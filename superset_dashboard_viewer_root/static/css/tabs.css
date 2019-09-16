@@ -1,0 +1,42 @@
+.tabs-column {
+    background-color: #2b2f3e;
+}
+
+.tab-button {
+    background-color: #2b2f3e;
+    color: #c4c8d6;
+    width: 100%;
+    padding: 20px 20px 20px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+    transition: 0.4s;
+    font-size: 1.2rem;
+}
+
+/* tab selected or with the mouse over it */
+.tab-button.focus {
+    background-color: #4983af;
+    color: #ffffff;
+}
+
+.tab-button.selected-without-focus {
+    background-color: #2b2f3e;
+    color: #7a7e8a;
+}
+
+div.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.fix-col-padding {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+iframe {
+    height: 100%;
+    border: none;
+}
