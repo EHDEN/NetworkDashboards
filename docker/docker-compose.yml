@@ -1,0 +1,76 @@
+version: "3"
+services:
+  redis:
+    image: redis:3.2
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:${REDIS_PORT}"
+    volumes:
+      - redis:/data
+
+  postgres:
+    image: postgres:10
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: "${POSTGRES_ROOT_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_ROOT_PASSWORD}"
+      # Variables above are used to iniliaze databases for the
+      #  services above (superset and dashboard_viewer).
+      POSTGRES_DBS: "${POSTGRES_SUPERSET_DB} ${POSTGRES_DASHBOARD_VIEWER_DB}"
+      POSTGRES_DBS_USERS: "${POSTGRES_SUPERSET_USER} ${POSTGRES_DASHBOARD_VIEWER_USER}"
+      POSTGRES_DBS_PASSWORDS: "${POSTGRES_SUPERSET_PASSWORD} ${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
+    ports:
+      - "127.0.0.1:5432:${POSTGRES_PORT}"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./postgres-entrypoint:/docker-entrypoint-initdb.d
+
+  superset:
+    build:
+      context: ../incubator-superset
+      dockerfile: contrib/docker/Dockerfile
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_USER: "${POSTGRES_SUPERSET_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_SUPERSET_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_SUPERSET_DB}"
+      REDIS_HOST: redis
+      REDIS_PORT: "${REDIS_PORT}"
+      # If using production, comment development volume below
+      SUPERSET_ENV: production
+      #SUPERSET_ENV: development
+    user: root:root
+    ports:
+      - "8088:${SUPERSET_PORT}"
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      # this is needed to communicate with the postgres and redis services
+      - ../incubator-superset/superset_config.py:/home/superset/superset/superset_config.py
+      # this is needed for development, remove with SUPERSET_ENV=production
+      #- ../../superset:/home/superset/superset
+
+  dashboad_viewer:
+      build:
+        context: ../superset_dashboard_viewer
+      environment:
+        SUPERSET_HOST: superset
+        SUPERSET_PORT: "${SUPERSET_PORT}"
+        POSTGRES_HOST: postgres
+        POSTGRES_PORT: "${POSTGRES_PORT}"
+        POSTGRES_USER: "${POSTGRES_DASHBOARD_VIEWER_USER}"
+        POSTGRES_PASSWORD: "${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
+        POSTGRES_DB: "${POSTGRES_DASHBOARD_VIEWER_DB}"
+      ports:
+        - "8000:${DASHBOARD_VIEWER_PORT}"
+      depends_on:
+        - postgres
+
+volumes:
+  postgres:
+    external: false
+  redis:
+    external: false
