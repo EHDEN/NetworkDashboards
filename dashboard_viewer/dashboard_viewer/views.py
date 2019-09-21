@@ -10,7 +10,7 @@ class TabsView(views.View):
 
     def get(self, request, *args, **kwargs):
 
-        tabs = Tab.objects.filter(visible=True).order_by("position")
+        tabs = Tab.objects.filter(visible=True).order_by("position", "title")
 
         tabs = [tab.__dict__ for tab in tabs]
 
@@ -19,7 +19,7 @@ class TabsView(views.View):
                 del tab[key]
 
         context = {
-            "tabs": tabs
+            "tabs": tabs,
         }
 
         return render(request, self.template_name, context)
