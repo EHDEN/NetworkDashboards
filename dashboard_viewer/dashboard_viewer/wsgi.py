@@ -1,5 +1,5 @@
 """
-WSGI config for superset_dashboard_viewer project.
+WSGI config for dashboard_viewer project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'superset_dashboard_viewer.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dashboard_viewer.settings')
 
 application = get_wsgi_application()

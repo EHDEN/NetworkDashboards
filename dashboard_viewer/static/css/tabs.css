@@ -40,3 +40,8 @@ iframe {
     height: 100%;
     border: none;
 }
+
+h1#no_tabs_header {
+    padding-top: 30px;
+    padding-left: 30px;
+}

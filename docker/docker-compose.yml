@@ -14,8 +14,8 @@ services:
     environment:
       POSTGRES_USER: "${POSTGRES_ROOT_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_ROOT_PASSWORD}"
-      # Variables above are used to iniliaze databases for the
-      #  services above (superset and dashboard_viewer).
+      # Variables below are used to iniliaze databases for the
+      #  services below (superset and dashboard_viewer).
       POSTGRES_DBS: "${POSTGRES_SUPERSET_DB} ${POSTGRES_DASHBOARD_VIEWER_DB}"
       POSTGRES_DBS_USERS: "${POSTGRES_SUPERSET_USER} ${POSTGRES_DASHBOARD_VIEWER_USER}"
       POSTGRES_DBS_PASSWORDS: "${POSTGRES_SUPERSET_PASSWORD} ${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
@@ -27,7 +27,7 @@ services:
 
   superset:
     build:
-      context: ../incubator-superset
+      context: ../superset
       dockerfile: contrib/docker/Dockerfile
     restart: unless-stopped
     environment:
@@ -49,25 +49,28 @@ services:
       - redis
     volumes:
       # this is needed to communicate with the postgres and redis services
-      - ../incubator-superset/superset_config.py:/home/superset/superset/superset_config.py
+      - ../superset/superset_config.py:/home/superset/superset/superset_config.py
       # this is needed for development, remove with SUPERSET_ENV=production
       #- ../../superset:/home/superset/superset
 
-  dashboad_viewer:
+  dashboard_viewer:
       build:
-        context: ../superset_dashboard_viewer
+        context: ../dashboard_viewer
       environment:
-        SUPERSET_HOST: superset
-        SUPERSET_PORT: "${SUPERSET_PORT}"
         POSTGRES_HOST: postgres
         POSTGRES_PORT: "${POSTGRES_PORT}"
         POSTGRES_USER: "${POSTGRES_DASHBOARD_VIEWER_USER}"
         POSTGRES_PASSWORD: "${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
         POSTGRES_DB: "${POSTGRES_DASHBOARD_VIEWER_DB}"
+        # If using production, comment development volume below
+        DASHBOARD_VIEWER_ENV: development
       ports:
         - "8000:${DASHBOARD_VIEWER_PORT}"
       depends_on:
         - postgres
+      #volumes:
+        # this is needed for development, remove with DASHBOARD_VIEWER_ENV=production
+        #- ../dashboard_viewer:/app
 
 volumes:
   postgres:

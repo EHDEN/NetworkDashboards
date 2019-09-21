@@ -4,3 +4,4 @@ Dockerfile
 db.sqlite3
 tests
 venv
+screenshot.png
