@@ -3,9 +3,9 @@ Tool for business intelligence using OMOP CDM
 
 ## Installation
 
-Make sure that you have docker and docker-compose installed in your machine. The, please follow these steps:
+Make sure that you have docker and docker-compose installed in your machine. Then, please follow these steps:
 
-- Please enter in the ''docker'' directory and this directory create your `.env` file here, using `.env-example` as reference. For local installation, you can just copy the `.env-example` content to a new file. Note: In case of port errors in the next steps, the problem could be related to a port already in use by your system that you defined here and it is busy, chose other.
+- Please enter in the ''docker'' directory and create your `.env` file here, using `.env-example` as reference. For local installation, you can just copy the `.env-example` content to a new file. Note: In case of port errors in the next steps, the problem could be related to a port already in use by your system that you defined here and it is busy, chose other.
 - Tip the following commands in the command line:
     1. Clone the Apache Superset repository:
         ```
@@ -38,4 +38,42 @@ Now, you have a clean setup running in your machine. To try the application usin
 
 ## Demo
 
-- TO DO
+1. Reconfigure the database on Superset (`localhost:8088`) to upload csvs.
+- Go to "Sources"-> "Databases" and edit the existing
+database (Second icon on the left).
+- Check the checkbox on "Expose in SQL Lab" and "Allow
+Csv Upload ".
+
+2. For each *CSV file* on the `demo/` folder:
+- Go to "Sources" -> "Upload a CSV"
+- Set the name of the table equal to the name of the file uploading without the extension
+- Select the csv file
+- Choose the database configured on the previous step
+
+3. Upload the exported dashboard file
+- Go to "Manage" -> "Import Dashboards"
+- Select the `sources_by_age_dashboard_exported.json` file,
+present on the `demo/` folder.
+- Click "Upload"
+
+4. Add a new tab to the dashboard viewer app.
+- Go to the Django's admin app (`localhost:8000/admin`)
+- On the `DASHBOARD_VIEWER` section and on `Tabs`
+row, add a new Tab.
+- Fill form's fields
+```
+Title:    Sources by age
+Icon:     birthday-cake
+Url:      See the next point
+Position: 1
+Visible:  ✓
+```
+- To get the url field
+    - Go back to superset (`localhost:8088`)
+    - Go to "Dashboards"
+    - Right click on the dashboard "Sources by age" and copy the link address
+    - Go back to the dashboard viewer app
+    - Paste de link and append to it `?standalone=true`
+    - Save
+
+6. Now you can go back to the root url (`localhost:8000`) to see the final result
