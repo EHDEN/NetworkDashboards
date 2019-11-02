@@ -50,13 +50,13 @@ Csv Upload ".
 - Select the csv file
 - Choose the database configured on the previous step
 
-4. Upload the exported dashboard file
+3. Upload the exported dashboard file
 - Go to "Manage" -> "Import Dashboards"
 - Select the `sources_by_age_dashboard_exported.json` file,
 present on the `demo/` folder.
 - Click "Upload"
 
-5. Add a new tab to the dashboard viewer app.
+4. Add a new tab to the dashboard viewer app.
 - Go to the Django's admin app (`localhost:8000/admin`)
 - On the `DASHBOARD_VIEWER` section and on `Tabs`
 row, add a new Tab.
@@ -64,7 +64,7 @@ row, add a new Tab.
 ```
 Title:    Sources by age
 Icon:     birthday-cake
-Url:
+Url:      See the next point
 Position: 1
 Visible:  ✓
 ```
