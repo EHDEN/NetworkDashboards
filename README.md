@@ -75,5 +75,14 @@ Visible:  ✓
     - Go back to the dashboard viewer app
     - Paste de link and append to it `?standalone=true`
     - Save
+    
+5. Update the public permissions to see the dashboards
+- In Superset go to "Security" -> "List Roles"
+- Select the "Edit record" button from the public role.
+- In the Permissions field, add the following categories:
+    - can explore JSON on Superset
+    - can dashboard on Superset
+    - all datasource access on all_datasource_access
+    - can csrf token on Superset
 
 6. Now you can go back to the root url (`localhost:8000`) to see the final result
