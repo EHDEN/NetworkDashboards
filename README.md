@@ -84,5 +84,6 @@ Visible:  ✓
     - can dashboard on Superset
     - all datasource access on all_datasource_access
     - can csrf token on Superset
+    - can list on CssTemplateAsyncModelView
 
 6. Now you can go back to the root url (`localhost:8000`) to see the final result
