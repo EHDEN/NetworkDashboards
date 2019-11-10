@@ -44,7 +44,7 @@ database (Second icon on the left).
 - Check the checkbox on "Expose in SQL Lab" and "Allow
 Csv Upload ".
 
-2. For each *CSV file* on the `demo/` folder:
+2. Upload the *CSV file* on the `demo/` folder:
 - Go to "Sources" -> "Upload a CSV"
 - Set the name of the table equal to the name of the file uploading without the extension
 - Select the csv file
@@ -62,7 +62,7 @@ present on the `demo/` folder.
 row, add a new Tab.
 - Fill form's fields
 ```
-Title:    Sources by age
+Title:    Sources by Age
 Icon:     birthday-cake
 Url:      See the next point
 Position: 1
