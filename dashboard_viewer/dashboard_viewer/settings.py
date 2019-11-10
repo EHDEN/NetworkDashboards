@@ -12,16 +12,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
-
-def get_env_variable(key):
-    value = os.environ.get(key)
-
-    if not value:
-        raise EnvironmentError(f'Environment variable {key} not set')
-
-    return value
-
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -33,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 from .SECRET_KEY import SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = get_env_variable("DASHBOARD_VIEWER_ENV") == "development"
+DEBUG = os.environ.get("DASHBOARD_VIEWER_ENV", "development") == "development"
 
 ALLOWED_HOSTS = []
 
@@ -48,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'dashboard_viewer',
+    'tabsManager',
 ]
 
 MIDDLEWARE = [
@@ -66,7 +56,7 @@ ROOT_URLCONF = 'dashboard_viewer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': []
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -89,11 +79,11 @@ WSGI_APPLICATION = 'dashboard_viewer.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': get_env_variable('POSTGRES_DB'),
-        'HOST': get_env_variable('POSTGRES_HOST'),
-        'PORT': get_env_variable('POSTGRES_PORT'),
-        'USER': get_env_variable('POSTGRES_USER'),
-        'PASSWORD': get_env_variable('POSTGRES_PASSWORD'),
+        'NAME': os.environ.get('POSTGRES_DB', 'postgres'),
+        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'postgres'),
     }
 }
 
@@ -135,7 +125,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
