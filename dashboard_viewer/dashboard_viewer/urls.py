@@ -21,4 +21,5 @@ urlpatterns = [
     path('', lambda request: redirect('tabs/')),
     path('admin/', admin.site.urls),
     path('tabs/', include('tabsManager.urls')),
+    path('uploader/', include('uploader.urls')),
 ]

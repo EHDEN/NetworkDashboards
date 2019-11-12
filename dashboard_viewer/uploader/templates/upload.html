@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h2>CDM-BI Database Uploader</h2>
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		<label for="achillesResults">Select the achilles results file: </label>
+		<input type="file" name="achillesResults">
+		<br/>
+		<button type="submit"> Upload</button>
+	</form>
+{% endblock %}
