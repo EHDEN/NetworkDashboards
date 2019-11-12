@@ -1,0 +1,17 @@
+.uploadHeader {
+	padding: 30px;
+	text-align: center;
+	background: #84bdee;
+	color: white;
+	font-size: 30px;
+}
+.uploadMessage {
+	padding-top: 3%;
+    padding-right: 10%;
+    padding-bottom: 2%;
+    padding-left: 10%;
+}
+.grad {
+    height: 100vh;
+    background-image: linear-gradient(to bottom, #dde9f4, white);
+}

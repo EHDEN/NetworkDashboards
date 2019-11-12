@@ -1,0 +1,33 @@
+.dropzone {
+	min-height: 150px;
+	background: white;
+	padding: 20px 20px;
+	border: 3px solid #2396fb;
+	text-align: center;
+	width: 100%;  
+}
+.dz-default .dz-message {
+  text-align: center;
+  margin: 2em 0;
+}
+.center {
+	margin: auto;
+	display: block;
+}
+.image-upload>input {
+  display: none;
+}
+.upload_btn{
+  position:absolute;
+  width:200px;
+  height:40px;
+  margin-top:-40px;
+  z-index:10;
+  opacity:0;
+}
+.custom-file-upload {
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+}
