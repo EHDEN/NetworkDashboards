@@ -39,8 +39,8 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: "${REDIS_PORT}"
       # If using production, comment development volume below
-      SUPERSET_ENV: production
-      #SUPERSET_ENV: development
+      #SUPERSET_ENV: production
+      SUPERSET_ENV: development
     user: root:root
     ports:
       - "${SUPERSET_PORT}:8088"
@@ -54,23 +54,24 @@ services:
       #- ../../superset:/home/superset/superset
 
   dashboard_viewer:
-      build:
-        context: ../dashboard_viewer
-      environment:
-        POSTGRES_HOST: postgres
-        POSTGRES_PORT: "${POSTGRES_PORT}"
-        POSTGRES_USER: "${POSTGRES_DASHBOARD_VIEWER_USER}"
-        POSTGRES_PASSWORD: "${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
-        POSTGRES_DB: "${POSTGRES_DASHBOARD_VIEWER_DB}"
-        # If using production, comment development volume below
-        DASHBOARD_VIEWER_ENV: production
-      ports:
-        - "${DASHBOARD_VIEWER_PORT}:8000"
-      depends_on:
-        - postgres
-      #volumes:
-        # this is needed for development, remove with DASHBOARD_VIEWER_ENV=production
-        #- ../dashboard_viewer:/app
+    build:
+      context: ../dashboard_viewer
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_USER: "${POSTGRES_DASHBOARD_VIEWER_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DASHBOARD_VIEWER_DB}"
+      # If using production, comment development volume below
+      #DASHBOARD_VIEWER_ENV: production
+      SUPERSET_ENV: development
+    ports:
+      - "${DASHBOARD_VIEWER_PORT}:8000"
+    depends_on:
+      - postgres
+    #volumes:
+      # this is needed for development, remove with DASHBOARD_VIEWER_ENV=production
+      #- ../dashboard_viewer:/app
 
 volumes:
   postgres:
