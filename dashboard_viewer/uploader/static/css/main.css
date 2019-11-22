@@ -1,17 +1,63 @@
 .uploadHeader {
-	padding: 30px;
-	text-align: center;
-	background: #84bdee;
-	color: white;
-	font-size: 30px;
+	padding-left: 10%;
+	padding-bottom: 17px;
+	background: white;
+	color: #20425a;
 }
 .uploadMessage {
 	padding-top: 3%;
-    padding-right: 10%;
-    padding-bottom: 2%;
-    padding-left: 10%;
+	padding-right: 10%;
+	padding-bottom: 2%;
+	padding-left: 10%;
+}
+.uploadMessageSectionInfo{
+	padding-top: 2%;	
+	text-align: justify;
+	color: #434a54;
 }
 .grad {
-    height: 100vh;
-    background-image: linear-gradient(to bottom, #dde9f4, white);
+	height: 100vh;
+	background-color: #dde9f452;
+}
+
+.logo {
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 17px;
+	text-align: left;
+	transition-property: all;
+	transition-duration: 0.3s;
+	transition-timing-function: ease;
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.3s;
+	-webkit-transition-timing-function: ease;
+}
+.slogan {
+	display: inline-block;
+	vertical-align: top;
+	font-size: 20px;
+	letter-spacing: 1px;
+	font-style: bold;
+	margin-top: 17px;
+	font-weight: 500;
+	border-left: 1px solid #000;
+	margin-left: 0px;
+	line-height: 20px;
+	padding: 10px 0 10px 0px;
+	padding-left: 0px;
+	padding-left: 11px;
+}
+.fa-cloud-upload-alt
+.fa-sync-alt
+.fa-file-download {
+	font-size: xx-large;
+}
+.fa-file-download {
+	color: #87d534;
+}
+.fa-cloud-upload-alt {
+	color: #329bed;
+}
+.fa-sync-alt {
+	color: #ea6e55;
 }
