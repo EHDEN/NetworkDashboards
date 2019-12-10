@@ -25,7 +25,7 @@ from .SECRET_KEY import SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DASHBOARD_VIEWER_ENV", "development") == "development"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
