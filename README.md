@@ -9,14 +9,17 @@ Make sure that you have docker and docker-compose installed in your machine. The
 - Tip the following commands in the command line:
     1. Clone the Apache Superset repository:
         ```
-        git clone https://github.com/apache/incubator-superset ../superset
+        git clone https://github.com/apache/incubator-superset ../superset -b 0.35.1 --single-branch 
         cp ../superset/contrib/docker/superset_config.py ../superset
         ```
     2. Init the Apache Superset (This creates a user, so it is necessary to interact with the console):
         ```
-        docker-compose run --rm -e FLASK_APP=superset superset flask fab create-db
         docker-compose run --rm superset ./docker-init.sh
         ```
+        2.1. If the user admin was not created successfully in the previous step, it is necessary to run the following command:
+            ```
+            docker-compose run --rm -e FLASK_APP=superset superset flask fab create-db
+            ```
     3. Init the Dashboard Layout  (This creates a user, so it is necessary to interact with the console):
         ```
         docker-compose run --rm dashboard_viewer ./docker-init.sh

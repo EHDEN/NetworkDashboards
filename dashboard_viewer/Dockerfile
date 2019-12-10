@@ -1,5 +1,10 @@
 FROM python:3.7.4-stretch
 
+RUN apt-get update \
+ && apt-get -y install vim
+
+RUN alias ll="ls -al"
+
 WORKDIR /app
 
 COPY requirements.txt .
