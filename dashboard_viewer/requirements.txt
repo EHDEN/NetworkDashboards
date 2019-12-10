@@ -2,3 +2,4 @@ Django==2.2.7
 pytz==2019.3
 sqlparse==0.3.0
 psycopg2==2.8.4
+gunicorn==19.6.0

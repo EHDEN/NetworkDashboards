@@ -74,7 +74,7 @@ services:
       POSTGRES_DB: "${POSTGRES_DASHBOARD_VIEWER_DB}"
       # If using production, comment development volume below
       #DASHBOARD_VIEWER_ENV: production
-      SUPERSET_ENV: development
+      DASHBOARD_VIEWER_ENV: development
     ports:
       - "${DASHBOARD_VIEWER_PORT}:8000"
     depends_on:
