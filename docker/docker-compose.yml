@@ -1,5 +1,15 @@
 version: "3"
 services:
+  nginx:
+    image: nginx:1.14.0
+    ports:
+      - "${NGINX_PORT}:8000"
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d
+    links:
+      - superset
+      - dashboard_viewer
+
   redis:
     image: redis:3.2
     restart: unless-stopped
