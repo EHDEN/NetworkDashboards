@@ -80,13 +80,23 @@ WSGI_APPLICATION = 'dashboard_viewer.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', 'postgres'),
+        'NAME': os.environ.get('DEFAULT_POSTGRES_DB', 'postgres'),
         'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
         'PORT': os.environ.get('POSTGRES_PORT', '5432'),
-        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'postgres'),
+        'USER': os.environ.get('POSTGRES_DEFAULT_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_DEFAULT_PASSWORD', 'postgres'),
+    },
+    'achilles': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_ACHILLES_DB', 'achilles'),
+        'HOST': os.environ.get('POSTGRES_ACHILLES_HOST', 'localhost'),
+        'PORT': os.environ.get('POSTGRES_ACHILLES_PORT', '5432'),
+        'USER': os.environ.get('POSTGRES_ACHILLES_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_ACHILLES_PASSWORD', 'postgres'),
     }
 }
+
+DATABASE_ROUTERS = ['dashboard_viewer.routers.AchillesRouter']
 
 
 # Password validation
