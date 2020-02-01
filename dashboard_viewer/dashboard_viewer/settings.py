@@ -60,7 +60,9 @@ ROOT_URLCONF = 'dashboard_viewer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': []
+        'DIRS': [
+            os.path.join(BASE_DIR, "shared/templates")
+        ]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -142,6 +144,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "node_modules"),
+    os.path.join(BASE_DIR, "shared/static"),
 ]
 
 STATICFILES_FINDERS = (
