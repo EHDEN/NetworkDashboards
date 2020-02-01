@@ -1,74 +1,66 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
 {% load staticfiles %}
 
 {% block head_tail %}
     <link href='{% static "css/main.css" %}' rel="stylesheet">
-    <link href='{% static "css/dropzone.css" %}' rel="stylesheet">
-    <script type="text/javascript" src='{% static "js/dropzone.js" %}'></script>
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script type="text/javascript">
-    	$('#file-upload').change(function() {
-		  var i = $(this).prev('label').clone();
-		  var file = $('#file-upload')[0].files[0].name;
-		  $(this).prev('label').text(file);
-		});
-    </script>
+    {{ form.media.css }}
+    {{ form.media.js }}
 {% endblock %}
 
 {% block content %}
-	<div class="grad">
-		<div class="uploadHeader">
-			<div class="logo">
-				<img src='{% static "images/CDM-BI-icon.png" %}' style="width: 4rem;"/>
-			</div>
-			<div class="slogan">CDM-BI<br>Uploader</div>
-		</div>
-		<div class="uploadMessage center">
-			<div>
-				<form method="post" enctype="multipart/form-data" action=" ">
-					{% csrf_token %}
-            		{% if db == None %}
-						<div class="form-group">
-							<label for="exampleInputEmail1">Database name</label>
-							<input type="text" class="form-control" id="inputDB" name="inputDB" aria-describedby="dbHelp" placeholder="Enter the database name">
-						</div>
-					{% endif %}
-					<p>Please upload the CSV Achilles result file here (achilles_results.csv):</p>
-					<div class="image-upload fallback">
-						<label class="dropzone center" for="file-input">
-							<img src='{% static "images/uploadCSV.png" %}' style="width: 6rem;"/>
-							<br/>
-							<input id="file-input" class="upload_btn" type="file" name="achillesResults" action="">
-						</label>
-					</div>
-					<br/>
-					<button class="btn btn-lg btn-primary btn-block center" type="submit"><i class="fas fa-file-upload"></i>&nbsp;Upload</button>
-				</form>
-				{% if success %}
-				<br/>
-				<div class="alert alert-success" role="alert">
-				  Uploaded with success!
-				</div>
-				{% endif %}
+    <div class="grad">
+        <div class="uploadHeader">
+            <div class="logo">
+                <img class="logo-img" src='{% static "images/CDM-BI-icon.png" %}'/>
+            </div>
+            <div class="slogan">CDM-BI<br>Uploader</div>
+        </div>
+        <div class="uploadMessage center">
+            <div>
+                {% comment %}
+                <form method="post" enctype="multipart/form-data" action=" ">
+                    <div class="image-upload fallback">
+                        <label class="dropzone center" for="file-input">
+                            <img src='{% static "images/uploadCSV.png" %}' style="width: 6rem;"/>
+                            <br/>
+                            <input id="file-input" class="upload_btn" type="file" name="achillesResults" action="">
+                        </label>
+                    </div>
+                    <br/>
+                    <button class="btn btn-lg btn-primary btn-block center" type="submit"><i class="fas fa-file-upload"></i>&nbsp;Upload</button>
+                </form>{% endcomment %}
 
-			</div>
-			<div class="uploadMessageSectionInfo">
-				<div class="row">
-					<div class="col-sm">
-						<h4><i class="fas fa-file-download"></i>&nbsp;Export Achilles results</h4>
-						<p>Achilles is intended to be implemented by organizations that have patient-level observational health databases available in their local environment. Please run the R package securely within your local environment without disclosing any patient identifiable information to access the Achilles result files. <a href="https://github.com/OHDSI/Achilles" target="_blank">(https://github.com/OHDSI/Achilles)</a></p>
-					</div>
-					<div class="col-sm">
-						<h4><i class="fas fa-cloud-upload-alt"></i>&nbsp;Upload Achilles results</h4>
-						<p>Upload the Achilles result file in this platform. The necessary file is named by default as achilles_results.csv. To upgrade an already existent database, just upload the file again, that the data will be replaced. This operation can take a few seconds.</p>
-					</div>
-					<div class="col-sm">
-						<h4><i class="fas fa-sync-alt"></i>&nbsp;Auto update dashboard</h4>
-						<p>All the dashboards will be automatically update after an upload. This replace or introduce a new database in all the graphs.</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary">
+                            Submit
+                        </button>
+                    {% endbuttons %}
+                </form>
+
+            </div>
+            <div class="uploadMessageSectionInfo">
+                <div class="row">
+                    <div class="col-sm">
+                        <h4><i class="fas fa-file-download"></i>&nbsp;Export Achilles results</h4>
+                        <p>Achilles is intended to be implemented by organizations that have patient-level observational health databases available in their local environment. Please run the R package securely within your local environment without disclosing any patient identifiable information to access the Achilles result files. <a href="https://github.com/OHDSI/Achilles" target="_blank">(https://github.com/OHDSI/Achilles)</a></p>
+                    </div>
+                    <div class="col-sm">
+                        <h4><i class="fas fa-cloud-upload-alt"></i>&nbsp;Upload Achilles results</h4>
+                        <p>Upload the Achilles result file in this platform. The necessary file is named by default as achilles_results.csv. To upgrade an already existent database, just upload the file again, that the data will be replaced. This operation can take a few seconds.</p>
+                    </div>
+                    <div class="col-sm">
+                        <h4><i class="fas fa-sync-alt"></i>&nbsp;Auto update dashboard</h4>
+                        <p>All the dashboards will be automatically update after an upload. This replace or introduce a new database in all the graphs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

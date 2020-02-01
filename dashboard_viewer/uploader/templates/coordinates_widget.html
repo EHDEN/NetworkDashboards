@@ -1,0 +1,32 @@
+<div style="display: none">
+    {{ text_input }}
+</div>
+<div id="map_{{ name }}" style="width: 500px; height: 250px"></div>
+
+<script>
+    const map = L.map("map_{{ name }}").setView([51,-0.2], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    const set_latlng = (lat, lng) => {
+        $("#{{ text_input_id }}").val(`${lat}:${lng}`)
+    };
+
+    let marker;
+    map.on("click", (e) => {
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker(e.latlng, {draggable: true});
+        marker.addTo(map);
+
+        marker.on("dragend", (dragEvent) => {
+            set_latlng(dragEvent.target._latlng.lat, dragEvent.target._latlng.lng);
+        });
+
+        set_latlng(e.latlng.lat, e.latlng.lng);
+    });
+
+</script>
