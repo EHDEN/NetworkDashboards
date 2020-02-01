@@ -1,7 +1,9 @@
-.dockerignore
-.idea
+.*
 Dockerfile
 db.sqlite3
 tests
 venv
 screenshot.png
+package-lock.json
+package.json
+node_modules
