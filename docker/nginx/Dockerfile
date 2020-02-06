@@ -4,4 +4,7 @@
 FROM nginx:1.17.2-alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d
+
+COPY nginx.conf /nginx.conf
+COPY nginxSuffix.conf /nginxSuffix.conf
+COPY setupURL.sh /setupURL.sh

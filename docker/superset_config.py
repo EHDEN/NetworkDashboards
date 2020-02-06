@@ -1,9 +1,5 @@
 import os
 
-#Static links
-APP_ICON = "/analytics/static/assets/images/superset-logo@2x.png"
-IMG_UPLOAD_URL = "/analytics/static/uploads/"
-
 def get_env_variable(var_name, default=None):
     """Get the environment variable or raise exception."""
     try:
@@ -15,7 +11,6 @@ def get_env_variable(var_name, default=None):
             error_msg = 'The environment variable {} was missing, abort...'\
                         .format(var_name)
             raise EnvironmentError(error_msg)
-
 
 POSTGRES_USER = get_env_variable('POSTGRES_USER')
 POSTGRES_PASSWORD = get_env_variable('POSTGRES_PASSWORD')
@@ -63,3 +58,9 @@ class ReverseProxied(object):
 
 
 ADDITIONAL_MIDDLEWARE = [ReverseProxied, ]
+
+
+#Static links
+SUFFIX = "/" +  get_env_variable('SUFFIX') if get_env_variable('SUFFIX') else ""
+APP_ICON = SUFFIX + "/static/assets/images/superset-logo@2x.png"
+IMG_UPLOAD_URL = SUFFIX + "/static/uploads/"

@@ -15,14 +15,6 @@ services:
   postgres:
     image: postgres:10
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: "${POSTGRES_ROOT_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_ROOT_PASSWORD}"
-      # Variables below are used to iniliaze databases for the
-      #  services below (superset and dashboard_viewer).
-      POSTGRES_DBS: "${POSTGRES_SUPERSET_DB} ${POSTGRES_DASHBOARD_VIEWER_DB}"
-      POSTGRES_DBS_USERS: "${POSTGRES_SUPERSET_USER} ${POSTGRES_DASHBOARD_VIEWER_USER}"
-      POSTGRES_DBS_PASSWORDS: "${POSTGRES_SUPERSET_PASSWORD} ${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
@@ -31,37 +23,34 @@ services:
     networks:
       - backbone
       - all
+    environment:
+      POSTGRES_USER: "${POSTGRES_ROOT_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_ROOT_PASSWORD}"
+      # Variables below are used to iniliaze databases for the
+      #  services below (superset and dashboard_viewer).
+      POSTGRES_DBS: "${POSTGRES_SUPERSET_DB} ${POSTGRES_DASHBOARD_VIEWER_DB}"
+      POSTGRES_DBS_USERS: "${POSTGRES_SUPERSET_USER} ${POSTGRES_DASHBOARD_VIEWER_USER}"
+      POSTGRES_DBS_PASSWORDS: "${POSTGRES_SUPERSET_PASSWORD} ${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
 
-
-        #  superset:
-          #image: amancevice/superset:0.34.0
-          #restart: always
-    #    depends_on:
-    #  - redis
-    # ports:
-    #  - "8088"
-#   volumes:
-   #  - ./superset_config.py:/etc/superset/superset_config.py
-   # networks:
-   #   - backbone
-   #   - all
+  nginx:
+    build: ./nginx
+    command: "sh setupURL.sh"
+    ports:
+      - "${NGINX_PORT}:80"
+    depends_on:
+      - superset
+    networks:
+      - backbone
+      - all
+    environment:
+      BASE: "${NGINX_BASE}"
+      SUFFIX: "${NGINX_SUFFIX}"
 
   superset:
     build:
       context: ../superset
       dockerfile: contrib/docker/Dockerfile
     restart: unless-stopped
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: "${POSTGRES_PORT}"
-      POSTGRES_USER: "${POSTGRES_SUPERSET_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_SUPERSET_PASSWORD}"
-      POSTGRES_DB: "${POSTGRES_SUPERSET_DB}"
-      REDIS_HOST: redis
-      REDIS_PORT: "${REDIS_PORT}"
-      # If using production, comment development volume below
-      #SUPERSET_ENV: production
-      SUPERSET_ENV: development
     user: root:root
     ports:
      - "${SUPERSET_PORT}:8088"
@@ -75,27 +64,38 @@ services:
       - ./superset_config.py:/home/superset/superset/superset_config.py
     expose:
       - 8088
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_USER: "${POSTGRES_SUPERSET_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_SUPERSET_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_SUPERSET_DB}"
+      REDIS_HOST: redis
+      REDIS_PORT: "${REDIS_PORT}"
+      SUPERSET_ENV: "${INSTALLATION_ENV}"
+      BASE: "${NGINX_BASE}"
+      SUFFIX: "${NGINX_SUFFIX}"
 
-
-
-
-
-
-
-
-    
-
-
-
-  nginx:
-    build: ./nginx
+  dashboardviewer:
+    build:
+      context: ../dashboard_viewer
+    restart: unless-stopped
+    volumes:
+      - ../dashboard_viewer:/app
     ports:
-      - "${NGINX_PORT}:80"
+      - "${DASHBOARD_VIEWER_PORT}:8000"
     depends_on:
-      - superset
+      - postgres
     networks:
       - backbone
       - all
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_USER: "${POSTGRES_DASHBOARD_VIEWER_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DASHBOARD_VIEWER_DB}"
+      DASHBOARD_VIEWER_ENV: "${INSTALLATION_ENV}"
 
 volumes:
   postgres:
