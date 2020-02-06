@@ -1,8 +1,17 @@
 #!/bin/sh
 
+while read var; do
+   	#echo $var
+    	case $var in
+		*NGINX_SUFFIX* ) SUFFIX="$(echo $var|rev|cut -d'=' -f1|rev)" ;;
+	esac
+done < ../.env
+
+echo $SUFFIX
+
 if [ -z "$SUFFIX" ]
 then
-    SUFFIX_CLEAN=""
+    	SUFFIX_CLEAN=""
 else
 	#Remove commas from environment varibale and add slash
 	SUFFIX_CLEAN="/$(echo $SUFFIX | sed 's/"//g')"
