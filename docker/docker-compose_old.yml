@@ -1,11 +1,24 @@
-# reference
-# - https://github.com/amancevice/docker-superset/blob/master/examples/postgres/docker-compose.yml
-
-version: '3'
+version: "3"
 services:
+  nginx:
+    image: nginx:1.14.0
+    restart: unless-stopped
+    ports:
+      - "${NGINX_PORT}:8000"
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d
+    links:
+      - superset
+      - dashboardviewer
+    networks:
+      - backbone
+      - all
+
   redis:
-    image: redis
-    restart: always
+    image: redis:3.2
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:6379"
     volumes:
       - redis:/data
     networks:
@@ -31,20 +44,6 @@ services:
     networks:
       - backbone
       - all
-
-
-        #  superset:
-          #image: amancevice/superset:0.34.0
-          #restart: always
-    #    depends_on:
-    #  - redis
-    # ports:
-    #  - "8088"
-#   volumes:
-   #  - ./superset_config.py:/etc/superset/superset_config.py
-   # networks:
-   #   - backbone
-   #   - all
 
   superset:
     build:
@@ -72,30 +71,36 @@ services:
       - backbone
       - all
     volumes:
-      - ./superset_config.py:/home/superset/superset/superset_config.py
+      # this is needed to communicate with the postgres and redis services
+      - ../superset/superset_config.py:/home/superset/superset/superset_config.py
+      # this is needed for development, remove with SUPERSET_ENV=production
+      #- ../../superset:/home/superset/superset
     expose:
       - 8088
 
-
-
-
-
-
-
-
-    
-
-
-
-  nginx:
-    build: ./nginx
+  dashboardviewer:
+    build:
+      context: ../dashboard_viewer
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_USER: "${POSTGRES_DASHBOARD_VIEWER_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DASHBOARD_VIEWER_DB}"
+      # If using production, comment development volume below
+      #DASHBOARD_VIEWER_ENV: production
+      DASHBOARD_VIEWER_ENV: development
     ports:
-      - "${NGINX_PORT}:80"
+      - "${DASHBOARD_VIEWER_PORT}:8000"
     depends_on:
-      - superset
+      - postgres
     networks:
       - backbone
       - all
+    #volumes:
+      # this is needed for development, remove with DASHBOARD_VIEWER_ENV=production
+      #- ../dashboard_viewer:/app
 
 volumes:
   postgres:

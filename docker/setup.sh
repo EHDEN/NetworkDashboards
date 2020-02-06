@@ -2,7 +2,7 @@
 
 echo "Setting up superset repo"
 git clone https://github.com/apache/incubator-superset ../superset
-
+#do not forget to add the git tag TO DO
 cp ../superset/contrib/docker/superset_config.py ../superset
 
 echo "Setting up the database for the superset app"
