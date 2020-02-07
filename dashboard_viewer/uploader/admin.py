@@ -1,3 +1,7 @@
+
 from django.contrib import admin
 
-# Register your models here.
+from .models import DatabaseType, DataSource
+
+admin.site.register(DatabaseType)
+admin.site.register(DataSource)

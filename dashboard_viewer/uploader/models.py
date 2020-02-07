@@ -3,83 +3,137 @@ from django.db import models
 from django.db.models.signals import post_save, post_delete
 
 
-CONTINENTS = [
-    ('AF', 'Africa'),
-    ('AS', 'Asia'),
-    ('EU', 'Europe'),
-    ('NA', 'North America'),
-    ('OC', 'Oceania'),
-    ('SA', 'South America'),
-    ('AN', 'Antarctica'),
-]
-
-
 class Continent(models.Model):
-    continent = models.CharField(max_length=40)
+    class Meta:
+        db_table = "continent"
+        ordering = ("continent",)
 
-
-class Country(models.Model):
-    country   = models.CharField(max_length=40)
-    #continent = models.CharField(max_length=2, choices=CONTINENTS)
-    continent = models.ForeignKey(Continent, on_delete=models.CASCADE)
-
-
-class Location(models.Model):
-    city    = models.CharField(max_length=40)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    iso       = models.CharField(
+        max_length=2,
+        help_text="ISO code."
+    )
+    continent = models.CharField(
+        max_length=40,
+        help_text="Continent name."
+    )
 
     def __str__(self):
-        return f"{self.city} - {self.country.country} - {self.country.continent}"
-
-
-class DatabaseType(models.Model):
-    type = models.CharField(max_length=40)
+        return f"{self.continent}"
 
     def __repr__(self):
         return self.__str__()
 
+
+class Country(models.Model):
+    class Meta:
+        db_table = "country"
+        ordering = ("country",)
+
+    iso       = models.CharField(
+        max_length=2,
+        help_text="Alpha 2 ISO code.",
+    )
+    iso3      = models.CharField(
+        max_length=3,
+        help_text="Alpha 3 ISO code."
+    )
+    country   = models.CharField(
+        max_length=50,
+        help_text="Country name."
+    )
+    continent = models.ForeignKey(
+        Continent,
+        on_delete=models.CASCADE,
+        help_text="Continent associated."
+    )
+
+    def __str__(self):
+        return f"{self.country}"
+
+    def __repr__(self):
+        return self.__repr__()
+
+
+class DatabaseType(models.Model):
+    class Meta:
+        db_table = "database_type"
+
+    type = models.CharField(
+        max_length=40,
+        unique=True,
+        help_text="Name of the type."
+    )
+
     def __str__(self):
         return self.type
 
+    def __repr__(self):
+        return self.__str__()
 
-class Sources(models.Model):
+
+class DataSource(models.Model):
     class Meta:
-        db_table = "achilles_datasources"
+        db_table = "data_source"
 
-    name                     = models.CharField(max_length=40)
-    release_date             = models.DateField(
-        help_text="Date at which DB is available for research for current release"
+    name          = models.CharField(
+        max_length=40,
+        unique=True,
+        help_text="Name of the data source."
     )
-    database_type            = models.ForeignKey(DatabaseType, on_delete=models.SET_NULL, null=True)
-    location                 = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
-    latitude                 = models.FloatField()
-    longitude                = models.FloatField()
-    link                     = models.URLField()
+    slug          = models.SlugField(
+        max_length=10,
+        unique=True,
+        help_text="Short label for the data source, containing only letters, numbers, underscores or hyphens."
+    )
+    release_date  = models.DateField(
+        help_text="Date at which DB is available for research for current release."
+    )
+    database_type = models.ForeignKey(
+        DatabaseType,
+        on_delete=models.SET_NULL,
+        null=True,
+        help_text="Type of the data source. You can create a new type.",
+    )
+    country       = models.ForeignKey(
+        Country,
+        on_delete=models.SET_NULL,
+        null=True,
+        help_text="Country where the data source is located.",
+    )
+    latitude      = models.FloatField()
+    longitude     = models.FloatField()
+    link          = models.URLField(
+        help_text="Link to home page of the data source"
+    )
 
 
-def after_source_saved(sender, **kwargs):
+def after_data_source_saved(sender, **kwargs):
     """
-    TODO After a source is inserted dashboards on superset might need to be updated
+    TODO After a data source is inserted dashboards on superset might need to be updated
     """
     pass
 
 
-post_save.connect(after_source_saved, sender=Sources)
+post_save.connect(after_data_source_saved, sender=DataSource)
 
 
-def after_source_deleted(sender, **kwargs):
+def after_data_source_deleted(sender, **kwargs):
     """
-    TODO After a source is deleted dashboards on superset might need to be updated
+    TODO After a data source is deleted dashboards on superset might need to be updated
     """
     pass
 
 
-post_delete.connect(after_source_deleted, sender=Sources)
+post_delete.connect(after_data_source_deleted, sender=DataSource)
 
 
 class UploadHistory(models.Model):
-    source                   = models.ForeignKey(Sources, on_delete=models.CASCADE)
-    date                     = models.DateField()
+    class Meta:
+        ordering = ("-upload_date",)
+        db_table = "upload_history"
+
+    data_source              = models.ForeignKey(DataSource, on_delete=models.CASCADE)
+    upload_date              = models.DateTimeField()
     achilles_version         = models.CharField(max_length=10)
     achilles_generation_date = models.DateField()
     cdm_version              = models.CharField(max_length=10)
@@ -90,11 +144,11 @@ class AchillesResults(models.Model):
     class Meta:
         db_table = "achilles_results"
         indexes = [
-            models.Index(fields=("source",)),
+            models.Index(fields=("data_source",)),
             models.Index(fields=("analysis_id",))
         ]
 
-    source      = models.ForeignKey(Sources, on_delete=models.CASCADE)
+    data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
     analysis_id = models.BigIntegerField()
     stratum_1   = models.TextField()
     stratum_2   = models.TextField()
@@ -108,13 +162,12 @@ class AchillesResultsArchive(models.Model):
     class Meta:
         db_table = "achilles_results_archive"
         indexes = [
-            models.Index(fields=("source",)),
+            models.Index(fields=("data_source",)),
             models.Index(fields=("analysis_id",))
         ]
 
-    date        = models.DateField()
-    upload_id   = models.ForeignKey(UploadHistory, on_delete=models.CASCADE)
-    source      = models.ForeignKey(Sources, on_delete=models.CASCADE)
+    upload_info = models.ForeignKey(UploadHistory, on_delete=models.CASCADE)
+    data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
     analysis_id = models.BigIntegerField()
     stratum_1   = models.TextField()
     stratum_2   = models.TextField()

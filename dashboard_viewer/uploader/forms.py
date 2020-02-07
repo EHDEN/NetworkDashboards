@@ -1,40 +1,47 @@
 
+from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
 
-from .models import Sources
-from .widgets import ListTextWidget, CoordinatesWidget
-
-from bootstrap_datepicker_plus import DatePickerInput
+from .fields import CoordinatesField
+from .models import DataSource, DatabaseType
+from .widgets import ListTextWidget
 
 VERSION_REGEX = r'[0-9]+\.[0-9]+\.[0-9]+'
 
 
 class SourceFrom(forms.ModelForm):
-    coordinates = forms.CharField(max_length=40, widget=CoordinatesWidget)
+    database_type = forms.CharField(
+        max_length=40,
+        widget=ListTextWidget(DatabaseType.objects),
+        help_text="Type of the data source. You can create a new type.",
+    )
+    coordinates = CoordinatesField(
+        help_text="Coordinates for the location of the data source"
+    )
 
     class Meta:
-        model = Sources
-        fields = (
-            'name',
-            'release_date',
-            'database_type',
-            'location',
-            'link',
+        model = DataSource
+        exclude = (
+            "latitude",
+            "longitude",
         )
         widgets = {
             'release_date': DatePickerInput(),
         }
 
-    def save(self, commit=True):
-        pass
-
     def clean_database_type(self):
-        return self.cleaned_data["database_type"].title()
+        db_type_title = self.cleaned_data["database_type"].title()
+        try:
+            db_type = DatabaseType.objects.get(type=db_type_title)
+        except DatabaseType.DoesNotExist:
+            db_type = None
 
-    def __init__(self, database_types, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields['database_type'].widget = ListTextWidget(database_types, 'database-types-list')
+        if db_type is not None:
+            return db_type
+        else:
+            db_type = DatabaseType(type=db_type_title)
+            db_type.save()
+            return db_type
 
 
 class AchillesResultsForm(forms.Form):

@@ -1,0 +1,43 @@
+{% extends "uploader_base.html" %}
+
+{% block title %}
+    <div class="row">
+        <h3 class="col-md-3">Data Source: {{ data_source }}</h3>
+        <button class="btn btn-warning col-md-2" onclick="window.location='edit/'">
+            <i class="far fa-edit"></i> Edit
+        </button>
+    </div>
+
+    <hr/>
+    <h3>Upload a new achilles results file</h3>
+{% endblock %}
+
+{% block upload_history %}
+    <hr/>
+
+    <div>
+        <h3>Upload history</h3>
+        {% if upload_history|length > 0 %}
+            <table class="table">
+                <tr>
+                    <th>Date</th>
+                    <th>Achilles Version</th>
+                    <th>Achilles Generation Date</th>
+                    <th>CDM Version</th>
+                    <th>Vocabulary Version</th>
+                </tr>
+                {% for up_hi in upload_history %}
+                    <tr>
+                        <td>{{ up_hi.date }}</td>
+                        <td>{{ up_hi.achilles_version }}</td>
+                        <td>{{ up_hi.achilles_generation_date }}</td>
+                        <td>{{ up_hi.cdm_version }}</td>
+                        <td>{{ up_hi.vocabulary_version }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No achilles results files were uploaded.</p>
+        {% endif %}
+    </div>
+{% endblock %}

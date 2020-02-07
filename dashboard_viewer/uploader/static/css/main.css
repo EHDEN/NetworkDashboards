@@ -5,18 +5,13 @@
 	color: #20425a;
 }
 .uploadMessage {
-	padding-top: 3%;
-	padding-right: 10%;
-	padding-bottom: 2%;
-	padding-left: 10%;
+	padding: 1% 10% 0 10%;
 }
 .uploadMessageSectionInfo{
-	padding-top: 2%;	
 	text-align: justify;
 	color: #434a54;
 }
 .grad {
-	height: 100vh;
 	background-color: #dde9f452;
 }
 
@@ -40,19 +35,18 @@
 	vertical-align: top;
 	font-size: 20px;
 	letter-spacing: 1px;
-	font-style: bold;
 	margin-top: 17px;
 	font-weight: 500;
 	border-left: 1px solid #000;
-	margin-left: 0px;
+	margin-left: 0;
 	line-height: 20px;
-	padding: 10px 0 10px 0px;
-	padding-left: 0px;
-	padding-left: 11px;
+	padding: 10px 0 10px 11px;
 }
-.fa-cloud-upload-alt
-.fa-sync-alt
-.fa-file-download {
+.center {
+	margin: auto;
+	display: block;
+}
+.fa-cloud-upload-alt .fa-sync-alt .fa-file-download {
 	font-size: xx-large;
 }
 .fa-file-download {

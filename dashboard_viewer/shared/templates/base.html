@@ -9,9 +9,6 @@
     <link href="{% static "bootstrap/dist/css/bootstrap.min.css" %}" rel="stylesheet">
     <link href="{% static "fontawesome-free-5.11.2-web/css/all.css" %}" rel="stylesheet">
 
-    <script src="{% static "jquery/dist/jquery.slim.min.js" %}"></script>
-    <script src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
-
     {% block head_tail %}
     {% endblock %}
 </head>
@@ -21,6 +18,9 @@
 
     {% block content %}
     {% endblock %}
+
+    <script src="{% static "jquery/dist/jquery.slim.min.js" %}"></script>
+    <script src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
 
     {% block body_tail %}
     {% endblock %}
