@@ -12,6 +12,21 @@
         {% include "header.html" %}
 
         <div class="uploadMessage center">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert
+                        {% if message.tags %}
+                            {% if message.tags == 'error' %}
+                                alert-danger
+                            {% else %}
+                                alert-success
+                            {% endif %}
+                        {% endif %}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
             {% include "upload_message.html" %}
 
             <br>
@@ -36,7 +51,7 @@
 
                 {% buttons %}
                     <button type="submit" class="btn btn-primary">
-                        {{ submit_button_text|safe }}
+                        {{ submit_button_text }}
                     </button>
                 {% endbuttons %}
             </form>

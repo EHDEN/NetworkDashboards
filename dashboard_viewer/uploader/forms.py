@@ -50,3 +50,4 @@ class AchillesResultsForm(forms.Form):
     cdm_version = forms.RegexField(VERSION_REGEX)
     vocabulary_version = forms.RegexField(VERSION_REGEX)
     achilles_results = forms.FileField()
+    has_header = forms.BooleanField(help_text="Does the achilles results file has a header line", initial=True)

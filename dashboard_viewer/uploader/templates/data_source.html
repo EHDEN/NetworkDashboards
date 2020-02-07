@@ -2,20 +2,20 @@
 
 {% block title %}
     <div class="row">
-    <h3 class="col-md-3">
-        {% if editing %}
-            Edit
-        {% else %}
-            Create
-        {% endif %}
-        your Data Source
-    </h3>
+        <h3 class="col-md-4">
+            {% if editing %}
+                Edit
+            {% else %}
+                Create
+            {% endif %}
+            your Data Source
+        </h3>
 
-    {% if editing %}
-        <button class="btn btn-primary col-md-2" onclick="window.location.href='..'">
-            <i class="fas fa-arrow-left"></i> Back to upload page
-        </button>
-    {% endif %}
+        {% if editing %}
+            <button class="btn btn-primary col-md-2" onclick="window.location.href='..'">
+                <i class="fas fa-arrow-left"></i> Back to upload page
+            </button>
+        {% endif %}
     </div>
 
 {% endblock %}
