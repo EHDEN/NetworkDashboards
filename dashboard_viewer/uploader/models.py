@@ -106,6 +106,12 @@ class DataSource(models.Model):
         help_text="Link to home page of the data source"
     )
 
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return self.__str__()
+
 
 def after_data_source_saved(sender, **kwargs):
     """
