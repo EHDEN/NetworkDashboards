@@ -1,8 +1,10 @@
 {% extends "uploader_base.html" %}
 
 {% block title %}
+    {% include "upload_message.html" %}
+    
     <div class="row">
-        <h3 class="col-md-4">
+        <h3 class="col">
             {% if editing %}
                 Edit
             {% else %}
@@ -12,9 +14,11 @@
         </h3>
 
         {% if editing %}
-            <button class="btn btn-primary col-md-2" onclick="window.location.href='..'">
-                <i class="fas fa-arrow-left"></i> Back to upload page
+        <div class="col-auto">
+            <button class="btn btn-primary btn-sm-lg" onclick="window.location.href='..'">
+                <i class="fas fa-arrow-left"></i> Back
             </button>
+        </div>
         {% endif %}
     </div>
 

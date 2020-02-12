@@ -2,49 +2,18 @@
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 
-
-class Continent(models.Model):
-    class Meta:
-        db_table = "continent"
-        ordering = ("continent",)
-
-    iso       = models.CharField(
-        max_length=2,
-        help_text="ISO code."
-    )
-    continent = models.CharField(
-        max_length=40,
-        help_text="Continent name."
-    )
-
-    def __str__(self):
-        return f"{self.continent}"
-
-    def __repr__(self):
-        return self.__str__()
-
-
 class Country(models.Model):
     class Meta:
         db_table = "country"
         ordering = ("country",)
-
-    iso       = models.CharField(
-        max_length=2,
-        help_text="Alpha 2 ISO code.",
-    )
-    iso3      = models.CharField(
-        max_length=3,
-        help_text="Alpha 3 ISO code."
-    )
     country   = models.CharField(
-        max_length=50,
-        help_text="Country name."
+        max_length = 100,
+        unique = True,
+        help_text = "Country name."
     )
-    continent = models.ForeignKey(
-        Continent,
-        on_delete=models.CASCADE,
-        help_text="Continent associated."
+    continent = models.CharField(
+        max_length = 50,
+        help_text = "Continent associated."
     )
 
     def __str__(self):
@@ -61,7 +30,7 @@ class DatabaseType(models.Model):
     type = models.CharField(
         max_length=40,
         unique=True,
-        help_text="Name of the type."
+        help_text="Defines the database type."
     )
 
     def __str__(self):
@@ -70,40 +39,39 @@ class DatabaseType(models.Model):
     def __repr__(self):
         return self.__str__()
 
-
+#Not following the relational rules in the database_type field, but it will simplify the SQL queries in the SQL Lab
 class DataSource(models.Model):
     class Meta:
         db_table = "data_source"
 
-    name          = models.CharField(
-        max_length=40,
-        unique=True,
-        help_text="Name of the data source."
+    name            = models.CharField(
+        max_length  = 40,
+        unique      = True,
+        help_text   = "Name of the data source."
     )
-    slug          = models.SlugField(
-        max_length=10,
-        unique=True,
-        help_text="Short label for the data source, containing only letters, numbers, underscores or hyphens."
+    slug            = models.SlugField(
+        max_length  = 50,
+        unique      = True,
+        help_text   = "Short label for the data source, containing only letters, numbers, underscores or hyphens."
     )
-    release_date  = models.DateField(
-        help_text="Date at which DB is available for research for current release."
+    release_date    = models.DateField(
+        help_text   = "Date at which DB is available for research for current release."
     )
-    database_type = models.ForeignKey(
-        DatabaseType,
-        on_delete=models.SET_NULL,
-        null=True,
-        help_text="Type of the data source. You can create a new type.",
+    database_type   = models.CharField(
+        max_length  = 40,
+        help_text   = "Type of the data source. You can create a new type."
     )
-    country       = models.ForeignKey(
+    country         = models.ForeignKey(
         Country,
-        on_delete=models.SET_NULL,
-        null=True,
-        help_text="Country where the data source is located.",
+        on_delete   = models.SET_NULL,
+        null        = True,
+        help_text   = "Country where the data source is located.",
     )
-    latitude      = models.FloatField()
-    longitude     = models.FloatField()
-    link          = models.URLField(
-        help_text="Link to home page of the data source"
+    latitude        = models.FloatField()
+    longitude       = models.FloatField()
+    link            = models.URLField(
+        help_text   = "Link to home page of the data source",
+        blank       = True
     )
 
 

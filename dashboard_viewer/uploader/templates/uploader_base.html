@@ -27,30 +27,14 @@
                 {% endfor %}
             {% endif %}
 
-            {% include "upload_message.html" %}
-
-            <br>
-
             {% block title %}{% endblock %}
-            {% comment %}
-            <form method="post" enctype="multipart/form-data" action=" ">
-                <div class="image-upload fallback">
-                    <label class="dropzone center" for="file-input">
-                        <img src='{% static "images/uploadCSV.png" %}' style="width: 6rem;"/>
-                        <br/>
-                        <input id="file-input" class="upload_btn" type="file" name="achillesResults" action="">
-                    </label>
-                </div>
-                <br/>
-                <button class="btn btn-lg btn-primary btn-block center" type="submit"><i class="fas fa-file-upload"></i>&nbsp;Upload</button>
-            </form>{% endcomment %}
 
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% bootstrap_form form %}
 
                 {% buttons %}
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary btn-sm-lg">
                         {{ submit_button_text }}
                     </button>
                 {% endbuttons %}
