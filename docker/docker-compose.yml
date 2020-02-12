@@ -7,7 +7,10 @@ services:
       - "${REDIS_PORT}:6379"
     volumes:
       - redis:/data
-
+    networks:
+      - backbone
+      - all
+      
   postgres:
     image: postgres:10
     restart: unless-stopped
@@ -24,6 +27,9 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
       - ./postgres-entrypoint:/docker-entrypoint-initdb.d
+    networks:
+      - backbone
+      - all
 
   superset:
     build:
@@ -38,9 +44,7 @@ services:
       POSTGRES_DB: "${POSTGRES_SUPERSET_DB}"
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      # If using production, comment development volume below
-      #SUPERSET_ENV: production
-      SUPERSET_ENV: development
+      SUPERSET_ENV: "${INSTALLATION_ENV}"
     user: root:root
     ports:
       - "${SUPERSET_PORT}:8088"
@@ -52,6 +56,9 @@ services:
       - ../superset/superset_config.py:/home/superset/superset/superset_config.py
       # this is needed for development, remove with SUPERSET_ENV=production
       - ../../superset:/home/superset/superset
+    networks:
+      - backbone
+      - all
 
   dashboard_viewer:
     build:
@@ -67,9 +74,7 @@ services:
       POSTGRES_ACHILLES_USER: "${POSTGRES_ACHILLES_USER}"
       POSTGRES_ACHILLES_PASSWORD: "${POSTGRES_ACHILLES_PASSWORD}"
       POSTGRES_ACHILLES_DB: "${POSTGRES_ACHILLES_DB}"
-      # If using production, comment development volume below
-      #DASHBOARD_VIEWER_ENV: production
-      DASHBOARD_VIEWER_ENV: development
+      DASHBOARD_VIEWER_ENV: "${INSTALLATION_ENV}"
     ports:
       - "${DASHBOARD_VIEWER_PORT}:8000"
     depends_on:
@@ -77,9 +82,22 @@ services:
     volumes:
       # this is needed for development, remove with DASHBOARD_VIEWER_ENV=production
       - ../dashboard_viewer:/app
+      - ../../achilles_results_files:/home/superset/dashboard_viewer/achilles_results_files
+    networks:
+      - backbone
+      - all
 
 volumes:
   postgres:
     external: false
   redis:
     external: false
+
+networks:
+  backbone:
+    driver: bridge
+  all:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.1.0.0/16 
