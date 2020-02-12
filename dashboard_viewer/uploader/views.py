@@ -103,6 +103,8 @@ def upload_achilles_results(request, *args, **kwargs):
                     "Achilles Results file uploaded with success.",
                 )
 
+                form = AchillesResultsForm()
+
             else:
                 messages.add_message(
                     request,
