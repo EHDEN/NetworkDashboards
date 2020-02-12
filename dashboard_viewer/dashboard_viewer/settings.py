@@ -151,3 +151,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
+
+# uploader app specific settings
+ACHILLES_RESULTS_STORAGE_PATH = "achilles_results_files"

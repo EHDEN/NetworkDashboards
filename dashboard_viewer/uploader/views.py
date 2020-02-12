@@ -1,7 +1,10 @@
 
 import datetime
+import os
+
+from django.conf import settings
 from django.contrib import messages
-from django.shortcuts import redirect, render, render_to_response
+from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
 from django.http import HttpResponseRedirect
 
@@ -82,12 +85,24 @@ def upload_achilles_results(request, *args, **kwargs):
                 latest_upload.save()
                 upload_history = [latest_upload] + list(uploads)
 
+                # save the achilles result file to disk
+                data_source_storage_path = os.path.join(
+                    settings.BASE_DIR,
+                    settings.ACHILLES_RESULTS_STORAGE_PATH,
+                    data_source.slug,
+                )
+                os.makedirs(data_source_storage_path, exist_ok=True)
+                uploadedFile.seek(0, 0)
+                f = open(os.path.join(data_source_storage_path, f"{len(uploads)}.csv"), "wb+")
+                f.write(uploadedFile.read())
+                f.close()
+
                 messages.add_message(
                     request,
                     messages.SUCCESS,
                     "Achilles Results file uploaded with success.",
                 )
-            
+
             else:
                 messages.add_message(
                     request,
