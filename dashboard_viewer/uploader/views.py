@@ -89,7 +89,7 @@ def upload_achilles_results(request, *args, **kwargs):
                 data_source_storage_path = os.path.join(
                     settings.BASE_DIR,
                     settings.ACHILLES_RESULTS_STORAGE_PATH,
-                    data_source.slug,
+                    obj_data_source.slug
                 )
                 os.makedirs(data_source_storage_path, exist_ok=True)
                 uploadedFile.seek(0, 0)
