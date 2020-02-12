@@ -55,7 +55,7 @@ services:
       # this is needed to communicate with the postgres and redis services
       - ../superset/superset_config.py:/home/superset/superset/superset_config.py
       # this is needed for development, remove with SUPERSET_ENV=production
-      - ../../superset:/home/superset/superset
+      - ../superset/superset:/home/superset/superset
     networks:
       - backbone
       - all

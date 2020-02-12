@@ -85,9 +85,9 @@ WSGI_APPLICATION = 'dashboard_viewer.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DEFAULT_POSTGRES_DB', 'postgres'),
-        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
-        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+        'NAME': os.environ.get('POSTGRES_DEFAULT_DB', 'postgres'),
+        'HOST': os.environ.get('POSTGRES_DEFAULT_HOST', 'localhost'),
+        'PORT': os.environ.get('POSTGRES_DEFAULT_PORT', '5432'),
         'USER': os.environ.get('POSTGRES_DEFAULT_USER', 'postgres'),
         'PASSWORD': os.environ.get('POSTGRES_DEFAULT_PASSWORD', 'postgres'),
     },

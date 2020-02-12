@@ -1,8 +1,10 @@
 #!/bin/bash
 
 echo "Setting up superset repo"
+docker_dir=$(pwd)
 git clone https://github.com/apache/incubator-superset ../superset
-cd ../superset && git checkout tags/0.35.1 -b tag0.35.1 && cd ../docker
+cd ../superset && git checkout tags/0.35.1 -b tag0.35.1
+cd $docker_dir
 cp ../superset/contrib/docker/superset_config.py ../superset
 
 echo "Setting up the database for the superset app"
