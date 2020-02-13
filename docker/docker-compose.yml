@@ -6,9 +6,9 @@ services:
     ports:
       - "${REDIS_PORT}:6379"
     volumes:
-      - redis:/data
+      - ../../redis:/data
     networks:
-      - backbone
+            #- backbone
       - all
       
   postgres:
@@ -25,10 +25,10 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - ../../postgres:/var/lib/postgresql/data
       - ./postgres-entrypoint:/docker-entrypoint-initdb.d
     networks:
-      - backbone
+            #- backbone
       - all
 
   superset:
@@ -57,7 +57,7 @@ services:
       # this is needed for development, remove with SUPERSET_ENV=production
       - ../superset/superset:/home/superset/superset
     networks:
-      - backbone
+            #- backbone
       - all
 
   dashboard_viewer:
@@ -74,7 +74,8 @@ services:
       POSTGRES_ACHILLES_USER: "${POSTGRES_ACHILLES_USER}"
       POSTGRES_ACHILLES_PASSWORD: "${POSTGRES_ACHILLES_PASSWORD}"
       POSTGRES_ACHILLES_DB: "${POSTGRES_ACHILLES_DB}"
-      DASHBOARD_VIEWER_ENV: "${INSTALLATION_ENV}"
+      #DASHBOARD_VIEWER_ENV: "${INSTALLATION_ENV}"
+      DASHBOARD_VIEWER_ENV: development #"${INSTALLATION_ENV}"
     ports:
       - "${DASHBOARD_VIEWER_PORT}:8000"
     depends_on:
@@ -84,7 +85,7 @@ services:
       - ../dashboard_viewer:/app
       - ../../achilles_results_files:/home/superset/dashboard_viewer/achilles_results_files
     networks:
-      - backbone
+            #- backbone
       - all
 
 volumes:
@@ -94,8 +95,8 @@ volumes:
     external: false
 
 networks:
-  backbone:
-    driver: bridge
+        # backbone:
+          #driver: bridge
   all:
     ipam:
       driver: default
