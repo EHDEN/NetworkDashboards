@@ -5,6 +5,17 @@ from django.shortcuts import render
 from .models import Tab, TabGroup, Button
 
 
+def convert_button_to_dict(button):
+    final_btn = {}
+    for attr in ["title", "icon"]:
+        final_btn[attr] = getattr(button, attr)
+
+    if isinstance(button, Tab):
+        final_btn["url"] = button.url
+
+    return final_btn
+
+
 class TabsView(views.View):
     template_name = "tabs.html"
 
@@ -24,7 +35,7 @@ class TabsView(views.View):
         for i in range(len(single_tabs))[::-1]:
             tab = single_tabs[i]
             if tab.group is not None:
-                group_mappings[tab.group].append(tab)
+                group_mappings[tab.group].append(convert_button_to_dict(tab))
                 del single_tabs[i]
 
         # merge and convert both single tabs and groups keeping their order
@@ -33,26 +44,48 @@ class TabsView(views.View):
         while groups_idx < len(groups) and single_tabs_idx < len(single_tabs):
             if groups[groups_idx].position == single_tabs[single_tabs_idx].position:
                 if groups[groups_idx].title <= single_tabs[single_tabs_idx].title:
-                    final_menu.append(groups[groups_idx])  # TODO convert to dict
+                    final_menu.append(
+                        (
+                            convert_button_to_dict(groups[groups_idx]),
+                            group_mappings[groups[groups_idx]],
+                        )
+                    )
                     groups_idx += 1
                 else:
-                    final_menu.append(single_tabs[single_tabs_idx])  # TODO convert to dict
+                    final_menu.append(
+                        convert_button_to_dict(single_tabs[single_tabs_idx])
+                    )
                     single_tabs_idx += 1
             elif groups[groups_idx].position < single_tabs[single_tabs_idx].position:
-                final_menu.append(groups[groups_idx])  # TODO convert to dict
+                final_menu.append(
+                    (
+                        convert_button_to_dict(groups[groups_idx]),
+                        group_mappings[groups[groups_idx]],
+                    )
+                )
                 groups_idx += 1
             else:
-                final_menu.append(single_tabs[single_tabs_idx])  # TODO convert to dict
+                final_menu.append(
+                    convert_button_to_dict(single_tabs[single_tabs_idx])
+                )
                 single_tabs_idx += 1
 
         if groups_idx < len(groups) and len(groups) > 0:
             for i in range(groups_idx, len(groups)):
-                final_menu.append(groups[i])  # TODO convert to dict
+                final_menu.append(
+                    (
+                        convert_button_to_dict(groups[i]),
+                        group_mappings[groups[i]],
+                    )
+                )
         elif len(single_tabs) > 0:  # single_tabs_idx < len(single_tabs)
-            final_menu.append(single_tabs[single_tabs_idx:])  # TODO convert to dict
+            for i in range(single_tabs_idx, len(single_tabs)):
+                final_menu.append(
+                    convert_button_to_dict(single_tabs[i])
+                )
 
         context = {
-            "tabs": single_tabs,  # TODO final_menu
+            "tabs": final_menu,
         }
 
         return render(request, self.template_name, context)
