@@ -212,3 +212,10 @@ GitHub.sublime-settings
 
 # Superset repo #
 superset/
+
+# Static files #
+docker/static/
+dashboard_viewer/static/
+
+# Achilles results CSV files #
+dashboard_viewer/achilles_results_files/
