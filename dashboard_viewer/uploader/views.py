@@ -10,8 +10,9 @@ from django.http import HttpResponseRedirect
 
 from .forms import SourceFrom, AchillesResultsForm
 from .models import AchillesResults, UploadHistory, DataSource, AchillesResultsArchive
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 def upload_achilles_results(request, *args, **kwargs):
     data_source = kwargs.get("data_source")
     try:
@@ -124,7 +125,7 @@ def upload_achilles_results(request, *args, **kwargs):
         }
     )
 
-
+@csrf_exempt
 def create_data_source(request, *args, **kwargs):
     data_source = kwargs.get("data_source")
     if request.method == "GET":
@@ -163,7 +164,7 @@ def create_data_source(request, *args, **kwargs):
         }
     )
 
-
+@csrf_exempt
 def edit_data_source(request, *args, **kwargs):
     data_source = kwargs.get("data_source")
     try:

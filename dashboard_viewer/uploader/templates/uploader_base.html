@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
-{% load staticfiles %}
+{% load static %}
 
 {% block head_tail %}
     <link rel="stylesheet" href='{% static "css/main.css" %}' >
@@ -30,8 +30,8 @@
             {% block title %}{% endblock %}
 
             <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% bootstrap_form form %}
+                 
+		{% bootstrap_form form %}
 
                 {% buttons %}
                     <button type="submit" class="btn btn-primary btn-sm-lg">
