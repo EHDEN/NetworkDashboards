@@ -4,13 +4,13 @@
  *  for a specific coordinates field after click on the map
  *  or dragging of the marker
  * 
- * @param {str} name of the field on the django app
- * @param {float} lat latitude of the data source
- * @param {float} lng longitude of the data source
+ * @param {string} name of the field on the django app
+ * @param latlng LatLng leaflet object relative to the coordinates of the data source
  */
-const set_latlng = (name, lat, lng) => {
-    $(`#id_${name}_0`).val(lat);
-    $(`#id_${name}_1`).val(lng);
+const set_latlng = (name, latlng) => {
+    const wrapped_latlng =  L.latLng(latlng).wrap();
+    $(`#id_${name}_0`).val(wrapped_latlng.lat);
+    $(`#id_${name}_1`).val(wrapped_latlng.lng);
 };
 
 $(".coordinates-map").each((index, element) => {
@@ -29,7 +29,7 @@ $(".coordinates-map").each((index, element) => {
         marker = L.marker({"lat":lat, "lng": lng}, {draggable: true});
         marker.addTo(map);
         marker.on("dragend", (dragEvent) => {
-            set_latlng(name, dragEvent.target._latlng.lat, dragEvent.target._latlng.lng);
+            set_latlng(name, dragEvent.target._latlng);
         });
     }
 
@@ -41,9 +41,9 @@ $(".coordinates-map").each((index, element) => {
         marker.addTo(map);
 
         marker.on("dragend", (dragEvent) => {
-            set_latlng(name, dragEvent.target._latlng.lat, dragEvent.target._latlng.lng);
+            set_latlng(name, dragEvent.target._latlng);
         });
 
-        set_latlng(name, e.latlng.lat, e.latlng.lng);
+        set_latlng(name, e.latlng);
     });
 });
