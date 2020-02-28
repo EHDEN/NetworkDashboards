@@ -35,7 +35,7 @@ class TabsView(views.View):
         for i in range(len(single_tabs))[::-1]:
             tab = single_tabs[i]
             if tab.group is not None:
-                group_mappings[tab.group].append(convert_button_to_dict(tab))
+                group_mappings[tab.group].insert(0, convert_button_to_dict(tab))
                 del single_tabs[i]
 
         # merge and convert both single tabs and groups keeping their order

@@ -3,16 +3,20 @@
 
 {% block head_tail %}
     {% load static %}
+    <link rel="stylesheet" href="{% static "simplebar/dist/simplebar.css" %}"/>
     <link href="{% static "css/tabs.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
         <header class="main-head">
-            <nav class="head-nav">
+            <div class="container">
+                <img src="https://www.ehden.eu/wp-content/uploads/2019/03/EHDEN-1.png" style="background: #ffffff">
+            </div>
+            <nav class="head-nav" data-simplebar data-simplebar-auto-hide="false">
                 <ul>
                     {% for tab in tabs %}
                         {% if tab|isinst:"tuple" %}
-                            <li>
+                            <li data-toggle="collapse" href="#tab_group_{{ forloop.counter0 }}" aria-expanded="false">
                                 <div class="li-content">
                                     <div class="icon-div">
                                         <i class="fa fa-{{ tab.0.icon }} icon"></i>
@@ -23,18 +27,20 @@
                                     </span>
                                 </div>
                             </li>
-                            {% for subtab in tab.1 %}
-                                <li url="{{ subtab.url }}">
-                                    <div class="li-content">
-                                        <div class="icon-div">
-                                            <i class="fa fa-{{ subtab.icon }} icon"></i>
+                            <div id="tab_group_{{ forloop.counter0 }}" class="collapse">
+                                {% for subtab in tab.1 %}
+                                    <li url="{{ subtab.url }}">
+                                        <div class="li-content">
+                                            <div class="icon-div">
+                                                <i class="fa fa-{{ subtab.icon }} icon"></i>
+                                            </div>
+                                            <span>
+                                                {{ subtab.title }}
+                                            </span>
                                         </div>
-                                        <span>
-                                            {{ subtab.title }}
-                                        </span>
-                                    </div>
-                                </li>
-                            {% endfor %}
+                                    </li>
+                                {% endfor %}
+                            </div>
                         {% else %}
                             <li url="{{ tab.url }}">
                                 <div class="li-content">
@@ -53,7 +59,7 @@
         </header>
         <div class="content">
             {% if tabs|length > 0 %}
-                <iframe src="{{ tabs.0.url }}"></iframe>
+                <iframe id="main_iframe" src="{{ tabs.0.url }}"></iframe>
             {% else %}
                 <h1 id="no_tabs_header">No visible tabs stored</h1>
             {% endif %}
@@ -61,5 +67,6 @@
 {% endblock %}
 
 {% block body_tail %}
-    <script src="js/tabs.js" type="text/javascript"></script>
+    <script src="{% static "simplebar/dist/simplebar.js" %}"></script>
+    <script src="{% static "js/tabs.js" %}" type="text/javascript"></script>
 {% endblock %}

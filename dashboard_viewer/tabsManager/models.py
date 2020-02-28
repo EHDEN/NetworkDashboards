@@ -12,15 +12,16 @@ class Button(models.Model):
 
     title        = models.CharField(
         max_length=30,
-        help_text="Text to appear on the tab under the icon"
+        help_text="Text to appear on the tab under the icon",
+        unique=True,
     )
     icon         = models.CharField(
         max_length=20,
-        help_text="Font awesome icon v4. Just the end part, e.g. fa-clock-o -> clock-o"
+        help_text="Font awesome icon v5. Just the end part, e.g. fa-clock-o -> clock-o",
     )
     position     = models.PositiveIntegerField()
     visible      = models.BooleanField(
-        help_text="If the tab should be displayed"
+        help_text="If the tab should be displayed",
     )
 
     def __repr__(self):

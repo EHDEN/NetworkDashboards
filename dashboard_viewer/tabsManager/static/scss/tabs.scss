@@ -1,0 +1,180 @@
+$background-color: #003399;
+$background-color-expanded: #3366cc;
+$text-color: #ffffff;
+
+$on-hover-background-color: #6699ff;
+$on-hover-color: #ffffff;
+
+$border-between-buttons-color: #c4c8d6;
+
+$menu-collapsed-width: 100px;
+$menu-expanded-width: 380px;
+
+.simplebar-scrollbar:before {
+  background-color: $text-color;
+}
+
+/* Font awesome icon */
+.icon {
+  font-size: xx-large;
+}
+
+/* Div containing the Font awesome icon */
+.icon-div {
+  width: $menu-collapsed-width;
+  text-align: center;
+  background: $background-color;
+  z-index: 10;
+  flex-shrink: 0;
+  -webkit-transition: background-color 400ms;
+  transition: background-color 400ms;
+}
+
+/* Expand arrow to mark buttons expandable buttons */
+.expand-icon {
+  font-size: x-large;
+  float: right;
+}
+
+/* These two classes are inserted through js */
+.hovered-text {
+  color: $on-hover-color;
+}
+.hovered-background {
+  background-color: $on-hover-background-color;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+/* header element */
+.main-head {
+  position: fixed;
+  bottom: 0;
+  width: $menu-collapsed-width;
+  height: 100%;
+  z-index: 1;
+  background: $background-color;
+  -webkit-transition: width 400ms;
+  transition: width 400ms;
+
+  /* Color of buttons within a group */
+  .collapse, .collapsing {
+    background: $background-color-expanded;
+
+    .icon-div {
+      background-color: $background-color-expanded;
+    }
+    /* repeated because of css precedence */
+    .icon-div.hovered-background {
+      @extend .hovered-background;
+    }
+  }
+
+  &:hover {
+    width: $menu-expanded-width;
+
+    .head-nav span {
+      width: 100%;
+      padding-right: 20px;
+      text-indent: 0; /* initially is at -20*/
+    }
+
+    & + .content {
+      -webkit-transform: translateX($menu-expanded-width - $menu-collapsed-width);
+      transform: translateX($menu-expanded-width - $menu-collapsed-width);
+      max-width: 100%;
+      opacity: 0.4;
+    }
+  }
+}
+
+/* nav element, inside the header element */
+.head-nav {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc(100% - 50px);
+
+  /* menu list */
+  ul {
+    margin: 1.85rem 0 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Each button entry on the menu list */
+  li {
+    position: relative;
+    clear: both;
+    width: 100%;
+    padding: 0;
+    -webkit-transition: 400ms;
+    transition: 400ms;
+    border-bottom: $border-between-buttons-color solid 1px;
+
+    &:before {
+      position: absolute;
+      left: -0.925rem;
+      top: 0;
+      width: 0.925rem;
+      height: 100%;
+      background: $background-color;
+      z-index: 1;
+      -webkit-transition: background 400ms;
+      transition: background 400ms;
+    }
+
+    &:first-of-type {
+      border-top: $border-between-buttons-color solid 1px;
+    }
+
+    /* Div inside the li */
+    .li-content {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      padding-top: 2vh;
+      padding-bottom: 2vh;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      width: 100%;
+      color: $text-color;
+      text-decoration: none;
+      -webkit-transition: color 400ms;
+      transition: color 400ms;
+
+      /* Button title */
+      span {
+        position: relative;
+        display: block;
+        z-index: 0;
+        text-indent: -20em;
+        white-space: nowrap;
+        -webkit-transition: text-indent 400ms ease-in-out;
+        transition: text-indent 400ms ease-in-out;
+      }
+    }
+  }
+}
+
+/* Everything other than the side menu */
+.content {
+  min-height: 100%;
+  height: 100%;
+  padding-left: $menu-collapsed-width;
+  margin-top: 0;
+  -webkit-transition: transform 400ms, opacity 400ms, -webkit-transform 400ms;
+  transition: transform 400ms, opacity 400ms, -webkit-transform 400ms;
+}
+
+iframe#main_iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
