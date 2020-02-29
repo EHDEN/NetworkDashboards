@@ -59,7 +59,12 @@
         </header>
         <div class="content">
             {% if tabs|length > 0 %}
-                <iframe id="main_iframe" src="{{ tabs.0.url }}"></iframe>
+                <iframe id="main_iframe" class="fill-all-space hide"></iframe>
+                <div id="loading_screen" class="fill-all-space center-content">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
             {% else %}
                 <h1 id="no_tabs_header">No visible tabs stored</h1>
             {% endif %}

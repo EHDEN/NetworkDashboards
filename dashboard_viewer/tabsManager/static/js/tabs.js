@@ -54,12 +54,50 @@ $(".head-nav li:not([aria-expanded])").click(event => {
     }
 
     clicked = liClicked;
+    window.location.hash = clicked.find("span").text().trim();
     updateHoverClasses(clicked, "add");
 
-    const url = liClicked.attr("url");
-    const iframe = $("#main_iframe");
-    iframe.attr("src", url);
-    iframe.on("load", event => {
-        console.log("done");
-    })
+    $("#main_iframe")
+        .addClass("hide")
+        .attr("src", clicked.attr("url"));
+    $("#loading_screen").removeClass("hide");
+});
+
+
+$("#main_iframe").on("load", event => {
+    $("#loading_screen").addClass("hide");
+    $("#main_iframe").removeClass("hide");
+});
+
+$(document).ready(event => {
+    let preSelectedTab = false;
+
+    const candidatesToDisplay = $(".head-nav li:not([aria-expanded])");
+    if (window.location.hash) {
+        const tabToDisplayTitle = decodeURI(window.location.hash.substr(1));
+        for (let li of candidatesToDisplay) {
+            li = $(li);
+            const title = li.find("span").text().trim();
+
+            if (title === tabToDisplayTitle) {
+                clicked = li;
+                updateHoverClasses(clicked, "add");
+                $("#main_iframe").attr("src", clicked.attr("url"));
+                preSelectedTab = true;
+                break;
+            }
+        }
+    }
+
+    if (!preSelectedTab) {
+        clicked = candidatesToDisplay.first();
+        window.location.hash = clicked.find("span").text().trim();
+        updateHoverClasses(clicked, "add");
+        $("#main_iframe").attr("src", clicked.attr("url"));
+    }
+
+    const clickedParent = clicked.parent();
+    if (!clickedParent.is("ul")) {
+        clickedParent.collapse("toggle");
+    }
 });
