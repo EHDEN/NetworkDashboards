@@ -5,9 +5,13 @@
 {% block head_tail %}
     <link rel="stylesheet" href='{% static "css/main.css" %}' >
     {{ form.media.css }}
+    <link rel="stylesheet" href='{% static "css/uploader.css" %}' >
 {% endblock %}
 
 {% block content %}
+
+    {% include "uploader_loading.html" %}
+
     <div class="grad">
         {% include "header.html" %}
 
@@ -29,12 +33,12 @@
 
             {% block title %}{% endblock %}
 
-            <form method="POST" enctype="multipart/form-data">
+            <form id="uploadForm" method="POST" enctype="multipart/form-data">
                  
-		{% bootstrap_form form %}
+                {% bootstrap_form form %}
 
                 {% buttons %}
-                    <button type="submit" class="btn btn-primary btn-sm-lg">
+                    <button type="submit" class="btn btn-primary btn-sm-lg" >
                         {{ submit_button_text }}
                     </button>
                 {% endbuttons %}
@@ -47,4 +51,5 @@
 
 {% block body_tail %}
     {{ form.media.js }}
+    <script src="{% static 'js/uploader.js' %}"></script>  
 {% endblock %}
