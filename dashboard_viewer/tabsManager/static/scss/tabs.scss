@@ -3,7 +3,7 @@ $background-color-expanded: #3366cc;
 $text-color: #ffffff;
 
 $on-hover-background-color: #6699ff;
-$on-hover-color: #ffffff;
+$on-hover-text-color: #ffffff;
 
 $border-between-buttons-color: #c4c8d6;
 
@@ -24,7 +24,7 @@ $menu-expanded-width: 380px;
   width: $menu-collapsed-width;
   text-align: center;
   background: $background-color;
-  z-index: 10;
+  z-index: 1; /* To be on top of the title */
   flex-shrink: 0;
   -webkit-transition: background-color 400ms;
   transition: background-color 400ms;
@@ -38,7 +38,7 @@ $menu-expanded-width: 380px;
 
 /* These two classes are inserted through js */
 .hovered-text {
-  color: $on-hover-color;
+  color: $on-hover-text-color;
 }
 .hovered-background {
   background-color: $on-hover-background-color;
@@ -58,40 +58,7 @@ body {
   bottom: 0;
   width: $menu-collapsed-width;
   height: 100%;
-  z-index: 1;
   background: $background-color;
-  -webkit-transition: width 400ms;
-  transition: width 400ms;
-
-  /* Color of buttons within a group */
-  .collapse, .collapsing {
-    background: $background-color-expanded;
-
-    .icon-div {
-      background-color: $background-color-expanded;
-    }
-    /* repeated because of css precedence */
-    .icon-div.hovered-background {
-      @extend .hovered-background;
-    }
-  }
-
-  &:hover {
-    width: $menu-expanded-width;
-
-    .head-nav span {
-      width: 100%;
-      padding-right: 20px;
-      text-indent: 0; /* initially is at -20*/
-    }
-
-    & + .content {
-      -webkit-transform: translateX($menu-expanded-width - $menu-collapsed-width);
-      transform: translateX($menu-expanded-width - $menu-collapsed-width);
-      max-width: 100%;
-      opacity: 0.4;
-    }
-  }
 }
 
 /* nav element, inside the header element */
@@ -109,25 +76,11 @@ body {
 
   /* Each button entry on the menu list */
   li {
-    position: relative;
-    clear: both;
-    width: 100%;
-    padding: 0;
+    width: $menu-collapsed-width;
     -webkit-transition: 400ms;
     transition: 400ms;
     border-bottom: $border-between-buttons-color solid 1px;
-
-    &:before {
-      position: absolute;
-      left: -0.925rem;
-      top: 0;
-      width: 0.925rem;
-      height: 100%;
-      background: $background-color;
-      z-index: 1;
-      -webkit-transition: background 400ms;
-      transition: background 400ms;
-    }
+    z-index: 999999999999999999;
 
     &:first-of-type {
       border-top: $border-between-buttons-color solid 1px;
@@ -143,22 +96,44 @@ body {
       -webkit-box-align: center;
       -ms-flex-align: center;
       align-items: center;
-      width: 100%;
       color: $text-color;
-      text-decoration: none;
       -webkit-transition: color 400ms;
       transition: color 400ms;
 
       /* Button title */
       span {
-        position: relative;
-        display: block;
-        z-index: 0;
+        width: 100%;
         text-indent: -20em;
         white-space: nowrap;
         -webkit-transition: text-indent 400ms ease-in-out;
         transition: text-indent 400ms ease-in-out;
       }
+    }
+
+    &:hover {
+      width: $menu-expanded-width;
+
+      .li-content span {
+        padding-right: 20px;
+        text-indent: 0; /* initially is at -20*/
+      }
+
+      & + .content {
+        opacity: 0.4;
+      }
+    }
+  }
+
+  /* Color of buttons within a group */
+  .collapse, .collapsing {
+    background: $background-color-expanded;
+
+    .icon-div {
+      background-color: $background-color-expanded;
+    }
+    /* repeated because of css precedence */
+    .icon-div.hovered-background {
+      @extend .hovered-background;
     }
   }
 }

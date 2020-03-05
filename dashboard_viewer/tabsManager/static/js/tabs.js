@@ -1,6 +1,6 @@
 
 // keep track of the current li clicked
-let clicked;
+var clicked;
 
 function updateHoverClasses(target, action) {
     if (action === "add") {
