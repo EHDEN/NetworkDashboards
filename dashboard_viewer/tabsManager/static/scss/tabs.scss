@@ -44,15 +44,15 @@ $border-radius: 20px;
   color: $on-hover-text-color;
 }
 .hovered-background {
-  background-color: $on-hover-background-color;
+  background-color: $on-hover-background-color !important;
 }
 
 /* Css to apply when a button is hovered */
-.top-group-li-hovered {
+.tab-group-hovered {
   width: $menu-expanded-width !important;
   border-top-right-radius: $border-radius;
 }
-.no-group-li-hovered {
+.tab-single-hovered {
   width: $menu-expanded-width !important;
   border-top-right-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
@@ -97,69 +97,47 @@ body {
     list-style: none;
   }
 
-  li {
-    display: block;
+  .tab {
+    width: $menu-collapsed-width;
     position: relative;
     pointer-events: auto;
     border-bottom: $border-between-buttons-color solid 1px;
     -webkit-transition: 400ms;
     transition: 400ms;
 
+    display: flex;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    -webkit-box-align: center;
+    align-items: center;
+    color: $text-color;
+
     &:first-of-type {
       border-top: $border-between-buttons-color solid 1px;
     }
 
-    /* Div inside the li */
-    .li-content {
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      padding-top: 2vh;
-      padding-bottom: 2vh;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-      align-items: center;
-      color: $text-color;
-      -webkit-transition: color 400ms;
-      transition: color 400ms;
-
-      /* Button title */
-      span {
-        width: 100%;
-        white-space: nowrap;
-      }
+    /* Button title */
+    span {
+      width: 100%;
+      white-space: nowrap;
+      text-indent: -20em;
+      -webkit-transition: text-indent 400ms ease-in-out;
+      transition: text-indent 400ms ease-in-out;
     }
   }
 
-  .top-group-li, .no-group-li {
-    width: $menu-collapsed-width;
-
-    .li-content {
-      span {
-        text-indent: -20em;
-        -webkit-transition: text-indent 400ms ease-in-out;
-        transition: text-indent 400ms ease-in-out;
-      }
-    }
+  .tab-group, .tab-single {
+    background-color: $background-color;
   }
 
-  /* Color of buttons within a group */
-  .collapse, .collapsing {
+  .tab-within-group {
     background: $background-color-groups;
-    border-bottom-right-radius: $border-radius;
-
-    li:last-of-type {
-      border-bottom-right-radius: $border-radius;
-    }
 
     .icon-div {
       background-color: $background-color-groups;
     }
-    /* repeated because of css precedence */
-    .icon-div.hovered-background {
-      @extend .hovered-background;
-    }
   }
+
 }
 
 /* Everything other than the side menu */

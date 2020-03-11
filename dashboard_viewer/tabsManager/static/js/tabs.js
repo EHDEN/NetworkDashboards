@@ -2,8 +2,7 @@
 // keep track of the current li clicked
 let clicked;
 
-// keep track of what groups are expanded
-let groupsExpanded = [];
+let hoveredGroup;
 
 function updateHoverClasses(target, action) {
     if (action === "add") {
@@ -24,7 +23,7 @@ function updateHoverClasses(target, action) {
     }
 }
 
-$(".head-nav li").hover(
+$(".head-nav .tab").hover(
     event => {
         // display the scrollbar if it is needed (elements extend the max height)
         if ($(".simplebar-track.simplebar-vertical").css("visibility") === "visible") {
@@ -34,55 +33,53 @@ $(".head-nav li").hover(
         const hovered = $(event.currentTarget);
         updateHoverClasses(hovered, "add");
 
-        if (hovered.hasClass("top-group-li")) {
-            hovered.addClass("top-group-li-hovered");
-            hovered.find(".li-content span").addClass("span-on-li-hovered");
+        if (hovered.hasClass("tab-group")) {
+            hovered.addClass("tab-group-hovered");
+            hovered.find("span").addClass("span-on-li-hovered");
         }
-        else if (hovered.hasClass("no-group-li")) {
-            hovered.addClass("no-group-li-hovered");
-            hovered.find(".li-content span").addClass("span-on-li-hovered");
-        }
-
-        for (let i = 0; i < groupsExpanded.length; i++) {
-            if (groupsExpanded[i].is(hovered)) {
-                break;
-            }
+        else if (hovered.hasClass("tab-single")) {
+            hovered.addClass("tab-single-hovered");
+            hovered.find("span").addClass("span-on-li-hovered");
         }
     },
     event => {
         // hide the scrollbar when collapsing the side menu
-        $(".simplebar-scrollbar").removeClass("simplebar-visible");
+        $(".simplebar-scrollbar").removeClass("simplebar-visible"); // TODO move this to hover out of nav-head
 
         const hovered = $(event.currentTarget);
-
-        if (hovered.hasClass("top-group-li")) {
-            hovered.removeClass("top-group-li-hovered");
-            hovered.find(".li-content span").removeClass("span-on-li-hovered");
-        }
-        else if (hovered.hasClass("no-group-li")) {
-            hovered.removeClass("no-group-li-hovered");
-            hovered.find(".li-content span").removeClass("span-on-li-hovered");
-        }
 
         if (hovered.is(clicked)) {
             return;
         }
         updateHoverClasses(hovered, "remove");
+
+        if (hovered.parents().is(hoveredGroup)) {
+            return;
+        }
+
+        if (hovered.hasClass("tab-group")) {
+            hovered.removeClass("tab-group-hovered");
+            hovered.find("span").removeClass("span-on-li-hovered");
+        }
+        else if (hovered.hasClass("tab-single")) {
+            hovered.removeClass("tab-single-hovered");
+            hovered.find("span").removeClass("span-on-li-hovered");
+        }
     },
 );
 
-$(".head-nav li:not(.top-group-li)").click(event => {
-    const liClicked = $(event.currentTarget);
+$(".head-nav .tab-with-url").click(event => {
+    const tabClicked = $(event.currentTarget);
 
     if (clicked) {
-        if (liClicked.is(clicked)) {
+        if (tabClicked.is(clicked)) {
             return;
         }
 
         updateHoverClasses(clicked, "remove");
     }
 
-    clicked = liClicked;
+    clicked = tabClicked;
     window.location.hash = clicked.find("span").text().trim();
     updateHoverClasses(clicked, "add");
 
@@ -92,22 +89,44 @@ $(".head-nav li:not(.top-group-li)").click(event => {
     $("#loading_screen").removeClass("hide");
 });
 
-$(".head-nav li.top-group-li").click(event => {
-    const clicked = $(event.currentTarget);
-    const wasExpanded = clicked.attr("aria-expanded");
+$(".head-nav .group").hover(
+    event => {
+        hoveredGroup = $(event.currentTarget);
 
-    if (wasExpanded === "false") {
-        groupsExpanded.push(clicked);
-    }
-    else {
-        for (let i = 0; i < groupsExpanded.length; i++) {
-            if (groupsExpanded[i].is(clicked)) {
-                groupsExpanded.splice(i, 1);
-                break;
+        const groupTop = hoveredGroup.children().first();
+        groupTop.addClass("tab-group-hovered");
+        groupTop.find("span").addClass("span-on-li-hovered");
+
+        const subTabs = hoveredGroup.children().last().children();
+        for (let i = 0; i < subTabs.length; i++) {
+            const tab = $(subTabs[i]);
+
+            tab.css("width", "380px");
+            if (i === subTabs.length - 1) { // last
+                tab.css("border-bottom-right-radius", "20px");
             }
+            tab.find("span").addClass("span-on-li-hovered")
         }
-    }
-});
+    },
+    event => {
+        const groupTop = hoveredGroup.children().first();
+        groupTop.removeClass("tab-group-hovered");
+        groupTop.find("span").removeClass("span-on-li-hovered");
+
+        const subTabs = hoveredGroup.children().last().children();
+        for (let i = 0; i < subTabs.length; i++) {
+            const tab = $(subTabs[i]);
+
+            tab.css("width", "100px"); // TODO use classes here
+            if (i === subTabs.length - 1) { // last
+                tab.css("border-bottom-right-radius", "");
+            }
+            tab.find("span").removeClass("span-on-li-hovered")
+        }
+
+        hoveredGroup = undefined;
+    },
+);
 
 $("#main_iframe").on("load", event => {
     $("#loading_screen").addClass("hide");
@@ -117,15 +136,15 @@ $("#main_iframe").on("load", event => {
 $(document).ready(event => {
     let preSelectedTab = false;
 
-    const candidatesToDisplay = $(".head-nav li:not([aria-expanded])");
+    const candidatesToDisplay = $(".head-nav .tab-with-url");
     if (window.location.hash) {
         const tabToDisplayTitle = decodeURI(window.location.hash.substr(1));
-        for (let li of candidatesToDisplay) {
-            li = $(li);
-            const title = li.find("span").text().trim();
+        for (let tab of candidatesToDisplay) {
+            tab = $(tab);
+            const title = tab.find("span").text().trim();
 
             if (title === tabToDisplayTitle) {
-                clicked = li;
+                clicked = tab;
                 updateHoverClasses(clicked, "add");
                 $("#main_iframe").attr("src", clicked.attr("url"));
                 preSelectedTab = true;
@@ -135,14 +154,14 @@ $(document).ready(event => {
     }
 
     if (!preSelectedTab) {
-        clicked = candidatesToDisplay.first();
+        clicked = candidatesToDisplay.first(); // TODO this can be a group tab
         window.location.hash = clicked.find("span").text().trim();
         updateHoverClasses(clicked, "add");
         $("#main_iframe").attr("src", clicked.attr("url"));
     }
 
     const clickedParent = clicked.parent();
-    if (!clickedParent.is("ul")) {
+    if (clickedParent.hasClass("collapse")) {
         clickedParent.collapse("toggle");
     }
 });
