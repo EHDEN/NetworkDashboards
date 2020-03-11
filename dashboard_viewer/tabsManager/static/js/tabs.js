@@ -1,6 +1,9 @@
 
 // keep track of the current li clicked
-var clicked;
+let clicked;
+
+// keep track of what groups are expanded
+let groupsExpanded = [];
 
 function updateHoverClasses(target, action) {
     if (action === "add") {
@@ -28,13 +31,39 @@ $(".head-nav li").hover(
             $(".simplebar-scrollbar").addClass("simplebar-visible");
         }
 
-        updateHoverClasses($(event.currentTarget), "add");
+        const hovered = $(event.currentTarget);
+        updateHoverClasses(hovered, "add");
+
+        if (hovered.hasClass("top-group-li")) {
+            hovered.addClass("top-group-li-hovered");
+            hovered.find(".li-content span").addClass("span-on-li-hovered");
+        }
+        else if (hovered.hasClass("no-group-li")) {
+            hovered.addClass("no-group-li-hovered");
+            hovered.find(".li-content span").addClass("span-on-li-hovered");
+        }
+
+        for (let i = 0; i < groupsExpanded.length; i++) {
+            if (groupsExpanded[i].is(hovered)) {
+                break;
+            }
+        }
     },
     event => {
         // hide the scrollbar when collapsing the side menu
         $(".simplebar-scrollbar").removeClass("simplebar-visible");
 
         const hovered = $(event.currentTarget);
+
+        if (hovered.hasClass("top-group-li")) {
+            hovered.removeClass("top-group-li-hovered");
+            hovered.find(".li-content span").removeClass("span-on-li-hovered");
+        }
+        else if (hovered.hasClass("no-group-li")) {
+            hovered.removeClass("no-group-li-hovered");
+            hovered.find(".li-content span").removeClass("span-on-li-hovered");
+        }
+
         if (hovered.is(clicked)) {
             return;
         }
@@ -42,7 +71,7 @@ $(".head-nav li").hover(
     },
 );
 
-$(".head-nav li:not([aria-expanded])").click(event => {
+$(".head-nav li:not(.top-group-li)").click(event => {
     const liClicked = $(event.currentTarget);
 
     if (clicked) {
@@ -63,6 +92,22 @@ $(".head-nav li:not([aria-expanded])").click(event => {
     $("#loading_screen").removeClass("hide");
 });
 
+$(".head-nav li.top-group-li").click(event => {
+    const clicked = $(event.currentTarget);
+    const wasExpanded = clicked.attr("aria-expanded");
+
+    if (wasExpanded === "false") {
+        groupsExpanded.push(clicked);
+    }
+    else {
+        for (let i = 0; i < groupsExpanded.length; i++) {
+            if (groupsExpanded[i].is(clicked)) {
+                groupsExpanded.splice(i, 1);
+                break;
+            }
+        }
+    }
+});
 
 $("#main_iframe").on("load", event => {
     $("#loading_screen").addClass("hide");

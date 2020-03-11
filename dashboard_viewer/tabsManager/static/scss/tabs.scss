@@ -1,5 +1,5 @@
 $background-color: #003399;
-$background-color-expanded: #3366cc;
+$background-color-groups: #3366cc;
 $text-color: #ffffff;
 
 $on-hover-background-color: #6699ff;
@@ -9,6 +9,8 @@ $border-between-buttons-color: #c4c8d6;
 
 $menu-collapsed-width: 100px;
 $menu-expanded-width: 380px;
+
+$border-radius: 20px;
 
 .simplebar-scrollbar:before {
   background-color: $text-color;
@@ -30,19 +32,36 @@ $menu-expanded-width: 380px;
   transition: background-color 400ms;
 }
 
-/* Expand arrow to mark buttons expandable buttons */
+/* Expand arrow to mark buttons as expandable */
 .expand-icon {
   font-size: x-large;
   float: right;
 }
 
-/* These two classes are inserted through js */
+/* --- Begin: These classes are inserted through js --- */
+/* Classes to specify the color in different states  */
 .hovered-text {
   color: $on-hover-text-color;
 }
 .hovered-background {
   background-color: $on-hover-background-color;
 }
+
+/* Css to apply when a button is hovered */
+.top-group-li-hovered {
+  width: $menu-expanded-width !important;
+  border-top-right-radius: $border-radius;
+}
+.no-group-li-hovered {
+  width: $menu-expanded-width !important;
+  border-top-right-radius: $border-radius;
+  border-bottom-right-radius: $border-radius;
+}
+.span-on-li-hovered {
+  padding-right: 20px;
+  text-indent: 0 !important; /* initially is at -20*/
+}
+/* --- End: These two classes are inserted through js --- */
 
 html,
 body {
@@ -57,15 +76,19 @@ body {
   position: fixed;
   bottom: 0;
   width: $menu-collapsed-width;
+  margin-right: $menu-expanded-width - $menu-collapsed-width;
   height: 100%;
   background: $background-color;
 }
+
 
 /* nav element, inside the header element */
 .head-nav {
   overflow-y: auto;
   overflow-x: hidden;
   height: calc(100% - 50px);
+  width: $menu-expanded-width;
+  pointer-events: none;
 
   /* menu list */
   ul {
@@ -74,13 +97,13 @@ body {
     list-style: none;
   }
 
-  /* Each button entry on the menu list */
   li {
-    width: $menu-collapsed-width;
+    display: block;
+    position: relative;
+    pointer-events: auto;
+    border-bottom: $border-between-buttons-color solid 1px;
     -webkit-transition: 400ms;
     transition: 400ms;
-    border-bottom: $border-between-buttons-color solid 1px;
-    z-index: 999999999999999999;
 
     &:first-of-type {
       border-top: $border-between-buttons-color solid 1px;
@@ -103,33 +126,34 @@ body {
       /* Button title */
       span {
         width: 100%;
-        text-indent: -20em;
         white-space: nowrap;
-        -webkit-transition: text-indent 400ms ease-in-out;
-        transition: text-indent 400ms ease-in-out;
       }
     }
+  }
 
-    &:hover {
-      width: $menu-expanded-width;
+  .top-group-li, .no-group-li {
+    width: $menu-collapsed-width;
 
-      .li-content span {
-        padding-right: 20px;
-        text-indent: 0; /* initially is at -20*/
-      }
-
-      & + .content {
-        opacity: 0.4;
+    .li-content {
+      span {
+        text-indent: -20em;
+        -webkit-transition: text-indent 400ms ease-in-out;
+        transition: text-indent 400ms ease-in-out;
       }
     }
   }
 
   /* Color of buttons within a group */
   .collapse, .collapsing {
-    background: $background-color-expanded;
+    background: $background-color-groups;
+    border-bottom-right-radius: $border-radius;
+
+    li:last-of-type {
+      border-bottom-right-radius: $border-radius;
+    }
 
     .icon-div {
-      background-color: $background-color-expanded;
+      background-color: $background-color-groups;
     }
     /* repeated because of css precedence */
     .icon-div.hovered-background {
@@ -176,6 +200,6 @@ body {
   -webkit-box-align:center;
 }
 
-.bootstrap-primary {
-  color: #007bff;
+iframe {
+  pointer-events: auto;
 }

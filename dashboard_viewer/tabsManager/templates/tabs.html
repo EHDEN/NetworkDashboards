@@ -16,7 +16,7 @@
                 <ul>
                     {% for tab in tabs %}
                         {% if tab|isinst:"tuple" %}
-                            <li data-toggle="collapse" href="#tab_group_{{ forloop.counter0 }}" aria-expanded="false">
+                            <li class="top-group-li" data-toggle="collapse" href="#tab_group_{{ forloop.counter0 }}" aria-expanded="false">
                                 <div class="li-content">
                                     <div class="icon-div">
                                         <i class="fa fa-{{ tab.0.icon }} icon"></i>
@@ -26,23 +26,23 @@
                                         <i class="fa fa-angle-down expand-icon"></i>
                                     </span>
                                 </div>
-                            </li>
-                            <div id="tab_group_{{ forloop.counter0 }}" class="collapse">
-                                {% for subtab in tab.1 %}
-                                    <li url="{{ subtab.url }}">
-                                        <div class="li-content">
-                                            <div class="icon-div">
-                                                <i class="fa fa-{{ subtab.icon }} icon"></i>
-                                            </div>
-                                            <span>
+                                <div id="tab_group_{{ forloop.counter0 }}" class="collapse">
+                                    {% for subtab in tab.1 %}
+                                        <div class="within-group-li" url="{{ subtab.url }}">
+                                            <div class="li-content">
+                                                <div class="icon-div">
+                                                    <i class="fa fa-{{ subtab.icon }} icon"></i>
+                                                </div>
+                                                <span>
                                                 {{ subtab.title }}
                                             </span>
+                                            </div>
                                         </div>
-                                    </li>
-                                {% endfor %}
-                            </div>
+                                    {% endfor %}
+                                </div>
+                            </li>
                         {% else %}
-                            <li url="{{ tab.url }}">
+                            <li class="no-group-li" url="{{ tab.url }}">
                                 <div class="li-content">
                                     <div class="icon-div">
                                         <i class="fa fa-{{ tab.icon }} icon"></i>
