@@ -2,13 +2,28 @@
 
 {% block title %}
     <div class="row">
-        <h3 class="col-md-3">Data Source: {{ data_source }}</h3>
-        <button class="btn btn-warning col-md-2" onclick="window.location='edit/'">
-            <i class="far fa-edit"></i> Edit
-        </button>
+        <h3 class="col">Data Source: {{ obj_data_source.name }}</h3>
+        <div class="col-auto">
+            <button class="btn btn-warning btn-sm-lg" onclick="window.location='edit/'">
+                <i class="far fa-edit"></i> Edit
+            </button>
+        </div>
     </div>
-
+    <div class="row">
+        <div class="col">
+            <p><b>Database type:</b> {{ obj_data_source.database_type }}</p>
+        </div>
+        <div class="col">
+            <p><b>Country:</b> {{ obj_data_source.country }}</p>
+        </div>
+        <div class="col-auto">
+            <p><b>Release date:</b> {{ obj_data_source.release_date }}</p>
+        </div>
+    </div>
     <hr/>
+
+
+
     <h3>Upload a new achilles results file</h3>
 {% endblock %}
 
@@ -20,7 +35,7 @@
         {% if upload_history|length > 0 %}
             <table class="table">
                 <tr>
-                    <th>Date</th>
+                    <th>Upload Date</th>
                     <th>Achilles Version</th>
                     <th>Achilles Generation Date</th>
                     <th>CDM Version</th>
@@ -28,7 +43,7 @@
                 </tr>
                 {% for up_hi in upload_history %}
                     <tr>
-                        <td>{{ up_hi.date }}</td>
+                        <td>{{ up_hi.upload_date }}</td>
                         <td>{{ up_hi.achilles_version }}</td>
                         <td>{{ up_hi.achilles_generation_date }}</td>
                         <td>{{ up_hi.cdm_version }}</td>

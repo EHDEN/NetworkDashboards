@@ -25,7 +25,7 @@ from .SECRET_KEY import SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DASHBOARD_VIEWER_ENV", "development") == "development"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -86,19 +86,19 @@ WSGI_APPLICATION = 'dashboard_viewer.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DEFAULT_POSTGRES_DB', 'postgres'),
-        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
-        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
-        'USER': os.environ.get('POSTGRES_DEFAULT_USER', 'postgres'),
-        'PASSWORD': os.environ.get('POSTGRES_DEFAULT_PASSWORD', 'postgres'),
+        'NAME': os.environ.get('POSTGRES_DEFAULT_DB', 'cdm'),
+        'HOST': os.environ.get('POSTGRES_DEFAULT_HOST', 'localhost'),
+        'PORT': os.environ.get('POSTGRES_DEFAULT_PORT', '5432'),
+        'USER': os.environ.get('POSTGRES_DEFAULT_USER', 'cdm'),
+        'PASSWORD': os.environ.get('POSTGRES_DEFAULT_PASSWORD', 'cdm'),
     },
     'achilles': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('POSTGRES_ACHILLES_DB', 'achilles'),
         'HOST': os.environ.get('POSTGRES_ACHILLES_HOST', 'localhost'),
         'PORT': os.environ.get('POSTGRES_ACHILLES_PORT', '5432'),
-        'USER': os.environ.get('POSTGRES_ACHILLES_USER', 'postgres'),
-        'PASSWORD': os.environ.get('POSTGRES_ACHILLES_PASSWORD', 'postgres'),
+        'USER': os.environ.get('POSTGRES_ACHILLES_USER', 'achilles'),
+        'PASSWORD': os.environ.get('POSTGRES_ACHILLES_PASSWORD', 'achilles'),
     }
 }
 
@@ -156,3 +156,6 @@ STATICFILES_FINDERS = (
 # Media files (Uploaded images, ...)
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# Uploader app specific settings
+ACHILLES_RESULTS_STORAGE_PATH = "achilles_results_files"
