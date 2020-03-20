@@ -9,10 +9,17 @@
 
 {% block content %}
         <header class="main-head">
-            <div class="container">
-                <img src="https://www.ehden.eu/wp-content/uploads/2019/03/EHDEN-1.png" style="background: #ffffff">
-            </div>
-            <nav class="head-nav" data-simplebar data-simplebar-auto-hide="false">
+            {% if logo %}
+                <style rel="stylesheet">
+                    img#logo:hover {
+                        {{ logo.imageOnHoverCss }}
+                    }
+                </style>
+                <div id="logo-container" {% if logo.imageContainerCss %}style="{{ logo.imageContainerCss }}"{% endif %}>
+                    <img id="logo" {% if logo.imageCss %}style="{{ logo.imageCss }}"{% endif %} src="{{ logo.imageSrc }}">
+                </div>
+            {% endif %}
+            <nav class="head-nav" data-simplebar data-simplebar-auto-hide="false" data-simplebar-scrollbar-max-size="700">
                 <ul>
                     {% for tab in tabs %}
                         {% if tab|isinst:"tuple" %}
@@ -64,7 +71,9 @@
                     </div>
                 </div>
             {% else %}
-                <h1 id="no_tabs_header">No visible tabs stored</h1>
+                <div class="fill-all-space center-content">
+                    <h1>No visible tabs available</h1>
+                </div>
             {% endif %}
         </div>
 {% endblock %}

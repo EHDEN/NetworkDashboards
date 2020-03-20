@@ -15,6 +15,9 @@ $border-radius: 20px;
 .simplebar-scrollbar:before {
   background-color: $text-color;
 }
+.simplebar-track {
+  left: 0;
+}
 
 /* Font awesome icon */
 .icon {
@@ -48,26 +51,33 @@ $border-radius: 20px;
 }
 
 /* Css to apply when a button is hovered */
-.tab-group-hovered {
+.nav-hovered-width {
   width: $menu-expanded-width !important;
+}
+.tab-group-hovered-border-radius {
   border-top-right-radius: $border-radius;
 }
-.tab-single-hovered {
-  width: $menu-expanded-width !important;
+.tab-single-hovered-border-radius {
   border-top-right-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
 }
-.span-on-li-hovered {
+.last-tab-within-group-border-radius {
+  border-bottom-right-radius: $border-radius;
+}
+.tab-title-hovered {
   padding-right: 20px;
   text-indent: 0 !important; /* initially is at -20*/
 }
-/* --- End: These two classes are inserted through js --- */
+.tab-within-group-tile-hovered {
+  text-indent: 2rem !important; /* initially is at -20*/
+}
+/* --- End --- */
 
 html,
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  overflow: hidden;
   height: 100%;
 }
 
@@ -86,13 +96,12 @@ body {
 .head-nav {
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(100% - 50px);
-  width: $menu-expanded-width;
-  pointer-events: none;
+  height: calc(100% - #{$menu-collapsed-width});
+  width: $menu-collapsed-width;
+  transition: width 400ms;
 
   /* menu list */
   ul {
-    margin: 1.85rem 0 0 0;
     padding: 0;
     list-style: none;
   }
@@ -116,7 +125,7 @@ body {
       border-top: $border-between-buttons-color solid 1px;
     }
 
-    /* Button title */
+    /* Tab title */
     span {
       width: 100%;
       white-space: nowrap;
@@ -157,7 +166,7 @@ body {
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
 
 /* https://stackoverflow.com/a/18966255/12980218 */

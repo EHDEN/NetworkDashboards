@@ -1,8 +1,9 @@
 
 from django import views
+from django.conf import settings
 from django.shortcuts import render
 
-from .models import Tab, TabGroup, Button
+from .models import Button, Logo, Tab, TabGroup
 
 
 def convert_button_to_dict(button):
@@ -35,7 +36,8 @@ class TabsView(views.View):
         for i in range(len(single_tabs))[::-1]:
             tab = single_tabs[i]
             if tab.group is not None:
-                group_mappings[tab.group].insert(0, convert_button_to_dict(tab))
+                if tab.group in group_mappings:
+                    group_mappings[tab.group].insert(0, convert_button_to_dict(tab))
                 del single_tabs[i]
 
         # merge and convert both single tabs and groups keeping their order
@@ -84,8 +86,21 @@ class TabsView(views.View):
                     convert_button_to_dict(single_tabs[i])
                 )
 
+        logoObj = Logo.load()
+        logo = dict()
+        if logoObj:
+            logo["imageContainerCss"] = logoObj.imageContainerCss
+            logo["imageCss"] = logoObj.imageCss
+            logo["imageOnHoverCss"] = logoObj.imageOnHoverCss
+
+            if logoObj.image:
+                logo["imageSrc"] = f"/{settings.MEDIA_URL}{logoObj.image}"
+            else:
+                logo["imageSrc"] = logoObj.url
+
         context = {
             "tabs": final_menu,
+            "logo": logo,
         }
 
         return render(request, self.template_name, context)

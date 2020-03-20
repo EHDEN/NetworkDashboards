@@ -1,10 +1,5 @@
 
-// keep track of the current li clicked
-let clicked;
-
-let hoveredGroup;
-
-function updateHoverClasses(target, action) {
+function updateHoverColorClasses(target, action) {
     if (action === "add") {
         target.addClass("hovered-background");
         target.find(".icon-div")
@@ -23,6 +18,61 @@ function updateHoverClasses(target, action) {
     }
 }
 
+function updateHoverExpandedClasses(target, action, last) {
+    if (action === "add") {
+        $(".head-nav").addClass("nav-hovered-width");
+        target.addClass("nav-hovered-width");
+        if (target.hasClass("tab-group")) {
+            target.addClass("tab-group-hovered-border-radius");
+        }
+        else if (target.hasClass("tab-single")) {
+            target.addClass("tab-single-hovered-border-radius");
+        }
+        else if (last) {
+            target.addClass("last-tab-within-group-border-radius")
+        }
+
+        if (target.hasClass("tab-within-group")) {
+            target.find("span").addClass("tab-within-group-tile-hovered");
+        }
+        else {
+            target.find("span").addClass("tab-title-hovered");
+        }
+    }
+    else {
+        $(".head-nav").removeClass("nav-hovered-width");
+        target.removeClass("nav-hovered-width");
+        if (target.hasClass("tab-group")) {
+            target.removeClass("tab-group-hovered-border-radius");
+        }
+        else if (target.hasClass("tab-single")) {
+            target.removeClass("tab-single-hovered-border-radius");
+        }
+        else if (last) {
+            target.removeClass("last-tab-within-group-border-radius")
+        }
+
+        if (target.hasClass("tab-within-group")) {
+            target.find("span").removeClass("tab-within-group-tile-hovered");
+        }
+        else {
+            target.find("span").removeClass("tab-title-hovered");
+        }
+    }
+}
+
+
+// keep track of the current tab being displayed.
+let clicked;
+
+/**
+ * keep track of the current group of tabs being hovered.
+ * this allows to keep tabs of the same group expanded while the user
+ *  has the mouse within a group of tabs
+ */
+let hoveredGroup;
+
+
 $(".head-nav .tab").hover(
     event => {
         // display the scrollbar if it is needed (elements extend the max height)
@@ -31,39 +81,25 @@ $(".head-nav .tab").hover(
         }
 
         const hovered = $(event.currentTarget);
-        updateHoverClasses(hovered, "add");
-
-        if (hovered.hasClass("tab-group")) {
-            hovered.addClass("tab-group-hovered");
-            hovered.find("span").addClass("span-on-li-hovered");
-        }
-        else if (hovered.hasClass("tab-single")) {
-            hovered.addClass("tab-single-hovered");
-            hovered.find("span").addClass("span-on-li-hovered");
-        }
+        updateHoverColorClasses(hovered, "add");
+        updateHoverExpandedClasses(hovered, "add");
     },
     event => {
         // hide the scrollbar when collapsing the side menu
-        $(".simplebar-scrollbar").removeClass("simplebar-visible"); // TODO move this to hover out of nav-head
+        $(".simplebar-scrollbar").removeClass("simplebar-visible");
 
         const hovered = $(event.currentTarget);
 
-        if (hovered.is(clicked)) {
-            return;
-        }
-        updateHoverClasses(hovered, "remove");
-
-        if (hovered.parents().is(hoveredGroup)) {
-            return;
+        // only reset the expanded classes if the mouse left the group that
+        //  the current tab belongs to
+        if (!hovered.parents().is(hoveredGroup)) {
+            updateHoverExpandedClasses(hovered, "remove");
         }
 
-        if (hovered.hasClass("tab-group")) {
-            hovered.removeClass("tab-group-hovered");
-            hovered.find("span").removeClass("span-on-li-hovered");
-        }
-        else if (hovered.hasClass("tab-single")) {
-            hovered.removeClass("tab-single-hovered");
-            hovered.find("span").removeClass("span-on-li-hovered");
+        // only reset the color classes if the current tab is not the one
+        //  being displayed/clicked
+        if (!hovered.is(clicked)) {
+            updateHoverColorClasses(hovered, "remove");
         }
     },
 );
@@ -76,12 +112,12 @@ $(".head-nav .tab-with-url").click(event => {
             return;
         }
 
-        updateHoverClasses(clicked, "remove");
+        updateHoverColorClasses(clicked, "remove");
     }
 
     clicked = tabClicked;
     window.location.hash = clicked.find("span").text().trim();
-    updateHoverClasses(clicked, "add");
+    updateHoverColorClasses(clicked, "add");
 
     $("#main_iframe")
         .addClass("hide")
@@ -94,37 +130,28 @@ $(".head-nav .group").hover(
         hoveredGroup = $(event.currentTarget);
 
         const groupTop = hoveredGroup.children().first();
-        groupTop.addClass("tab-group-hovered");
-        groupTop.find("span").addClass("span-on-li-hovered");
+        updateHoverExpandedClasses(groupTop, "add");
 
         const subTabs = hoveredGroup.children().last().children();
         for (let i = 0; i < subTabs.length; i++) {
             const tab = $(subTabs[i]);
 
-            tab.css("width", "380px");
-            if (i === subTabs.length - 1) { // last
-                tab.css("border-bottom-right-radius", "20px");
-            }
-            tab.find("span").addClass("span-on-li-hovered")
+            updateHoverExpandedClasses(tab, "add", i === subTabs.length - 1);
         }
     },
     event => {
-        const groupTop = hoveredGroup.children().first();
-        groupTop.removeClass("tab-group-hovered");
-        groupTop.find("span").removeClass("span-on-li-hovered");
+        const hoveredGroupTmp = hoveredGroup;
+        hoveredGroup = undefined;
 
-        const subTabs = hoveredGroup.children().last().children();
+        const groupTop = hoveredGroupTmp.children().first();
+        updateHoverExpandedClasses(groupTop, "remove");
+
+        const subTabs = hoveredGroupTmp.children().last().children();
         for (let i = 0; i < subTabs.length; i++) {
             const tab = $(subTabs[i]);
 
-            tab.css("width", "100px"); // TODO use classes here
-            if (i === subTabs.length - 1) { // last
-                tab.css("border-bottom-right-radius", "");
-            }
-            tab.find("span").removeClass("span-on-li-hovered")
+            updateHoverExpandedClasses(tab, "remove", i === subTabs.length - 1);
         }
-
-        hoveredGroup = undefined;
     },
 );
 
@@ -134,6 +161,8 @@ $("#main_iframe").on("load", event => {
 });
 
 $(document).ready(event => {
+    $(".head-nav").height(`calc(100% - ${$("#logo-container").outerHeight(true)}px)`);
+
     let preSelectedTab = false;
 
     const candidatesToDisplay = $(".head-nav .tab-with-url");
@@ -145,7 +174,7 @@ $(document).ready(event => {
 
             if (title === tabToDisplayTitle) {
                 clicked = tab;
-                updateHoverClasses(clicked, "add");
+                updateHoverColorClasses(clicked, "add");
                 $("#main_iframe").attr("src", clicked.attr("url"));
                 preSelectedTab = true;
                 break;
@@ -154,9 +183,8 @@ $(document).ready(event => {
     }
 
     if (!preSelectedTab) {
-        clicked = candidatesToDisplay.first(); // TODO this can be a group tab
-        window.location.hash = clicked.find("span").text().trim();
-        updateHoverClasses(clicked, "add");
+        clicked = candidatesToDisplay.first();
+        updateHoverColorClasses(clicked, "add");
         $("#main_iframe").attr("src", clicked.attr("url"));
     }
 
