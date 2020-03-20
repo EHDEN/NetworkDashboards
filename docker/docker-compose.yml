@@ -99,12 +99,6 @@ services:
     networks:
       - all
 
-volumes:
-  postgres:
-    external: false
-  redis:
-    external: false
-
 networks:
   all:
     ipam:

@@ -30,7 +30,7 @@ def associate_tab_and_button(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tabsManager', '0001_initial'),
+        ('tabsManager', '0002_auto_20200214_1128'),
     ]
 
     operations = [
