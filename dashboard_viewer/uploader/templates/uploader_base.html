@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block head_tail %}
+    <link rel="stylesheet" href='{% static "css/main.css" %}' >
+    {{ form.media.css }}
+    <link rel="stylesheet" href='{% static "css/uploader.css" %}' >
+{% endblock %}
+
+{% block content %}
+
+    {% include "uploader_loading.html" %}
+
+    <div class="grad">
+        {% include "header.html" %}
+
+        <div class="uploadMessage center">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert
+                        {% if message.tags %}
+                            {% if message.tags == 'error' %}
+                                alert-danger
+                            {% else %}
+                                alert-success
+                            {% endif %}
+                        {% endif %}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block title %}{% endblock %}
+
+            <form id="uploadForm" method="POST" enctype="multipart/form-data">
+                 
+                {% bootstrap_form form %}
+
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary btn-sm-lg" >
+                        {{ submit_button_text }}
+                    </button>
+                {% endbuttons %}
+            </form>
+
+            {% block upload_history %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block body_tail %}
+    {{ form.media.js }}
+    <script src="{% static 'js/uploader.js' %}"></script>  
+{% endblock %}

@@ -1,0 +1,16 @@
+{
+  "name": "dashboard_viewer",
+  "version": "0.0.1",
+  "description": "Django app that displays dashboards in a vertical tab layout",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "aspedrosa",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.4.1",
+    "jquery": "^3.4.1",
+    "leaflet": "^1.6.0"
+  }
+}

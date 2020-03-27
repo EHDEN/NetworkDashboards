@@ -1,13 +1,28 @@
 version: "3"
 services:
+  nginx:
+    image: nginx:1.14.0
+    restart: unless-stopped
+    ports:
+      - "${NGINX_PORT}:80"
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d
+      - ./static:/static
+    links:
+      - dashboard
+    networks:
+      - all
+
   redis:
     image: redis:3.2
     restart: unless-stopped
     ports:
       - "${REDIS_PORT}:6379"
     volumes:
-      - redis:/data
-
+      - ../../redis:/data
+    networks:
+      - all
+      
   postgres:
     image: postgres:10
     restart: unless-stopped
@@ -16,14 +31,16 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_ROOT_PASSWORD}"
       # Variables below are used to iniliaze databases for the
       #  services below (superset and dashboard_viewer).
-      POSTGRES_DBS: "${POSTGRES_SUPERSET_DB} ${POSTGRES_DASHBOARD_VIEWER_DB}"
-      POSTGRES_DBS_USERS: "${POSTGRES_SUPERSET_USER} ${POSTGRES_DASHBOARD_VIEWER_USER}"
-      POSTGRES_DBS_PASSWORDS: "${POSTGRES_SUPERSET_PASSWORD} ${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
+      POSTGRES_DBS: "${POSTGRES_SUPERSET_DB} ${POSTGRES_DASHBOARD_VIEWER_DB} ${POSTGRES_ACHILLES_DB}"
+      POSTGRES_DBS_USERS: "${POSTGRES_SUPERSET_USER} ${POSTGRES_DASHBOARD_VIEWER_USER} ${POSTGRES_ACHILLES_USER}"
+      POSTGRES_DBS_PASSWORDS: "${POSTGRES_SUPERSET_PASSWORD} ${POSTGRES_DASHBOARD_VIEWER_PASSWORD} ${POSTGRES_ACHILLES_PASSWORD}"
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - ../../postgres:/var/lib/postgresql/data
       - ./postgres-entrypoint:/docker-entrypoint-initdb.d
+    networks:
+      - all
 
   superset:
     build:
@@ -32,15 +49,13 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_HOST: postgres
-      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_PORT: 5432
       POSTGRES_USER: "${POSTGRES_SUPERSET_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_SUPERSET_PASSWORD}"
       POSTGRES_DB: "${POSTGRES_SUPERSET_DB}"
       REDIS_HOST: redis
-      REDIS_PORT: "${REDIS_PORT}"
-      # If using production, comment development volume below
-      #SUPERSET_ENV: production
-      SUPERSET_ENV: development
+      REDIS_PORT: 6379
+      SUPERSET_ENV: "${INSTALLATION_ENV}"
     user: root:root
     ports:
       - "${SUPERSET_PORT}:8088"
@@ -51,30 +66,48 @@ services:
       # this is needed to communicate with the postgres and redis services
       - ../superset/superset_config.py:/home/superset/superset/superset_config.py
       # this is needed for development, remove with SUPERSET_ENV=production
-      #- ../../superset:/home/superset/superset
+      - ../superset/superset:/home/superset/superset
+    networks:
+      - all
 
-  dashboard_viewer:
+  dashboard:
     build:
       context: ../dashboard_viewer
     environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: "${POSTGRES_PORT}"
-      POSTGRES_USER: "${POSTGRES_DASHBOARD_VIEWER_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
-      POSTGRES_DB: "${POSTGRES_DASHBOARD_VIEWER_DB}"
-      # If using production, comment development volume below
-      #DASHBOARD_VIEWER_ENV: production
-      SUPERSET_ENV: development
+      POSTGRES_DEFAULT_HOST: postgres
+      POSTGRES_DEFAULT_PORT: 5432
+      POSTGRES_DEFAULT_USER: "${POSTGRES_DASHBOARD_VIEWER_USER}"
+      POSTGRES_DEFAULT_PASSWORD: "${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
+      POSTGRES_DEFAULT_DB: "${POSTGRES_DASHBOARD_VIEWER_DB}"
+      POSTGRES_ACHILLES_HOST: postgres
+      POSTGRES_ACHILLES_PORT: 5432
+      POSTGRES_ACHILLES_USER: "${POSTGRES_ACHILLES_USER}"
+      POSTGRES_ACHILLES_PASSWORD: "${POSTGRES_ACHILLES_PASSWORD}"
+      POSTGRES_ACHILLES_DB: "${POSTGRES_ACHILLES_DB}"
+      DASHBOARD_VIEWER_ENV: "${INSTALLATION_ENV}"
+      #DASHBOARD_VIEWER_ENV: development #"${INSTALLATION_ENV}"
     ports:
       - "${DASHBOARD_VIEWER_PORT}:8000"
     depends_on:
       - postgres
-    #volumes:
+    volumes:
       # this is needed for development, remove with DASHBOARD_VIEWER_ENV=production
-      #- ../dashboard_viewer:/app
+      - ../dashboard_viewer:/app
+      # to keep the achilles files outside
+      - ../../achilles_results_files:/app/achilles_results_files
+      - ./static:/app/static
+    networks:
+      - all
 
 volumes:
   postgres:
     external: false
   redis:
     external: false
+
+networks:
+  all:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.1.0.0/16 

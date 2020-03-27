@@ -25,7 +25,7 @@ from .SECRET_KEY import SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DASHBOARD_VIEWER_ENV", "development") == "development"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'tabsManager',
+    'uploader',
+
+    'bootstrap4',
+    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +60,9 @@ ROOT_URLCONF = 'dashboard_viewer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': []
+        'DIRS': [
+            os.path.join(BASE_DIR, "shared/templates")
+        ]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -79,13 +85,23 @@ WSGI_APPLICATION = 'dashboard_viewer.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', 'postgres'),
-        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
-        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
-        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'postgres'),
+        'NAME': os.environ.get('POSTGRES_DEFAULT_DB', 'postgres'),
+        'HOST': os.environ.get('POSTGRES_DEFAULT_HOST', 'localhost'),
+        'PORT': os.environ.get('POSTGRES_DEFAULT_PORT', '5432'),
+        'USER': os.environ.get('POSTGRES_DEFAULT_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_DEFAULT_PASSWORD', 'postgres'),
+    },
+    'achilles': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_ACHILLES_DB', 'achilles'),
+        'HOST': os.environ.get('POSTGRES_ACHILLES_HOST', 'localhost'),
+        'PORT': os.environ.get('POSTGRES_ACHILLES_PORT', '5432'),
+        'USER': os.environ.get('POSTGRES_ACHILLES_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_ACHILLES_PASSWORD', 'postgres'),
     }
 }
+
+DATABASE_ROUTERS = ['dashboard_viewer.routers.AchillesRouter']
 
 
 # Password validation
@@ -125,3 +141,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "node_modules"),
+    os.path.join(BASE_DIR, "shared/static"),
+]
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
+# uploader app specific settings
+ACHILLES_RESULTS_STORAGE_PATH = "achilles_results_files"

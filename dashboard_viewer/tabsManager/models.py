@@ -9,7 +9,7 @@ class Tab(models.Model):
     )
     icon         = models.CharField(
         max_length=20,
-        help_text="Font awesome icon v4. Just the end part, e.g. fa-clock-o -> clock-o"
+        help_text="Font awesome icon v5. Just the end part, e.g. fa-clock-o -> clock-o"
     )
     url          = models.URLField()
     position     = models.PositiveIntegerField()
