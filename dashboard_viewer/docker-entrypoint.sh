@@ -2,6 +2,8 @@
 
 set -ex
 
+python manage.py migrate
+
 if [ ${DASHBOARD_VIEWER_ENV} = "production" ]; then
 	python manage.py collectstatic --noinput
 	exec gunicorn dashboard_viewer.wsgi:application --bind 0.0.0.0:8000 --workers 5
