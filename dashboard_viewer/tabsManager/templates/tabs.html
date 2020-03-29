@@ -1,88 +1,84 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
 
 {% block head_tail %}
     {% load static %}
+    <link rel="stylesheet" href="{% static "simplebar/dist/simplebar.css" %}"/>
     <link href="{% static "css/tabs.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-        <div class="row" style="height: 100vh">
-            <div class="col-md-1 fix-col-padding tabs-column">
+        <header class="main-head">
+            {% if logo %}
+                <style rel="stylesheet">
+                    img#logo:hover {
+                        {{ logo.imageOnHoverCss }}
+                    }
+                </style>
+                <div id="logo-container" {% if logo.imageContainerCss %}style="{{ logo.imageContainerCss }}"{% endif %}>
+                    <img id="logo" {% if logo.imageCss %}style="{{ logo.imageCss }}"{% endif %} src="{{ logo.imageSrc }}">
+                </div>
+            {% endif %}
+            <nav class="head-nav" data-simplebar data-simplebar-auto-hide="false" data-simplebar-scrollbar-max-size="700">
+                <ul>
                     {% for tab in tabs %}
-                        <button class="tab-button" url="{{ tab.url }}">
-                            {# HEIGHT of this button is changed dynamically on the script below #}
-                            <i class="fas fa-{{ tab.icon }}" style="font-size: x-large"></i>
-                            <br>
-                            {{ tab.title }}
-                        </button>
+                        {% if tab|isinst:"tuple" %}
+                            <li class="group">
+                                <div class="tab tab-group" data-toggle="collapse" data-target="#tabGroup{{ forloop.counter0 }}" aria-expanded="false" aria-controls="tabGroup{{ forloop.counter0 }}">
+                                    <div class="icon-div">
+                                        <i class="fa fa-{{ tab.0.icon }} icon"></i>
+                                    </div>
+                                    <span>
+                                        {{ tab.0.title }}
+                                        <i class="fa fa-angle-down expand-icon"></i>
+                                    </span>
+                                </div>
+                                <div id="tabGroup{{ forloop.counter0 }}" class="collapse">
+                                    {% for subtab in tab.1 %}
+                                        <div class="tab tab-with-url tab-within-group" url="{{ subtab.url }}">
+                                            <div class="icon-div">
+                                                <i class="fa fa-{{ subtab.icon }} icon"></i>
+                                            </div>
+                                            <span>
+                                                {{ subtab.title }}
+                                            </span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </li>
+                        {% else %}
+                            <li>
+                                <div class="tab tab-with-url tab-single" url="{{ tab.url }}">
+                                    <div class="icon-div">
+                                        <i class="fa fa-{{ tab.icon }} icon"></i>
+                                    </div>
+                                    <span>
+                                        {{ tab.title }}
+                                    </span>
+                                </div>
+                            </li>
+                        {% endif %}
                     {% endfor %}
-            </div>
+                </ul>
+            </nav>
+        </header>
+        <div class="content">
             {% if tabs|length > 0 %}
-                <iframe src="{{ tabs.0.url }}" class="col-md-11 fix-col-padding"></iframe>
+                <iframe id="main_iframe" class="fill-all-space hide"></iframe>
+                <div id="loading_screen" class="fill-all-space center-content">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
             {% else %}
-                <h1 id="no_tabs_header">No visible tabs stored</h1>
+                <div class="fill-all-space center-content">
+                    <h1>No visible tabs available</h1>
+                </div>
             {% endif %}
         </div>
 {% endblock %}
 
 {% block body_tail %}
-    <script>
-        const focus_class = "focus";
-        const selected_without_focus_class = "selected-without-focus";
-
-        const iframe = $("iframe");
-        const tabs_buttons = $(".tab-button");
-
-        let selected_button;
-        $(window).on("load", () => {
-            // Make all tabs have the same height
-            let max_height = -1;
-            for (const tab of tabs_buttons) {
-                const tab_height = tab.offsetHeight;
-                if (tab_height > max_height) {
-                    max_height = tab_height;
-                }
-            }
-            tabs_buttons.css("height", max_height);
-
-            //set event listeners for tabs
-            if (tabs_buttons.length > 0) {
-                selected_button = tabs_buttons[0];
-                selected_button.classList.add(focus_class);
-            }
-        });
-
-        tabs_buttons.click(function() {
-            if (this === selected_button) {
-                return;
-            }
-            selected_button.classList.remove(selected_without_focus_class);
-            this.classList.add(focus_class);
-
-            selected_button = this;
-
-            iframe.attr("src", this.getAttribute("url"));
-        });
-
-        tabs_buttons.mouseenter(function() {
-            if (this === selected_button) {
-                return;
-            }
-
-            selected_button.classList.remove(focus_class);
-            selected_button.classList.add(selected_without_focus_class);
-
-            this.classList.add(focus_class);
-        });
-
-        tabs_buttons.mouseleave(function() {
-            if (this === selected_button) {
-                return;
-            }
-            this.classList.remove(focus_class);
-
-            selected_button.classList.remove(selected_without_focus_class);
-            selected_button.classList.add(focus_class);
-        });
-    </script>
+    <script src="{% static "simplebar/dist/simplebar.js" %}"></script>
+    <script src="{% static "js/tabs.js" %}" type="text/javascript"></script>
 {% endblock %}

@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-from .SECRET_KEY import SECRET_KEY
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DASHBOARD_VIEWER_ENV", "development") == "development"
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'bootstrap4',
     'bootstrap_datepicker_plus',
+    'django_sass',
 ]
 
 MIDDLEWARE = [
@@ -85,19 +86,19 @@ WSGI_APPLICATION = 'dashboard_viewer.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DEFAULT_DB', 'postgres'),
+        'NAME': os.environ.get('POSTGRES_DEFAULT_DB', 'cdm'),
         'HOST': os.environ.get('POSTGRES_DEFAULT_HOST', 'localhost'),
         'PORT': os.environ.get('POSTGRES_DEFAULT_PORT', '5432'),
-        'USER': os.environ.get('POSTGRES_DEFAULT_USER', 'postgres'),
-        'PASSWORD': os.environ.get('POSTGRES_DEFAULT_PASSWORD', 'postgres'),
+        'USER': os.environ.get('POSTGRES_DEFAULT_USER', 'cdm'),
+        'PASSWORD': os.environ.get('POSTGRES_DEFAULT_PASSWORD', 'cdm'),
     },
     'achilles': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('POSTGRES_ACHILLES_DB', 'achilles'),
         'HOST': os.environ.get('POSTGRES_ACHILLES_HOST', 'localhost'),
         'PORT': os.environ.get('POSTGRES_ACHILLES_PORT', '5432'),
-        'USER': os.environ.get('POSTGRES_ACHILLES_USER', 'postgres'),
-        'PASSWORD': os.environ.get('POSTGRES_ACHILLES_PASSWORD', 'postgres'),
+        'USER': os.environ.get('POSTGRES_ACHILLES_USER', 'achilles'),
+        'PASSWORD': os.environ.get('POSTGRES_ACHILLES_PASSWORD', 'achilles'),
     }
 }
 
@@ -152,5 +153,9 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-# uploader app specific settings
+# Media files (Uploaded images, ...)
+MEDIA_URL = "media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# Uploader app specific settings
 ACHILLES_RESULTS_STORAGE_PATH = "achilles_results_files"

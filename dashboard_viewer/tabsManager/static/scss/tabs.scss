@@ -1,0 +1,192 @@
+$background-color: #003399;
+$background-color-groups: #3366cc;
+$text-color: #ffffff;
+
+$on-hover-background-color: #6699ff;
+$on-hover-text-color: #ffffff;
+
+$border-between-buttons-color: #c4c8d6;
+
+$menu-collapsed-width: 100px;
+$menu-expanded-width: 380px;
+
+$border-radius: 20px;
+
+.simplebar-scrollbar:before {
+  background-color: $text-color;
+}
+.simplebar-track {
+  left: 0;
+}
+
+/* Font awesome icon */
+.icon {
+  font-size: xx-large;
+}
+
+/* Div containing the Font awesome icon */
+.icon-div {
+  width: $menu-collapsed-width;
+  text-align: center;
+  background: $background-color;
+  z-index: 1; /* To be on top of the title */
+  flex-shrink: 0;
+  -webkit-transition: background-color 400ms;
+  transition: background-color 400ms;
+}
+
+/* Expand arrow to mark buttons as expandable */
+.expand-icon {
+  font-size: x-large;
+  float: right;
+}
+
+/* --- Begin: These classes are inserted through js --- */
+/* Classes to specify the color in different states  */
+.hovered-text {
+  color: $on-hover-text-color;
+}
+.hovered-background {
+  background-color: $on-hover-background-color !important;
+}
+
+/* Css to apply when a button is hovered */
+.nav-hovered-width {
+  width: $menu-expanded-width !important;
+}
+.tab-group-hovered-border-radius {
+  border-top-right-radius: $border-radius;
+}
+.tab-single-hovered-border-radius {
+  border-top-right-radius: $border-radius;
+  border-bottom-right-radius: $border-radius;
+}
+.last-tab-within-group-border-radius {
+  border-bottom-right-radius: $border-radius;
+}
+.tab-title-hovered {
+  padding-right: 20px;
+  text-indent: 0 !important; /* initially is at -20*/
+}
+.tab-within-group-tile-hovered {
+  text-indent: 2rem !important; /* initially is at -20*/
+}
+/* --- End --- */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* header element */
+.main-head {
+  position: fixed;
+  bottom: 0;
+  width: $menu-collapsed-width;
+  margin-right: $menu-expanded-width - $menu-collapsed-width;
+  height: 100%;
+  background: $background-color;
+}
+
+
+/* nav element, inside the header element */
+.head-nav {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc(100% - #{$menu-collapsed-width});
+  width: $menu-collapsed-width;
+  transition: width 400ms;
+
+  /* menu list */
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+
+  .tab {
+    width: $menu-collapsed-width;
+    position: relative;
+    pointer-events: auto;
+    border-bottom: $border-between-buttons-color solid 1px;
+    -webkit-transition: 400ms;
+    transition: 400ms;
+
+    display: flex;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    -webkit-box-align: center;
+    align-items: center;
+    color: $text-color;
+
+    &:first-of-type {
+      border-top: $border-between-buttons-color solid 1px;
+    }
+
+    /* Tab title */
+    span {
+      width: 100%;
+      white-space: nowrap;
+      text-indent: -20em;
+      -webkit-transition: text-indent 400ms ease-in-out;
+      transition: text-indent 400ms ease-in-out;
+    }
+  }
+
+  .tab-group, .tab-single {
+    background-color: $background-color;
+  }
+
+  .tab-within-group {
+    background: $background-color-groups;
+
+    .icon-div {
+      background-color: $background-color-groups;
+    }
+  }
+
+}
+
+/* Everything other than the side menu */
+.content {
+  min-height: 100%;
+  height: 100%;
+  padding-left: $menu-collapsed-width;
+  margin-top: 0;
+  -webkit-transition: transform 400ms, opacity 400ms, -webkit-transform 400ms;
+  transition: transform 400ms, opacity 400ms, -webkit-transform 400ms;
+}
+
+.fill-all-space {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.hide {
+  display: none !important;
+}
+
+/* https://stackoverflow.com/a/18966255/12980218 */
+.center-content {
+  /* Internet Explorer 10 */
+  display:-ms-flexbox;
+  -ms-flex-pack:center;
+  -ms-flex-align:center;
+
+  /* Firefox */
+  display:-moz-box;
+  -moz-box-pack:center;
+  -moz-box-align:center;
+
+  /* Safari, Opera, and Chrome */
+  display:-webkit-box;
+  -webkit-box-pack:center;
+  -webkit-box-align:center;
+}
+
+iframe {
+  pointer-events: auto;
+}
