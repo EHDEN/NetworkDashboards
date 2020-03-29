@@ -7,14 +7,13 @@ Make sure that you have docker and docker-compose installed in your machine. The
 
 - Please enter in the ''docker'' directory and create your `.env` file here, using `.env-example` as reference. For local installation, you can just copy the `.env-example` content to a new file. Note: In case of port errors in the next steps, the problem could be related to a port already in use by your system that you defined here and it is busy, chose other.
 - Tip the following commands in the command line:
-    1. Clone the Apache Superset repository:
+    1. Clone the Apache Superset repository and checkout to tag 0.35.1:
         ```
         git clone https://github.com/apache/incubator-superset ../superset
-        cp ../superset/contrib/docker/superset_config.py ../superset
+        cd ../superset && git checkout tags/0.35.1 -b tag0.35.1 && cd ../docker
         ```
     2. Init the Apache Superset (This creates a user, so it is necessary to interact with the console):
         ```
-        docker-compose run --rm -e FLASK_APP=superset superset flask fab create-db
         docker-compose run --rm superset ./docker-init.sh
         ```
     3. Init the Dashboard Layout  (This creates a user, so it is necessary to interact with the console):

@@ -5,26 +5,22 @@ setting all necessary environment variables
 
 2. Setup superset
 
-2.1 Clone the repository
+    2.1. Clone the repository
+    
+    `git clone https://github.com/apache/incubator-superset ../superset`
 
-`git clone https://github.com/apache/incubator-superset ../superset`
+    2.2 Checkout to tag 0.35.1
 
-2.2 Checkout to tag 0.35.1
-
-`cd ../superset && git checkout tags/0.35.1 -b tag0.35.1`
-
-2.3 Copy the superset_config.py file to the superset's root directory
-
-`cp ../superset/contrib/docker/superset_config.py ../superset`
+    `cd ../superset && git checkout tags/0.35.1 -b tag0.35.1`
 
 3. Set up the database for superset
 
-`docker-compose run --rm superset ./docker-init.sh`
+    `docker-compose run --rm superset ./docker-init.sh`
 
 4. Set up the database for the dashboard viewer app
 
-`docker-compose run --rm dashboard_viewer ./docker-init.sh`
+    `docker-compose run --rm dashboard_viewer ./docker-init.sh`
 
 4. Bring up the containers
 
-`docker-compose up`
+    `docker-compose up -d`
