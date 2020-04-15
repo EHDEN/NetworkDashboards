@@ -22,7 +22,7 @@ services:
       - ../../redis:/data
     networks:
       - all
-      
+
   postgres:
     image: postgres:10
     restart: unless-stopped
@@ -85,6 +85,8 @@ services:
       POSTGRES_ACHILLES_USER: "${POSTGRES_ACHILLES_USER}"
       POSTGRES_ACHILLES_PASSWORD: "${POSTGRES_ACHILLES_PASSWORD}"
       POSTGRES_ACHILLES_DB: "${POSTGRES_ACHILLES_DB}"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       SECRET_KEY: "${DASHBOARD_VIEWER_SECRET_KEY}"
       DASHBOARD_VIEWER_ENV: "${INSTALLATION_ENV}"
       #DASHBOARD_VIEWER_ENV: development #"${INSTALLATION_ENV}"
