@@ -52,7 +52,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       MAPBOX_API_KEY: "${SUPERSET_MAPBOX_API_KEY}"
-      SUPERSET_ENV: "${INSTALLATION_ENV}"
+      SUPERSET_ENV: production
     user: root:root
     ports:
       - "${SUPERSET_PORT}:8088"
@@ -62,8 +62,6 @@ services:
     volumes:
       # required, this is needed to communicate with the postgres and redis services
       - ../superset/superset_config.py:/home/superset/superset/superset_config.py
-      # development
-      #- ../superset/superset:/home/superset/superset
     networks:
       - all
 
