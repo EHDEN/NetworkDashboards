@@ -39,7 +39,8 @@ class DatabaseType(models.Model):
     def __repr__(self):
         return self.__str__()
 
-#Not following the relational rules in the database_type field, but it will simplify the SQL queries in the SQL Lab
+
+# Not following the relational rules in the database_type field, but it will simplify the SQL queries in the SQL Lab
 class DataSource(models.Model):
     class Meta:
         db_table = "data_source"
@@ -49,7 +50,7 @@ class DataSource(models.Model):
         unique      = True,
         help_text   = "Name of the data source."
     )
-    slug            = models.SlugField(
+    acronym            = models.SlugField(
         max_length  = 50,
         unique      = True,
         help_text   = "Short label for the data source, containing only letters, numbers, underscores or hyphens."

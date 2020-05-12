@@ -34,14 +34,11 @@ class SourceFrom(forms.ModelForm):
         try:
             db_type = DatabaseType.objects.get(type=db_type_title)
         except DatabaseType.DoesNotExist:
-            db_type = None
-
-        if db_type is not None:
-            return db_type
-        else:
             db_type = DatabaseType(type=db_type_title)
             db_type.save()
             return db_type
+
+        return db_type
 
 
 class AchillesResultsForm(forms.Form):
