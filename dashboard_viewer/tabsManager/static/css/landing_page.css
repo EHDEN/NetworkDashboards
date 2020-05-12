@@ -1,0 +1,51 @@
+.w-100 {
+    width: 100%;
+}
+
+.margin-5 { /* Add some space between buttons */
+    margin: 5px;
+}
+
+/* Buttons and their content */
+a.button {
+    padding: 12px 24px 12px 24px;
+    color: #c4c8d6;
+    background-color: #2b2f3e;
+    border-color: #2b2f3e;
+}
+a.button:hover {
+    padding: 12px 24px 12px 24px;
+    color: #ffffff;
+    background-color: #4983af;
+    border-color: #4983af;
+}
+i.single-button-icon {
+    font-size: 30px;
+}
+i.group-button-icon {
+    font-size: 20px;
+}
+.tab-title { /* Add some space between the icon and the title */
+    margin-left: 10px;
+}
+
+/* utils */
+.center-content { /* Center vertically both icon and title of a button */
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.bootstrap-row-modified {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+iframe {
+    border: none;
+}

@@ -210,7 +210,8 @@ CONSTANCE_CONFIG = {
         str,
     ),
     "LANDING_PAGE_DESCRIPTION": (
-        "",
+        "# Description\n"
+        "TODO",
         "Land page desc",
         "markdown"
     ),
