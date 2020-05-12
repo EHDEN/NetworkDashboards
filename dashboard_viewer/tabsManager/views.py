@@ -3,6 +3,9 @@ from django import views
 from django.conf import settings
 from django.shortcuts import render
 
+from rest_framework import views as rest_views
+from rest_framework.response import Response
+
 from .models import Button, Logo, Tab, TabGroup
 
 
@@ -83,6 +86,12 @@ def get_menu():
             )
 
     return final_menu
+
+
+class APITabsView(rest_views.APIView):
+
+    def get(self, request):
+        return Response(get_menu())
 
 
 class TabsView(views.View):
