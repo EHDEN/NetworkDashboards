@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% load static %}
+
+{% block head_tail %}
+    <style>
+        .margins {
+            margin: 5px;
+        }
+        .center-with-flex {
+            display: flex !important;
+            justify-content: center;
+        }
+        a {
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 0 !important;
+        }
+        .w-100 {
+            width: 100%;
+        }
+        .section-title {
+            margin-top: 50px;
+        }
+        iframe {
+            border: none;
+        }
+        a.single-button {
+            padding: 12px 24px 12px 24px;
+        }
+        i.single-button-icon {
+            font-size: 40px;
+        }
+        a.group-button {
+            padding: 12px 24px 12px 24px;
+        }
+        i.group-button-icon {
+            font-size: 30px;
+        }
+        .tab-title {
+            margin-left: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href='{% static "pages.css" %}' >
+    <link rel="stylesheet" href='{% static "header.css" %}' >
+{% endblock %}
+
+{% block content %}
+
+    <div class="page-container">
+        {% include "header.html" %}
+
+        <div class="content-container">
+            <div>
+                {{ constance_config.LANDING_PAGE_DESCRIPTION }}
+            </div>
+
+            {% if tabs|length > 0 %}
+                <h1 class="section-title">Dashboards</h1>
+                <div class="row justify-content-md-center" style="padding-left: 10%; padding-right: 10%">
+                    {% for tab in tabs %}
+                        {% if tab|isinst:"tuple" %}
+                            <div class="margins card">
+                                <div class="card-body row">
+                                    <span class="center-with-flex"><i class="group-button-icon fa fa-{{ tab.0.icon }}"></i> {{ tab.0.title }}</span>
+                                    {% for subtab in tab.1 %}
+                                        <a class="group-button btn btn-primary" href="/tabs#{{ subtab.title }}">
+                                            <i class="group-button-icon fa fa-{{ subtab.icon }}"></i>
+                                            <span class="tab-title">{{ subtab.title }}</span>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <a class="single-button margins btn btn-primary" href="/tabs#{{ tab.title }}">
+                                <i class="single-button-icon fa fa-{{ tab.icon }}"></i>
+                                <span class="tab-title">{{ tab.title }}</span>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if constance_config.LANDING_PAGE_RESUME_DASHBOARD_URL %}
+                <h1 class="section-title">Network</h1>
+                <iframe class="w-100" src="{{ constance_config.LANDING_PAGE_RESUME_DASHBOARD_URL }}" style="height: 1000px"></iframe>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block body_tail %}
+{% endblock %}

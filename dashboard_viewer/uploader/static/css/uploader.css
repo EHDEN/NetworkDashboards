@@ -1,5 +1,5 @@
-#pageloader
-{
+
+#pageloader {
   background: rgba( 255, 255, 255, 0.6 );
   display: none;
   height: 100%;
@@ -7,10 +7,29 @@
   width: 100%;
   z-index: 9999;
 }
-
-#pageloader .spinner-box
-{
+#pageloader .spinner-box {
   left: 50%;
   position: absolute;
   top: 50%;
+}
+
+.uploadMessageSectionInfo{
+  text-align: justify;
+  color: #434a54;
+}
+
+.fa-cloud-upload-alt .fa-sync-alt .fa-file-download {
+  font-size: xx-large;
+}
+.fa-file-download {
+  color: #87d534;
+}
+.fa-cloud-upload-alt {
+  color: #329bed;
+}
+.fa-sync-alt {
+  color: #ea6e55;
+}
+.btn-sm-lg{
+  padding: .25rem 3rem;
 }

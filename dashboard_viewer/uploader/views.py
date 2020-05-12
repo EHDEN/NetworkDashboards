@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import SourceFrom, AchillesResultsForm
 from .models import UploadHistory, DataSource
 from .tasks import update_achilles_results_data
+from shared.utils.markdown import ConstanceProxy
 
 
 quotes_regex = re.compile(r"^'|'$|^\"|\"$")
@@ -120,6 +121,8 @@ def upload_achilles_results(request, *args, **kwargs):
             "obj_data_source": obj_data_source,
             "upload_history": upload_history,
             "submit_button_text": mark_safe("<i class='fas fa-upload'></i> Upload"),
+            "constance_config": ConstanceProxy(),
+            "page_title": "Uploader",
         }
     )
 
@@ -160,6 +163,8 @@ def create_data_source(request, *args, **kwargs):
             "form": form,
             "editing": False,
             "submit_button_text": mark_safe("<i class='fas fa-plus-circle'></i> Create"),
+            "constance_config": ConstanceProxy(),
+            "page_title": "Uploader",
         }
     )
 
@@ -214,5 +219,7 @@ def edit_data_source(request, *args, **kwargs):
             "form": form,
             "editing": True,
             "submit_button_text": mark_safe("<i class='far fa-edit'></i> Edit"),
+            "constance_config": ConstanceProxy(),
+            "page_title": "Uploader",
         }
     )

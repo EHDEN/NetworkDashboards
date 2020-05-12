@@ -5,6 +5,7 @@ from django.shortcuts import render
 
 from rest_framework import views as rest_views
 from rest_framework.response import Response
+from shared.utils.markdown import ConstanceProxy
 
 from .models import Button, Logo, Tab, TabGroup
 
@@ -92,6 +93,18 @@ class APITabsView(rest_views.APIView):
 
     def get(self, request):
         return Response(get_menu())
+
+
+class LandingPageView(views.View):
+    template_name = "landing_page.html"
+
+    def get(self, request, *args, **kwargs):
+        context = {
+            "constance_config": ConstanceProxy(),
+            "tabs": get_menu(),
+        }
+
+        return render(request, self.template_name, context)
 
 
 class TabsView(views.View):

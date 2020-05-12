@@ -1,0 +1,18 @@
+{% load static %}
+
+{% comment %}
+    add this <link rel="stylesheet" href='{% static "header.css" %}' >
+    to tail_head section
+{% endcomment %}
+
+<div class="uploadHeader">
+    <div class="logo">
+        <img class="logo-img" src='{% static "images/CDM-BI-icon.png" %}'/>
+    </div>
+    <div class="slogan">
+        <b>{{ constance_config.APP_TITLE }}</b>
+        {% if page_title %}
+            <br>{{ page_title }}
+        {% endif %}
+    </div>
+</div>

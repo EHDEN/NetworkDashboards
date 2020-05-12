@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
 {% load static %}
+{% load markdownify %}
 
 {% block head_tail %}
-    <link rel="stylesheet" href='{% static "css/main.css" %}' >
     {{ form.media.css }}
+    <link rel="stylesheet" href='{% static "pages.css" %}' >
+    <link rel="stylesheet" href='{% static "header.css" %}' >
     <link rel="stylesheet" href='{% static "css/uploader.css" %}' >
 {% endblock %}
 
@@ -12,10 +14,10 @@
 
     {% include "uploader_loading.html" %}
 
-    <div class="grad">
+    <div class="page-container">
         {% include "header.html" %}
 
-        <div class="uploadMessage center">
+        <div class="content-container">
             {% if messages %}
                 {% for message in messages %}
                     <div class="alert
@@ -34,7 +36,6 @@
             {% block title %}{% endblock %}
 
             <form id="uploadForm" method="POST" enctype="multipart/form-data">
-                 
                 {% bootstrap_form form %}
 
                 {% buttons %}

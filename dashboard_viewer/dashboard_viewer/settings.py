@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,11 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # 3rd party apps
     'bootstrap4',
     'bootstrap_datepicker_plus',
+    'constance',
     'django_sass',
+    'markdownify',
+    'martor',
     'rest_framework',
 
+    # our apps
     'tabsManager',
     'uploader',
 ]
@@ -82,8 +88,6 @@ WSGI_APPLICATION = 'dashboard_viewer.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -166,3 +170,98 @@ REDIS_HOST = os.environ.get('REDIS_HOST', 'redis')
 REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
 
 CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/1"
+
+# Constance
+CONSTANCE_REDIS_CONNECTION = {
+    'host': REDIS_HOST,
+    'port': REDIS_PORT,
+    'db': 1,
+}
+
+CONSTANCE_ADDITIONAL_FIELDS = {
+    "image": ["django.forms.ImageField", {"required": False}],
+    "url": ["django.forms.URLField", {"required": False}],
+    "markdown": ["django.forms.CharField", {"widget": "martor.widgets.AdminMartorWidget", "required": False}]
+}
+
+CONSTANCE_CONFIG = {
+    "APP_LOGO_USE_IMAGE": (
+        True,
+        "If an image was updated to the "
+        "APP_LOGO_IMAGE and you don't want"
+        "to use it anymore uncheck this option",
+        bool
+    ),
+    "APP_LOGO_IMAGE": (
+        "",
+        "Image file to use as app logo.",
+        "image"
+    ),
+    "APP_LOGO_URL": (
+        "",
+        "Url to the image to usa as app logo."
+        "This setting will be used over the APP_LOG_IMAGE,"
+        " even if the APP_LOGO_USE_IMAGE option is checked",
+        "url"
+    ),
+    "APP_TITLE": (
+        "CDM-BI",
+        "Title to use for the several pages",
+        str,
+    ),
+    "LANDING_PAGE_DESCRIPTION": (
+        "",
+        "Land page desc",
+        "markdown"
+    ),
+    "LANDING_PAGE_RESUME_DASHBOARD_URL": (
+        "",
+        "URL for the resume dashbaord of the network",
+        "url"
+    ),
+    "UPLOADER_EXPORT": (
+        "The Achilles tool generates summary statistics of the database that can be visualised in the Network Dashboard"
+        " in the EHDEN portal. Information about the tool can be found on the"
+        " [OHDSI Github Page](https://github.com/OHDSI/Achilles). Once the Achilles tool has run against your database"
+        " you need to export the achilles results table to a csv file.",
+        "Text for the 'Export Achilles results' section on the uploader app",
+        "markdown"
+    ),
+    "UPLOADER_UPLOAD": (
+        "The next step is to upload the Achilles result file in the portal using the form below. To update an existing"
+        " database, you can simply upload the file and the data will be replaced. This operation can take some time to"
+        " finish.",
+        "Text for the 'Upload Achilles results' section on the uploader app",
+        "markdown"
+    ),
+    "UPLOADER_AUTO_UPDATE": (
+        "Once the Achilles results have been uploaded, all the graphs in the Network Dashboard will show the most"
+        " recent data.",
+        "Text for the 'Auto update dashboard' section on the uploader app",
+        "markdown"
+    ),
+}
+
+from django.dispatch import receiver
+from constance.signals import config_updated
+
+
+@receiver(config_updated)
+def constance_updated(sender, key, old_value, new_value, **kwargs):
+    if key == "APP_LOGO_IMAGE" and old_value:
+        try:
+            os.remove(os.path.join(MEDIA_ROOT, old_value))
+        except FileNotFoundError:
+            pass
+
+
+# Markdown editor (Martor)
+MARTOR_ENABLE_CONFIGS = {
+    'emoji': 'false',
+    'imgur': 'false',
+    'mention': 'false',
+    'jquery': 'true',
+    'living': 'false',      # to enable/disable live updates in preview
+    'spellcheck': 'true',
+    'hljs': 'true',         # to enable/disable hljs highlighting in preview
+}

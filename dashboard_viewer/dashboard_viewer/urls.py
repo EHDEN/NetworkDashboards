@@ -20,8 +20,8 @@ from django.shortcuts import redirect
 from django.urls import path, include
 
 urlpatterns = [
-    path('', lambda request: redirect('tabs/')),
+    path('', include("tabsManager.urls")),
     path('admin/', admin.site.urls),
-    path('tabs/', include('tabsManager.urls')),
     path('uploader/', include('uploader.urls')),
+    path('martor/', include('martor.urls')),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
