@@ -253,7 +253,8 @@ cython_debug/
 
 # static files generated from Django application using `collectstatic`
 media
-static
+static/**
+!dashboard_viewer/shared/static
 
 # Retrieved from https://github.com/github/gitignore/blob/599646e9d0a26283d67715dead8f26e0eb2df753/Global/JetBrains.gitignore
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
