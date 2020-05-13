@@ -12,12 +12,12 @@
             <div style="{{ constance_config.TABS_LOGO_CONTAINER_CSS }}">
                 <img style="{{ constance_config.TABS_LOGO_IMG_CSS }}"
                     {% if constance_config.APP_LOGO_URL %}
-                        src='{{ constance_config.APP_LOGO_URL }}'/>
+                        src='{{ constance_config.APP_LOGO_URL }}'
                     {% else %}
                         {% get_media_prefix as MEDIA_ROOT %}
-                        src='/{{ MEDIA_ROOT }}{{ constance_config.APP_LOGO_IMAGE }}'/>
+                        src='/{{ MEDIA_ROOT }}{{ constance_config.APP_LOGO_IMAGE }}'
                     {% endif %}
-                >
+                />
             </div>
             <nav class="head-nav" data-simplebar data-simplebar-auto-hide="false" data-simplebar-scrollbar-max-size="700">
                 <ul>
