@@ -32,7 +32,6 @@ services:
     environment: *superset-environment
     depends_on: *superset-depends-on
     volumes: *superset-volumes
-    restart: unless-stopped
     ports:
       - ${SUPERSET_PORT}:8080
     networks:
@@ -94,6 +93,7 @@ services:
     volumes:
       - ./nginx-config:/etc/nginx/conf.d
       - ./static:/static/dashboard
+      - ../dashboard_viewer/media:/media
     depends_on:
       - dashboard
     networks:
@@ -128,6 +128,7 @@ services:
       - ./volumes/achilles_results_files:/app/achilles_results_files
       # production
       - ./static:/app/static
+      - ../dashboard_viewer/media:/app/media
       # development
       #- ../dashboard_viewer:/app
     networks:

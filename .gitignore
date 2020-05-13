@@ -255,6 +255,7 @@ cython_debug/
 media
 !dashboard_viewer/media/CDM-BI-icon.png
 static/**
+static
 !dashboard_viewer/shared/static
 
 # Retrieved from https://github.com/github/gitignore/blob/599646e9d0a26283d67715dead8f26e0eb2df753/Global/JetBrains.gitignore
