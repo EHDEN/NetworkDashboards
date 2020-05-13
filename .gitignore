@@ -253,6 +253,7 @@ cython_debug/
 
 # static files generated from Django application using `collectstatic`
 media
+!dashboard_viewer/media/CDM-BI-icon.png
 static/**
 !dashboard_viewer/shared/static
 

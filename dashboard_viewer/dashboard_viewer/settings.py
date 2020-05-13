@@ -185,23 +185,15 @@ CONSTANCE_ADDITIONAL_FIELDS = {
 }
 
 CONSTANCE_CONFIG = {
-    "APP_LOGO_USE_IMAGE": (
-        True,
-        "If an image was updated to the "
-        "APP_LOGO_IMAGE and you don't want"
-        "to use it anymore uncheck this option",
-        bool
-    ),
     "APP_LOGO_IMAGE": (
-        "",
+        "CDM-BI-icon.png",
         "Image file to use as app logo.",
         "image"
     ),
     "APP_LOGO_URL": (
         "",
         "Url to the image to usa as app logo."
-        "This setting will be used over the APP_LOG_IMAGE,"
-        " even if the APP_LOGO_USE_IMAGE option is checked",
+        "This setting will be used over the APP_LOG_IMAGE",
         "url"
     ),
     "APP_TITLE": (
@@ -241,6 +233,26 @@ CONSTANCE_CONFIG = {
         "Text for the 'Auto update dashboard' section on the uploader app",
         "markdown"
     ),
+    "TABS_LOGO_CONTAINER_CSS": (
+        "padding: 5px 5px 5px 5px;\n"
+        "height: 100px;\n"
+        "margin-bottom: 10px;\n",
+        "Css for the div container of the logo image",
+        str
+    ),
+    "TABS_LOGO_IMG_CSS": (
+        "background: #fff;\n"
+        "object-fit: contain;\n"
+        "width: 90px;\n"
+        "height: 100%;\n"
+        "border-radius: 5px;\n"
+        "padding: 0 5px 0 5px;\n"
+        "transition: width 400ms, height 400ms;\n"
+        "position: relative;\n"
+        "z-index: 5;\n",
+        "Css for the img tag displaying the app logo",
+        str
+    )
 }
 
 from django.dispatch import receiver

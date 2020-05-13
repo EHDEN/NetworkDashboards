@@ -1,13 +1,12 @@
 
 from django import views
-from django.conf import settings
 from django.shortcuts import render
 
 from rest_framework import views as rest_views
 from rest_framework.response import Response
 from shared.utils.markdown import ConstanceProxy
 
-from .models import Button, Logo, Tab, TabGroup
+from .models import Button, Tab, TabGroup
 
 
 def convert_button_to_dict(button):
@@ -111,21 +110,7 @@ class TabsView(views.View):
     template_name = "tabs.html"
 
     def get(self, request, *args, **kwargs):
-        logoObj = Logo.load()
-        logo = dict()
-        if logoObj:
-            logo["imageContainerCss"] = logoObj.imageContainerCss
-            logo["imageCss"] = logoObj.imageCss
-            logo["imageOnHoverCss"] = logoObj.imageOnHoverCss
-
-            if logoObj.image:
-                logo["imageSrc"] = f"/{settings.MEDIA_URL}{logoObj.image}"
-            else:
-                logo["imageSrc"] = logoObj.url
-
-        context = {
+        return render(request, self.template_name, {
             "tabs": get_menu(),
-            "logo": logo,
-        }
-
-        return render(request, self.template_name, context)
+            "constance_config": ConstanceProxy()
+        })

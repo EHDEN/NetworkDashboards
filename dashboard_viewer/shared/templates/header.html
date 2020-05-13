@@ -7,7 +7,13 @@
 
 <div class="uploadHeader">
     <div class="logo">
-        <img class="logo-img" src='{% static "images/CDM-BI-icon.png" %}'/>
+        <img class="logo-img"
+            {% if constance_config.APP_LOGO_URL %}
+                src='{{ constance_config.APP_LOGO_URL }}'/>
+            {% else %}
+                {% get_media_prefix as MEDIA_ROOT %}
+                src='/{{ MEDIA_ROOT }}{{ constance_config.APP_LOGO_IMAGE }}'/>
+            {% endif %}
     </div>
     <div class="slogan">
         <b>{{ constance_config.APP_TITLE }}</b>

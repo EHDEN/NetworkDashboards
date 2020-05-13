@@ -11,8 +11,9 @@
 }
 
 .logo {
-    display: inline-block;
-    vertical-align: top;
+    display: flex;
+    vertical-align: middle;
+    align-items: center;
     margin-top: 17px;
     text-align: left;
     transition-property: all;
