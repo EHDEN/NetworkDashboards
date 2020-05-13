@@ -1,20 +1,40 @@
 
 function updateHoverColorClasses(target, action) {
     if (action === "add") {
-        target.addClass("hovered-background");
-        target.find(".icon-div")
-            .addClass("hovered-background")
-            .addClass("hovered-text");
-        target.find("span")
-            .addClass("hovered-text");
+        if (target.hasClass("tab-within-group")) {
+            target.addClass("hovered-background-within-group");
+            target.find(".icon-div")
+                .addClass("hovered-background-within-group")
+                .addClass("hovered-text-within-group");
+            target.find("span")
+                .addClass("hovered-text-within-group");
+        }
+        else {
+            target.addClass("hovered-background");
+            target.find(".icon-div")
+                .addClass("hovered-background")
+                .addClass("hovered-text");
+            target.find("span")
+                .addClass("hovered-text");
+        }
     }
     else {
-        target.removeClass("hovered-background");
-        target.find(".icon-div")
-            .removeClass("hovered-background")
-            .removeClass("hovered-text");
-        target.find("span")
-            .removeClass("hovered-text");
+        if (target.hasClass("tab-within-group")) {
+            target.removeClass("hovered-background-within-group");
+            target.find(".icon-div")
+                .removeClass("hovered-background-within-group")
+                .removeClass("hovered-text-within-group");
+            target.find("span")
+                .removeClass("hovered-text-within-group");
+        }
+        else {
+            target.removeClass("hovered-background");
+            target.find(".icon-div")
+                .removeClass("hovered-background")
+                .removeClass("hovered-text");
+            target.find("span")
+                .removeClass("hovered-text");
+        }
     }
 }
 
