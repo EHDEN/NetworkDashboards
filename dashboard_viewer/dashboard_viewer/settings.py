@@ -197,7 +197,7 @@ CONSTANCE_CONFIG = {
         "url"
     ),
     "APP_TITLE": (
-        "CDM-BI",
+        "Network Dashboards",
         "Title to use for the several pages",
         str,
     ),
