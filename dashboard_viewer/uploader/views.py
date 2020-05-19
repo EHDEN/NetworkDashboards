@@ -11,7 +11,7 @@ from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
 
 from .forms import SourceForm, AchillesResultsForm
-from .models import UploadHistory, DataSource
+from .models import UploadHistory, DataSource, Country
 from .tasks import update_achilles_results_data
 
 
@@ -128,8 +128,10 @@ def upload_achilles_results(request, *args, **kwargs):
 def create_data_source(request, *args, **kwargs):
     data_source = kwargs.get("data_source")
     if request.method == "GET":
+
+        initial = {"acronym": data_source}
+
         if request.GET:
-            initial = dict()
             for field_name, field in SourceForm.base_fields.items():
                 if isinstance(field, fields.MultiValueField):
                     for i, widget in enumerate(field.widget.widgets):
@@ -137,6 +139,10 @@ def create_data_source(request, *args, **kwargs):
                         field_value = request.GET.get(generated_field_name)
                         if field_value:
                             initial[generated_field_name] = field_value
+                elif field_name == "country":
+                    countries_found = Country.objects.filter(country__icontains=request.GET["country"])
+                    if countries_found.count() == 1:
+                        initial["country"] = countries_found.get().id
                 else:
                     field_value = request.GET.get(field_name)
                     if field_value:
@@ -151,7 +157,6 @@ def create_data_source(request, *args, **kwargs):
                 obj.save()
 
                 return redirect("/uploader/{}".format(obj.acronym))
-
 
             for field_name, field in SourceForm.base_fields.items():
                 if isinstance(field, fields.MultiValueField):
@@ -172,20 +177,23 @@ def create_data_source(request, *args, **kwargs):
                 else:
                     if field_name in aux_form.cleaned_data:
                         initial[field_name] = aux_form.cleaned_data[field_name]
+                    elif field_name in initial:
+                        del initial[field_name]
 
             form = SourceForm(initial=initial)
 
-            for field, msgs in aux_form.errors.items():
-                required_error = False
-                for msg in msgs:
-                    if "required" in msg:
-                        required_error = True
-                        break
+            # fill the form with important errors
+            #for field, msgs in aux_form.errors.items():
+            #    required_error = False
+            #    for msg in msgs:
+            #        if "required" in msg:
+            #            required_error = True
+            #            break
 
-                if not required_error:
-                    form.errors[field] = msgs
+            #    if not required_error:
+            #        form.errors[field] = msgs
         else:
-            form = SourceForm(initial={"acronym": data_source})
+            form = SourceForm(initial=initial)
 
         if data_source is not None:
             form.fields["acronym"].disabled = True
