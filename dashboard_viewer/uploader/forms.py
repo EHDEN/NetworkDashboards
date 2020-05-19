@@ -9,7 +9,7 @@ from .widgets import ListTextWidget
 VERSION_REGEX = r'[\d.]*\d+'
 
 
-class SourceFrom(forms.ModelForm):
+class SourceForm(forms.ModelForm):
     database_type = forms.CharField(
         max_length = 40,
         widget = ListTextWidget(DatabaseType.objects),
@@ -28,17 +28,9 @@ class SourceFrom(forms.ModelForm):
         widgets = {
             'release_date': DatePickerInput(),
         }
-    
-    def clean_database_type(self):
-        db_type_title = self.cleaned_data["database_type"].title()
-        try:
-            db_type = DatabaseType.objects.get(type=db_type_title)
-        except DatabaseType.DoesNotExist:
-            db_type = DatabaseType(type=db_type_title)
-            db_type.save()
-            return db_type
 
-        return db_type
+    def clean_database_type(self):
+        return self.cleaned_data["database_type"].title()
 
 
 class AchillesResultsForm(forms.Form):

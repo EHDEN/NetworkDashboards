@@ -75,6 +75,13 @@ class DataSource(models.Model):
         blank       = True
     )
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if DatabaseType.objects.filter(type=self.database_type).count() == 0:
+            db_type = DatabaseType(type=self.database_type)
+            db_type.save()
+
+        super().save(force_insert, force_update, using, update_fields)
+
     def __str__(self):
         return self.name
 
