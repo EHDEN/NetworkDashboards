@@ -2,6 +2,7 @@
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 
+
 class Country(models.Model):
     class Meta:
         db_table = "country"
@@ -20,7 +21,7 @@ class Country(models.Model):
         return f"{self.country}"
 
     def __repr__(self):
-        return self.__repr__()
+        return self.__str__()
 
 
 class DatabaseType(models.Model):
@@ -50,7 +51,7 @@ class DataSource(models.Model):
         unique      = True,
         help_text   = "Name of the data source."
     )
-    acronym            = models.SlugField(
+    acronym         = models.CharField(
         max_length  = 50,
         unique      = True,
         help_text   = "Short label for the data source, containing only letters, numbers, underscores or hyphens."
