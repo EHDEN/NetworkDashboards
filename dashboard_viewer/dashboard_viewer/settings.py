@@ -177,6 +177,7 @@ CONSTANCE_REDIS_CONNECTION = {
     'port': REDIS_PORT,
     'db': 1,
 }
+CONSTANCE_DBS = ["default"]
 
 CONSTANCE_ADDITIONAL_FIELDS = {
     "image": ["django.forms.ImageField", {"required": False}],
