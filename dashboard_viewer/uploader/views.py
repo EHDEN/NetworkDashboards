@@ -57,7 +57,7 @@ def upload_achilles_results(request, *args, **kwargs):
 
             if not error:
                 update_achilles_results_data.delay(
-                    serialize('json', [obj_data_source] + [uploads[0]] if len(uploads) > 0 else [False]),
+                    serialize('json', [obj_data_source] + [uploads[0]] if len(uploads) > 0 else []),
                     lines
                 )
 

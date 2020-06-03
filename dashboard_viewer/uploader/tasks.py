@@ -15,9 +15,9 @@ def update_achilles_results_data(serialized_args, entries):
     serialized_args = list(deserialize('json', serialized_args))
 
     db = serialized_args[0].object
-    last_upload = serialized_args[1].object
 
-    if last_upload:
+    if len(serialized_args) > 1:
+        last_upload = serialized_args[1].object
         with closing(connections["achilles"].cursor()) as cursor:
             cursor.execute(
                 f"""
