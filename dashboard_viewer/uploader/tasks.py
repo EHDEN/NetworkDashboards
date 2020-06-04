@@ -17,6 +17,8 @@ def update_achilles_results_data(serialized_args, entries):
     db = serialized_args[0].object
 
     if len(serialized_args) > 1:
+        # if there were any records uploaded before
+        #  move them to the AchillesResultsArchive table
         last_upload = serialized_args[1].object
         with closing(connections["achilles"].cursor()) as cursor:
             cursor.execute(

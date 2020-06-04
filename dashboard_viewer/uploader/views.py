@@ -40,6 +40,9 @@ def upload_achilles_results(request, *args, **kwargs):
                 for i, line in enumerate(lines):
                     lines[i] = line.strip().split(",")
                     if len(lines[i]) != 7 and (i != len(lines) - 1 or line != ""):
+                        # fail if the number of columns is not 7 and if the its not the last line
+                        # or if it is the last line and is not a empty line. This condition allows
+                        # and empty line on the last line.
                         error = mark_safe(f"Invalid number of columns on line {i + 1}. The csv file"
                                           f" uploaded must have <b>seven</b> columns (analysis_id,"
                                           f" stratum_1, stratum_2, stratum_3, stratum_4, stratum_5, count_value).")
@@ -47,15 +50,19 @@ def upload_achilles_results(request, *args, **kwargs):
 
                 if form.cleaned_data["has_header"]:
                     lines = lines[1:]
+
+                # if the last line is a empty line remove it
                 if len(lines[-1]) == 1:
                     lines = lines[:-1]
 
             else:
                 error = mark_safe("Uploaded achilles results files should be <b>CSV</b> files.")
 
+            # get the latest upload record on the upload history
             uploads = UploadHistory.objects.filter(data_source__slug=obj_data_source.slug).order_by('-upload_date')
 
             if not error:
+                # launch a asynchronous task
                 update_achilles_results_data.delay(
                     serialize('json', [obj_data_source] + [uploads[0]] if len(uploads) > 0 else []),
                     lines
