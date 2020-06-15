@@ -2,8 +2,6 @@
 
 set -ex
 
-npm install
-
 # Apply django migrations
 python manage.py migrate
 python manage.py migrate --database=achilles uploader

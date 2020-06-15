@@ -2,9 +2,7 @@
 superset/
 
 # Docker volumes
-redis
-postgres
-dashboard_viewer/achilles_results_files/
+volumes/
 
 # Retrived from https://github.com/github/gitignore/blob/21419e391a78f2487340b3b1240b988aaf15b54f/Node.gitignore
 # Logs
