@@ -19,7 +19,7 @@ setting all necessary environment variables
 
 4. Set up the database for the dashboard viewer app
 
-    `docker-compose run --rm dashboard_viewer ./docker-init.sh`
+    `docker-compose run --rm dashboard ./docker-init.sh`
 
 4. Bring up the containers
 
