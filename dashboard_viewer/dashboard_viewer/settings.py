@@ -38,12 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'tabsManager',
-    'uploader',
-
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'django_sass',
+    'rest_framework',
+
+    'tabsManager',
+    'uploader',
 ]
 
 MIDDLEWARE = [
