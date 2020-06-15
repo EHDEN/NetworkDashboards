@@ -9,6 +9,7 @@
   "author": "aspedrosa",
   "license": "ISC",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.0",
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",
     "leaflet": "^1.6.0",
