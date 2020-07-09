@@ -1,6 +1,7 @@
 
 import datetime
 import os
+import re
 
 from django.conf import settings
 from django.contrib import messages
@@ -11,6 +12,9 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import SourceFrom, AchillesResultsForm
 from .models import UploadHistory, DataSource
 from .tasks import update_achilles_results_data
+
+
+quotes_regex = re.compile(r"^'|'$|^\"|\"$")
 
 
 @csrf_exempt
@@ -37,7 +41,7 @@ def upload_achilles_results(request, *args, **kwargs):
                 file_content = uploadedFile.read()
                 lines = file_content.decode("UTF-8").split("\n")
                 for i, line in enumerate(lines):
-                    lines[i] = line.strip().split(",")
+                    lines[i] = [re.sub(quotes_regex, "", entry) for entry in line.strip().split(",")]
                     if len(lines[i]) != 7 and (i != len(lines) - 1 or line != ""):
                         # fail if the number of columns is not 7 and if the its not the last line
                         # or if it is the last line and is not a empty line. This condition allows
