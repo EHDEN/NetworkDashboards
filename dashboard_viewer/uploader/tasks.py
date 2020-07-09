@@ -4,22 +4,16 @@ from __future__ import absolute_import, unicode_literals
 from contextlib import closing
 
 from celery import shared_task
-from django.core.serializers import deserialize
 from django.db import connections
 
 from .models import AchillesResults, AchillesResultsArchive
 
 
 @shared_task
-def update_achilles_results_data(serialized_args, entries):
-    serialized_args = list(deserialize('json', serialized_args))
-
-    db = serialized_args[0].object
-
-    if len(serialized_args) > 1:
+def update_achilles_results_data(db_id, last_upload_id, entries):
+    if last_upload_id:
         # if there were any records uploaded before
         #  move them to the AchillesResultsArchive table
-        last_upload = serialized_args[1].object
         with closing(connections["achilles"].cursor()) as cursor:
             cursor.execute(
                 f"""
@@ -45,9 +39,9 @@ def update_achilles_results_data(serialized_args, entries):
                     %s, %s
                 FROM {AchillesResults._meta.db_table}
                 """,
-                (db.id, last_upload.id)
+                (db_id, last_upload_id)
             )
-        AchillesResults.objects.filter(data_source=db).delete()
+        AchillesResults.objects.filter(data_source_id=db_id).delete()
 
     max_write_chunk = 100000
 
@@ -55,7 +49,7 @@ def update_achilles_results_data(serialized_args, entries):
     to_insert = [None] * max_write_chunk
     for entry in entries:
         to_insert[count] = AchillesResults(
-            data_source=db,
+            data_source_id=db_id,
             analysis_id=entry[0],
             stratum_1  =entry[1],
             stratum_2  =entry[2],

@@ -4,7 +4,6 @@ import os
 
 from django.conf import settings
 from django.contrib import messages
-from django.core.serializers import serialize
 from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
@@ -64,9 +63,12 @@ def upload_achilles_results(request, *args, **kwargs):
             if not error:
                 # launch a asynchronous task
                 update_achilles_results_data.delay(
-                    serialize('json', [obj_data_source] + [uploads[0]] if len(uploads) > 0 else []),
-                    lines
+                    obj_data_source.id,
+                    uploads[0].id if len(uploads) > 0 else None,
+                    lines,
                 )
+
+                lines = None
 
                 latest_upload = UploadHistory(
                     data_source=obj_data_source,
