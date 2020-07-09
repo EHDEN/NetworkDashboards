@@ -13,10 +13,9 @@ RUN pip install --upgrade pip setuptools \
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
     apt-get update && apt-get install -y nodejs
 
-#COPY ../dashboard_viewer/package.json .
+COPY package.json .
 
-#RUN npm install
-
+RUN npm install
 
 EXPOSE 8000
 
