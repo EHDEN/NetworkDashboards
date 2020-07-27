@@ -10,9 +10,11 @@
 
    2.3 Create a `docker-init.sh` file on `docker/superset` based on the file `docker/superset/docker-init-example.sh` to set up admin credentials for superset
 
+3. Build containers' images: `docker-compose build`. This might take several minutes.
+
 3. Set up the database for the dashboard viewer app: `docker-compose run --rm dashboard ./docker-init.sh`
 
-4. Bring up the containers: `docker-compose up`
+4. Bring up the containers: `docker-compose up -d`
 
 5. If you used the default ports:
    - Go to `http://localhost` to access the dashboard viewer app.
