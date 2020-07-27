@@ -1,23 +1,10 @@
 #!/usr/bin/env bash
-#
-# Licensed to the Apache Software Foundation (ASF) under one or more
-# contributor license agreements.  See the NOTICE file distributed with
-# this work for additional information regarding copyright ownership.
-# The ASF licenses this file to You under the Apache License, Version 2.0
-# (the "License"); you may not use this file except in compliance with
-# the License.  You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+
+# Based on https://github.com/apache/incubator-superset/blob/0.37.0rc3/docker/docker-init.sh
+
 set -e
 
-STEP_CNT=4
+STEP_CNT=3
 
 echo_step() {
 cat <<EOF
@@ -33,9 +20,9 @@ Init Step ${1}/${STEP_CNT} [${2}] -- ${3}
 EOF
 }
 
-# Create an admin user
+# Create an admin user - >> CHANGE THE VALUES BELOW <<
 echo_step "1" "Starting" "Setting up admin user ( admin / admin )"
-superset fab create-admin \ # CHANGE THE VALUES BELOW
+superset fab create-admin \
               --username admin \
               --firstname Superset \
               --lastname Admin \
@@ -48,14 +35,7 @@ echo_step "2" "Starting" "Applying DB migrations"
 superset db upgrade
 echo_step "2" "Complete" "Applying DB migrations"
 
-if [ "$SUPERSET_LOAD_EXAMPLES" = "yes" ]; then
-    # Load some data to play with
-    echo_step "3" "Starting" "Loading examples"
-    superset load_examples
-    echo_step "3" "Complete" "Loading examples"
-fi
-
 # Create default roles and permissions
-echo_step "4" "Starting" "Setting up roles and perms"
+echo_step "3" "Starting" "Setting up roles and perms"
 superset init
-echo_step "4" "Complete" "Setting up roles and perms"
+echo_step "3" "Complete" "Setting up roles and perms"

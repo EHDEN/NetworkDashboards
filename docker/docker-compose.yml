@@ -32,6 +32,7 @@ services:
     environment: *superset-environment
     depends_on: *superset-depends-on
     volumes: *superset-volumes
+    restart: unless-stopped
     ports:
       - ${SUPERSET_PORT}:8080
     networks:
@@ -39,6 +40,7 @@ services:
 
   superset-init:
     build: *superset-app-build
+    container_name: superset_init
     command: ["/app/docker-init.sh"]
     environment: *superset-environment
     depends_on: *superset-depends-on
@@ -48,6 +50,7 @@ services:
 
   superset-worker:
     build: *superset-app-build
+    container_name: superset_worker
     command: ["celery", "worker", "--app=superset.tasks.celery_app:app", "-Ofair", "-l", "INFO"]
     restart: unless-stopped
     environment: *superset-environment

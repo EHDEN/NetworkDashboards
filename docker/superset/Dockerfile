@@ -1,4 +1,4 @@
-# Originated from https://github.com/apache/incubator-superset/blob/0.36.0/Dockerfile
+# Based on https://github.com/apache/incubator-superset/blob/0.37.0rc3/Dockerfile
 
 ######################################################################
 # PY stage that simply does a pip install on our requirements
@@ -18,7 +18,7 @@ RUN mkdir /app \
 # in order to only build if and only if requirements change
 COPY ./requirements.txt ./docker/requirements-extra.txt /app/
 RUN cd /app \
-        && pip install --upgrade pip \
+        && pip install --upgrade pip setuptools \
         && pip install --no-cache -r requirements.txt -r requirements-extra.txt
 
 
@@ -62,15 +62,13 @@ ENV LANG=C.UTF-8 \
     SUPERSET_PORT=8080
 
 RUN useradd --user-group --no-create-home --no-log-init --shell /bin/bash superset \
-        && mkdir -p ${SUPERSET_HOME} \
+        && mkdir -p ${SUPERSET_HOME} ${PYTHONPATH} \
         && apt-get update -y \
         && apt-get install -y --no-install-recommends \
             build-essential \
             default-libmysqlclient-dev \
             libpq-dev \
         && rm -rf /var/lib/apt/lists/*
-
-COPY ./docker/pythonpath_dev ${PYTHONPATH}
 
 COPY --from=superset-py /usr/local/lib/python3.6/site-packages/ /usr/local/lib/python3.6/site-packages/
 # Copying site-packages doesn't move the CLIs, so let's copy them one by one
