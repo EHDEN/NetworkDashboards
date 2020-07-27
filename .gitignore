@@ -1,5 +1,7 @@
 # Superset repo
 superset/
+!docker/superset
+docker-init.sh
 
 # Docker volumes
 volumes/
