@@ -3,6 +3,7 @@
 set -ex
 
 python manage.py migrate
+python manage.py migrate --database=achilles uploader
 
 if [ ${DASHBOARD_VIEWER_ENV} = "production" ]; then
 	python manage.py collectstatic --noinput
