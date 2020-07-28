@@ -7,7 +7,7 @@ x-superset-depends-on: &superset-depends-on
   - redis
 x-superset-volumes: &superset-volumes
   - ./superset/docker-init.sh:/app/docker-init.sh
-  - ./superset/pythonpath_docker:/app/pythonpath
+  - ./superset/superset_config_overrides.py:/app/pythonpath/superset_config_docker.py
   - superset_home:/app/superset_home
 x-superset-environment: &superset-environment
   DATABASE_DIALECT: postgresql

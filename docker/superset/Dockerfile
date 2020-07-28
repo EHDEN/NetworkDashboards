@@ -70,6 +70,8 @@ RUN useradd --user-group --no-create-home --no-log-init --shell /bin/bash supers
             libpq-dev \
         && rm -rf /var/lib/apt/lists/*
 
+COPY ./docker/pythonpath_dev/superset_config.py ${PYTHONPATH}
+
 COPY --from=superset-py /usr/local/lib/python3.6/site-packages/ /usr/local/lib/python3.6/site-packages/
 # Copying site-packages doesn't move the CLIs, so let's copy them one by one
 COPY --from=superset-py /usr/local/bin/gunicorn /usr/local/bin/celery /usr/local/bin/flask /usr/bin/
