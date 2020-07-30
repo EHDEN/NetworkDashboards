@@ -131,10 +131,11 @@ def create_data_source(request, *args, **kwargs):
 
         initial = {"acronym": data_source}
 
-        if request.GET:
+        if request.GET:  # if the request has arguments
+            # compute fields' initial values
             for field_name, field in SourceForm.base_fields.items():
                 if isinstance(field, fields.MultiValueField):
-                    for i, widget in enumerate(field.widget.widgets):
+                    for i in range(len(field.widget.widgets)):
                         generated_field_name = f"{field_name}_{i}"
                         field_value = request.GET.get(generated_field_name)
                         if field_value:
@@ -158,11 +159,12 @@ def create_data_source(request, *args, **kwargs):
 
                 return redirect("/uploader/{}".format(obj.acronym))
 
+            # since the form isn't valid, lets maintain only the valid fields
             for field_name, field in SourceForm.base_fields.items():
                 if isinstance(field, fields.MultiValueField):
                     decompressed = list()
 
-                    for i, _ in enumerate(field.widget.widgets):
+                    for i in range(len(field.widget.widgets)):
                         generated_field_name = f"{field_name}_{i}"
                         value = request.GET.get(generated_field_name)
                         if value:
@@ -182,7 +184,7 @@ def create_data_source(request, *args, **kwargs):
 
             form = SourceForm(initial=initial)
 
-            # fill the form with important errors
+            # fill the form with errors associated with each field that wasn't valid
             #for field, msgs in aux_form.errors.items():
             #    required_error = False
             #    for msg in msgs:

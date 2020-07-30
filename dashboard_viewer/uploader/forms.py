@@ -26,7 +26,7 @@ class SourceForm(forms.ModelForm):
             "longitude"
         )
         widgets = {
-            'release_date': DatePickerInput(),
+            'release_date': DatePickerInput(),  # format %m/%d/%Y. Using a ModelForm this can't be changed
         }
 
     def clean_database_type(self):
