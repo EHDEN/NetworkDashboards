@@ -20,72 +20,72 @@ def convert_button_to_dict(button):
     return final_btn
 
 
-def get_menu():
+def get_menu(a):
+    """
+    :return: Organized structure with single tabs, group tabs and its sub tabs. Follows the following strcture
+    ```
+    [
+      {
+        "title": "Button 1",
+        "icon": "fa-icon",
+        "url": "http://..."
+      },
+      (
+        {
+          "title": "Group Button 1",
+          "icon": "fa-icon",
+        },
+        [
+          {
+            "title": "Within Group Button 1",
+            "icon": "fa-icon",
+            "url": "http://..."
+          },
+          {
+            "title": "Within Group Button 2",
+            "icon": "fa-icon",
+            "url": "http://..."
+          },
+          #...
+        )
+      ],
+      {
+        "title": "Button 2",
+        "icon": "fa-icon",
+        "url": "http://..."
+      },
+      #...
+    ]
+    ```
+    :rtype: list
+    """
     # get all base visible buttons, ordered by their position and title fields
-    buttons = Button.objects.filter(visible=True).order_by("position", "title").select_subclasses()
+    buttons = list(Button.objects.filter(visible=True).order_by("position", "title").select_subclasses())
 
-    groups = []
-    for btn in buttons:
-        if isinstance(btn, TabGroup):
-            groups.append(btn)
-    group_mappings = {group: [] for group in groups}  # tabs within a group
-    single_tabs = [btn for btn in buttons if isinstance(btn, Tab)]  # button without sub tabs
-
-    # associate each tab to its group, if it has one
-    for i in range(len(single_tabs))[::-1]:
-        tab = single_tabs[i]
-        if tab.group is not None:
-            if tab.group in group_mappings:
-                group_mappings[tab.group].insert(0, convert_button_to_dict(tab))
-            del single_tabs[i]
-
-    # merge and convert both single tabs and groups keeping their order
-    final_menu = []
-    groups_idx = single_tabs_idx = 0
-    while groups_idx < len(groups) and single_tabs_idx < len(single_tabs):
-        if groups[groups_idx].position == single_tabs[single_tabs_idx].position:
-            if groups[groups_idx].title <= single_tabs[single_tabs_idx].title:
-                final_menu.append(
-                    (
-                        convert_button_to_dict(groups[groups_idx]),
-                        group_mappings[groups[groups_idx]],
-                    )
-                )
-                groups_idx += 1
+    # association between a TabGroup and its SubTabs (Tab with the group field not None)
+    group_mappings = {}
+    for i, btn in enumerate(buttons):
+        if isinstance(btn, Tab):
+            if btn.group is None:
+                buttons[i] = convert_button_to_dict(btn)
             else:
-                final_menu.append(
-                    convert_button_to_dict(single_tabs[single_tabs_idx])
-                )
-                single_tabs_idx += 1
-        elif groups[groups_idx].position < single_tabs[single_tabs_idx].position:
-            final_menu.append(
-                (
-                    convert_button_to_dict(groups[groups_idx]),
-                    group_mappings[groups[groups_idx]],
-                )
-            )
-            groups_idx += 1
-        else:
-            final_menu.append(
-                convert_button_to_dict(single_tabs[single_tabs_idx])
-            )
-            single_tabs_idx += 1
+                if btn.group in group_mappings:
+                    # append the button to the already created sub tabs list
+                    group_mappings[btn.group].append(convert_button_to_dict(btn))
+                else:
+                    # create the list of the sub tabs for the associated group
+                    group_mappings[btn.group] = [convert_button_to_dict(btn)]
 
-    if groups_idx < len(groups) and len(groups) > 0:
-        for i in range(groups_idx, len(groups)):
-            final_menu.append(
-                (
-                    convert_button_to_dict(groups[i]),
-                    group_mappings[groups[i]],
-                )
+        elif isinstance(btn, TabGroup):
+            # if the list of sub tabs for this groups wasn't created yet, then use a new one
+            group_sub_buttons = group_mappings.get(btn, [])
+            buttons[i] = (
+                convert_button_to_dict(btn),
+                group_sub_buttons  # note that this list is the same as the one on group_mappings
             )
-    elif len(single_tabs) > 0:  # single_tabs_idx < len(single_tabs)
-        for i in range(single_tabs_idx, len(single_tabs)):
-            final_menu.append(
-                convert_button_to_dict(single_tabs[i])
-            )
+            group_mappings[btn] = group_sub_buttons
 
-    return final_menu
+    return [btn for btn in buttons if not isinstance(btn, Tab)]
 
 
 class APITabsView(rest_views.APIView):
