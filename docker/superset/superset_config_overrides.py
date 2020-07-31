@@ -1,4 +1,6 @@
 
+import os
+
 
 def get_env_variable(var_name, default=None):
     """Get the environment variable or raise exception."""
@@ -20,6 +22,8 @@ PUBLIC_ROLE_LIKE_GAMMA = True
 ENABLE_ROW_LEVEL_SECURITY = True
 
 
+REDIS_HOST = get_env_variable("REDIS_HOST")
+REDIS_PORT = get_env_variable("REDIS_PORT")
 REDIS_RESULTS_DB = get_env_variable("REDIS_CELERY_DB", 1)
 
 CACHE_CONFIG = {
