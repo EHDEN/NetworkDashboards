@@ -1,16 +1,21 @@
 
 import datetime
 import os
+import re
 
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
-from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 
 from .forms import SourceFrom, AchillesResultsForm
-from .models import AchillesResults, UploadHistory, DataSource, AchillesResultsArchive
-from django.views.decorators.csrf import csrf_exempt
+from .models import UploadHistory, DataSource
+from .tasks import update_achilles_results_data
+
+
+quotes_regex = re.compile(r"^'|'$|^\"|\"$")
+
 
 @csrf_exempt
 def upload_achilles_results(request, *args, **kwargs):
@@ -22,58 +27,52 @@ def upload_achilles_results(request, *args, **kwargs):
 
     upload_history = list()
     if request.method == "GET":
-        upload_history = list(
-            UploadHistory
-                .objects
-                .filter(data_source__slug=obj_data_source.slug)
-        )
+        upload_history = list(UploadHistory.objects.filter(data_source__slug=obj_data_source.slug))
         form = AchillesResultsForm()
+
     elif request.method == "POST":
         form = AchillesResultsForm(request.POST, request.FILES)
-        if form.is_valid():
-            uploads = UploadHistory.objects.filter(data_source__slug=obj_data_source.slug).order_by('-upload_date')
 
+        if form.is_valid():
             error = None
             uploadedFile = request.FILES["achilles_results"]
-            if uploadedFile.content_type == "text/csv":
-                try:
-                    is_header = form.cleaned_data["has_header"]
-                    listOfEntries = []
-                    for line in uploadedFile:
-                        if not is_header:
-                            listOfEntries.append(buildEntry(obj_data_source, line))
-                        else:
-                            is_header = False
 
-                    insertIntoDB(listOfEntries)
-                except IndexError:
-                    error = "The csv file uploaded must have at least <b>seven</b> columns \
-                        (analysis_id, stratum_1, stratum_2, stratum_3, stratum_4, stratum_5, count_value)."
+            if uploadedFile.content_type == "text/csv":
+                file_content = uploadedFile.read()
+                lines = file_content.decode("UTF-8").split("\n")
+                for i, line in enumerate(lines):
+                    lines[i] = [re.sub(quotes_regex, "", entry) for entry in line.strip().split(",")]
+                    if len(lines[i]) != 7 and (i != len(lines) - 1 or line != ""):
+                        # fail if the number of columns is not 7 and if the its not the last line
+                        # or if it is the last line and is not a empty line. This condition allows
+                        # and empty line on the last line.
+                        error = mark_safe(f"Invalid number of columns on line {i + 1}. The csv file"
+                                          f" uploaded must have <b>seven</b> columns (analysis_id,"
+                                          f" stratum_1, stratum_2, stratum_3, stratum_4, stratum_5, count_value).")
+                        break
+
+                if form.cleaned_data["has_header"]:
+                    lines = lines[1:]
+
+                # if the last line is a empty line remove it
+                if len(lines[-1]) == 1:
+                    lines = lines[:-1]
+
             else:
                 error = mark_safe("Uploaded achilles results files should be <b>CSV</b> files.")
 
+            # get the latest upload record on the upload history
+            uploads = UploadHistory.objects.filter(data_source__slug=obj_data_source.slug).order_by('-upload_date')
+
             if not error:
-                if len(uploads) > 0:
-                    last_upload = uploads[0]
+                # launch a asynchronous task
+                update_achilles_results_data.delay(
+                    obj_data_source.id,
+                    uploads[0].id if len(uploads) > 0 else None,
+                    lines,
+                )
 
-                    entries = []
-                    for ach_res in AchillesResults.objects.filter(data_source=obj_data_source).all():
-                        entries.append(
-                            AchillesResultsArchive(
-                                data_source=obj_data_source,
-                                upload_info=last_upload,
-                                analysis_id=ach_res.analysis_id,
-                                stratum_1=ach_res.stratum_1,
-                                stratum_2=ach_res.stratum_2,
-                                stratum_3=ach_res.stratum_3,
-                                stratum_4=ach_res.stratum_4,
-                                stratum_5=ach_res.stratum_5,
-                                count_value=ach_res.count_value
-                            )
-                        )
-                    AchillesResultsArchive.objects.bulk_create(entries)
-                    AchillesResults.objects.filter(data_source=obj_data_source).delete()
-
+                lines = None
 
                 latest_upload = UploadHistory(
                     data_source=obj_data_source,
@@ -93,15 +92,14 @@ def upload_achilles_results(request, *args, **kwargs):
                     obj_data_source.slug
                 )
                 os.makedirs(data_source_storage_path, exist_ok=True)
-                uploadedFile.seek(0, 0)
                 f = open(os.path.join(data_source_storage_path, f"{len(uploads)}.csv"), "wb+")
-                f.write(uploadedFile.read())
+                f.write(file_content)
                 f.close()
 
                 messages.add_message(
                     request,
                     messages.SUCCESS,
-                    "Achilles Results file uploaded with success.",
+                    "Achilles Results file uploaded with success. The dashboards will update in a few minutes.",
                 )
 
                 form = AchillesResultsForm()
@@ -125,15 +123,16 @@ def upload_achilles_results(request, *args, **kwargs):
         }
     )
 
+
 @csrf_exempt
 def create_data_source(request, *args, **kwargs):
     data_source = kwargs.get("data_source")
     if request.method == "GET":
         form = SourceFrom(initial={'slug': data_source})
-        if data_source != None:
+        if data_source is not None:
             form.fields["slug"].disabled = True
     elif request.method == "POST":
-        if "slug" not in request.POST and data_source != None:
+        if "slug" not in request.POST and data_source is not None:
             request.POST = request.POST.copy()
             request.POST["slug"] = data_source
         form = SourceFrom(request.POST)
@@ -163,6 +162,7 @@ def create_data_source(request, *args, **kwargs):
             "submit_button_text": mark_safe("<i class='fas fa-plus-circle'></i> Create"),
         }
     )
+
 
 @csrf_exempt
 def edit_data_source(request, *args, **kwargs):
@@ -216,21 +216,3 @@ def edit_data_source(request, *args, **kwargs):
             "submit_button_text": mark_safe("<i class='far fa-edit'></i> Edit"),
         }
     )
-
-
-def buildEntry(db, line):
-    #columns=("source","analysis_id","stratum_1","stratum_2","stratum_3","stratum_4","stratum_5","count_value")    
-    newLine = line.decode('ASCII').strip().replace('"', "")
-    newLine = [db] + newLine.split(",")
-    return AchillesResults(data_source    = newLine[0],
-                           analysis_id    = newLine[1],
-                           stratum_1      = newLine[2],
-                           stratum_2      = newLine[3],
-                           stratum_3      = newLine[4],
-                           stratum_4      = newLine[5],
-                           stratum_5      = newLine[6],
-                           count_value    = newLine[7])
-
-
-def insertIntoDB(listOfEntries):
-    AchillesResults.objects.bulk_create(listOfEntries)
