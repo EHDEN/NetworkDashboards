@@ -5,11 +5,9 @@ The dashboards to represent the OMOP CDM databases in the EHDEN network
 
 More documentation about the system is available [here](https://github.com/EHDEN/NetworkDashboards/wiki).
 
-### Active Developers
+### Core Team
 * João R. Almeida<sup id="a1">[1](#f1)</sup>
 * André Pedrosa<sup id="a1">[1](#f1)</sup>
-  
-### Project Leader
 * José L. Oliveira<sup id="a1">[1](#f1)</sup>
 
 ### Partners
