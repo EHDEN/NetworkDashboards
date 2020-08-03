@@ -124,11 +124,11 @@ class AchillesResults(models.Model):
 
     data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
     analysis_id = models.BigIntegerField()
-    stratum_1   = models.TextField()
-    stratum_2   = models.TextField()
-    stratum_3   = models.TextField()
-    stratum_4   = models.TextField()
-    stratum_5   = models.TextField()
+    stratum_1   = models.TextField(null=True)
+    stratum_2   = models.TextField(null=True)
+    stratum_3   = models.TextField(null=True)
+    stratum_4   = models.TextField(null=True)
+    stratum_5   = models.TextField(null=True)
     count_value = models.BigIntegerField()
 
 
@@ -143,11 +143,11 @@ class AchillesResultsArchive(models.Model):
     upload_info = models.ForeignKey(UploadHistory, on_delete=models.CASCADE)
     data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
     analysis_id = models.BigIntegerField()
-    stratum_1   = models.TextField()
-    stratum_2   = models.TextField()
-    stratum_3   = models.TextField()
-    stratum_4   = models.TextField()
-    stratum_5   = models.TextField()
+    stratum_1   = models.TextField(null=True)
+    stratum_2   = models.TextField(null=True)
+    stratum_3   = models.TextField(null=True)
+    stratum_4   = models.TextField(null=True)
+    stratum_5   = models.TextField(null=True)
     count_value = models.BigIntegerField()
 
 

@@ -1,20 +1,18 @@
 
 import datetime
 import os
-import re
 
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
+import pandas
+import numpy  # noqa
 
 from .forms import SourceFrom, AchillesResultsForm
 from .models import UploadHistory, DataSource
 from .tasks import update_achilles_results_data
-
-
-quotes_regex = re.compile(r"^'|'$|^\"|\"$")
 
 
 @csrf_exempt
@@ -25,9 +23,8 @@ def upload_achilles_results(request, *args, **kwargs):
     except DataSource.DoesNotExist:
         return create_data_source(request, *args, **kwargs)
 
-    upload_history = list()
+    upload_history = list(UploadHistory.objects.filter(data_source__slug=obj_data_source.slug))
     if request.method == "GET":
-        upload_history = list(UploadHistory.objects.filter(data_source__slug=obj_data_source.slug))
         form = AchillesResultsForm()
 
     elif request.method == "POST":
@@ -35,55 +32,68 @@ def upload_achilles_results(request, *args, **kwargs):
 
         if form.is_valid():
             error = None
-            uploadedFile = request.FILES["achilles_results"]
 
-            if uploadedFile.content_type == "text/csv":
-                file_content = uploadedFile.read()
-                lines = file_content.decode("UTF-8").split("\n")
-                for i, line in enumerate(lines):
-                    lines[i] = [re.sub(quotes_regex, "", entry) for entry in line.strip().split(",")]
-                    if len(lines[i]) != 7 and (i != len(lines) - 1 or line != ""):
-                        # fail if the number of columns is not 7 and if the its not the last line
-                        # or if it is the last line and is not a empty line. This condition allows
-                        # and empty line on the last line.
-                        error = mark_safe(f"Invalid number of columns on line {i + 1}. The csv file"
-                                          f" uploaded must have <b>seven</b> columns (analysis_id,"
-                                          f" stratum_1, stratum_2, stratum_3, stratum_4, stratum_5, count_value).")
-                        break
-
-                if form.cleaned_data["has_header"]:
-                    lines = lines[1:]
-
-                # if the last line is a empty line remove it
-                if len(lines[-1]) == 1:
-                    lines = lines[:-1]
-
-            else:
+            try:
+                achilles_results = pandas.read_csv(
+                    request.FILES["achilles_results_file"],
+                    header=0,
+                    usecols=range(7),
+                    dtype=str,
+                    low_memory=False,
+                )
+            except ValueError:
                 error = mark_safe("Uploaded achilles results files should be <b>CSV</b> files.")
+                error = mark_safe(f"Invalid number of columns. The csv file uploaded"
+                                  f" must have <b>seven</b> (analysis_id, stratum_1,"
+                                  f" stratum_2, stratum_3, stratum_4, stratum_5, count_value).")
 
-            # get the latest upload record on the upload history
-            uploads = UploadHistory.objects.filter(data_source__slug=obj_data_source.slug).order_by('-upload_date')
+            achilles_results.columns = [
+                "analysis_id",
+                "stratum_1",
+                "stratum_2",
+                "stratum_3",
+                "stratum_4",
+                "stratum_5",
+                "count_value"
+            ]
+            achilles_results.astype({
+                "analysis_id": numpy.int32,
+                "count_value": numpy.int32,
+            }, copy=False)
+
+            analysis_0 = achilles_results[achilles_results.analysis_id == 0]
+            if analysis_0.empty:
+                pass
+                #error = mark_safe("TODO")
+
+            #achilles_version = analysis_0.loc[0, "stratum_2"]
+            #achilles_generation_date = analysis_0.loc[0, "stratum_3"]
+
+            analysis_5000 = achilles_results[achilles_results.analysis_id == 5000]
+            if analysis_5000.empty:
+                pass
+                #error = mark_safe("TODO")
+
+            #cdm_version = analysis_5000.loc[0, "stratum_4"]
 
             if not error:
                 # launch a asynchronous task
                 update_achilles_results_data.delay(
                     obj_data_source.id,
-                    uploads[0].id if len(uploads) > 0 else None,
-                    lines,
+                    upload_history[0].id if len(upload_history) > 0 else None,
+                    achilles_results.to_json(),
                 )
-
-                lines = None
 
                 latest_upload = UploadHistory(
                     data_source=obj_data_source,
                     upload_date=datetime.datetime.today(),
-                    achilles_version=form.cleaned_data["achilles_version"],
-                    achilles_generation_date=form.cleaned_data["achilles_generation_date"],
-                    cdm_version=form.cleaned_data["cdm_version"],
-                    vocabulary_version=form.cleaned_data["vocabulary_version"],
+                    achilles_version="3.3.3",#achilles_version,
+                    achilles_generation_date=datetime.datetime.today(),#datachilles_generation_date,
+                    cdm_version="3.5.5",#cdm_version,
+                    vocabulary_version="3.3.3",#form.cleaned_data["vocabulary_version"],
                 )
                 latest_upload.save()
-                upload_history = [latest_upload] + list(uploads)
+                upload_history = [latest_upload] + upload_history
 
                 # save the achilles result file to disk
                 data_source_storage_path = os.path.join(
@@ -92,9 +102,13 @@ def upload_achilles_results(request, *args, **kwargs):
                     obj_data_source.slug
                 )
                 os.makedirs(data_source_storage_path, exist_ok=True)
-                f = open(os.path.join(data_source_storage_path, f"{len(uploads)}.csv"), "wb+")
-                f.write(file_content)
-                f.close()
+                achilles_results.to_csv(
+                    os.path.join(
+                        data_source_storage_path,
+                        f"{len(upload_history)}.csv"
+                    ),
+                    index=False,
+                )
 
                 messages.add_message(
                     request,
@@ -110,8 +124,6 @@ def upload_achilles_results(request, *args, **kwargs):
                     messages.ERROR,
                     error,
                 )
-
-                upload_history = list(uploads)
     return render(
         request,
         'upload_achilles_results.html',
