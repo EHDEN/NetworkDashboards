@@ -9,8 +9,6 @@ More documentation about the system is available [here](https://github.com/EHDEN
 * João R. Almeida<sup id="a1">[1](#f1)</sup>
 * André Pedrosa<sup id="a1">[1](#f1)</sup>
 * José L. Oliveira<sup id="a1">[1](#f1)</sup>
-
-### Partners
 * Peter Rijnbeek<sup id="a2">[2](#f2)</sup>
 
  1. <small id="f1"> University of Aveiro, Dept. Electronics, Telecommunications and Informatics (DETI / IEETA), Aveiro, Portugal </small> [↩](#a1)
