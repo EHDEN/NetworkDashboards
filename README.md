@@ -1,5 +1,5 @@
-# cdm-bi
-Tool for business intelligence using OMOP CDM
+# Network Dashboards
+The dashboards to represent the OMOP CDM databases in the EHDEN network
 
 ## Installation
 
