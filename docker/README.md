@@ -1,26 +1,23 @@
 # Setup a docker environment
 
-1. Create a `.env` file here, using `.env-example` as reference,
-setting all necessary environment variables
+1. Create a `.env` file on this directory, using `.env-example` as reference, setting all necessary environment variables (SUPERSET\_MAPBOX\_API\_KEY and DASHBOARD\_VIEWER\_SECRET\_KEY)
 
 2. Setup superset
 
-    2.1. Clone the repository
-    
-    `git clone https://github.com/apache/incubator-superset ../superset`
+   2.1 Clone the repository to the root of the repository into a directory called ''superset': `git clone https://github.com/apache/incubator-superset ../superset`
 
-    2.2 Checkout to tag 0.35.1
+   2.2 Checkout to tag 0.37.0rc4: `cd ../superset && git checkout tags/0.37.0rc4 -b tag0.37.0rc4`
 
-    `cd ../superset && git checkout tags/0.35.1 -b tag0.35.1`
+   2.3 Create a `docker-init.sh` file on `docker/superset` based on the file `docker/superset/docker-init-example.sh` to set up admin credentials for superset
 
-3. Set up the database for superset
+3. If you wish to include this app as an iframe on another website you need to add its address to the ALLOWED_HOSTS list on file `dashboard_viewer/dashboard_viewer/settings.py` of the dasboard app
 
-    `docker-compose run --rm superset ./docker-init.sh`
+4. Build containers' images: `docker-compose build`. This might take several minutes.
 
-4. Set up the database for the dashboard viewer app
+5. Set up the database for the dashboard viewer app: `docker-compose run --rm dashboard ./docker-init.sh`
 
-    `docker-compose run --rm dashboard ./docker-init.sh`
+6. Bring up the containers: `docker-compose up -d`
 
-4. Bring up the containers
-
-    `docker-compose up -d`
+7. If you used the default ports:
+   - Go to `http://localhost` to access the dashboard viewer app.
+   - Go to `http://localhost:8088` to access superset.
