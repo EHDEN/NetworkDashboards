@@ -1,11 +1,15 @@
-$background-color: #003399;
-$background-color-groups: #3366cc;
-$text-color: #ffffff;
+$background-color: #2b2f3e;
+$background-color-within-group: #f2f2f4;
+$text-color: #c4c8d6;
+$text-color-within-group: #adb4d0;
 
-$on-hover-background-color: #6699ff;
+$on-hover-background-color: #4983af;
+$on-hover-background-color-within-group: #444a5f;
 $on-hover-text-color: #ffffff;
+$on-hover-text-color-within-group: #adb4d0;
 
-$border-between-buttons-color: #c4c8d6;
+$border-color-between-buttons: #2f3444;
+$border-color-between-buttons-within-group: #f2f2f4;
 
 $menu-collapsed-width: 100px;
 $menu-expanded-width: 380px;
@@ -46,8 +50,14 @@ $border-radius: 20px;
 .hovered-text {
   color: $on-hover-text-color;
 }
+.hovered-text-within-group {
+  color: $on-hover-text-color-within-group;
+}
 .hovered-background {
   background-color: $on-hover-background-color !important;
+}
+.hovered-background-within-group {
+  background-color: $on-hover-background-color-within-group !important;
 }
 
 /* Css to apply when a button is hovered */
@@ -110,7 +120,6 @@ body {
     width: $menu-collapsed-width;
     position: relative;
     pointer-events: auto;
-    border-bottom: $border-between-buttons-color solid 1px;
     -webkit-transition: 400ms;
     transition: 400ms;
 
@@ -119,31 +128,40 @@ body {
     padding-bottom: 2vh;
     -webkit-box-align: center;
     align-items: center;
-    color: $text-color;
-
-    &:first-of-type {
-      border-top: $border-between-buttons-color solid 1px;
-    }
 
     /* Tab title */
     span {
       width: 100%;
       white-space: nowrap;
       text-indent: -20em;
-      -webkit-transition: text-indent 400ms ease-in-out;
-      transition: text-indent 400ms ease-in-out;
+      -webkit-transition: text-indent 200ms ease-in-out;
+      transition: text-indent 200ms ease-in-out;
     }
   }
 
   .tab-group, .tab-single {
+    border-bottom: $border-color-between-buttons solid 1px;
+
+    &:first-of-type {
+      border-top: $border-color-between-buttons solid 1px;
+    }
+
+    color: $text-color;
     background-color: $background-color;
   }
 
   .tab-within-group {
-    background: $background-color-groups;
+    border-bottom: $border-color-between-buttons-within-group solid 1px;
+
+    &:first-of-type {
+      border-top: $border-color-between-buttons-within-group solid 1px;
+    }
+
+    color: $text-color-within-group;
+    background: $background-color-within-group;
 
     .icon-div {
-      background-color: $background-color-groups;
+      background-color: $background-color-within-group;
     }
   }
 

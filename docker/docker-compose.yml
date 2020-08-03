@@ -1,73 +1,101 @@
-version: "3"
+x-superset-app-build: &superset-app-build
+  context: ../superset
+  dockerfile: ../docker/superset/Dockerfile
+  target: lean
+x-superset-depends-on: &superset-depends-on
+  - postgres
+  - redis
+x-superset-volumes: &superset-volumes
+  - ./superset/docker-init.sh:/app/docker-init.sh
+  - ./superset/superset_config_overrides.py:/app/pythonpath/superset_config_docker.py
+  - superset_home:/app/superset_home
+x-superset-environment: &superset-environment
+  DATABASE_DIALECT: postgresql
+  DATABASE_HOST: postgres
+  DATABASE_PORT: 5432
+  DATABASE_USER: ${POSTGRES_SUPERSET_USER}
+  DATABASE_PASSWORD: ${POSTGRES_SUPERSET_PASSWORD}
+  DATABASE_DB: ${POSTGRES_SUPERSET_DB}
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
+  FLASK_ENV: production
+  SUPERSET_ENV: production
+  MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
+  PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
+
+version: "3.7"
 services:
-  nginx:
-    image: nginx:1.14.0
+  #### SUPERSET ####
+  superset:
+    build: *superset-app-build
+    restart: unless-stopped
+    environment: *superset-environment
+    depends_on: *superset-depends-on
+    volumes: *superset-volumes
     restart: unless-stopped
     ports:
-      - "${NGINX_PORT}:80"
-    volumes:
-      - ./nginx-config:/etc/nginx/conf.d
-      - ./static:/static
-    links:
-      - dashboard
+      - ${SUPERSET_PORT}:8080
     networks:
       - all
 
+  superset-init:
+    build: *superset-app-build
+    container_name: superset_init
+    command: ["/app/docker-init.sh"]
+    environment: *superset-environment
+    depends_on: *superset-depends-on
+    volumes: *superset-volumes
+    networks:
+      - all
+
+  superset-worker:
+    build: *superset-app-build
+    container_name: superset_worker
+    command: ["celery", "worker", "--app=superset.tasks.celery_app:app", "-Ofair", "-l", "INFO"]
+    restart: unless-stopped
+    environment: *superset-environment
+    depends_on: *superset-depends-on
+    volumes: *superset-volumes
+    networks:
+      - all
+
+  #### DATA ####
   redis:
     image: redis:3.2
     restart: unless-stopped
-    ports:
-      - "${REDIS_PORT}:6379"
     volumes:
-      - ../../redis:/data
+      - ./volumes/redis:/data
     networks:
       - all
-      
+
   postgres:
     image: postgres:10
     restart: unless-stopped
     environment:
-      POSTGRES_USER: "${POSTGRES_ROOT_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_ROOT_PASSWORD}"
+      POSTGRES_USER: ${POSTGRES_ROOT_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
       # Variables below are used to iniliaze databases for the
       #  services below (superset and dashboard_viewer).
-      POSTGRES_DBS: "${POSTGRES_SUPERSET_DB} ${POSTGRES_DASHBOARD_VIEWER_DB} ${POSTGRES_ACHILLES_DB}"
-      POSTGRES_DBS_USERS: "${POSTGRES_SUPERSET_USER} ${POSTGRES_DASHBOARD_VIEWER_USER} ${POSTGRES_ACHILLES_USER}"
-      POSTGRES_DBS_PASSWORDS: "${POSTGRES_SUPERSET_PASSWORD} ${POSTGRES_DASHBOARD_VIEWER_PASSWORD} ${POSTGRES_ACHILLES_PASSWORD}"
-    ports:
-      - "${POSTGRES_PORT}:5432"
+      POSTGRES_DBS: ${POSTGRES_SUPERSET_DB} ${POSTGRES_DASHBOARD_VIEWER_DB} ${POSTGRES_ACHILLES_DB}
+      POSTGRES_DBS_USERS: ${POSTGRES_SUPERSET_USER} ${POSTGRES_DASHBOARD_VIEWER_USER} ${POSTGRES_ACHILLES_USER}
+      POSTGRES_DBS_PASSWORDS: ${POSTGRES_SUPERSET_PASSWORD} ${POSTGRES_DASHBOARD_VIEWER_PASSWORD} ${POSTGRES_ACHILLES_PASSWORD}
     volumes:
-      - ../../postgres:/var/lib/postgresql/data
+      - ./volumes/postgres:/var/lib/postgresql/data
       - ./postgres-entrypoint:/docker-entrypoint-initdb.d
     networks:
       - all
 
-  superset:
-    build:
-      context: ../superset
-      dockerfile: contrib/docker/Dockerfile
+  #### DASHBOARD ####
+  nginx:
+    image: nginx:1.18.0
     restart: unless-stopped
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: "${POSTGRES_SUPERSET_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_SUPERSET_PASSWORD}"
-      POSTGRES_DB: "${POSTGRES_SUPERSET_DB}"
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      MAPBOX_API_KEY: "${SUPERSET_MAPBOX_API_KEY}"
-      SUPERSET_ENV: "${INSTALLATION_ENV}"
-    user: root:root
     ports:
-      - "${SUPERSET_PORT}:8088"
-    depends_on:
-      - postgres
-      - redis
+      - ${NGINX_PORT}:80
     volumes:
-      # this is needed to communicate with the postgres and redis services
-      - ./superset_config.py:/home/superset/superset/superset_config.py
-      # this is needed for development, remove with SUPERSET_ENV=production
-      - ../superset/superset:/home/superset/superset
+      - ./nginx-config:/etc/nginx/conf.d
+      - ./static:/static/dashboard
+    depends_on:
+      - dashboard
     networks:
       - all
 
@@ -77,33 +105,40 @@ services:
     environment:
       POSTGRES_DEFAULT_HOST: postgres
       POSTGRES_DEFAULT_PORT: 5432
-      POSTGRES_DEFAULT_USER: "${POSTGRES_DASHBOARD_VIEWER_USER}"
-      POSTGRES_DEFAULT_PASSWORD: "${POSTGRES_DASHBOARD_VIEWER_PASSWORD}"
-      POSTGRES_DEFAULT_DB: "${POSTGRES_DASHBOARD_VIEWER_DB}"
+      POSTGRES_DEFAULT_USER: ${POSTGRES_DASHBOARD_VIEWER_USER}
+      POSTGRES_DEFAULT_PASSWORD: ${POSTGRES_DASHBOARD_VIEWER_PASSWORD}
+      POSTGRES_DEFAULT_DB: ${POSTGRES_DASHBOARD_VIEWER_DB}
       POSTGRES_ACHILLES_HOST: postgres
       POSTGRES_ACHILLES_PORT: 5432
-      POSTGRES_ACHILLES_USER: "${POSTGRES_ACHILLES_USER}"
-      POSTGRES_ACHILLES_PASSWORD: "${POSTGRES_ACHILLES_PASSWORD}"
-      POSTGRES_ACHILLES_DB: "${POSTGRES_ACHILLES_DB}"
-      SECRET_KEY: "${DASHBOARD_VIEWER_SECRET_KEY}"
-      DASHBOARD_VIEWER_ENV: "${INSTALLATION_ENV}"
-      #DASHBOARD_VIEWER_ENV: development #"${INSTALLATION_ENV}"
-    ports:
-      - "${DASHBOARD_VIEWER_PORT}:8000"
+      POSTGRES_ACHILLES_USER: ${POSTGRES_ACHILLES_USER}
+      POSTGRES_ACHILLES_PASSWORD: ${POSTGRES_ACHILLES_PASSWORD}
+      POSTGRES_ACHILLES_DB: ${POSTGRES_ACHILLES_DB}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SECRET_KEY: ${DASHBOARD_VIEWER_SECRET_KEY}
+      DASHBOARD_VIEWER_ENV: ${INSTALLATION_ENV}
+    # ports for development
+    #ports:
+    # - ${DASHBOARD_VIEWER_PORT}:8000
     depends_on:
       - postgres
+      - redis
     volumes:
-      # this is needed for development, remove with DASHBOARD_VIEWER_ENV=production
-      - ../dashboard_viewer:/app
-      # to keep the achilles files outside
-      - ../../achilles_results_files:/app/achilles_results_files
+      # required, to keep the achilles files outside
+      - ./volumes/achilles_results_files:/app/achilles_results_files
+      # production
       - ./static:/app/static
+      # development
+      #- ../dashboard_viewer:/app
     networks:
       - all
+
+volumes:
+  superset_home:
 
 networks:
   all:
     ipam:
       driver: default
       config:
-        - subnet: 10.1.0.0/16 
+        - subnet: 10.1.0.0/16

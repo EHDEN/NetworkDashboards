@@ -38,12 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'tabsManager',
-    'uploader',
-
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'django_sass',
+    'rest_framework',
+
+    'tabsManager',
+    'uploader',
 ]
 
 MIDDLEWARE = [
@@ -141,6 +142,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
@@ -158,3 +160,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Uploader app specific settings
 ACHILLES_RESULTS_STORAGE_PATH = "achilles_results_files"
+
+# Celery
+REDIS_HOST = os.environ.get('REDIS_HOST', 'redis')
+REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
+
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/1"
