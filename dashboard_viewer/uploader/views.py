@@ -1,9 +1,11 @@
 
+from typing import Union
 import datetime
 import os
 
 from django.conf import settings
 from django.contrib import messages
+from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
@@ -13,6 +15,81 @@ import numpy  # noqa
 from .forms import SourceFrom, AchillesResultsForm
 from .models import UploadHistory, DataSource
 from .tasks import update_achilles_results_data
+
+
+def get_df_from_uploaded_file(request: WSGIRequest) -> Union[pandas.DataFrame, None]:
+    try:
+        achilles_results = pandas.read_csv(
+            request.FILES["achilles_results_file"],
+            header=0,
+            usecols=range(7),
+            dtype=str,
+            low_memory=False,
+        )
+    except ValueError:
+        messages.add_message(
+            request,
+            messages.ERROR,
+            mark_safe(
+                "The provided file has an invalid csv format. Make sure is a text file separated"
+                " by <b>commas</b> with <b>seven</b> columns (analysis_id, stratum_1,"
+                " stratum_2, stratum_3, stratum_4, stratum_5, count_value)."
+            ),
+        )
+
+        return
+
+
+    achilles_results.columns = [  # noqa
+        "analysis_id",
+        "stratum_1",
+        "stratum_2",
+        "stratum_3",
+        "stratum_4",
+        "stratum_5",
+        "count_value"
+    ]
+
+    try:
+        achilles_results.astype({
+            "analysis_id": numpy.int32,
+            "count_value": numpy.int32,
+        }, copy=False)
+    except ValueError:
+        messages.add_message(
+            request,
+            messages.ERROR,
+            mark_safe(
+                "The provided file has invalid values on the columns <i>analysis_id</i> or <i>count_value</i>."
+                " These must be integers."
+            ),
+        )
+
+        return
+
+
+    missing = []  # noqa
+    if achilles_results[achilles_results.analysis_id == 0].empty:
+        missing.append("0")
+    if achilles_results[achilles_results.analysis_id == 5000].empty:
+        missing.append("5000")
+
+    if missing:
+        missing = f"{missing[0]} is" if len(missing) == 1 else f"{', '.join(missing[:-1])} and {missing[-1]} are"
+
+        messages.add_message(
+            request,
+            messages.ERROR,
+            mark_safe(
+                f"Analysis id {missing} missing. Try (re)running the plugin"
+                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
+                "on your database."
+            ),
+        )
+
+        return
+
+    return achilles_results
 
 
 @csrf_exempt
@@ -31,59 +108,17 @@ def upload_achilles_results(request, *args, **kwargs):
         form = AchillesResultsForm(request.POST, request.FILES)
 
         if form.is_valid():
-            error = None
+            achilles_results = get_df_from_uploaded_file(request)
 
-            try:
-                achilles_results = pandas.read_csv(
-                    request.FILES["achilles_results_file"],
-                    header=0,
-                    usecols=range(7),
-                    dtype=str,
-                    low_memory=False,
-                )
-            except ValueError:
-                error = mark_safe("Uploaded achilles results files should be <b>CSV</b> files.")
-                error = mark_safe(f"Invalid number of columns. The csv file uploaded"
-                                  f" must have <b>seven</b> (analysis_id, stratum_1,"
-                                  f" stratum_2, stratum_3, stratum_4, stratum_5, count_value).")
-
-            achilles_results.columns = [
-                "analysis_id",
-                "stratum_1",
-                "stratum_2",
-                "stratum_3",
-                "stratum_4",
-                "stratum_5",
-                "count_value"
-            ]
-            achilles_results.astype({
-                "analysis_id": numpy.int32,
-                "count_value": numpy.int32,
-            }, copy=False)
-
-            analysis_0 = achilles_results[achilles_results.analysis_id == 0]
-            if analysis_0.empty:
-                pass
-                #error = mark_safe("TODO")
-
-            #achilles_version = analysis_0.loc[0, "stratum_2"]
-            #achilles_generation_date = analysis_0.loc[0, "stratum_3"]
-
-            analysis_5000 = achilles_results[achilles_results.analysis_id == 5000]
-            if analysis_5000.empty:
-                pass
-                #error = mark_safe("TODO")
-
-            #cdm_version = analysis_5000.loc[0, "stratum_4"]
-
-            if not error:
-                # launch a asynchronous task
+            if achilles_results:
+                # launch an asynchronous task
                 update_achilles_results_data.delay(
                     obj_data_source.id,
                     upload_history[0].id if len(upload_history) > 0 else None,
                     achilles_results.to_json(),
                 )
 
+                # TODO aspedrosa: fill with appropriate data
                 latest_upload = UploadHistory(
                     data_source=obj_data_source,
                     upload_date=datetime.datetime.today(),
@@ -116,14 +151,6 @@ def upload_achilles_results(request, *args, **kwargs):
                     "Achilles Results file uploaded with success. The dashboards will update in a few minutes.",
                 )
 
-                form = AchillesResultsForm()
-
-            else:
-                messages.add_message(
-                    request,
-                    messages.ERROR,
-                    error,
-                )
     return render(
         request,
         'upload_achilles_results.html',
