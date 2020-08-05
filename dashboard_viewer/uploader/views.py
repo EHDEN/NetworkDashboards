@@ -1,7 +1,8 @@
 
-from typing import Union
+from typing import Union, List, Dict, Any
 import datetime
 import os
+import re
 
 from django.conf import settings
 from django.contrib import messages
@@ -17,7 +18,38 @@ from .models import UploadHistory, DataSource
 from .tasks import update_achilles_results_data
 
 
-def get_df_from_uploaded_file(request: WSGIRequest) -> Union[pandas.DataFrame, None]:
+VERSION_REGEX = re.compile(r'[\d.]*\d+')
+
+
+def convert_to_datetime_from_iso(elem):
+    analysis, stratum = elem
+
+    try:
+        return datetime.datetime.fromisoformat(analysis.loc[0, stratum])
+    except ValueError:
+        return None
+
+
+def check_correct(names: List[str], values: List[Any], transform, check) -> Union[List[Any], str]:
+    assert len(names) == len(values)
+
+    transformed_elements = [None] * len(names)
+    bad_elements = []
+
+    for i in range(len(names)):
+        transformed = transform(values[i])
+        if not check(transformed):
+            bad_elements.append(names[i])
+        else:
+            transformed_elements[i] = transformed
+
+    if bad_elements:
+        return f" {bad_elements[0]} is" if len(bad_elements) == 1 else f"s {', '.join(bad_elements[:-1])} and {bad_elements[-1]} are"
+
+    return transformed_elements
+
+
+def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
     try:
         achilles_results = pandas.read_csv(
             request.FILES["achilles_results_file"],
@@ -67,21 +99,19 @@ def get_df_from_uploaded_file(request: WSGIRequest) -> Union[pandas.DataFrame, N
 
         return
 
+    output = check_correct(
+        ["0", "5000"],
+        [0, 5000],
+        lambda e: achilles_results[achilles_results.analysis_id == e],
+        lambda e: e.empty
+    )
 
-    missing = []  # noqa
-    if achilles_results[achilles_results.analysis_id == 0].empty:
-        missing.append("0")
-    if achilles_results[achilles_results.analysis_id == 5000].empty:
-        missing.append("5000")
-
-    if missing:
-        missing = f"{missing[0]} is" if len(missing) == 1 else f"{', '.join(missing[:-1])} and {missing[-1]} are"
-
+    if isinstance(output, str):
         messages.add_message(
             request,
             messages.ERROR,
             mark_safe(
-                f"Analysis id {missing} missing. Try (re)running the plugin"
+                f"Analysis id{output} missing. Try (re)running the plugin"
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 "on your database."
             ),
@@ -89,7 +119,61 @@ def get_df_from_uploaded_file(request: WSGIRequest) -> Union[pandas.DataFrame, N
 
         return
 
-    return achilles_results
+    return_value = {"achilles_results": achilles_results}
+
+    analysis_0 = output[0]
+    analysis_5000 = output[1]
+
+    errors = False
+
+    # check dates
+    output = check_correct(
+        ["Achilles generation date (analysis=0, stratum2)", "CDM release date (analysis=5000, stratum_3)"],
+        [(analysis_0, "stratum_2"), (analysis_5000, "stratum_3")],
+        convert_to_datetime_from_iso,
+        lambda _: True,
+    )
+
+    if isinstance(output, str):
+        errors = True
+
+        messages.add_message(
+            request,
+            messages.ERROR,
+            mark_safe(
+                f"The field{output} not in a ISO date format."
+            ),
+        )
+    else:
+        return_value["achilles_generation_date"] = output[0]
+        return_value["cdm_release_date"] = output[1]
+
+    # check versions
+    output = check_correct(
+        ["CDM version (analysis_id=0, stratum_1)", "Achilles version (analysis_id=5000, stratum_4)"],
+        [(analysis_0, "stratum_1"), (analysis_5000, "stratum_4")],
+        lambda elem: elem[0].loc[0, elem[1]],
+        VERSION_REGEX.match,
+    )
+
+    if isinstance(output, str):
+        errors = True
+        
+        messages.add_message(
+            request,
+            messages.ERROR,
+            mark_safe(
+                f"The field{output} not in valid version format. Should match the regex '[\\d.]*\\d+'."
+            ),
+        )
+    else:
+        return_value["cdm_version"] = output[0]
+        return_value["achilles_version"] = output[1]
+
+    if errors:
+        return
+
+    return return_value
 
 
 @csrf_exempt
@@ -108,24 +192,25 @@ def upload_achilles_results(request, *args, **kwargs):
         form = AchillesResultsForm(request.POST, request.FILES)
 
         if form.is_valid():
-            achilles_results = get_df_from_uploaded_file(request)
+            data = extract_data_from_uploaded_file(request)
 
-            if achilles_results:
+            if data:
+
                 # launch an asynchronous task
                 update_achilles_results_data.delay(
                     obj_data_source.id,
                     upload_history[0].id if len(upload_history) > 0 else None,
-                    achilles_results.to_json(),
+                    data["achilles_results"].to_json(),
                 )
 
-                # TODO aspedrosa: fill with appropriate data
                 latest_upload = UploadHistory(
                     data_source=obj_data_source,
                     upload_date=datetime.datetime.today(),
-                    achilles_version="3.3.3",#achilles_version,
-                    achilles_generation_date=datetime.datetime.today(),#datachilles_generation_date,
-                    cdm_version="3.5.5",#cdm_version,
-                    vocabulary_version="3.3.3",#form.cleaned_data["vocabulary_version"],
+                    achilles_version=data["achilles_version"],
+                    achilles_generation_date=data["achilles_generation_date"],
+                    cdm_release_date=data["cdm_release_date"],
+                    cdm_version=data["cdm_version"],
+                    vocabulary_version=data["cdm_version"],  # TODO aspedrosa: change this
                 )
                 latest_upload.save()
                 upload_history = [latest_upload] + upload_history
@@ -137,7 +222,7 @@ def upload_achilles_results(request, *args, **kwargs):
                     obj_data_source.slug
                 )
                 os.makedirs(data_source_storage_path, exist_ok=True)
-                achilles_results.to_csv(
+                data["achilles_results"].to_csv(
                     os.path.join(
                         data_source_storage_path,
                         f"{len(upload_history)}.csv"
