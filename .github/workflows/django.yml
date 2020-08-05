@@ -22,17 +22,16 @@ jobs:
       id: cache
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-dev.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-black.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install Dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        cd dashboard_viewer
         pip install --upgrade pip
-        pip install -r requirements-dev.txt
+        pip install -r requiments-dev/requirements-black.txt
     - name: black
-      run: black --check --exclude venv* --exclude superset .
+      run: black --check --exclude superset .
 
 
   isort:
@@ -52,17 +51,16 @@ jobs:
       id: cache
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-dev.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-isort.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install Dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        cd dashboard_viewer
         pip install --upgrade pip
-        pip install -r requirements-dev.txt
+        pip install -r requirements-dev/requirements-isort.txt
     - name: isort
-      run: isort --check-only --recursive --skip-glob venv* --skip-glob superset .
+      run: isort --check-only --recursive --skip-glob superset .
 
 
   mypy:
@@ -82,15 +80,14 @@ jobs:
       id: cache
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-dev.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-mypy.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install Dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        cd dashboard_viewer
         pip install --upgrade pip
-        pip install -r requirements-dev.txt
+        pip install -r requirements-dev/requirements-mypy.txt
     - name: mypy
       run: |
         cd dashboard_viewer
@@ -114,17 +111,16 @@ jobs:
       id: cache
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-prospector.txt', 'dashboard_viewer/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install Dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        cd dashboard_viewer
         pip install --upgrade pip
-        pip install -r requirements.txt -r requirements-dev.txt
+        pip install -r requirements-dev/requirements-prospector.txt -r dashboard_viewer/requirements.txt
     - name: prospector
-      run: prospector -I venv -I superset .
+      run: prospector -I superset .
 
 
   tests:
@@ -144,15 +140,14 @@ jobs:
       id: cache
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('dashboard_viewer/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install Dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        cd dashboard_viewer
         pip install --upgrade pip
-        pip install -r requirements.txt -r requirements-dev.txt
+        pip install -r dashboard_viewer/requirements.txt
     - name: tests
       run: |
         cd dashboard_viewer
