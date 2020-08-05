@@ -5,7 +5,7 @@ on:
     branches: [ dev ]
 
 jobs:
-  lint:
+  black:
 
     runs-on: ubuntu-latest
     strategy:
@@ -26,18 +26,132 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install Dependencies
-      if: steps.cache.outputs["cache-hit"] != 'true'
+      if: steps.cache.outputs.cache-hit != 'true'
       run: |
         cd dashboard_viewer
         pip install --upgrade pip
         pip install -r requirements-dev.txt
     - name: black
-      run: black --check dashboard_viewer
+      run: black --check --exclude venv*|superset .
+
+
+  isort:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pythonversion: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.pythonversion }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.pythonversion }}
+    - uses: actions/cache@v2
+      id: cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-dev.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install Dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        cd dashboard_viewer
+        pip install --upgrade pip
+        pip install -r requirements-dev.txt
+    - name: isort
+      run: isort --check-only --recursive --skip-glob venv* --skip-glob superset .
+
+
+  mypy:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pythonversion: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.pythonversion }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.pythonversion }}
+    - uses: actions/cache@v2
+      id: cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-dev.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install Dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        cd dashboard_viewer
+        pip install --upgrade pip
+        pip install -r requirements-dev.txt
     - name: mypy
       run: |
         cd dashboard_viewer
         mypy .
-    - name: isort
-      run: isort --check-only --recursive dashboard_viewer
+
+
+  prospector:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pythonversion: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.pythonversion }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.pythonversion }}
+    - uses: actions/cache@v2
+      id: cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install Dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        cd dashboard_viewer
+        pip install --upgrade pip
+        pip install -r requirements.txt -r requirements-dev.txt
     - name: prospector
-      run: prospector dashboard_viewer
+      run: prospector -I venv -I superset .
+
+
+  tests:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pythonversion: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.pythonversion }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.pythonversion }}
+    - uses: actions/cache@v2
+      id: cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install Dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        cd dashboard_viewer
+        pip install --upgrade pip
+        pip install -r requirements.txt -r requirements-dev.txt
+    - name: tests
+      run: python manage.py test
