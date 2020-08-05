@@ -32,7 +32,7 @@ jobs:
         pip install --upgrade pip
         pip install -r requirements-dev.txt
     - name: black
-      run: black --check --exclude venv*|superset .
+      run: black --check --exclude venv* --exclude superset .
 
 
   isort:
@@ -154,4 +154,6 @@ jobs:
         pip install --upgrade pip
         pip install -r requirements.txt -r requirements-dev.txt
     - name: tests
-      run: python manage.py test
+      run: |
+        cd dashboard_viewer
+        SECRET_KEY=secret python manage.py test
