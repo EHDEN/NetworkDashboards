@@ -1,5 +1,5 @@
 
-from typing import Union, List, Dict, Any
+from typing import Callable, Dict, List, TypeVar, Union
 import datetime
 import os
 import re
@@ -21,7 +21,14 @@ from .tasks import update_achilles_results_data
 VERSION_REGEX = re.compile(r'[\d.]*\d+')
 
 
-def convert_to_datetime_from_iso(elem):
+def convert_to_datetime_from_iso(elem: str) -> Union[datetime.datetime, None]:
+    """
+    Function used to convert string dates received on the uploaded file.
+    Used on the 'transform' argument of the function 'check_correct'.
+
+    :param elem: string to convert to datetime
+    :return: a datetime object or None if the string is not in a valid ISO format
+    """
     analysis, stratum = elem
 
     try:
@@ -30,7 +37,31 @@ def convert_to_datetime_from_iso(elem):
         return None
 
 
-def check_correct(names: List[str], values: List[Any], transform, check) -> Union[List[Any], str]:
+# Type of the values received on the check_correct function
+T = TypeVar("T")
+# Type of the returned value from the transform callable argument of the check_correct function
+U = TypeVar("U")
+
+
+def check_correct(
+        names: List[str],
+        values: List[T],
+        transform: Callable[[T], Union[U, None]],
+        check: Callable[[U]: bool],
+) -> Union[List[U], str]:
+    """
+    Transforms the values of given fields from the uploaded file
+     and check if they end up in the desired format
+
+    :param names: names of the fields to check
+    :param values: values of the fields to transform and check if they are
+     in the right format
+    :param transform: callable to transform the values of the
+     provided fields
+    :param check: callable check if the transform processes generated
+     a valid output
+    :return: the transformed fields or an error string
+    """
     assert len(names) == len(values)
 
     transformed_elements = [None] * len(names)
@@ -126,7 +157,7 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
 
     errors = False
 
-    # check dates
+    # check mandatory dates
     output = check_correct(
         ["Achilles generation date (analysis=0, stratum2)", "CDM release date (analysis=5000, stratum_3)"],
         [(analysis_0, "stratum_2"), (analysis_5000, "stratum_3")],
@@ -141,14 +172,16 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
             request,
             messages.ERROR,
             mark_safe(
-                f"The field{output} not in a ISO date format."
+                f"The field{output} not in a ISO date format. Try (re)running the plugin"
+                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
+                "on your database."
             ),
         )
     else:
         return_value["achilles_generation_date"] = output[0]
         return_value["cdm_release_date"] = output[1]
 
-    # check versions
+    # check mandatory versions
     output = check_correct(
         ["CDM version (analysis_id=0, stratum_1)", "Achilles version (analysis_id=5000, stratum_4)"],
         [(analysis_0, "stratum_1"), (analysis_5000, "stratum_4")],
@@ -164,6 +197,9 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
             messages.ERROR,
             mark_safe(
                 f"The field{output} not in valid version format. Should match the regex '[\\d.]*\\d+'."
+                "Try (re)running the plugin"
+                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
+                "on your database."
             ),
         )
     else:
