@@ -60,4 +60,9 @@ class Migration(migrations.Migration):
             name='stratum_5',
             field=models.TextField(null=True),
         ),
+        migrations.AddField(
+            model_name='uploadhistory',
+            name='cdm_release_date',
+            field=models.DateField(null=True),
+        ),
     ]

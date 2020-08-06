@@ -110,7 +110,7 @@ class UploadHistory(models.Model):
     upload_date              = models.DateTimeField()
     achilles_version         = models.CharField(max_length=10)
     achilles_generation_date = models.DateField()
-    cdm_release_date         = models.DateField()
+    cdm_release_date         = models.DateField(null=True)  # TODO aspedrosa: on future migration remove this null=True
     cdm_version              = models.CharField(max_length=10)
     vocabulary_version       = models.CharField(max_length=10)
 
