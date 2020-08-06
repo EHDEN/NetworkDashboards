@@ -2,7 +2,7 @@
 from typing import Callable, Dict, List, TypeVar, Union
 import datetime
 import os
-import re
+import regex
 
 from django.conf import settings
 from django.contrib import messages
@@ -18,7 +18,7 @@ from .models import UploadHistory, DataSource
 from .tasks import update_achilles_results_data
 
 
-VERSION_REGEX = re.compile(r'[\d.]*\d+')
+VERSION_REGEX = regex.compile(r'\d+[\d.]*(?<!\.)')
 
 
 def convert_to_datetime_from_iso(elem: str) -> Union[datetime.datetime, None]:
@@ -47,7 +47,7 @@ def check_correct(
         names: List[str],
         values: List[T],
         transform: Callable[[T], Union[U, None]],
-        check: Callable[[U]: bool],
+        check: Callable[[U], bool],
 ) -> Union[List[U], str]:
     """
     Transforms the values of given fields from the uploaded file
@@ -90,9 +90,8 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
             low_memory=False,
         )
     except ValueError:
-        messages.add_message(
+        messages.error(
             request,
-            messages.ERROR,
             mark_safe(
                 "The provided file has an invalid csv format. Make sure is a text file separated"
                 " by <b>commas</b> with <b>seven</b> columns (analysis_id, stratum_1,"
@@ -114,14 +113,13 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
     ]
 
     try:
-        achilles_results.astype({
+        achilles_results = achilles_results.astype({
             "analysis_id": numpy.int32,
             "count_value": numpy.int32,
-        }, copy=False)
+        })
     except ValueError:
-        messages.add_message(
+        messages.error(
             request,
-            messages.ERROR,
             mark_safe(
                 "The provided file has invalid values on the columns <i>analysis_id</i> or <i>count_value</i>."
                 " These must be integers."
@@ -134,17 +132,16 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
         ["0", "5000"],
         [0, 5000],
         lambda e: achilles_results[achilles_results.analysis_id == e],
-        lambda e: e.empty
+        lambda e: not e.empty
     )
 
     if isinstance(output, str):
-        messages.add_message(
+        messages.error(
             request,
-            messages.ERROR,
             mark_safe(
-                f"Analysis id{output} missing. Try (re)running the plugin"
+                f"Analysis id{output} missing. Try (re)running the plugin "
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
-                "on your database."
+                " on your database."
             ),
         )
 
@@ -152,31 +149,21 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
 
     return_value = {"achilles_results": achilles_results}
 
-    analysis_0 = output[0]
-    analysis_5000 = output[1]
+    analysis_0 = output[0].reset_index()
+    analysis_5000 = output[1].reset_index()
 
-    errors = False
+    errors = []
 
     # check mandatory dates
     output = check_correct(
-        ["Achilles generation date (analysis=0, stratum2)", "CDM release date (analysis=5000, stratum_3)"],
-        [(analysis_0, "stratum_2"), (analysis_5000, "stratum_3")],
+        ["Achilles generation date (analysis_id=0, stratum3)", "CDM release date (analysis_id=5000, stratum_3)"],
+        [(analysis_0, "stratum_3"), (analysis_5000, "stratum_3")],
         convert_to_datetime_from_iso,
-        lambda _: True,
+        lambda date: date,
     )
 
     if isinstance(output, str):
-        errors = True
-
-        messages.add_message(
-            request,
-            messages.ERROR,
-            mark_safe(
-                f"The field{output} not in a ISO date format. Try (re)running the plugin"
-                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
-                "on your database."
-            ),
-        )
+        errors.append(f"The field{output} not in a ISO date format.")
     else:
         return_value["achilles_generation_date"] = output[0]
         return_value["cdm_release_date"] = output[1]
@@ -184,29 +171,23 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
     # check mandatory versions
     output = check_correct(
         ["CDM version (analysis_id=0, stratum_1)", "Achilles version (analysis_id=5000, stratum_4)"],
-        [(analysis_0, "stratum_1"), (analysis_5000, "stratum_4")],
+        [(analysis_0, "stratum_2"), (analysis_5000, "stratum_4")],
         lambda elem: elem[0].loc[0, elem[1]],
-        VERSION_REGEX.match,
+        VERSION_REGEX.fullmatch,
     )
 
     if isinstance(output, str):
-        errors = True
-        
-        messages.add_message(
-            request,
-            messages.ERROR,
-            mark_safe(
-                f"The field{output} not in valid version format. Should match the regex '[\\d.]*\\d+'."
-                "Try (re)running the plugin"
-                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
-                "on your database."
-            ),
-        )
+        errors.append(f"The field{output} not in a valid version format.")
     else:
         return_value["cdm_version"] = output[0]
         return_value["achilles_version"] = output[1]
 
     if errors:
+        messages.error(request, mark_safe(
+            " ".join(errors) + "<br/>Try (re)running the plugin "
+            "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
+            " on your database."
+        ))
         return
 
     return return_value
@@ -266,9 +247,8 @@ def upload_achilles_results(request, *args, **kwargs):
                     index=False,
                 )
 
-                messages.add_message(
+                messages.success(
                     request,
-                    messages.SUCCESS,
                     "Achilles Results file uploaded with success. The dashboards will update in a few minutes.",
                 )
 
@@ -303,9 +283,8 @@ def create_data_source(request, *args, **kwargs):
             obj.data_source = data_source
             obj.save()
 
-            messages.add_message(
+            messages.success(
                 request,
-                messages.SUCCESS,
                 format_html(
                     "Data source <b>{}</b> created with success. You may now upload achilles results files.",
                     obj.name
@@ -330,9 +309,8 @@ def edit_data_source(request, *args, **kwargs):
     try:
         data_source = DataSource.objects.get(slug=data_source)
     except DataSource.DoesNotExist:
-        messages.add_message(
+        messages.error(
             request,
-            messages.ERROR,
             format_html("No data source with the slug <b>{}</b>", data_source),
         )
 
@@ -360,9 +338,8 @@ def edit_data_source(request, *args, **kwargs):
             obj.latitude, obj.longitude = float(lat), float(lon)
             obj.save()
 
-            messages.add_message(
+            messages.success(
                 request,
-                messages.SUCCESS,
                 format_html("Data source <b>{}</b> edited with success.", obj.name),
             )
             return redirect("/uploader/{}".format(obj.slug))
