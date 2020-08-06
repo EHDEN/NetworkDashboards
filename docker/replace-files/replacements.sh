@@ -21,3 +21,7 @@ sed -i "s,{SUFFIX},$SUFFIX_CLEAN,g" base.html
 sed -i "s,{SUFFIX},$SUFFIX_CLEAN,g" basic.html
 sed -i "s,{SUFFIX},$SUFFIX_CLEAN,g" theme.html
 sed -i "s,{SUFFIX},$SUFFIX_CLEAN,g" webpack.config.js
+sed -i "s,{SUFFIX},$SUFFIX_CLEAN,g" Loading.jsx
+sed -i "s,{SUFFIX},$SUFFIX_CLEAN,g" DisplayQueryButton.jsx
+
+

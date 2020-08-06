@@ -86,7 +86,7 @@ if (isDevMode) {
 
 const output = {
   path: BUILD_DIR,
-  publicPath: '{SUFFIX}/static/assets/dist/', // necessary for lazy-loaded chunks
+  publicPath: '/apache-superset/static/assets/dist/', // necessary for lazy-loaded chunks
 };
 
 if (isDevMode) {
