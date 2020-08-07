@@ -156,8 +156,12 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
 
     # check mandatory dates
     output = check_correct(
-        ["Achilles generation date (analysis_id=0, stratum3)", "CDM release date (analysis_id=5000, stratum_3)"],
-        [(analysis_0, "stratum_3"), (analysis_5000, "stratum_3")],
+        [
+            "Achilles generation date (analysis_id=0, stratum3)",
+            "Source release date (analysis_id=5000, stratum_1)",
+            "CDM release date (analysis_id=5000, stratum_3)",
+        ],
+        [(analysis_0, "stratum_3"), (analysis_5000, "stratum_1"), (analysis_5000, "stratum_3")],
         convert_to_datetime_from_iso,
         lambda date: date,
     )
@@ -166,7 +170,8 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
         errors.append(f"The field{output} not in a ISO date format.")
     else:
         return_value["achilles_generation_date"] = output[0]
-        return_value["cdm_release_date"] = output[1]
+        return_value["source_release_date"] = output[1]
+        return_value["cdm_release_date"] = output[2]
 
     # check mandatory versions
     output = check_correct(
@@ -217,13 +222,15 @@ def upload_achilles_results(request, *args, **kwargs):
             data = extract_data_from_uploaded_file(request)
 
             if data:
-
-                # launch an asynchronous task
+                # launch an asynchronous task to insert the new data
                 update_achilles_results_data.delay(
                     obj_data_source.id,
                     upload_history[0].id if len(upload_history) > 0 else None,
                     data["achilles_results"].to_json(),
                 )
+
+                obj_data_source.release_date = data["source_release_date"]
+                obj_data_source.save()
 
                 latest_upload = UploadHistory(
                     data_source=obj_data_source,
