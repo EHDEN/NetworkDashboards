@@ -168,14 +168,17 @@ ACHILLES_RESULTS_STORAGE_PATH = "achilles_results_files"
 # Celery
 REDIS_HOST = os.environ.get('REDIS_HOST', 'redis')
 REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
+#REDIS_CACHE_DB = os.environ.get('REDIS_CACHE_DB', 0)
+REDIS_CELERY_DB = os.environ.get('REDIS_CELERY_DB', 1)
+REDIS_CONSTANCE_DB = os.environ.get('REDIS_CONSTANCE_DB', 2)
 
-CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/1"
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_DB}"
 
 # Constance
 CONSTANCE_REDIS_CONNECTION = {
     'host': REDIS_HOST,
     'port': REDIS_PORT,
-    'db': 1,
+    'db': REDIS_CONSTANCE_DB,
 }
 CONSTANCE_DBS = ["default"]
 

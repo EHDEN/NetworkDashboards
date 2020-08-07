@@ -5,7 +5,7 @@ chardet==3.0.4
 Django==2.2.13
 django-bootstrap-datepicker-plus==3.0.5
 django-bootstrap4==1.1.1
-django-constance==2.7.0
+django-constance>=2.7.0
 django-markdownify>=0.8.1
 django-model-utils==4.0.0
 django-sass==1.0.0
