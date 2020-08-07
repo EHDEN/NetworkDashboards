@@ -61,14 +61,11 @@ def upload_achilles_results(request, *args, **kwargs):
             else:
                 error = mark_safe("Uploaded achilles results files should be <b>CSV</b> files.")
 
-            # get the latest upload record on the upload history
-            uploads = UploadHistory.objects.filter(data_source__slug=obj_data_source.slug).order_by('-upload_date')
-
             if not error:
                 # launch a asynchronous task
                 update_achilles_results_data.delay(
                     obj_data_source.id,
-                    uploads[0].id if len(uploads) > 0 else None,
+                    upload_history[0].id if len(upload_history) > 0 else None,
                     lines,
                 )
 
@@ -83,7 +80,7 @@ def upload_achilles_results(request, *args, **kwargs):
                     vocabulary_version=form.cleaned_data["vocabulary_version"],
                 )
                 latest_upload.save()
-                upload_history = [latest_upload] + list(uploads)
+                upload_history = [latest_upload] + upload_history
 
                 # save the achilles result file to disk
                 data_source_storage_path = os.path.join(
@@ -92,7 +89,7 @@ def upload_achilles_results(request, *args, **kwargs):
                     obj_data_source.acronym
                 )
                 os.makedirs(data_source_storage_path, exist_ok=True)
-                f = open(os.path.join(data_source_storage_path, f"{len(uploads)}.csv"), "wb+")
+                f = open(os.path.join(data_source_storage_path, f"{len(upload_history)}.csv"), "wb+")
                 f.write(file_content)
                 f.close()
 
@@ -111,7 +108,6 @@ def upload_achilles_results(request, *args, **kwargs):
                     error,
                 )
 
-                upload_history = list(uploads)
     return render(
         request,
         'upload_achilles_results.html',
