@@ -170,8 +170,12 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
 
     # check mandatory versions
     output = check_correct(
-        ["CDM version (analysis_id=0, stratum_1)", "Achilles version (analysis_id=5000, stratum_4)"],
-        [(analysis_0, "stratum_2"), (analysis_5000, "stratum_4")],
+        [
+            "CDM version (analysis_id=0, stratum_1)",
+            "Achilles version (analysis_id=5000, stratum_4)",
+            "Vocabulary version (analysis_id=5000, stratum_5)",
+        ],
+        [(analysis_0, "stratum_2"), (analysis_5000, "stratum_4"), (analysis_5000, "stratum_5")],
         lambda elem: elem[0].loc[0, elem[1]],
         VERSION_REGEX.fullmatch,
     )
@@ -181,6 +185,7 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
     else:
         return_value["cdm_version"] = output[0]
         return_value["achilles_version"] = output[1]
+        return_value["vocabulary_version"] = output[2]
 
     if errors:
         messages.error(request, mark_safe(
@@ -227,7 +232,7 @@ def upload_achilles_results(request, *args, **kwargs):
                     achilles_generation_date=data["achilles_generation_date"],
                     cdm_release_date=data["cdm_release_date"],
                     cdm_version=data["cdm_version"],
-                    vocabulary_version=data["cdm_version"],  # TODO aspedrosa: change this
+                    vocabulary_version=data["vocabulary_version"],
                 )
                 latest_upload.save()
                 upload_history = [latest_upload] + upload_history
