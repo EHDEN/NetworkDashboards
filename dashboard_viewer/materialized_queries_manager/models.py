@@ -42,7 +42,7 @@ class MaterializedQuery(models.Model):
                 self._create_materialized_view(cursor)
 
     def delete(self, using=None, keep_parents=False):
+        super().delete(using, keep_parents)
+
         with closing(connections["achilles"].cursor()) as cursor:
             cursor.execute(f"DROP MATERIALIZED VIEW {self.name}")
-
-        super().delete(using, keep_parents)
