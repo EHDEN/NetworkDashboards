@@ -7,6 +7,7 @@ from celery import shared_task
 from django.db import connections
 
 from .models import AchillesResults, AchillesResultsArchive
+from materialized_queries_manager.models import MaterializedQuery
 
 
 @shared_task
@@ -68,3 +69,6 @@ def update_achilles_results_data(db_id, last_upload_id, entries):
     if count > 0:
         AchillesResults.objects.bulk_create(to_insert[:count])
 
+    with closing(connections["achilles"].cursor()) as cursor:
+        for materialized_query in MaterializedQuery.objects.all():
+            cursor.execute(f"REFRESH MATERIALIZED VIEW {materialized_query.name}")
