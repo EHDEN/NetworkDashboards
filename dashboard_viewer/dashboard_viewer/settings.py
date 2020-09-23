@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'rest_framework',
+    'sass_processor',
 
     'tabsManager',
     'uploader',
@@ -142,6 +143,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+SASS_PROCESSOR_ROOT = STATIC_ROOT
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
@@ -151,6 +153,7 @@ STATICFILES_DIRS = [
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
 )
 
 # Media files (Uploaded images, ...)
