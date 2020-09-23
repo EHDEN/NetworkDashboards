@@ -212,7 +212,7 @@ def upload_achilles_results(request, *args, **kwargs):
         return create_data_source(request, *args, **kwargs)
 
 
-    upload_history = list(UploadHistory.objects.filter(data_source__acronym=obj_data_source.acronym)
+    upload_history = list(UploadHistory.objects.filter(data_source__acronym=obj_data_source.acronym))
     if request.method == "GET":
         form = AchillesResultsForm()
 
