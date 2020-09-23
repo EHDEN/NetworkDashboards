@@ -5,7 +5,6 @@
 {% block head_tail %}
     <link rel="stylesheet" href='{% static "css/main.css" %}' >
     {{ form.media.css }}
-    <link rel="stylesheet" href='{% static "css/uploader.css" %}' >
 {% endblock %}
 
 {% block content %}
@@ -34,7 +33,7 @@
             {% block title %}{% endblock %}
 
             <form id="uploadForm" method="POST" enctype="multipart/form-data">
-                 
+
                 {% bootstrap_form form %}
 
                 {% buttons %}
