@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% load custom_tags %}
+{% load sass_tags %}
 
 {% block head_tail %}
     {% load static %}
     <link rel="stylesheet" href="{% static "simplebar/dist/simplebar.css" %}"/>
-    <link href="{% static "css/tabs.css" %}" rel="stylesheet">
+    <link href="{% sass_src "scss/tabs.scss" %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block content %}
