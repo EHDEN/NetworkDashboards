@@ -3,10 +3,8 @@ from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
 
 from .fields import CoordinatesField
-from .models import DataSource, DatabaseType, Country
+from .models import DataSource, DatabaseType
 from .widgets import ListTextWidget
-
-VERSION_REGEX = r'[\d.]*\d+'
 
 
 class SourceForm(forms.ModelForm):
@@ -34,13 +32,4 @@ class SourceForm(forms.ModelForm):
 
 
 class AchillesResultsForm(forms.Form):
-    achilles_version = forms.RegexField(VERSION_REGEX)
-    achilles_generation_date = forms.DateField(widget=DatePickerInput)
-    cdm_version = forms.RegexField(VERSION_REGEX)
-    vocabulary_version = forms.RegexField(VERSION_REGEX)
-    achilles_results = forms.FileField()
-    has_header = forms.BooleanField(
-        help_text="Does the achilles results file has a header line",
-        initial=True,
-        required=False
-    )
+    achilles_results_file = forms.FileField()

@@ -5,7 +5,7 @@
 	color: #20425a;
 }
 .uploadMessage {
-	padding: 1% 10% 0 10%;
+	padding: 1% 10% 1% 10%;
 }
 .uploadMessageSectionInfo{
 	text-align: justify;
@@ -60,4 +60,23 @@
 }
 .btn-sm-lg{
 	padding: .25rem 3rem;
+}
+
+#pageloader {
+	background: rgba( 255, 255, 255, 0.6 );
+	display: none;
+	height: 100%;
+	position: fixed;
+	width: 100%;
+	z-index: 9999;
+}
+
+#pageloader .spinner-box {
+	left: 50%;
+	position: absolute;
+	top: 50%;
+}
+
+form {
+	margin-top: 30px;
 }
