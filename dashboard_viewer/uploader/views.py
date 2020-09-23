@@ -158,10 +158,10 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
     output = check_correct(
         [
             "Achilles generation date (analysis_id=0, stratum3)",
-            "Source release date (analysis_id=5000, stratum_1)",
+            "Source release date (analysis_id=5000, stratum_2)",
             "CDM release date (analysis_id=5000, stratum_3)",
         ],
-        [(analysis_0, "stratum_3"), (analysis_5000, "stratum_1"), (analysis_5000, "stratum_3")],
+        [(analysis_0, "stratum_3"), (analysis_5000, "stratum_2"), (analysis_5000, "stratum_3")],
         convert_to_datetime_from_iso,
         lambda date: date,
     )
