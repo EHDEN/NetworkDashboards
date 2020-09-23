@@ -1,26 +1,38 @@
+celery==4.4.2                             # asynchronous task on uploader app
+django-bootstrap-datepicker-plus==3.0.5   # realease date on create data source form on uploader app
+django-bootstrap4==1.1.1                  # forms beautifier
+django-model-utils==4.0.0                 # get specific type of subclasses after requesting buttons on tabsManager app
+django>=2.2.13
+djangorestframework==3.11.0               # expose tabs content through an API
+gunicorn==20.0.4                          # for production deployment
+Pillow==7.0.0                             # image fields (App Logo)
+psycopg2-binary==2.8.4                    # communicate with postgres
+redis==3.4.1                              # comunicate with redis (celery)
+
+#### pip freeze
+amqp==2.6.1
 beautifulsoup4==4.8.2
-celery==4.4.2
+billiard==3.6.3.0
 certifi==2019.11.28
 chardet==3.0.4
-Django==2.2.13
-django-bootstrap-datepicker-plus==3.0.5
-django-bootstrap4==1.1.1
-django-compressor>=2.4
-django-model-utils==4.0.0
-django-sass-processor>=0.8
-djangorestframework==3.11.0
-gunicorn==20.0.4
+django-appconf==1.0.4
+django-compressor==2.4
+django-sass-processor==0.8.2
 idna==2.8
-libsass>=0.20.0
+importlib-metadata==2.0.0
+kombu==4.6.11
+libsass==0.20.1
 numpy==1.18.1
 pandas==0.24.2
-Pillow==7.0.0
-psycopg2==2.8.4
 python-dateutil==2.8.1
 pytz==2019.3
-redis==3.4.1
+rcssmin==1.0.6
 requests==2.22.0
+rjsmin==1.1.0
+six==1.15.0
 soupsieve==1.9.5
 SQLAlchemy==1.3.2
 sqlparse==0.3.0
 urllib3==1.25.8
+vine==1.3.0
+zipp==3.2.0
