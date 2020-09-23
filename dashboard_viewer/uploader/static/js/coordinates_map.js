@@ -15,7 +15,7 @@ const set_latlng = (name, latlng) => {
 
 $(".coordinates-map").each((index, element) => {
     // create the map
-    const map = L.map(element.id).setView([29,-401], 3);
+    const map = L.map(element.id).setView([24, -36], 3);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);

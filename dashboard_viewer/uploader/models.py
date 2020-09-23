@@ -2,6 +2,7 @@
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 
+
 class Country(models.Model):
     class Meta:
         db_table = "country"
@@ -20,7 +21,7 @@ class Country(models.Model):
         return f"{self.country}"
 
     def __repr__(self):
-        return self.__repr__()
+        return self.__str__()
 
 
 class DatabaseType(models.Model):
@@ -39,7 +40,8 @@ class DatabaseType(models.Model):
     def __repr__(self):
         return self.__str__()
 
-#Not following the relational rules in the database_type field, but it will simplify the SQL queries in the SQL Lab
+
+# Not following the relational rules in the database_type field, but it will simplify the SQL queries in the SQL Lab
 class DataSource(models.Model):
     class Meta:
         db_table = "data_source"
@@ -49,7 +51,7 @@ class DataSource(models.Model):
         unique      = True,
         help_text   = "Name of the data source."
     )
-    slug            = models.SlugField(
+    acronym         = models.CharField(
         max_length  = 50,
         unique      = True,
         help_text   = "Short label for the data source, containing only letters, numbers, underscores or hyphens."
@@ -73,6 +75,13 @@ class DataSource(models.Model):
         help_text   = "Link to home page of the data source",
         blank       = True
     )
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if DatabaseType.objects.filter(type=self.database_type).count() == 0:
+            db_type = DatabaseType(type=self.database_type)
+            db_type.save()
+
+        super().save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
         return self.name
