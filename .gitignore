@@ -1,5 +1,5 @@
-# Superset repo
-superset/
+# custom file created at docker/superset
+docker-init.sh
 
 # Docker volumes
 volumes/
