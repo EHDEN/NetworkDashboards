@@ -1,7 +1,6 @@
 import re
 
 from django import forms
-from django.forms import widgets
 from django.template import loader
 from django.utils.safestring import mark_safe
 
@@ -27,7 +26,7 @@ class ListTextWidget(forms.TextInput):
         return text_html + data_list
 
 
-class CoordinatesWidget(widgets.MultiWidget):
+class CoordinatesWidget(forms.MultiWidget):
     html_tags_regex = re.compile("(<[^>]*>)")
 
     class Media:

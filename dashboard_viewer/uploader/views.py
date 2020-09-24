@@ -1,13 +1,11 @@
 import datetime
 import os
-from typing import Callable, Dict, List, TypeVar, Union
 
 import numpy  # noqa
 import pandas
 import regex
 from django.conf import settings
 from django.contrib import messages
-from django.core.handlers.wsgi import WSGIRequest
 from django.forms import fields
 from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
@@ -20,7 +18,7 @@ from .tasks import update_achilles_results_data
 VERSION_REGEX = regex.compile(r"\d+[\d.]*(?<!\.)")
 
 
-def convert_to_datetime_from_iso(elem: str) -> Union[datetime.datetime, None]:
+def _convert_to_datetime_from_iso(elem):
     """
     Function used to convert string dates received on the uploaded file.
     Used on the 'transform' argument of the function 'check_correct'.
@@ -36,18 +34,7 @@ def convert_to_datetime_from_iso(elem: str) -> Union[datetime.datetime, None]:
         return None
 
 
-# Type of the values received on the check_correct function
-T = TypeVar("T")
-# Type of the returned value from the transform callable argument of the check_correct function
-U = TypeVar("U")
-
-
-def check_correct(
-    names: List[str],
-    values: List[T],
-    transform: Callable[[T], Union[U, None]],
-    check: Callable[[U], bool],
-) -> Union[List[U], str]:
+def _check_correct(names, values, transform, check):
     """
     Transforms the values of given fields from the uploaded file
      and check if they end up in the desired format
@@ -83,7 +70,7 @@ def check_correct(
     return transformed_elements
 
 
-def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
+def _extract_data_from_uploaded_file(request):
     try:
         achilles_results = pandas.read_csv(
             request.FILES["achilles_results_file"],
@@ -132,7 +119,7 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
 
         return None
 
-    output = check_correct(
+    output = _check_correct(
         ["0", "5000"],
         [0, 5000],
         lambda e: achilles_results[achilles_results.analysis_id == e],
@@ -159,7 +146,7 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
     errors = []
 
     # check mandatory dates
-    output = check_correct(
+    output = _check_correct(
         [
             "Achilles generation date (analysis_id=0, stratum3)",
             "Source release date (analysis_id=5000, stratum_2)",
@@ -170,7 +157,7 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
             (analysis_5000, "stratum_2"),
             (analysis_5000, "stratum_3"),
         ],
-        convert_to_datetime_from_iso,
+        _convert_to_datetime_from_iso,
         lambda date: date,
     )
 
@@ -182,7 +169,7 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
         return_value["cdm_release_date"] = output[2]
 
     # check mandatory versions
-    output = check_correct(
+    output = _check_correct(
         [
             "CDM version (analysis_id=0, stratum_1)",
             "Achilles version (analysis_id=5000, stratum_4)",
@@ -236,7 +223,7 @@ def upload_achilles_results(request, *args, **kwargs):
         form = AchillesResultsForm(request.POST, request.FILES)
 
         if form.is_valid():
-            data = extract_data_from_uploaded_file(request)
+            data = _extract_data_from_uploaded_file(request)
 
             if data:
                 # launch an asynchronous task to insert the new data
