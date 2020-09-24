@@ -1,7 +1,6 @@
 from django import views
 from django.conf import settings
 from django.shortcuts import render
-
 from rest_framework import views as rest_views
 from rest_framework.response import Response
 

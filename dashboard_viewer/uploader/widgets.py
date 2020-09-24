@@ -1,8 +1,9 @@
+import re
+
 from django import forms
 from django.forms import widgets
 from django.template import loader
 from django.utils.safestring import mark_safe
-import re
 
 
 class ListTextWidget(forms.TextInput):

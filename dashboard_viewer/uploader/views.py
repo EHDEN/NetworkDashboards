@@ -1,8 +1,10 @@
-from typing import Callable, Dict, List, TypeVar, Union
 import datetime
 import os
-import regex
+from typing import Callable, Dict, List, TypeVar, Union
 
+import numpy  # noqa
+import pandas
+import regex
 from django.conf import settings
 from django.contrib import messages
 from django.core.handlers.wsgi import WSGIRequest
@@ -10,13 +12,10 @@ from django.forms import fields
 from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
-import pandas
-import numpy  # noqa
 
-from .forms import SourceForm, AchillesResultsForm
-from .models import UploadHistory, DataSource, Country
+from .forms import AchillesResultsForm, SourceForm
+from .models import Country, DataSource, UploadHistory
 from .tasks import update_achilles_results_data
-
 
 VERSION_REGEX = regex.compile(r"\d+[\d.]*(?<!\.)")
 

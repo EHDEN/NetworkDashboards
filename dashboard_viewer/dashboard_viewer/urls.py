@@ -17,7 +17,7 @@ from django.conf import settings
 from django.conf.urls import static
 from django.contrib import admin
 from django.shortcuts import redirect
-from django.urls import path, include
+from django.urls import include, path
 
 urlpatterns = [
     path("", lambda request: redirect("tabs/")),

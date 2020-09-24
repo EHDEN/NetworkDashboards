@@ -3,16 +3,16 @@ from __future__ import absolute_import, unicode_literals
 from contextlib import closing
 from typing import Union
 
+import pandas
 from celery import shared_task
 from celery.utils.log import get_task_logger
-from django.core.cache import cache
 from django.conf import settings
+from django.core.cache import cache
 from django.db import connections
+from materialized_queries_manager.models import MaterializedQuery
 from redis_rw_lock import RWLock
-import pandas
 
 from .models import AchillesResults, AchillesResultsArchive
-from materialized_queries_manager.models import MaterializedQuery
 
 logger = get_task_logger(__name__)
 
