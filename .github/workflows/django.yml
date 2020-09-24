@@ -60,7 +60,7 @@ jobs:
         pip install --upgrade pip
         pip install -r requirements-dev/requirements-isort.txt
     - name: isort
-      run: isort --check-only --recursive --skip-glob superset .
+      run: isort --check-only --skip-glob superset .
 
 
   prospector:
@@ -90,7 +90,7 @@ jobs:
         pip install -r requirements-dev/requirements-prospector.txt -r dashboard_viewer/requirements.txt
     - name: prospector
       run: |
-        prospector -I superset .
+        prospector dashboard_viewer
         prospector docker/superset
 
 
