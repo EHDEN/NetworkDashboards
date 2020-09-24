@@ -91,7 +91,9 @@ class Logo(models.Model):
 
         super(Logo, self).delete(using, keep_parents)
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
 
         try:
             os.remove(f"{settings.MEDIA_ROOT}/{Logo.objects.get(pk=1).image}")

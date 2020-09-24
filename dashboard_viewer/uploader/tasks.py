@@ -38,7 +38,9 @@ def update_achilles_results_data(
             # if there were any records uploaded before
             #  move them to the AchillesResultsArchive table
             logger.info(
-                "Moving old records to the %s table [datasource %d]", AchillesResultsArchive._meta.db_table, db_id
+                "Moving old records to the %s table [datasource %d]",
+                AchillesResultsArchive._meta.db_table,
+                db_id,
             )
             with closing(connections["achilles"].cursor()) as cursor:
                 cursor.execute(
@@ -69,14 +71,18 @@ def update_achilles_results_data(
                 )
 
             logger.info(
-                "Deleting old records from %s table [datasource %d]", AchillesResults._meta.db_table, db_id
+                "Deleting old records from %s table [datasource %d]",
+                AchillesResults._meta.db_table,
+                db_id,
             )
             AchillesResults.objects.filter(data_source_id=db_id).delete()
 
         entries["data_source_id"] = db_id
 
         logger.info(
-            "Inserting new records on %s table [datasource %d]", AchillesResults._meta.db_table, db_id
+            "Inserting new records on %s table [datasource %d]",
+            AchillesResults._meta.db_table,
+            db_id,
         )
         entries.to_sql(
             AchillesResults._meta.db_table,
