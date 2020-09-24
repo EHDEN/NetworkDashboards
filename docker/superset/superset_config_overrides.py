@@ -8,11 +8,11 @@ def get_env_variable(var_name, default=None):
     except KeyError:
         if default is not None:
             return default
-        else:
-            error_msg = "The environment variable {} was missing, abort...".format(
-                var_name
-            )
-            raise EnvironmentError(error_msg)
+
+        error_msg = "The environment variable {} was missing, abort...".format(
+            var_name
+        )
+        raise EnvironmentError(error_msg)
 
 
 PUBLIC_ROLE_LIKE_GAMMA = True

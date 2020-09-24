@@ -21,7 +21,7 @@ logger = get_task_logger(__name__)
 def update_achilles_results_data(
     db_id: int, last_upload_id: Union[int, None], achilles_results: str
 ) -> None:
-    logger.info(f"Worker started [datasource {db_id}]")
+    logger.info("Worker started [datasource %d]", db_id)
     cache.incr("celery_workers_updating", ignore_key_check=True)
 
     # several workers can update records concurrently -> same as -> several threads can read from the same file
@@ -30,7 +30,7 @@ def update_achilles_results_data(
 
     # but only one worker can make updates associated to a specific data source at the same time
     with cache.lock(f"celery_worker_lock_db_{db_id}"):
-        logger.info(f"Updating achilles results records [datasource {db_id}]")
+        logger.info("Updating achilles results records [datasource %d]", db_id)
 
         entries = pandas.read_json(achilles_results)
 
@@ -38,7 +38,7 @@ def update_achilles_results_data(
             # if there were any records uploaded before
             #  move them to the AchillesResultsArchive table
             logger.info(
-                f"Moving old records to the {AchillesResultsArchive._meta.db_table} table [datasource {db_id}]"
+                "Moving old records to the %s table [datasource %d]", AchillesResultsArchive._meta.db_table, db_id
             )
             with closing(connections["achilles"].cursor()) as cursor:
                 cursor.execute(
@@ -69,14 +69,14 @@ def update_achilles_results_data(
                 )
 
             logger.info(
-                f"Deleting old records from {AchillesResults._meta.db_table} table [datasource {db_id}]"
+                "Deleting old records from %s table [datasource %d]", AchillesResults._meta.db_table, db_id
             )
             AchillesResults.objects.filter(data_source_id=db_id).delete()
 
         entries["data_source_id"] = db_id
 
         logger.info(
-            f"Inserting new records on {AchillesResults._meta.db_table} table [datasource {db_id}]"
+            "Inserting new records on %s table [datasource %d]", AchillesResults._meta.db_table, db_id
         )
         entries.to_sql(
             AchillesResults._meta.db_table,
@@ -100,11 +100,11 @@ def update_achilles_results_data(
         )
         write_lock.acquire()
 
-        logger.info(f"Updating materialized views [datasource {db_id}]")
+        logger.info("Updating materialized views [datasource %d]", db_id)
         with closing(connections["achilles"].cursor()) as cursor:
             for materialized_query in MaterializedQuery.objects.all():
                 cursor.execute(f"REFRESH MATERIALIZED VIEW {materialized_query.name}")
 
         write_lock.release()
 
-    logger.info(f"Done [datasource {db_id}]")
+    logger.info("Done [datasource %d]", db_id)

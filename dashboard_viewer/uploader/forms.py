@@ -18,7 +18,7 @@ class SourceForm(forms.ModelForm):
 
     class Meta:
         model = DataSource
-        exclude = ("latitude", "longitude")
+        fields = ("name", "acronym", "release_date", "country", "link")
         widgets = {
             "release_date": DatePickerInput(),  # format %m/%d/%Y. Using a ModelForm this can't be changed
         }

@@ -40,8 +40,6 @@ class TabGroup(Button):
     Dont't display iframes
     """
 
-    pass
-
 
 class Tab(Button):
     """
@@ -60,11 +58,11 @@ class Logo(models.Model):
 
     image = models.ImageField(blank=True, null=True, upload_to=MEDIA_DIR)
     url = models.URLField(blank=True, null=True)
-    imageContainerCss = models.TextField(
+    image_container_css = models.TextField(
         blank=True,
         default="padding: 5px 5px 5px 5px;\n" "height: 100px;\n" "margin-bottom: 10px;",
     )
-    imageCss = models.TextField(
+    image_css = models.TextField(
         blank=True,
         default="background: #fff;\n"
         "object-fit: contain;\n"
@@ -76,14 +74,14 @@ class Logo(models.Model):
         "position: relative;\n"
         "z-index: 5;\n",
     )
-    imageOnHoverCss = models.TextField(
+    image_on_hover_css = models.TextField(
         blank=True,
         default="max-width: none !important;\n"
         "width: 300px !important;\n"
         "height: 150px !important;",
     )
 
-    def delete(self, *args, **kwargs):
+    def delete(self, using=None, keep_parents=False):
         try:
             os.remove(f"{settings.MEDIA_ROOT}/{Logo.objects.get(pk=1).image}")
         except self.DoesNotExist:
@@ -91,15 +89,16 @@ class Logo(models.Model):
 
         cache.delete(self.__class__.__name__)
 
-        super(Logo, self).delete(*args, **kwargs)
+        super(Logo, self).delete(using, keep_parents)
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+
         try:
             os.remove(f"{settings.MEDIA_ROOT}/{Logo.objects.get(pk=1).image}")
         except Logo.DoesNotExist:
             pass
         self.pk = 1
-        obj = super(Logo, self).save(*args, **kwargs)
+        obj = super(Logo, self).save(force_insert, force_update, using, update_fields)
         cache.set(self.__class__.__name__, obj)
 
     @classmethod

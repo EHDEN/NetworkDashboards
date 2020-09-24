@@ -39,7 +39,7 @@ class CoordinatesWidget(widgets.MultiWidget):
         }
         js = ("leaflet/dist/leaflet.js", "js/coordinates_map.js")
 
-    def __init__(self, map_height=500, *args, **kwargs):
+    def __init__(self, *args, map_height=500, **kwargs):
         self.map_height = map_height
 
         widgets = [

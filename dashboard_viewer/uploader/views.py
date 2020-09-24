@@ -66,7 +66,7 @@ def check_correct(
     transformed_elements = [None] * len(names)
     bad_elements = []
 
-    for i in range(len(names)):
+    for i, _ in enumerate(names):
         transformed = transform(values[i])
         if not check(transformed):
             bad_elements.append(names[i])
@@ -102,7 +102,7 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
             ),
         )
 
-        return
+        return None
 
     achilles_results.columns = [  # noqa
         "analysis_id",
@@ -130,7 +130,7 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
             ),
         )
 
-        return
+        return None
 
     output = check_correct(
         ["0", "5000"],
@@ -149,7 +149,7 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
             ),
         )
 
-        return
+        return None
 
     return_value = {"achilles_results": achilles_results}
 
@@ -213,7 +213,7 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
                 " on your database."
             ),
         )
-        return
+        return None
 
     return return_value
 
@@ -292,32 +292,59 @@ def upload_achilles_results(request, *args, **kwargs):
     )
 
 
+def _get_fields_initial_values(request, initial):
+    for field_name, field in SourceForm.base_fields.items():
+        if isinstance(field, fields.MultiValueField):
+            for i in range(len(field.widget.widgets)):
+                generated_field_name = f"{field_name}_{i}"
+                field_value = request.GET.get(generated_field_name)
+                if field_value:
+                    initial[generated_field_name] = field_value
+        elif field_name == "country":
+            countries_found = Country.objects.filter(
+                country__icontains=request.GET["country"]
+            )
+            if countries_found.count() == 1:
+                initial["country"] = countries_found.get().id
+        else:
+            field_value = request.GET.get(field_name)
+            if field_value:
+                initial[field_name] = field_value
+
+
+def _leave_valid_fields_values_only(request, initial, aux_form):
+    for field_name, field in SourceForm.base_fields.items():
+        if isinstance(field, fields.MultiValueField):
+            decompressed = list()
+
+            for i in range(len(field.widget.widgets)):
+                generated_field_name = f"{field_name}_{i}"
+                value = request.GET.get(generated_field_name)
+                if value:
+                    del initial[generated_field_name]
+                    decompressed.append(value)
+                else:
+                    decompressed = list()
+                    break
+
+            if decompressed:
+                initial[field_name] = field.compress(decompressed)
+        else:
+            if field_name in aux_form.cleaned_data:
+                initial[field_name] = aux_form.cleaned_data[field_name]
+            elif field_name in initial:
+                del initial[field_name]
+
+
 @csrf_exempt
-def create_data_source(request, *args, **kwargs):
+def create_data_source(request, *_, **kwargs):
     data_source = kwargs.get("data_source")
     if request.method == "GET":
-
         initial = {"acronym": data_source}
 
         if request.GET:  # if the request has arguments
             # compute fields' initial values
-            for field_name, field in SourceForm.base_fields.items():
-                if isinstance(field, fields.MultiValueField):
-                    for i in range(len(field.widget.widgets)):
-                        generated_field_name = f"{field_name}_{i}"
-                        field_value = request.GET.get(generated_field_name)
-                        if field_value:
-                            initial[generated_field_name] = field_value
-                elif field_name == "country":
-                    countries_found = Country.objects.filter(
-                        country__icontains=request.GET["country"]
-                    )
-                    if countries_found.count() == 1:
-                        initial["country"] = countries_found.get().id
-                else:
-                    field_value = request.GET.get(field_name)
-                    if field_value:
-                        initial[field_name] = field_value
+            _get_fields_initial_values(request, initial)
 
             aux_form = SourceForm(initial)
             if aux_form.is_valid():
@@ -330,27 +357,7 @@ def create_data_source(request, *args, **kwargs):
                 return redirect("/uploader/{}".format(obj.acronym))
 
             # since the form isn't valid, lets maintain only the valid fields
-            for field_name, field in SourceForm.base_fields.items():
-                if isinstance(field, fields.MultiValueField):
-                    decompressed = list()
-
-                    for i in range(len(field.widget.widgets)):
-                        generated_field_name = f"{field_name}_{i}"
-                        value = request.GET.get(generated_field_name)
-                        if value:
-                            del initial[generated_field_name]
-                            decompressed.append(value)
-                        else:
-                            decompressed = list()
-                            break
-
-                    if decompressed:
-                        initial[field_name] = field.compress(decompressed)
-                else:
-                    if field_name in aux_form.cleaned_data:
-                        initial[field_name] = aux_form.cleaned_data[field_name]
-                    elif field_name in initial:
-                        del initial[field_name]
+            _leave_valid_fields_values_only(request, initial, aux_form)
 
             form = SourceForm(initial=initial)
 
@@ -405,7 +412,7 @@ def create_data_source(request, *args, **kwargs):
 
 
 @csrf_exempt
-def edit_data_source(request, *args, **kwargs):
+def edit_data_source(request, *_, **kwargs):
     data_source = kwargs.get("data_source")
     try:
         data_source = DataSource.objects.get(acronym=data_source)

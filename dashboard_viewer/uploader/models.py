@@ -1,5 +1,5 @@
+
 from django.db import models
-from django.db.models.signals import post_delete, post_save
 
 
 class Country(models.Model):
@@ -75,26 +75,6 @@ class DataSource(models.Model):
 
     def __repr__(self):
         return self.__str__()
-
-
-def after_data_source_saved(sender, **kwargs):
-    """
-    TODO After a data source is inserted dashboards on superset might need to be updated
-    """
-    pass
-
-
-post_save.connect(after_data_source_saved, sender=DataSource)
-
-
-def after_data_source_deleted(sender, **kwargs):
-    """
-    TODO After a data source is deleted dashboards on superset might need to be updated
-    """
-    pass
-
-
-post_delete.connect(after_data_source_deleted, sender=DataSource)
 
 
 class UploadHistory(models.Model):

@@ -94,7 +94,7 @@ class APITabsView(rest_views.APIView):
 class TabsView(views.View):
     template_name = "tabs.html"
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *_, **__):
         logoObj = Logo.load()
         logo = dict()
         if logoObj:
