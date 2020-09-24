@@ -1,9 +1,9 @@
 import datetime
 import os
+import re
 
 import numpy  # noqa
 import pandas
-import regex
 from django.conf import settings
 from django.contrib import messages
 from django.forms import fields
@@ -15,7 +15,7 @@ from .forms import AchillesResultsForm, SourceForm
 from .models import Country, DataSource, UploadHistory
 from .tasks import update_achilles_results_data
 
-VERSION_REGEX = regex.compile(r"\d+[\d.]*(?<!\.)")
+VERSION_REGEX = re.compile(r"\d+(\.\d+)*")
 
 
 def _convert_to_datetime_from_iso(elem):
