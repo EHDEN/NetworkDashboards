@@ -95,17 +95,17 @@ class TabsView(views.View):
     template_name = "tabs.html"
 
     def get(self, request, *_, **__):
-        logoObj = Logo.load()
+        logo_obj = Logo.load()
         logo = dict()
-        if logoObj:
-            logo["imageContainerCss"] = logoObj.imageContainerCss
-            logo["imageCss"] = logoObj.imageCss
-            logo["imageOnHoverCss"] = logoObj.imageOnHoverCss
+        if logo_obj:
+            logo["image_container_css"] = logo_obj.image_container_css
+            logo["image_css"] = logo_obj.image_css
+            logo["image_on_hover_css"] = logo_obj.image_on_hover_css
 
-            if logoObj.image:
-                logo["imageSrc"] = f"/{settings.MEDIA_URL}{logoObj.image}"
+            if logo_obj.image:
+                logo["image_src"] = f"/{settings.MEDIA_URL}{logo_obj.image}"
             else:
-                logo["imageSrc"] = logoObj.url
+                logo["image_src"] = logo_obj.url
 
         context = {
             "tabs": get_menu(),
