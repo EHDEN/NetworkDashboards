@@ -1,0 +1,154 @@
+name: Django
+
+on:
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  black:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pythonversion: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.pythonversion }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.pythonversion }}
+    - uses: actions/cache@v2
+      id: cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-black.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install Dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements-dev/requirements-black.txt
+    - name: black
+      run: black --check --exclude superset .
+
+
+  isort:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pythonversion: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.pythonversion }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.pythonversion }}
+    - uses: actions/cache@v2
+      id: cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-isort.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install Dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements-dev/requirements-isort.txt
+    - name: isort
+      run: isort --check-only --recursive --skip-glob superset .
+
+
+  mypy:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pythonversion: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.pythonversion }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.pythonversion }}
+    - uses: actions/cache@v2
+      id: cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-mypy.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install Dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements-dev/requirements-mypy.txt
+    - name: mypy
+      run: |
+        cd dashboard_viewer
+        mypy .
+
+
+  prospector:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pythonversion: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.pythonversion }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.pythonversion }}
+    - uses: actions/cache@v2
+      id: cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-prospector.txt', 'dashboard_viewer/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install Dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements-dev/requirements-prospector.txt -r dashboard_viewer/requirements.txt
+    - name: prospector
+      run: prospector -I superset .
+
+
+  tests:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pythonversion: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.pythonversion }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.pythonversion }}
+    - uses: actions/cache@v2
+      id: cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('dashboard_viewer/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install Dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        pip install --upgrade pip
+        pip install -r dashboard_viewer/requirements.txt
+    - name: tests
+      run: |
+        cd dashboard_viewer
+        SECRET_KEY=secret python manage.py test
