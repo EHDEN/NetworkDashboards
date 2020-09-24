@@ -6,63 +6,63 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('uploader', '0001_initial'),
+        ("uploader", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='achillesresults',
-            name='stratum_1',
+            model_name="achillesresults",
+            name="stratum_1",
             field=models.TextField(null=True),
         ),
         migrations.AlterField(
-            model_name='achillesresults',
-            name='stratum_2',
+            model_name="achillesresults",
+            name="stratum_2",
             field=models.TextField(null=True),
         ),
         migrations.AlterField(
-            model_name='achillesresults',
-            name='stratum_3',
+            model_name="achillesresults",
+            name="stratum_3",
             field=models.TextField(null=True),
         ),
         migrations.AlterField(
-            model_name='achillesresults',
-            name='stratum_4',
+            model_name="achillesresults",
+            name="stratum_4",
             field=models.TextField(null=True),
         ),
         migrations.AlterField(
-            model_name='achillesresults',
-            name='stratum_5',
+            model_name="achillesresults",
+            name="stratum_5",
             field=models.TextField(null=True),
         ),
         migrations.AlterField(
-            model_name='achillesresultsarchive',
-            name='stratum_1',
+            model_name="achillesresultsarchive",
+            name="stratum_1",
             field=models.TextField(null=True),
         ),
         migrations.AlterField(
-            model_name='achillesresultsarchive',
-            name='stratum_2',
+            model_name="achillesresultsarchive",
+            name="stratum_2",
             field=models.TextField(null=True),
         ),
         migrations.AlterField(
-            model_name='achillesresultsarchive',
-            name='stratum_3',
+            model_name="achillesresultsarchive",
+            name="stratum_3",
             field=models.TextField(null=True),
         ),
         migrations.AlterField(
-            model_name='achillesresultsarchive',
-            name='stratum_4',
+            model_name="achillesresultsarchive",
+            name="stratum_4",
             field=models.TextField(null=True),
         ),
         migrations.AlterField(
-            model_name='achillesresultsarchive',
-            name='stratum_5',
+            model_name="achillesresultsarchive",
+            name="stratum_5",
             field=models.TextField(null=True),
         ),
         migrations.AddField(
-            model_name='uploadhistory',
-            name='cdm_release_date',
+            model_name="uploadhistory",
+            name="cdm_release_date",
             field=models.DateField(null=True),
         ),
     ]

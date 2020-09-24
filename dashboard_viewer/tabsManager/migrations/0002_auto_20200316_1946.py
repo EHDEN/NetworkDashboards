@@ -30,64 +30,120 @@ def associate_tab_and_button(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tabsManager', '0002_auto_20200214_1128'),
+        ("tabsManager", "0002_auto_20200214_1128"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Button',
+            name="Button",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(help_text='Text to appear on the tab under the icon', max_length=30, unique=True)),
-                ('icon', models.CharField(help_text='Font awesome icon v5. Just the end part, e.g. fa-clock-o -> clock-o', max_length=20)),
-                ('position', models.IntegerField()),
-                ('visible', models.BooleanField(help_text='If the tab should be displayed')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        help_text="Text to appear on the tab under the icon",
+                        max_length=30,
+                        unique=True,
+                    ),
+                ),
+                (
+                    "icon",
+                    models.CharField(
+                        help_text="Font awesome icon v5. Just the end part, e.g. fa-clock-o -> clock-o",
+                        max_length=20,
+                    ),
+                ),
+                ("position", models.IntegerField()),
+                (
+                    "visible",
+                    models.BooleanField(help_text="If the tab should be displayed"),
+                ),
             ],
         ),
         migrations.RunPython(move_tabs_to_buttons),
         migrations.RemoveField(
-            model_name='tab',
-            name='icon',
+            model_name="tab",
+            name="icon",
         ),
         migrations.RemoveField(
-            model_name='tab',
-            name='position',
+            model_name="tab",
+            name="position",
         ),
         migrations.RemoveField(
-            model_name='tab',
-            name='visible',
+            model_name="tab",
+            name="visible",
         ),
         migrations.AddField(
-            model_name='tab',
-            name='button_ptr',
-            field=models.OneToOneField(auto_created=True, default=None, blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, serialize=False, to='tabsManager.Button'),
+            model_name="tab",
+            name="button_ptr",
+            field=models.OneToOneField(
+                auto_created=True,
+                default=None,
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                parent_link=True,
+                serialize=False,
+                to="tabsManager.Button",
+            ),
             preserve_default=False,
         ),
         migrations.RunPython(associate_tab_and_button),
         migrations.RemoveField(
-            model_name='tab',
-            name='id',
+            model_name="tab",
+            name="id",
         ),
         migrations.AlterField(
-            model_name='tab',
-            name='button_ptr',
-            field=models.OneToOneField(auto_created=True, default=None, on_delete=django.db.models.deletion.CASCADE, primary_key=True, parent_link=True, serialize=False, to='tabsManager.Button'),
+            model_name="tab",
+            name="button_ptr",
+            field=models.OneToOneField(
+                auto_created=True,
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                primary_key=True,
+                parent_link=True,
+                serialize=False,
+                to="tabsManager.Button",
+            ),
             preserve_default=False,
         ),
         migrations.RemoveField(
-            model_name='tab',
-            name='title',
+            model_name="tab",
+            name="title",
         ),
         migrations.CreateModel(
-            name='TabGroup',
+            name="TabGroup",
             fields=[
-                ('button_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='tabsManager.Button')),
+                (
+                    "button_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="tabsManager.Button",
+                    ),
+                ),
             ],
-            bases=('tabsManager.button',),
+            bases=("tabsManager.button",),
         ),
         migrations.AddField(
-            model_name='tab',
-            name='group',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='tabsManager.TabGroup'),
+            model_name="tab",
+            name="group",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="tabsManager.TabGroup",
+            ),
         ),
     ]

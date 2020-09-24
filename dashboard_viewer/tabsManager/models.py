@@ -1,4 +1,3 @@
-
 import os
 
 from django.conf import settings
@@ -14,17 +13,17 @@ class Button(models.Model):
 
     objects = InheritanceManager()
 
-    title    = models.CharField(
+    title = models.CharField(
         max_length=30,
         help_text="Text to appear on the tab under the icon",
         unique=True,
     )
-    icon     = models.CharField(
+    icon = models.CharField(
         max_length=20,
         help_text="Font awesome icon v5. Just the end part, e.g. fa-clock-o -> clock-o",
     )
     position = models.IntegerField()
-    visible  = models.BooleanField(
+    visible = models.BooleanField(
         help_text="If the tab should be displayed",
     )
 
@@ -40,6 +39,7 @@ class TabGroup(Button):
     Type of buttons that can hold a submenu
     Dont't display iframes
     """
+
     pass
 
 
@@ -48,8 +48,11 @@ class Tab(Button):
     Type of buttons that display a iframe
     Can be within a group, forming a submenu
     """
-    url   = models.URLField()
-    group = models.ForeignKey(TabGroup, on_delete=models.SET_NULL, null=True, blank=True)
+
+    url = models.URLField()
+    group = models.ForeignKey(
+        TabGroup, on_delete=models.SET_NULL, null=True, blank=True
+    )
 
 
 class Logo(models.Model):
@@ -59,15 +62,11 @@ class Logo(models.Model):
     url = models.URLField(blank=True, null=True)
     imageContainerCss = models.TextField(
         blank=True,
-        default=
-        "padding: 5px 5px 5px 5px;\n"
-        "height: 100px;\n"
-        "margin-bottom: 10px;",
+        default="padding: 5px 5px 5px 5px;\n" "height: 100px;\n" "margin-bottom: 10px;",
     )
     imageCss = models.TextField(
         blank=True,
-        default=
-        "background: #fff;\n"
+        default="background: #fff;\n"
         "object-fit: contain;\n"
         "width: 90px;\n"
         "height: 100%;\n"
@@ -75,14 +74,13 @@ class Logo(models.Model):
         "padding: 0 5px 0 5px;\n"
         "transition: width 400ms, height 400ms;\n"
         "position: relative;\n"
-        "z-index: 5;\n"
+        "z-index: 5;\n",
     )
     imageOnHoverCss = models.TextField(
         blank=True,
-        default=
-        "max-width: none !important;\n"
+        default="max-width: none !important;\n"
         "width: 300px !important;\n"
-        "height: 150px !important;"
+        "height: 150px !important;",
     )
 
     def delete(self, *args, **kwargs):

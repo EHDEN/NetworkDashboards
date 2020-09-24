@@ -1,4 +1,3 @@
-
 class AchillesRouter:
     """
     Defines:
@@ -24,7 +23,10 @@ class AchillesRouter:
         return None
 
     def allow_relation(self, obj1, obj2, **hints):
-        if obj1._meta.app_label == self.achilles_app or obj2._meta.app_label == self.achilles_app:
+        if (
+            obj1._meta.app_label == self.achilles_app
+            or obj2._meta.app_label == self.achilles_app
+        ):
             return True
         return None
 

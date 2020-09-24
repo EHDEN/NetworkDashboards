@@ -14,25 +14,36 @@ def fill_acronym(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('uploader', '0001_initial'),
+        ("uploader", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='datasource',
-            name='acronym',
-            field=models.CharField(default=None, null=True, help_text='Short label for the data source, containing only letters, numbers, underscores or hyphens.', max_length=50, unique=True),
+            model_name="datasource",
+            name="acronym",
+            field=models.CharField(
+                default=None,
+                null=True,
+                help_text="Short label for the data source, containing only letters, numbers, underscores or hyphens.",
+                max_length=50,
+                unique=True,
+            ),
             preserve_default=False,
         ),
         migrations.RunPython(fill_acronym),
         migrations.AlterField(
-            model_name='datasource',
-            name='acronym',
-            field=models.CharField(default=None, help_text='Short label for the data source, containing only letters, numbers, underscores or hyphens.', max_length=50, unique=True),
+            model_name="datasource",
+            name="acronym",
+            field=models.CharField(
+                default=None,
+                help_text="Short label for the data source, containing only letters, numbers, underscores or hyphens.",
+                max_length=50,
+                unique=True,
+            ),
             preserve_default=False,
         ),
         migrations.RemoveField(
-            model_name='datasource',
-            name='slug',
+            model_name="datasource",
+            name="slug",
         ),
     ]

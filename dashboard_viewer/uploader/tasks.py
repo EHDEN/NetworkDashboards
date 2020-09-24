@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import, unicode_literals
 
 from contextlib import closing
@@ -19,7 +18,9 @@ logger = get_task_logger(__name__)
 
 
 @shared_task
-def update_achilles_results_data(db_id: int, last_upload_id: Union[int, None], achilles_results: str) -> None:
+def update_achilles_results_data(
+    db_id: int, last_upload_id: Union[int, None], achilles_results: str
+) -> None:
     logger.info(f"Worker started [datasource {db_id}]")
     cache.incr("celery_workers_updating", ignore_key_check=True)
 
@@ -36,7 +37,9 @@ def update_achilles_results_data(db_id: int, last_upload_id: Union[int, None], a
         if last_upload_id:
             # if there were any records uploaded before
             #  move them to the AchillesResultsArchive table
-            logger.info(f"Moving old records to the {AchillesResultsArchive._meta.db_table} table [datasource {db_id}]")
+            logger.info(
+                f"Moving old records to the {AchillesResultsArchive._meta.db_table} table [datasource {db_id}]"
+            )
             with closing(connections["achilles"].cursor()) as cursor:
                 cursor.execute(
                     f"""
@@ -62,15 +65,19 @@ def update_achilles_results_data(db_id: int, last_upload_id: Union[int, None], a
                         %s, %s
                     FROM {AchillesResults._meta.db_table}
                     """,
-                    (db_id, last_upload_id)
+                    (db_id, last_upload_id),
                 )
 
-            logger.info(f"Deleting old records from {AchillesResults._meta.db_table} table [datasource {db_id}]")
+            logger.info(
+                f"Deleting old records from {AchillesResults._meta.db_table} table [datasource {db_id}]"
+            )
             AchillesResults.objects.filter(data_source_id=db_id).delete()
 
         entries["data_source_id"] = db_id
 
-        logger.info(f"Inserting new records on {AchillesResults._meta.db_table} table [datasource {db_id}]")
+        logger.info(
+            f"Inserting new records on {AchillesResults._meta.db_table} table [datasource {db_id}]"
+        )
         entries.to_sql(
             AchillesResults._meta.db_table,
             "postgresql"  # TODO aspedrosa: this shouldn't be hardcoded
@@ -88,7 +95,9 @@ def update_achilles_results_data(db_id: int, last_upload_id: Union[int, None], a
     if not cache.decr("celery_workers_updating"):
         # Only one worker can update the materialized views at the same time -> same as -> only one thread
         #  can write to a file at the same time
-        write_lock = RWLock(cache.client.get_client(), "celery_worker_updating", RWLock.WRITE)
+        write_lock = RWLock(
+            cache.client.get_client(), "celery_worker_updating", RWLock.WRITE
+        )
         write_lock.acquire()
 
         logger.info(f"Updating materialized views [datasource {db_id}]")

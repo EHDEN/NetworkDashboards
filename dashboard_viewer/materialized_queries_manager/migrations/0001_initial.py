@@ -8,16 +8,55 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='MaterializedQuery',
+            name="MaterializedQuery",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=20, validators=[django.core.validators.RegexValidator('^[_0-9a-zA-Z]+$', 'Only alphanumeric characters and the character "_" are allowed.')])),
-                ('query', models.TextField(validators=[django.core.validators.RegexValidator('--', 'Single line comments are not allowed', inverse_match=True), django.core.validators.RegexValidator('/\\*.*?\\*/', 'Block comments are not allowed', inverse_match=True), django.core.validators.RegexValidator(';', "';' characters are not allowed", inverse_match=True)])),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=20,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                "^[_0-9a-zA-Z]+$",
+                                'Only alphanumeric characters and the character "_" are allowed.',
+                            )
+                        ],
+                    ),
+                ),
+                (
+                    "query",
+                    models.TextField(
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                "--",
+                                "Single line comments are not allowed",
+                                inverse_match=True,
+                            ),
+                            django.core.validators.RegexValidator(
+                                "/\\*.*?\\*/",
+                                "Block comments are not allowed",
+                                inverse_match=True,
+                            ),
+                            django.core.validators.RegexValidator(
+                                ";",
+                                "';' characters are not allowed",
+                                inverse_match=True,
+                            ),
+                        ]
+                    ),
+                ),
             ],
         ),
     ]

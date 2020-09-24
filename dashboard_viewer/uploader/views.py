@@ -1,4 +1,3 @@
-
 from typing import Callable, Dict, List, TypeVar, Union
 import datetime
 import os
@@ -19,7 +18,7 @@ from .models import UploadHistory, DataSource, Country
 from .tasks import update_achilles_results_data
 
 
-VERSION_REGEX = regex.compile(r'\d+[\d.]*(?<!\.)')
+VERSION_REGEX = regex.compile(r"\d+[\d.]*(?<!\.)")
 
 
 def convert_to_datetime_from_iso(elem: str) -> Union[datetime.datetime, None]:
@@ -45,10 +44,10 @@ U = TypeVar("U")
 
 
 def check_correct(
-        names: List[str],
-        values: List[T],
-        transform: Callable[[T], Union[U, None]],
-        check: Callable[[U], bool],
+    names: List[str],
+    values: List[T],
+    transform: Callable[[T], Union[U, None]],
+    check: Callable[[U], bool],
 ) -> Union[List[U], str]:
     """
     Transforms the values of given fields from the uploaded file
@@ -76,7 +75,11 @@ def check_correct(
             transformed_elements[i] = transformed
 
     if bad_elements:
-        return f" {bad_elements[0]} is" if len(bad_elements) == 1 else f"s {', '.join(bad_elements[:-1])} and {bad_elements[-1]} are"
+        return (
+            f" {bad_elements[0]} is"
+            if len(bad_elements) == 1
+            else f"s {', '.join(bad_elements[:-1])} and {bad_elements[-1]} are"
+        )
 
     return transformed_elements
 
@@ -102,7 +105,6 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
 
         return
 
-
     achilles_results.columns = [  # noqa
         "analysis_id",
         "stratum_1",
@@ -110,14 +112,16 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
         "stratum_3",
         "stratum_4",
         "stratum_5",
-        "count_value"
+        "count_value",
     ]
 
     try:
-        achilles_results = achilles_results.astype({
-            "analysis_id": numpy.int32,
-            "count_value": numpy.int32,
-        })
+        achilles_results = achilles_results.astype(
+            {
+                "analysis_id": numpy.int32,
+                "count_value": numpy.int32,
+            }
+        )
     except ValueError:
         messages.error(
             request,
@@ -133,7 +137,7 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
         ["0", "5000"],
         [0, 5000],
         lambda e: achilles_results[achilles_results.analysis_id == e],
-        lambda e: not e.empty
+        lambda e: not e.empty,
     )
 
     if isinstance(output, str):
@@ -162,7 +166,11 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
             "Source release date (analysis_id=5000, stratum_2)",
             "CDM release date (analysis_id=5000, stratum_3)",
         ],
-        [(analysis_0, "stratum_3"), (analysis_5000, "stratum_2"), (analysis_5000, "stratum_3")],
+        [
+            (analysis_0, "stratum_3"),
+            (analysis_5000, "stratum_2"),
+            (analysis_5000, "stratum_3"),
+        ],
         convert_to_datetime_from_iso,
         lambda date: date,
     )
@@ -181,7 +189,11 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
             "Achilles version (analysis_id=5000, stratum_4)",
             "Vocabulary version (analysis_id=5000, stratum_5)",
         ],
-        [(analysis_0, "stratum_2"), (analysis_5000, "stratum_4"), (analysis_5000, "stratum_5")],
+        [
+            (analysis_0, "stratum_2"),
+            (analysis_5000, "stratum_4"),
+            (analysis_5000, "stratum_5"),
+        ],
         lambda elem: elem[0].loc[0, elem[1]],
         VERSION_REGEX.fullmatch,
     )
@@ -194,11 +206,14 @@ def extract_data_from_uploaded_file(request: WSGIRequest) -> Union[Dict, None]:
         return_value["vocabulary_version"] = output[2]
 
     if errors:
-        messages.error(request, mark_safe(
-            " ".join(errors) + "<br/>Try (re)running the plugin "
-            "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
-            " on your database."
-        ))
+        messages.error(
+            request,
+            mark_safe(
+                " ".join(errors) + "<br/>Try (re)running the plugin "
+                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
+                " on your database."
+            ),
+        )
         return
 
     return return_value
@@ -212,7 +227,9 @@ def upload_achilles_results(request, *args, **kwargs):
     except DataSource.DoesNotExist:
         return create_data_source(request, *args, **kwargs)
 
-    upload_history = list(UploadHistory.objects.filter(data_source__acronym=obj_data_source.acronym))
+    upload_history = list(
+        UploadHistory.objects.filter(data_source__acronym=obj_data_source.acronym)
+    )
     if request.method == "GET":
         form = AchillesResultsForm()
 
@@ -249,13 +266,12 @@ def upload_achilles_results(request, *args, **kwargs):
                 data_source_storage_path = os.path.join(
                     settings.BASE_DIR,
                     settings.ACHILLES_RESULTS_STORAGE_PATH,
-                    obj_data_source.acronym
+                    obj_data_source.acronym,
                 )
                 os.makedirs(data_source_storage_path, exist_ok=True)
                 data["achilles_results"].to_csv(
                     os.path.join(
-                        data_source_storage_path,
-                        f"{len(upload_history)}.csv"
+                        data_source_storage_path, f"{len(upload_history)}.csv"
                     ),
                     index=False,
                 )
@@ -267,13 +283,13 @@ def upload_achilles_results(request, *args, **kwargs):
 
     return render(
         request,
-        'upload_achilles_results.html',
+        "upload_achilles_results.html",
         {
             "form": form,
             "obj_data_source": obj_data_source,
             "upload_history": upload_history,
             "submit_button_text": mark_safe("<i class='fas fa-upload'></i> Upload"),
-        }
+        },
     )
 
 
@@ -294,7 +310,9 @@ def create_data_source(request, *args, **kwargs):
                         if field_value:
                             initial[generated_field_name] = field_value
                 elif field_name == "country":
-                    countries_found = Country.objects.filter(country__icontains=request.GET["country"])
+                    countries_found = Country.objects.filter(
+                        country__icontains=request.GET["country"]
+                    )
                     if countries_found.count() == 1:
                         initial["country"] = countries_found.get().id
                 else:
@@ -338,7 +356,7 @@ def create_data_source(request, *args, **kwargs):
             form = SourceForm(initial=initial)
 
             # fill the form with errors associated with each field that wasn't valid
-            #for field, msgs in aux_form.errors.items():
+            # for field, msgs in aux_form.errors.items():
             #    required_error = False
             #    for msg in msgs:
             #        if "required" in msg:
@@ -369,19 +387,21 @@ def create_data_source(request, *args, **kwargs):
                 request,
                 format_html(
                     "Data source <b>{}</b> created with success. You may now upload achilles results files.",
-                    obj.name
+                    obj.name,
                 ),
             )
             return redirect("/uploader/{}".format(obj.acronym))
-        
+
     return render(
         request,
         "data_source.html",
         {
             "form": form,
             "editing": False,
-            "submit_button_text": mark_safe("<i class='fas fa-plus-circle'></i> Create"),
-        }
+            "submit_button_text": mark_safe(
+                "<i class='fas fa-plus-circle'></i> Create"
+            ),
+        },
     )
 
 
@@ -433,5 +453,5 @@ def edit_data_source(request, *args, **kwargs):
             "form": form,
             "editing": True,
             "submit_button_text": mark_safe("<i class='far fa-edit'></i> Edit"),
-        }
+        },
     )

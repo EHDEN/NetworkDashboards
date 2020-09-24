@@ -1,4 +1,3 @@
-
 from django import views
 from django.conf import settings
 from django.shortcuts import render
@@ -22,14 +21,20 @@ def convert_button_to_dict(button):
 
 def get_menu():
     # get all base visible buttons, ordered by their position and title fields
-    buttons = Button.objects.filter(visible=True).order_by("position", "title").select_subclasses()
+    buttons = (
+        Button.objects.filter(visible=True)
+        .order_by("position", "title")
+        .select_subclasses()
+    )
 
     groups = []
     for btn in buttons:
         if isinstance(btn, TabGroup):
             groups.append(btn)
     group_mappings = {group: [] for group in groups}  # tabs within a group
-    single_tabs = [btn for btn in buttons if isinstance(btn, Tab)]  # button without sub tabs
+    single_tabs = [
+        btn for btn in buttons if isinstance(btn, Tab)
+    ]  # button without sub tabs
 
     # associate each tab to its group, if it has one
     for i in range(len(single_tabs))[::-1]:
@@ -53,9 +58,7 @@ def get_menu():
                 )
                 groups_idx += 1
             else:
-                final_menu.append(
-                    convert_button_to_dict(single_tabs[single_tabs_idx])
-                )
+                final_menu.append(convert_button_to_dict(single_tabs[single_tabs_idx]))
                 single_tabs_idx += 1
         elif groups[groups_idx].position < single_tabs[single_tabs_idx].position:
             final_menu.append(
@@ -66,9 +69,7 @@ def get_menu():
             )
             groups_idx += 1
         else:
-            final_menu.append(
-                convert_button_to_dict(single_tabs[single_tabs_idx])
-            )
+            final_menu.append(convert_button_to_dict(single_tabs[single_tabs_idx]))
             single_tabs_idx += 1
 
     if groups_idx < len(groups) and len(groups) > 0:
@@ -81,15 +82,12 @@ def get_menu():
             )
     elif len(single_tabs) > 0:  # single_tabs_idx < len(single_tabs)
         for i in range(single_tabs_idx, len(single_tabs)):
-            final_menu.append(
-                convert_button_to_dict(single_tabs[i])
-            )
+            final_menu.append(convert_button_to_dict(single_tabs[i]))
 
     return final_menu
 
 
 class APITabsView(rest_views.APIView):
-
     def get(self, request):
         return Response(get_menu())
 
