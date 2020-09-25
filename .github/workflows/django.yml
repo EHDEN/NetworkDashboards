@@ -26,7 +26,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install Dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
       run: |
         pip install --upgrade pip
         pip install -r requirements-dev/requirements-black.txt
@@ -55,7 +54,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install Dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
       run: |
         pip install --upgrade pip
         pip install -r requirements-dev/requirements-isort.txt
@@ -84,7 +82,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install Dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
       run: |
         pip install --upgrade pip
         pip install -r requirements-dev/requirements-prospector.txt -r dashboard_viewer/requirements.txt
@@ -115,7 +112,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install Dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
       run: |
         pip install --upgrade pip
         pip install -r dashboard_viewer/requirements.txt
