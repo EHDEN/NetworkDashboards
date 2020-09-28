@@ -212,7 +212,6 @@ def upload_achilles_results(request, *args, **kwargs):
     except DataSource.DoesNotExist:
         return create_data_source(request, *args, **kwargs)
 
-
     upload_history = list(UploadHistory.objects.filter(data_source__acronym=obj_data_source.acronym))
     if request.method == "GET":
         form = AchillesResultsForm()
@@ -354,10 +353,11 @@ def create_data_source(request, *args, **kwargs):
         if data_source is not None:
             form.fields["acronym"].disabled = True
     elif request.method == "POST":
-        if "acronym" not in request.POST and data_source is not None:
-            request.POST["acronym"] = data_source
+        post_data = request.POST.copy()
+        if "acronym" not in post_data and data_source is not None:
+            post_data.update({"acronym": data_source})
 
-        form = SourceForm(request.POST)
+        form = SourceForm(post_data)
         if form.is_valid():
             obj = form.save(commit=False)
             lat, lon = form.cleaned_data["coordinates"].split(",")
