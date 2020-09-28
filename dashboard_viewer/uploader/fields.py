@@ -1,4 +1,3 @@
-
 from django.forms import fields
 
 from .widgets import CoordinatesWidget
@@ -16,4 +15,4 @@ class CoordinatesField(fields.MultiValueField):
         super().__init__(_fields, *args, **kwargs)
 
     def compress(self, data_list):
-        return ','.join(data_list)
+        return ",".join(data_list)

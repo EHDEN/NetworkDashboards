@@ -13,11 +13,11 @@
             {% if logo %}
                 <style rel="stylesheet">
                     img#logo:hover {
-                        {{ logo.imageOnHoverCss }}
+                        {{ logo.image_on_hover_css }}
                     }
                 </style>
-                <div id="logo-container" {% if logo.imageContainerCss %}style="{{ logo.imageContainerCss }}"{% endif %}>
-                    <img id="logo" {% if logo.imageCss %}style="{{ logo.imageCss }}"{% endif %} src="{{ logo.imageSrc }}">
+                <div id="logo-container" {% if logo.image_container_css %}style="{{ logo.image_container_css }}"{% endif %}>
+                    <img id="logo" {% if logo.image_css %}style="{{ logo.image_css }}"{% endif %} src="{{ logo.image_src }}">
                 </div>
             {% endif %}
             <nav class="head-nav" data-simplebar data-simplebar-auto-hide="false" data-simplebar-scrollbar-max-size="700">
