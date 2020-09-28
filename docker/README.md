@@ -1,23 +1,28 @@
 # Setup a docker environment
 
-1. Create a `.env` file on this directory, using `.env-example` as reference, setting all necessary environment variables (SUPERSET\_MAPBOX\_API\_KEY and DASHBOARD\_VIEWER\_SECRET\_KEY)
+1. Clone the repository with the command `git clone --recurse-submodules https://github.com/EHDEN/NetworkDashboards`. If you already cloned the repository without the `--recurse-submodules` option, run `git submodule update --init` to fetch the superset submodule.
 
-2. Setup superset
+2. Create a `.env` file on the `docker` directory, using `.env-example` as reference, setting all necessary environment variables (SUPERSET\_MAPBOX\_API\_KEY and DASHBOARD\_VIEWER\_SECRET\_KEY).
 
-   2.1 Clone the repository to the root of the repository into a directory called ''superset': `git clone https://github.com/apache/incubator-superset ../superset`
+3. Create a `docker-init.sh` file on `docker/superset` based on the file `docker/superset/docker-init-example.sh` to set up admin credentials for superset.
 
-   2.2 Checkout to tag 0.37.0rc4: `cd ../superset && git checkout tags/0.37.0rc4 -b tag0.37.0rc4`
+4. If you wish to expose the dashboard viewer app through a specific domain(s) you must add it/them to the ALLOWED_HOSTS list on file `dashboard_viewer/dashboard_viewer/settings.py` and remove the `'*'` entry.
 
-   2.3 Create a `docker-init.sh` file on `docker/superset` based on the file `docker/superset/docker-init-example.sh` to set up admin credentials for superset
+5. Build containers' images: `docker-compose build`. This might take several minutes.
 
-3. If you wish to include this app as an iframe on another website you need to add its address to the ALLOWED_HOSTS list on file `dashboard_viewer/dashboard_viewer/settings.py` of the dasboard app
+6. Set up the database for the dashboard viewer app: `docker-compose run --rm dashboard ./docker-init.sh`.
 
-4. Build containers' images: `docker-compose build`. This might take several minutes.
+7. Bring up the containers: `docker-compose up -d`.
 
-5. Set up the database for the dashboard viewer app: `docker-compose run --rm dashboard ./docker-init.sh`
+8. If you used the default ports:
 
-6. Bring up the containers: `docker-compose up -d`
-
-7. If you used the default ports:
    - Go to `http://localhost` to access the dashboard viewer app.
    - Go to `http://localhost:8088` to access superset.
+
+9. On release 0.37 of superset there is a bug related to the public role and because of that we had to set `PUBLIC_ROLE_LIKE_GAMMA = True` on superset settings. This leads the public role with permissions that he shouldn't have. To solve this, so any anonymous user can view dashboards, you should remove all its permissions and then add the following:
+
+   - can explore JSON on Superset
+   - can dashboard on Superset
+   - all datasource access on all_datasource_access
+   - can csrf token on Superset
+   - can list on CssTemplateAsyncModelView

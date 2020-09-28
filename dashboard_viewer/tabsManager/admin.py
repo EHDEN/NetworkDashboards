@@ -1,6 +1,5 @@
-
-from django.contrib import admin
 from django import forms
+from django.contrib import admin
 
 from .models import Logo, Tab, TabGroup
 
@@ -16,7 +15,7 @@ class LogoForm(forms.ModelForm):
 
         if not image and not url:
             raise forms.ValidationError("Must define the image or url field")
-        elif image and url:
+        if image and url:
             raise forms.ValidationError("Define only the image or url field")
 
         return self.cleaned_data

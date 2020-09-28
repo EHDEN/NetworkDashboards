@@ -1,6 +1,6 @@
 {% extends "uploader_base.html" %}
 
-{% block title %}
+{% block title %} {# data source info #}
     <div class="row">
         <h3 class="col">Data Source: {{ obj_data_source.name }}</h3>
         <div class="col-auto">
@@ -20,11 +20,18 @@
             <p><b>Release date:</b> {{ obj_data_source.release_date }}</p>
         </div>
     </div>
+
     <hr/>
 
+    {# Achilles resutls file form #}
+    <h3>Upload new database characteristics</h3>
+    <span>
+        For more information see the CatalogueExport R-package
+        <a href="https://github.com/EHDEN/CatalogueExport">
+            <i class="fas fa-link"></i>
+        </a>
+    </span>
 
-
-    <h3>Upload a new achilles results file</h3>
 {% endblock %}
 
 {% block upload_history %}

@@ -6,19 +6,45 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tabsManager', '0002_auto_20200316_1946'),
+        ("tabsManager", "0002_auto_20200316_1946"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Logo',
+            name="Logo",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(blank=True, null=True, upload_to='logo')),
-                ('url', models.URLField(blank=True, null=True)),
-                ('imageContainerCss', models.TextField(blank=True, default='padding: 5px 5px 5px 5px;\nheight: 100px;\nmargin-bottom: 10px;')),
-                ('imageCss', models.TextField(blank=True, default='background: #fff;\nobject-fit: contain;\nwidth: 90px;\nheight: 100%;\nborder-radius: 30px;\npadding: 0 5px 0 5px;\ntransition: width 400ms, height 400ms;\nposition: relative;\nz-index: 5;\n')),
-                ('imageOnHoverCss', models.TextField(blank=True, default='max-width: none !important;\nwidth: 300px !important;\nheight: 150px !important;')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("image", models.ImageField(blank=True, null=True, upload_to="logo")),
+                ("url", models.URLField(blank=True, null=True)),
+                (
+                    "imageContainerCss",
+                    models.TextField(
+                        blank=True,
+                        default="padding: 5px 5px 5px 5px;\nheight: 100px;\nmargin-bottom: 10px;",
+                    ),
+                ),
+                (
+                    "imageCss",
+                    models.TextField(
+                        blank=True,
+                        default="background: #fff;\nobject-fit: contain;\nwidth: 90px;\nheight: 100%;\nborder-radius: 30px;\npadding: 0 5px 0 5px;\ntransition: width 400ms, height 400ms;\nposition: relative;\nz-index: 5;\n",
+                    ),
+                ),
+                (
+                    "imageOnHoverCss",
+                    models.TextField(
+                        blank=True,
+                        default="max-width: none !important;\nwidth: 300px !important;\nheight: 150px !important;",
+                    ),
+                ),
             ],
         ),
     ]
