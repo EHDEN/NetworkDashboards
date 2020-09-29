@@ -7,13 +7,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('materialized_queries_manager', '0001_initial'),
+        ("materialized_queries_manager", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='materializedquery',
-            name='name',
-            field=models.CharField(max_length=50, validators=[django.core.validators.RegexValidator('^[_0-9a-zA-Z]+$', 'Only alphanumeric characters and the character "_" are allowed.')]),
+            model_name="materializedquery",
+            name="name",
+            field=models.CharField(
+                max_length=50,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        "^[_0-9a-zA-Z]+$",
+                        'Only alphanumeric characters and the character "_" are allowed.',
+                    )
+                ],
+            ),
         ),
     ]
