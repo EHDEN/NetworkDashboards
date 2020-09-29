@@ -9,7 +9,7 @@ from django.db.utils import ProgrammingError
 
 class MaterializedQuery(models.Model):
     name = models.CharField(
-        max_length=20,
+        max_length=50,
         validators=(
             RegexValidator(
                 r"^[_0-9a-zA-Z]+$",
@@ -61,3 +61,9 @@ class MaterializedQuery(models.Model):
 
         with closing(connections["achilles"].cursor()) as cursor:
             cursor.execute(f"DROP MATERIALIZED VIEW {self.name}")
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return self.name
