@@ -10,11 +10,11 @@ from django.forms import fields
 from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
+from shared.utils.markdown import ConstanceProxy
 
 from .forms import AchillesResultsForm, SourceForm
 from .models import Country, DataSource, UploadHistory
 from .tasks import update_achilles_results_data
-from shared.utils.markdown import ConstanceProxy
 
 PAGE_TITLE = "Dashboard Data Upload"
 VERSION_REGEX = re.compile(r"\d+(\.\d+)*")

@@ -34,7 +34,7 @@ CACHE_CONFIG = {
 }
 
 
-class CeleryConfig(object):
+class CeleryConfig:
     BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_DB}"
     CELERY_IMPORTS = ("superset.sql_lab",)
     CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_DB}"

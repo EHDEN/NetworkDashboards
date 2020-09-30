@@ -16,13 +16,12 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import static
 from django.contrib import admin
-from django.shortcuts import redirect
 from django.urls import include, path
 
 urlpatterns = [
     path("", include("tabsManager.urls")),
     path("admin/", admin.site.urls),
-    path("martor/", include('martor.urls')),
+    path("martor/", include("martor.urls")),
     path("tabs/", include("tabsManager.urls")),
     path("uploader/", include("uploader.urls")),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

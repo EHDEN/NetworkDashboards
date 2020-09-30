@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+from constance.signals import config_updated
+from django.dispatch import receiver
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -189,29 +192,28 @@ CACHES = {
 
 # Constance
 CONSTANCE_REDIS_CONNECTION = {
-    'host': REDIS_HOST,
-    'port': REDIS_PORT,
-    'db': REDIS_CONSTANCE_DB,
+    "host": REDIS_HOST,
+    "port": REDIS_PORT,
+    "db": REDIS_CONSTANCE_DB,
 }
 CONSTANCE_DBS = ["default"]
 
 CONSTANCE_ADDITIONAL_FIELDS = {
     "image": ["django.forms.ImageField", {"required": False}],
     "url": ["django.forms.URLField", {"required": False}],
-    "markdown": ["django.forms.CharField", {"widget": "martor.widgets.AdminMartorWidget", "required": False}]
+    "markdown": [
+        "django.forms.CharField",
+        {"widget": "martor.widgets.AdminMartorWidget", "required": False},
+    ],
 }
 
 CONSTANCE_CONFIG = {
-    "APP_LOGO_IMAGE": (
-        "CDM-BI-icon.png",
-        "Image file to use as app logo.",
-        "image"
-    ),
+    "APP_LOGO_IMAGE": ("CDM-BI-icon.png", "Image file to use as app logo.", "image"),
     "APP_LOGO_URL": (
         "",
         "Url to the image to usa as app logo."
         "This setting will be used over the APP_LOG_IMAGE",
-        "url"
+        "url",
     ),
     "APP_TITLE": (
         "Network Dashboards",
@@ -219,15 +221,14 @@ CONSTANCE_CONFIG = {
         str,
     ),
     "LANDING_PAGE_DESCRIPTION": (
-        "# Description\n"
-        "TODO",
+        "# Description\nTODO",
         "Land page desc",
-        "markdown"
+        "markdown",
     ),
     "LANDING_PAGE_RESUME_DASHBOARD_URL": (
         "",
         "URL for the resume dashbaord of the network",
-        "url"
+        "url",
     ),
     "UPLOADER_EXPORT": (
         "The Achilles tool generates summary statistics of the database that can be visualised in the Network Dashboard"
@@ -235,27 +236,25 @@ CONSTANCE_CONFIG = {
         " [OHDSI Github Page](https://github.com/OHDSI/Achilles). Once the Achilles tool has run against your database"
         " you need to export the achilles results table to a csv file.",
         "Text for the 'Export Achilles results' section on the uploader app",
-        "markdown"
+        "markdown",
     ),
     "UPLOADER_UPLOAD": (
         "The next step is to upload the Achilles result file in the portal using the form below. To update an existing"
         " database, you can simply upload the file and the data will be replaced. This operation can take some time to"
         " finish.",
         "Text for the 'Upload Achilles results' section on the uploader app",
-        "markdown"
+        "markdown",
     ),
     "UPLOADER_AUTO_UPDATE": (
         "Once the Achilles results have been uploaded, all the graphs in the Network Dashboard will show the most"
         " recent data.",
         "Text for the 'Auto update dashboard' section on the uploader app",
-        "markdown"
+        "markdown",
     ),
     "TABS_LOGO_CONTAINER_CSS": (
-        "padding: 5px 5px 5px 5px;\n"
-        "height: 100px;\n"
-        "margin-bottom: 10px;\n",
+        "padding: 5px 5px 5px 5px;\nheight: 100px;\nmargin-bottom: 10px;\n",
         "Css for the div container of the logo image",
-        str
+        str,
     ),
     "TABS_LOGO_IMG_CSS": (
         "background: #fff;\n"
@@ -268,16 +267,13 @@ CONSTANCE_CONFIG = {
         "position: relative;\n"
         "z-index: 5;\n",
         "Css for the img tag displaying the app logo",
-        str
-    )
+        str,
+    ),
 }
-
-from django.dispatch import receiver
-from constance.signals import config_updated
 
 
 @receiver(config_updated)
-def constance_updated(sender, key, old_value, new_value, **kwargs):
+def constance_updated(key, old_value, **_):
     if key == "APP_LOGO_IMAGE" and old_value:
         try:
             os.remove(os.path.join(MEDIA_ROOT, old_value))
@@ -287,11 +283,11 @@ def constance_updated(sender, key, old_value, new_value, **kwargs):
 
 # Markdown editor (Martor)
 MARTOR_ENABLE_CONFIGS = {
-    'emoji': 'false',
-    'imgur': 'false',
-    'mention': 'false',
-    'jquery': 'true',
-    'living': 'false',      # to enable/disable live updates in preview
-    'spellcheck': 'true',
-    'hljs': 'true',         # to enable/disable hljs highlighting in preview
+    "emoji": "false",
+    "imgur": "false",
+    "mention": "false",
+    "jquery": "true",
+    "living": "false",  # to enable/disable live updates in preview
+    "spellcheck": "true",
+    "hljs": "true",  # to enable/disable hljs highlighting in preview
 }

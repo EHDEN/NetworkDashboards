@@ -58,7 +58,11 @@ def get_menu():
     :rtype: list
     """
     # get all base visible buttons, ordered by their position and title fields
-    buttons = list(Button.objects.filter(visible=True).order_by("position", "title").select_subclasses())
+    buttons = list(
+        Button.objects.filter(visible=True)
+        .order_by("position", "title")
+        .select_subclasses()
+    )
 
     # association between a TabGroup and its SubTabs (Tab with the group field not None)
     group_mappings = {}
@@ -79,7 +83,7 @@ def get_menu():
             group_sub_buttons = group_mappings.get(btn, [])
             buttons[i] = (
                 convert_button_to_dict(btn),
-                group_sub_buttons  # note that this list is the same as the one on group_mappings
+                group_sub_buttons,  # note that this list is the same as the one on group_mappings
             )
             group_mappings[btn] = group_sub_buttons
 
@@ -106,8 +110,9 @@ class LandingPageView(views.View):
 class TabsView(views.View):
     template_name = "tabs.html"
 
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {
-            "tabs": get_menu(),
-            "constance_config": ConstanceProxy()
-        })
+    def get(self, request, *_, **__):
+        return render(
+            request,
+            self.template_name,
+            {"tabs": get_menu(), "constance_config": ConstanceProxy()},
+        )

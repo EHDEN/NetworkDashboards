@@ -42,6 +42,7 @@ class Tab(Button):
     Type of buttons that display a iframe
     Can be within a group, forming a submenu
     """
+
     url = models.URLField()
     group = models.ForeignKey(
         TabGroup, on_delete=models.SET_NULL, null=True, blank=True
