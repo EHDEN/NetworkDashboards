@@ -1,7 +1,5 @@
-
 from django import views
 from django.shortcuts import render
-
 from rest_framework import views as rest_views
 from rest_framework.response import Response
 from shared.utils.markdown import ConstanceProxy
@@ -20,7 +18,7 @@ def convert_button_to_dict(button):
     return final_btn
 
 
-def get_menu(a):
+def get_menu():
     """
     :return: Organized structure with single tabs, group tabs and its sub tabs. Follows the following strcture
     ```
@@ -89,7 +87,6 @@ def get_menu(a):
 
 
 class APITabsView(rest_views.APIView):
-
     def get(self, request):
         return Response(get_menu())
 
@@ -97,7 +94,7 @@ class APITabsView(rest_views.APIView):
 class LandingPageView(views.View):
     template_name = "landing_page.html"
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *_, **__):
         context = {
             "constance_config": ConstanceProxy(),
             "tabs": get_menu(),

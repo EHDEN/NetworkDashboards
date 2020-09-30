@@ -1,6 +1,4 @@
-
 from django.db import models
-
 from model_utils.managers import InheritanceManager
 
 
@@ -11,17 +9,17 @@ class Button(models.Model):
 
     objects = InheritanceManager()
 
-    title    = models.CharField(
+    title = models.CharField(
         max_length=30,
         help_text="Text to appear on the tab under the icon",
         unique=True,
     )
-    icon     = models.CharField(
+    icon = models.CharField(
         max_length=20,
         help_text="Font awesome icon v5. Just the end part, e.g. fa-clock-o -> clock-o",
     )
     position = models.IntegerField()
-    visible  = models.BooleanField(
+    visible = models.BooleanField(
         help_text="If the tab should be displayed",
     )
 
@@ -37,7 +35,6 @@ class TabGroup(Button):
     Type of buttons that can hold a submenu
     Dont't display iframes
     """
-    pass
 
 
 class Tab(Button):
@@ -45,5 +42,7 @@ class Tab(Button):
     Type of buttons that display a iframe
     Can be within a group, forming a submenu
     """
-    url   = models.URLField()
-    group = models.ForeignKey(TabGroup, on_delete=models.SET_NULL, null=True, blank=True)
+    url = models.URLField()
+    group = models.ForeignKey(
+        TabGroup, on_delete=models.SET_NULL, null=True, blank=True
+    )

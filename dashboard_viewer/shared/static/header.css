@@ -4,16 +4,11 @@
     padding-bottom: 17px;
     background: white;
     color: #20425a;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
 }
 
 .logo {
-    display: flex;
-    vertical-align: middle;
-    align-items: center;
+    display: inline-block;
+    vertical-align: top;
     margin-top: 17px;
     text-align: left;
     transition-property: all;
@@ -35,7 +30,7 @@
     margin-top: 17px;
     font-weight: 500;
     border-left: 1px solid #000;
-    margin-left: 5px;
+    margin-left: 0;
     line-height: 20px;
     padding: 10px 0 10px 11px;
 }

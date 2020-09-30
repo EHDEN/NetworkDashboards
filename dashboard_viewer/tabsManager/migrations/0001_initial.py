@@ -7,19 +7,41 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Tab',
+            name="Tab",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(help_text='Text to appear on the tab under the icon', max_length=30)),
-                ('icon', models.CharField(help_text='Font awesome icon v4. Just the end part, e.g. fa-clock-o -> clock-o', max_length=20)),
-                ('url', models.URLField()),
-                ('position', models.PositiveIntegerField()),
-                ('visible', models.BooleanField(help_text='If the tab should be displayed')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        help_text="Text to appear on the tab under the icon",
+                        max_length=30,
+                    ),
+                ),
+                (
+                    "icon",
+                    models.CharField(
+                        help_text="Font awesome icon v4. Just the end part, e.g. fa-clock-o -> clock-o",
+                        max_length=20,
+                    ),
+                ),
+                ("url", models.URLField()),
+                ("position", models.PositiveIntegerField()),
+                (
+                    "visible",
+                    models.BooleanField(help_text="If the tab should be displayed"),
+                ),
             ],
         ),
     ]

@@ -33,3 +33,7 @@
 .btn-sm-lg{
   padding: .25rem 3rem;
 }
+
+form {
+	margin-top: 30px;
+}

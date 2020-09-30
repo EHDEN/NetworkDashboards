@@ -1,7 +1,6 @@
-
 from django.contrib import admin
 
-from .models import DataSource, Country, DatabaseType
+from .models import Country, DatabaseType, DataSource
 
 admin.site.register(DataSource)
 admin.site.register(Country)
