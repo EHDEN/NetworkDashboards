@@ -16,7 +16,7 @@ class ListTextWidget(forms.TextInput):
         self.query_obj = query_obj
 
     def render(self, name, value, attrs=None, renderer=None):
-        attrs.update({"list": f"{name}_list"})
+        attrs.update({"list": f"{name}_list", "autocomplete": "off"})
         text_html = super(ListTextWidget, self).render(name, value, attrs=attrs)
         data_list = f'<datalist id="{name}_list">'
         for item in self.query_obj.all():
