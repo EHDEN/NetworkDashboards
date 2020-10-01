@@ -2,6 +2,7 @@ import datetime
 import os
 import re
 
+import constance
 import numpy  # noqa
 import pandas
 from django.conf import settings
@@ -10,7 +11,6 @@ from django.forms import fields
 from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
-from shared.utils.markdown import ConstanceProxy
 
 from .forms import AchillesResultsForm, SourceForm
 from .models import Country, DataSource, UploadHistory
@@ -277,7 +277,7 @@ def upload_achilles_results(request, *args, **kwargs):
             "obj_data_source": obj_data_source,
             "upload_history": upload_history,
             "submit_button_text": mark_safe("<i class='fas fa-upload'></i> Upload"),
-            "constance_config": ConstanceProxy(),
+            "constance_config": constance.config,
             "page_title": PAGE_TITLE,
         },
     )
@@ -398,7 +398,7 @@ def create_data_source(request, *_, **kwargs):
             "submit_button_text": mark_safe(
                 "<i class='fas fa-plus-circle'></i> Create"
             ),
-            "constance_config": ConstanceProxy(),
+            "constance_config": constance.config,
             "page_title": PAGE_TITLE,
         },
     )
@@ -452,7 +452,7 @@ def edit_data_source(request, *_, **kwargs):
             "form": form,
             "editing": True,
             "submit_button_text": mark_safe("<i class='far fa-edit'></i> Edit"),
-            "constance_config": ConstanceProxy(),
+            "constance_config": constance.config,
             "page_title": PAGE_TITLE,
         },
     )

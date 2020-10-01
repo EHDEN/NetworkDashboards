@@ -1,8 +1,8 @@
+import constance
 from django import views
 from django.shortcuts import render
 from rest_framework import views as rest_views
 from rest_framework.response import Response
-from shared.utils.markdown import ConstanceProxy
 
 from .models import Button, Tab, TabGroup
 
@@ -95,18 +95,6 @@ class APITabsView(rest_views.APIView):
         return Response(get_menu())
 
 
-class LandingPageView(views.View):
-    template_name = "landing_page.html"
-
-    def get(self, request, *_, **__):
-        context = {
-            "constance_config": ConstanceProxy(),
-            "tabs": get_menu(),
-        }
-
-        return render(request, self.template_name, context)
-
-
 class TabsView(views.View):
     template_name = "tabs.html"
 
@@ -114,5 +102,5 @@ class TabsView(views.View):
         return render(
             request,
             self.template_name,
-            {"tabs": get_menu(), "constance_config": ConstanceProxy()},
+            {"tabs": get_menu(), "constance_config": constance.config},
         )

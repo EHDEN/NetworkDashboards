@@ -220,16 +220,6 @@ CONSTANCE_CONFIG = {
         "Title to use for the several pages",
         str,
     ),
-    "LANDING_PAGE_DESCRIPTION": (
-        "# Description\nTODO",
-        "Land page desc",
-        "markdown",
-    ),
-    "LANDING_PAGE_RESUME_DASHBOARD_URL": (
-        "",
-        "URL for the resume dashbaord of the network",
-        "url",
-    ),
     "UPLOADER_EXPORT": (
         "The Achilles tool generates summary statistics of the database that can be visualised in the Network Dashboard"
         " in the EHDEN portal. Information about the tool can be found on the"
