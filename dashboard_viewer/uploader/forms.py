@@ -7,19 +7,15 @@ from .widgets import ListTextWidget
 
 
 class SourceForm(forms.ModelForm):
-    database_type = forms.CharField(
-        max_length=40,
-        widget=ListTextWidget(DatabaseType.objects),
-        help_text="Type of the data source. You can create a new type.",
-    )
     coordinates = CoordinatesField(
         help_text="Coordinates for the location of the data source"
     )
 
     class Meta:
         model = DataSource
-        fields = ("name", "acronym", "release_date", "country", "link")
+        fields = ("name", "acronym", "release_date", "country", "link", "database_type")
         widgets = {
+            "database_type": ListTextWidget(DatabaseType.objects),
             "release_date": DatePickerInput(),  # format %m/%d/%Y. Using a ModelForm this can't be changed
         }
 
