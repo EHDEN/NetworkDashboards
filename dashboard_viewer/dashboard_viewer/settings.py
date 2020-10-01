@@ -221,23 +221,23 @@ CONSTANCE_CONFIG = {
         str,
     ),
     "UPLOADER_EXPORT": (
-        "The Achilles tool generates summary statistics of the database that can be visualised in the Network Dashboard"
-        " in the EHDEN portal. Information about the tool can be found on the"
-        " [OHDSI Github Page](https://github.com/OHDSI/Achilles). Once the Achilles tool has run against your database"
-        " you need to export the achilles results table to a csv file.",
+        "Achilles is intended to be implemented by organizations that have patient-level observational health "
+        "databases available in their local environment. Please run the R package "
+        "([https://github.com/CatalogueExport](https://github.com/CatalogueExport)) against your CDM to generate the "
+        "results file."
         "Text for the 'Export Achilles results' section on the uploader app",
         "markdown",
     ),
     "UPLOADER_UPLOAD": (
-        "The next step is to upload the Achilles result file in the portal using the form below. To update an existing"
-        " database, you can simply upload the file and the data will be replaced. This operation can take some time to"
-        " finish.",
+        "Upload the Achilles results file in this platform. The necessary file is named, by default, as "
+        "achilles_results.csv. To upgrade an already existent database, jsut upload the file again, that the data will "
+        "be replaced. This operation can take a few seconds.",
         "Text for the 'Upload Achilles results' section on the uploader app",
         "markdown",
     ),
     "UPLOADER_AUTO_UPDATE": (
-        "Once the Achilles results have been uploaded, all the graphs in the Network Dashboard will show the most"
-        " recent data.",
+        "All the dashboards will automatically update after an upload. This will replace or introduce a new database "
+        "in all the graphs.",
         "Text for the 'Auto update dashboard' section on the uploader app",
         "markdown",
     ),
