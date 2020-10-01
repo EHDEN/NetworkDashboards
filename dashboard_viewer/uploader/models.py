@@ -45,7 +45,8 @@ class DataSource(models.Model):
         help_text="Short label for the data source, containing only letters, numbers, underscores or hyphens.",
     )
     release_date = models.DateField(
-        help_text="Date at which DB is available for research for current release."
+        help_text="Date at which DB is available for research for current release.",
+        null=True,
     )
     database_type = models.CharField(
         max_length=40, help_text="Type of the data source. You can create a new type."

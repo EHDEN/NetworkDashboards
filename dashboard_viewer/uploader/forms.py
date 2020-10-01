@@ -18,7 +18,7 @@ class SourceForm(forms.ModelForm):
 
     class Meta:
         model = DataSource
-        fields = ("name", "acronym", "release_date", "country", "link")
+        fields = ("name", "acronym", "country", "link")
         widgets = {
             "release_date": DatePickerInput(),  # format %m/%d/%Y. Using a ModelForm this can't be changed
         }
