@@ -22,6 +22,5 @@ urlpatterns = [
     path("", include("tabsManager.urls")),
     path("admin/", admin.site.urls),
     path("martor/", include("martor.urls")),
-    path("tabs/", include("tabsManager.urls")),
     path("uploader/", include("uploader.urls")),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
