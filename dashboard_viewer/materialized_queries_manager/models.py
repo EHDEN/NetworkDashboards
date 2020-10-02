@@ -9,13 +9,21 @@ from django.db.utils import ProgrammingError
 
 class MaterializedQuery(models.Model):
     name = models.CharField(
-        max_length=50,
+        max_length=100,
         validators=(
             RegexValidator(
                 r"^[_0-9a-zA-Z]+$",
                 'Only alphanumeric characters and the character "_" are allowed.',
             ),
         ),
+    )
+    dashboards = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="In which dashboards is the view being used. This is field is Optional "
+        "field and has the intent to help on organization and search among the "
+        "different queries.",
     )
     query = models.TextField(
         validators=(
