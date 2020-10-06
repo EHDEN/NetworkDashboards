@@ -13,7 +13,7 @@ class SourceForm(forms.ModelForm):
 
     class Meta:
         model = DataSource
-        fields = ("name", "acronym", "release_date", "country", "link", "database_type")
+        fields = ("name", "acronym", "country", "link", "database_type")
         widgets = {
             "database_type": ListTextWidget(DatabaseType.objects),
             "release_date": DatePickerInput(),  # format %m/%d/%Y. Using a ModelForm this can't be changed
