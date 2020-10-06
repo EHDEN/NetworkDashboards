@@ -1,0 +1,24 @@
+{% load static %}
+
+{% comment %}
+    add this <link rel="stylesheet" href='{% static "header.css" %}' >
+    to tail_head section
+{% endcomment %}
+
+<div class="uploadHeader">
+    <div class="logo">
+        <img class="logo-img"
+            {% if constance_config.APP_LOGO_URL %}
+                src='{{ constance_config.APP_LOGO_URL }}'/>
+            {% else %}
+                {% get_media_prefix as MEDIA_ROOT %}
+                src='/{{ MEDIA_ROOT }}{{ constance_config.APP_LOGO_IMAGE }}'/>
+            {% endif %}
+    </div>
+    <div class="slogan">
+        <b>{{ constance_config.APP_TITLE }}</b>
+        {% if page_title %}
+            <br>{{ page_title }}
+        {% endif %}
+    </div>
+</div>
