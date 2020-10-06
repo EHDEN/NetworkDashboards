@@ -20,7 +20,7 @@ class SourceForm(forms.ModelForm):
         }
 
     def clean_database_type(self):
-        return self.cleaned_data["database_type"].trim().title()
+        return self.cleaned_data["database_type"].strip().title()
 
 
 class AchillesResultsForm(forms.Form):
