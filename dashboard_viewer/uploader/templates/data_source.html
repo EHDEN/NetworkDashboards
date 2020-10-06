@@ -1,7 +1,9 @@
 {% extends "uploader_base.html" %}
 
 {% block title %}
-    {% include "upload_message.html" %}
+    {% if not editing %}
+        {% include "upload_message.html" %}
+    {% endif %}
 
     <hr/>
     

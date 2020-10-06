@@ -45,7 +45,8 @@ class DataSource(models.Model):
         help_text="Short label for the data source, containing only letters, numbers, underscores or hyphens.",
     )
     release_date = models.DateField(
-        help_text="Date at which DB is available for research for current release."
+        help_text="Date at which DB is available for research for current release.",
+        null=True,
     )
     database_type = models.CharField(
         max_length=40, help_text="Type of the data source. You can create a new type."
@@ -83,8 +84,8 @@ class UploadHistory(models.Model):
 
     data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
     upload_date = models.DateTimeField()
-    achilles_version = models.CharField(max_length=10)
-    achilles_generation_date = models.DateField()
+    r_package_version = models.CharField(max_length=10)
+    generation_date = models.DateField()
     cdm_release_date = models.DateField(
         null=True
     )  # TODO aspedrosa: on future migration remove this null=True

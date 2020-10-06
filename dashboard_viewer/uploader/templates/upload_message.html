@@ -1,16 +1,18 @@
+{% load markdownify %}
+
 <div class="uploadMessageSectionInfo">
     <div class="row">
         <div class="col-sm">
             <h4><i class="fas fa-file-download"></i>&nbsp;Export Achilles results</h4>
-            <p>Achilles is intended to be implemented by organizations that have patient-level observational health databases available in their local environment. Please run the R package securely within your local environment without disclosing any patient identifiable information to access the Achilles result files. <a href="https://github.com/OHDSI/Achilles" target="_blank">(https://github.com/OHDSI/Achilles)</a></p>
+            <p>{{ constance_config.UPLOADER_EXPORT|markdownify }}</p>
         </div>
         <div class="col-sm">
             <h4><i class="fas fa-cloud-upload-alt"></i>&nbsp;Upload Achilles results</h4>
-            <p>Upload the Achilles result file in this platform. The necessary file is named by default as achilles_results.csv. To upgrade an already existent database, just upload the file again, that the data will be replaced. This operation can take a few seconds.</p>
+            <p>{{ constance_config.UPLOADER_UPLOAD|markdownify }}</p>
         </div>
         <div class="col-sm">
             <h4><i class="fas fa-sync-alt"></i>&nbsp;Auto update dashboard</h4>
-            <p>All the dashboards will be automatically update after an upload. This replace or introduce a new database in all the graphs.</p>
+            <p>{{ constance_config.UPLOADER_AUTO_UPDATE|markdownify }}</p>
         </div>
     </div>
 </div>

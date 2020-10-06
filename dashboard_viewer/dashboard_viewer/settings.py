@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+from constance.signals import config_updated
+from django.dispatch import receiver
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -39,6 +42,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "bootstrap4",
     "bootstrap_datepicker_plus",
+    "constance",
+    "markdownify",
+    "martor",
     "rest_framework",
     "sass_processor",
     "materialized_queries_manager",
@@ -78,8 +84,6 @@ WSGI_APPLICATION = "dashboard_viewer.wsgi.application"
 
 
 # Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -144,6 +148,7 @@ STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "node_modules"),
+    os.path.join(BASE_DIR, "shared/static"),
 ]
 
 STATICFILES_FINDERS = (
@@ -156,26 +161,123 @@ STATICFILES_FINDERS = (
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+
 # Uploader app specific settings
 ACHILLES_RESULTS_STORAGE_PATH = "achilles_results_files"
 
-# Celery
+# User to grant SELECT permissions on the materialized queries
+POSTGRES_SUPERSET_USER = os.environ.get("POSTGRES_DEFAULT_DB", "superset")
+
+
+# Redis
 REDIS_HOST = os.environ.get("REDIS_HOST", "redis")
 REDIS_PORT = os.environ.get("REDIS_PORT", 6379)
-REDIS_DB = os.environ.get("REDIS_DB", 1)
-REDIS_CONN = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+REDIS_CACHE_DB = os.environ.get("REDIS_CACHE_DB", 0)
+REDIS_CELERY_DB = os.environ.get("REDIS_CELERY_DB", 1)
+REDIS_CONSTANCE_DB = os.environ.get("REDIS_CONSTANCE_DB", 2)
 
-CELERY_BROKER_URL = REDIS_CONN
+# Celery
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_DB}"
 
+# Cache
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_CONN,
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CACHE_DB}",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
     }
 }
 
-# User to grant SELECT permissions on the materialized queries
-POSTGRES_SUPERSET_USER = os.environ.get("POSTGRES_DEFAULT_DB", "superset")
+# Constance
+CONSTANCE_REDIS_CONNECTION = {
+    "host": REDIS_HOST,
+    "port": REDIS_PORT,
+    "db": REDIS_CONSTANCE_DB,
+}
+CONSTANCE_DBS = ["default"]
+
+CONSTANCE_ADDITIONAL_FIELDS = {
+    "image": ["django.forms.ImageField", {"required": False}],
+    "url": ["django.forms.URLField", {"required": False}],
+    "markdown": [
+        "django.forms.CharField",
+        {"widget": "martor.widgets.AdminMartorWidget", "required": False},
+    ],
+}
+
+CONSTANCE_CONFIG = {
+    "APP_LOGO_IMAGE": ("CDM-BI-icon.png", "Image file to use as app logo.", "image"),
+    "APP_LOGO_URL": (
+        "",
+        "Url to the image to usa as app logo."
+        "This setting will be used over the APP_LOG_IMAGE",
+        "url",
+    ),
+    "APP_TITLE": (
+        "Network Dashboards",
+        "Title to use for the several pages",
+        str,
+    ),
+    "UPLOADER_EXPORT": (
+        "Achilles is intended to be implemented by organizations that have patient-level observational health "
+        "databases available in their local environment. Please run the R package "
+        "([https://github.com/CatalogueExport](https://github.com/CatalogueExport)) against your CDM to generate the "
+        "results file."
+        "Text for the 'Export Achilles results' section on the uploader app",
+        "markdown",
+    ),
+    "UPLOADER_UPLOAD": (
+        "Upload the Achilles results file in this platform. The necessary file is named, by default, as "
+        "achilles_results.csv. To upgrade an already existent database, jsut upload the file again, that the data will "
+        "be replaced. This operation can take a few seconds.",
+        "Text for the 'Upload Achilles results' section on the uploader app",
+        "markdown",
+    ),
+    "UPLOADER_AUTO_UPDATE": (
+        "All the dashboards will automatically update after an upload. This will replace or introduce a new database "
+        "in all the graphs.",
+        "Text for the 'Auto update dashboard' section on the uploader app",
+        "markdown",
+    ),
+    "TABS_LOGO_CONTAINER_CSS": (
+        "padding: 5px 5px 5px 5px;\nheight: 100px;\nmargin-bottom: 10px;\n",
+        "Css for the div container of the logo image",
+        str,
+    ),
+    "TABS_LOGO_IMG_CSS": (
+        "background: #fff;\n"
+        "object-fit: contain;\n"
+        "width: 90px;\n"
+        "height: 100%;\n"
+        "border-radius: 25px;\n"
+        "padding: 0 5px 0 5px;\n"
+        "transition: width 400ms, height 400ms;\n"
+        "position: relative;\n"
+        "z-index: 5;\n",
+        "Css for the img tag displaying the app logo",
+        str,
+    ),
+}
+
+
+@receiver(config_updated)
+def constance_updated(key, old_value, **_):
+    if key == "APP_LOGO_IMAGE" and old_value:
+        try:
+            os.remove(os.path.join(MEDIA_ROOT, old_value))
+        except FileNotFoundError:
+            pass
+
+
+# Markdown editor (Martor)
+MARTOR_ENABLE_CONFIGS = {
+    "emoji": "false",
+    "imgur": "false",
+    "mention": "false",
+    "jquery": "true",
+    "living": "false",  # to enable/disable live updates in preview
+    "spellcheck": "true",
+    "hljs": "true",  # to enable/disable hljs highlighting in preview
+}
