@@ -166,7 +166,7 @@ def _extract_data_from_uploaded_file(request):
     if isinstance(output, str):
         errors.append(f"The field{output} not in a ISO date format.")
     else:
-        return_value["achilles_generation_date"] = output[0]
+        return_value["generation_date"] = output[0]
         return_value["source_release_date"] = output[1]
         return_value["cdm_release_date"] = output[2]
 
@@ -241,8 +241,8 @@ def upload_achilles_results(request, *args, **kwargs):
                 latest_upload = UploadHistory(
                     data_source=obj_data_source,
                     upload_date=datetime.datetime.today(),
-                    achilles_version=data["achilles_version"],
-                    achilles_generation_date=data["achilles_generation_date"],
+                    r_package_version=data["r_package_version"],
+                    generation_date=data["generation_date"],
                     cdm_release_date=data["cdm_release_date"],
                     cdm_version=data["cdm_version"],
                     vocabulary_version=data["vocabulary_version"],
