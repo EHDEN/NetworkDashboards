@@ -8,6 +8,7 @@ x-superset-depends-on: &superset-depends-on
 x-superset-volumes: &superset-volumes
   - ./superset/docker-init.sh:/app/docker-init.sh
   - ./superset/superset_config_overrides.py:/app/pythonpath/superset_config_docker.py
+  - ./superset/data:/app/data
   - superset_home:/app/superset_home
 x-superset-environment: &superset-environment
   DATABASE_DIALECT: postgresql
@@ -16,6 +17,11 @@ x-superset-environment: &superset-environment
   DATABASE_USER: ${POSTGRES_SUPERSET_USER}
   DATABASE_PASSWORD: ${POSTGRES_SUPERSET_PASSWORD}
   DATABASE_DB: ${POSTGRES_SUPERSET_DB}
+  ACHILLES_DATABASE_HOST: postgres
+  ACHILLES_DATABASE_PORT: 5432
+  ACHILLES_DATABASE_USER: ${POSTGRES_ACHILLES_USER}
+  ACHILLES_DATABASE_PASSWORD: ${POSTGRES_ACHILLES_PASSWORD}
+  ACHILLES_DATABASE_DB: ${POSTGRES_ACHILLES_DB}
   REDIS_HOST: redis
   REDIS_PORT: 6379
   REDIS_CACHE_DB: 3

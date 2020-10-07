@@ -4,7 +4,7 @@
 
 set -e
 
-STEP_CNT=3
+STEP_CNT=5
 
 echo_step() {
 cat <<EOF
@@ -39,3 +39,14 @@ echo_step "2" "Complete" "Applying DB migrations"
 echo_step "3" "Starting" "Setting up roles and perms"
 superset init
 echo_step "3" "Complete" "Setting up roles and perms"
+
+# Import Achilles datasource
+echo_step "4" "Starting" "Importing datasources"
+sed -e "s/ACHILLES_HOST/$ACHILLES_DATABASE_HOST; s/ACHILLES_PORT/$ACHILLES_DATABASE_PORT; s/ACHILLES_DB/$ACHILLES_DATABASE_DB; s/ACHILLES_USER/$ACHILLES_DATABASE_USER; s/ACHILLES_PASSOWRD/$ACHILLES_DATABASE_PASSWORD/" /app/data/datasources.yaml > /tmp/datasources.yaml
+superset import-datasources -p /tmp/datasources.yaml
+echo_step "4" "Complete" "Importing datasources"
+
+# Import datashboards
+echo_step "5" "Starting" "Importing dashboards"
+superset import-dashboards -p /app/data/dashboards.json
+echo_step "5" "Complete" "Importing dashboards"
