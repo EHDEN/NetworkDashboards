@@ -1,16 +1,19 @@
 #!/usr/bin/python3
 
-import mega
 import sys
 
+import mega
 
 UPLOAD_FOLDER = "dashboards_backups"
 
 
 def main(argc, argv):
     if argc != 3:
-        print(f"Invalid number of arguments\nUSAGE: {argv[0]} credentials_file upload_file", file=sys.stderr)
-        exit(1)
+        print(
+            f"Invalid number of arguments\nUSAGE: {argv[0]} credentials_file upload_file",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     try:
         with open(argv[1]) as credentials_file:
@@ -18,14 +21,14 @@ def main(argc, argv):
             password = credentials_file.readline().strip()
     except FileNotFoundError:
         print(f'Credentials file "{argv[1]}" not found', file=sys.stderr)
-        exit(2)
+        sys.exit(2)
 
     m = mega.Mega()
     try:
         m.login(email, password)
     except mega.errors.RequestError as err:
         print(f"Error while logging in to Mega. ({err})", file=sys.stderr)
-        exit(3)
+        sys.exit(3)
 
     if UPLOAD_FOLDER:
         upload_folder = m.find(UPLOAD_FOLDER)
@@ -40,7 +43,7 @@ def main(argc, argv):
         m.upload(argv[2], upload_folder)
     except FileNotFoundError:
         print(f'Upload file "{argv[2]}" not found', file=sys.stderr)
-        exit(3)
+        sys.exit(3)
 
 
 if __name__ == "__main__":
