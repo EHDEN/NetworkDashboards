@@ -10,6 +10,6 @@ class TabAdmin(admin.ModelAdmin):
 
 
 @admin.register(TabGroup)
-class TabAdmin(admin.ModelAdmin):
+class TabGroupAdmin(admin.ModelAdmin):
     list_display = ("title", "position", "visible")
     list_filter = ("visible",)
