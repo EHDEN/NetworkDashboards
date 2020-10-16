@@ -223,8 +223,7 @@ CONSTANCE_CONFIG = {
     "UPLOADER_EXPORT": (
         "Achilles is intended to be implemented by organizations that have patient-level observational health "
         "databases available in their local environment. Please run the R package "
-        "([https://github.com/CatalogueExport](https://github.com/CatalogueExport)) against your CDM to generate the "
-        "results file."
+        "(https://github.com/EHDEN/CatalogueExport) against your CDM to generate the results file.",
         "Text for the 'Export Achilles results' section on the uploader app",
         "markdown",
     ),
