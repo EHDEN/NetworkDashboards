@@ -190,7 +190,7 @@ def _extract_data_from_uploaded_file(request):
         errors.append(f"The field{output} not in a valid version format.")
     else:
         return_value["cdm_version"] = output[0]
-        return_value["achilles_version"] = output[1]
+        return_value["r_package_version"] = output[1]
         return_value["vocabulary_version"] = output[2]
 
     if errors:
