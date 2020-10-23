@@ -1,4 +1,3 @@
-
 import argparse
 import csv
 import json
@@ -44,32 +43,24 @@ def main(args):
 
                 min, max = override_ranges.get(id, file_based_ranges[id])
 
-                writer.writerow([
-                    id,
-                    s1,
-                    s2,
-                    s3,
-                    s4,
-                    s5,
-                    random.randint(min, max)
-                ])
+                writer.writerow([id, s1, s2, s3, s4, s5, random.randint(min, max)])
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Generates a new achilles results by"
-                    "generating random values for each set of analysis_id and stratums"
-                    "within ranges calculated from a base achilles results file. "
-                    "It is possible to override the ranges of the base file either by "
-                    "updating the dictionary present on the source code or using the "
-                    "--override-from-file option and give a json file with the ranges"
+        "generating random values for each set of analysis_id and stratums"
+        "within ranges calculated from a base achilles results file. "
+        "It is possible to override the ranges of the base file either by "
+        "updating the dictionary present on the source code or using the "
+        "--override-from-file option and give a json file with the ranges"
     )
 
     parser.add_argument(
         "--override-from-file",
         dest="override_file",
         help="json file with ranges for each analysis_id to override the ones "
-             "calculated from the base file",
+        "calculated from the base file",
     )
 
     parser.add_argument(
