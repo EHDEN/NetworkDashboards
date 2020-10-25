@@ -23,12 +23,7 @@ EOF
 source .env
 
 echo_step "1" "Starting" "Setting up admin user"
-docker-compose run superset superset fab create-admin \
-              --username $SUPERSET_ADMIN_USERNAME \
-              --password $SUPERSET_ADMIN_PASSWORD \
-              --firstname $SUPERSET_ADMIN_FIRSTNAME \
-              --lastname $SUPERSET_ADMIN_LASTNAME \
-              --email $SUPERSET_ADMIN_EMAIL
+docker-compose run superset superset fab create-admin
 echo_step "1" "Complete" "Setting up admin user"
 
 # Import Achilles datasource
