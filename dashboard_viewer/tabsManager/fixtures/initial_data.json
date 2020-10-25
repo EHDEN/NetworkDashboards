@@ -155,7 +155,7 @@
         "pk": 8,
         "fields": {
             "url": "https://superset.ehden.eu/superset/dashboard/concepts-domains/?standalone=true",
-            "group": 8
+            "group": 1
         }
     }
 ]

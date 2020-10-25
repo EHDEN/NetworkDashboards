@@ -10,8 +10,9 @@ python manage.py migrate
 python manage.py migrate --database=achilles
 
 # Load initial data
-python manage.py load_data --app tabsManager initial_data
-python manage.py load_data --app uploader --database achilles country_initial_data
+python manage.py loaddata --app tabsManager initial_data
+python manage.py loaddata --app uploader --database achilles country_initial_data
+python manage.py loaddata --app materialized_queries_manager --database achilles initial_data
 
 # Create an user for the admin app
 python manage.py createsuperuser

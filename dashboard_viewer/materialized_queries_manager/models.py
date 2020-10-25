@@ -53,7 +53,16 @@ class MaterializedQuery(models.Model):
         with closing(connections["achilles"].cursor()) as cursor:
             if self.id:
                 old = MaterializedQuery.objects.get(id=self.id)
-                if old.name != self.name and old.query == self.query:
+
+                cursor.execute(
+                    "SELECT COUNT(*) FROM pg_matviews WHERE matviewname = %s",
+                    [old.name],
+                )
+                old_exists = cursor.fetchone()[0] > 0
+
+                if not old_exists:
+                    self._create_materialized_view(cursor)
+                elif old.name != self.name and old.query == self.query:
                     cursor.execute(
                         f"ALTER MATERIALIZED VIEW {old.name} RENAME TO {self.name}"
                     )

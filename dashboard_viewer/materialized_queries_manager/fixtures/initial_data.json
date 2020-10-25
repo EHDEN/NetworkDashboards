@@ -1,0 +1,173 @@
+[
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 1,
+        "fields": {
+            "name": "number_of_patients",
+            "dashboards": null,
+            "query": "SELECT\r\nachilles_results.count_value,\r\ndata_source.name,\r\ndata_source.acronym\r\nFROM achilles_results\r\nJOIN data_source ON achilles_results.data_source_id=data_source.id\r\nWHERE analysis_id = 1"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 2,
+        "fields": {
+            "name": "gender",
+            "dashboards": null,
+            "query": "SELECT source.name as name,\r\n             source.acronym,\r\n             concept_name as gender,\r\n             count_value\r\n      FROM public.achilles_results AS achilles\r\n      INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id\r\n      INNER JOIN public.concept ON stratum_1 = CAST(concept_id AS text)\r\n      WHERE analysis_id = 2"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 4,
+        "fields": {
+            "name": "age1observation_bar_chart",
+            "dashboards": null,
+            "query": "SELECT source.name,\r\n    cast(stratum_1 as int) as Age,\r\n    count_value as count, \r\n    source.acronym\r\nFROM public.achilles_results AS achilles INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id\r\nwhere analysis_id = 101"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 5,
+        "fields": {
+            "name": "year_of_birth",
+            "dashboards": null,
+            "query": "SELECT source.name,\r\n       source.acronym,\r\n       stratum_1 as \"Birth_year\",\r\n        count_value as count\r\nFROM public.achilles_results AS achilles INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id\r\nwhere analysis_id = 3"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 6,
+        "fields": {
+            "name": "avg_num_of_records_per_person",
+            "dashboards": null,
+            "query": "SELECT \r\n    source.name,\r\n    source.acronym,\r\n    case \r\n    when analysis_id = 201 then 'Visit'\r\n    when analysis_id = 401 then 'Condition'\r\n    when analysis_id = 501 then 'Death'\r\n    when analysis_id = 601 then 'Procedure'\r\n    when analysis_id = 701 then 'Drug Exposure'\r\n    when analysis_id = 801 then 'Observation'\r\n    when analysis_id = 1801 then 'Measurement'\r\n    when analysis_id = 2101 then 'Device'\r\n    when analysis_id = 2201 then 'Note'\r\n    end as Data_Domain,\r\n    SUM(count_value) /AVG(num_persons) as \"records_per_person\"\r\nFROM public.achilles_results AS achilles INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id\r\nINNER JOIN (SELECT data_source_id , count_value as num_persons FROM achilles_results WHERE analysis_id = 1) counts\r\nON achilles.data_source_id = counts.data_source_id \r\nGROUP BY analysis_id, source.name, source.acronym\r\nHAVING analysis_id IN (201, 401, 501, 601, 701, 801, 1801, 2101, 2201)"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 7,
+        "fields": {
+            "name": "data_domain_total_num_of_records",
+            "dashboards": null,
+            "query": "SELECT\r\ndata_source.name,\r\ndata_source.acronym,\r\n    case \r\n    when analysis_id = 201 then 'Visit'\r\n    when analysis_id = 401 then 'Condition'\r\n    when analysis_id = 501 then 'Death'\r\n    when analysis_id = 601 then 'Procedure'\r\n    when analysis_id = 701 then 'Drug Exposure'\r\n    when analysis_id = 801 then 'Observation'\r\n    when analysis_id = 1801 then 'Measurement'\r\n    when analysis_id = 2101 then 'Device'\r\n    when analysis_id = 2201 then 'Note'\r\n    end as Data_Domain,\r\n    SUM(count_value) as \"count\"\r\nFROM achilles_results\r\nJOIN data_source ON achilles_results.data_source_id=data_source.id\r\nGROUP BY name, acronym, analysis_id\r\nHAVING analysis_id IN (201, 401, 501, 601, 701, 801, 1801, 2101, 2201)"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 10,
+        "fields": {
+            "name": "num_of_patients_in_observation_period",
+            "dashboards": null,
+            "query": "SELECT source.name,\r\n       source.acronym,\r\n       to_date(stratum_1, 'YYYYMM') as Date,\r\n       count_value as \"Nr_patients\"\r\nFROM public.achilles_results AS achilles INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id\r\nWHERE analysis_id = 110"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 11,
+        "fields": {
+            "name": "cumulative_observation_time",
+            "dashboards": null,
+            "query": "SELECT\r\n  name,\r\n  acronym,\r\n  xLengthOfObservation,\r\n  round(cumulative_sum / total, 5) as yPercentPersons\r\nFROM (\r\n  SELECT data_source_id, CAST(stratum_1 AS INTEGER) * 30 AS xLengthOfObservation, SUM(count_value) OVER (PARTITION BY data_source_id ORDER BY CAST(stratum_1 AS INTEGER) DESC) as cumulative_sum\r\n  FROM achilles_results\r\n  WHERE analysis_id = 108\r\n) AS cumulative_sums\r\nJOIN (\r\n  SELECT data_source_id, count_value as total\r\n  FROM achilles_results\r\n  WHERE analysis_id = 1\r\n) AS totals\r\nON cumulative_sums.data_source_id = totals.data_source_id\r\nJOIN data_source ON cumulative_sums.data_source_id = data_source.id\r\nORDER BY name, xLengthOfObservation"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 12,
+        "fields": {
+            "name": "visit_type_bar_chart",
+            "dashboards": null,
+            "query": "SELECT\r\n  data_source.name,\r\n  data_source.acronym,\r\n  concept.concept_name,\r\n  achilles_results.count_value                                     AS num_persons\r\nFROM (SELECT * FROM achilles_results WHERE analysis_id = 200) as achilles_results\r\nJOIN data_source ON achilles_results.data_source_id = data_source.id\r\nJOIN concept ON CAST(achilles_results.stratum_1 AS INTEGER) = concept.concept_id"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 13,
+        "fields": {
+            "name": "visit_type_table",
+            "dashboards": null,
+            "query": "SELECT\r\n  name,\r\n  acronym,\r\n  concept.concept_name,\r\n  ar1.count_value                                     AS num_persons,\r\n  round(100.0 * ar1.count_value / denom.count_value, 2) AS percent_persons,\r\n  round(1.0 * ar2.count_value / ar1.count_value, 2)   AS records_per_person\r\nFROM (\r\n  SELECT *\r\n  FROM achilles_results WHERE analysis_id = 200) AS ar1\r\n  JOIN (\r\n    SELECT *\r\n    FROM achilles_results WHERE analysis_id = 201) AS ar2\r\n    ON ar1.stratum_1 = ar2.stratum_1 AND ar1.data_source_id = ar2.data_source_id\r\n  JOIN (\r\n    SELECT *\r\n    FROM achilles_results WHERE analysis_id = 1) AS denom\r\n    ON ar1.data_source_id = denom.data_source_id\r\n  JOIN data_source ON data_source.id = ar1.data_source_id\r\n  JOIN concept ON CAST(ar1.stratum_1 AS INTEGER) = concept_id\r\nORDER BY ar1.data_source_id, ar1.count_value DESC"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 14,
+        "fields": {
+            "name": "concept_browser_table",
+            "dashboards": null,
+            "query": "SELECT\r\n    q1.concept_id AS concept_id,\r\n    q1.concept_name AS concept_name,\r\n    q1.domain_id,\r\n    source.name AS source_name,\r\n    source.acronym,\r\n    sum(q1.count_value) as \"Occurrence_count\",\r\n    sum(q1.count_person) as \"Person_count\",\r\n    CASE \r\n        WHEN sum(q1.count_value)<=10 THEN '<=10'\r\n        WHEN sum(q1.count_value)<=100 THEN '11-10\u02c62'\r\n        WHEN sum(q1.count_value)<=1000 THEN '10\u02c62-10\u02c63'\r\n        WHEN sum(q1.count_value)<=10000 THEN '10\u02c63-10\u02c64'\r\n        WHEN sum(q1.count_value)<=100000 THEN '10\u02c64-10\u02c65'\r\n        WHEN sum(q1.count_value)<=1000000 THEN '10\u02c65-10\u02c66'\r\n        ELSE '>10\u02c66'\r\n    END as \"magnitude_occurrences\",\r\n    CASE \r\n        WHEN sum(q1.count_person)<=10 THEN '<=10'\r\n        WHEN sum(q1.count_person)<=100 THEN '11-10\u02c62'\r\n        WHEN sum(q1.count_person)<=1000 THEN '10\u02c62-10\u02c63'\r\n        WHEN sum(q1.count_person)<=10000 THEN '10\u02c63-10\u02c64'\r\n        WHEN sum(q1.count_person)<=100000 THEN '10\u02c64-10\u02c65'\r\n        WHEN sum(q1.count_person)<=1000000 THEN '10\u02c65-10\u02c66'\r\n        ELSE '>10\u02c66'\r\n    END AS \"magnitude_persons\"\r\nFROM (SELECT analysis_id,\r\n             stratum_1 concept_id,\r\n             data_source_id,\r\n             concept_name,\r\n             domain_id,\r\n             count_value, 0 as count_person\r\n    FROM achilles_results\r\n    JOIN concept ON cast(stratum_1 AS BIGINT)=concept_id\r\n    WHERE analysis_id in (201, 301, 401, 601, 701, 801, 901, 1001, 1801)\r\n    UNION (SELECT  analysis_id,\r\n                   stratum_1 concept_id,\r\n                   data_source_id,\r\n                   concept_name,\r\n                   domain_id,\r\n                   0 as count_value,\r\n                   sum(count_value) as count_person\r\n            FROM  achilles_results\r\n            JOIN concept on cast(stratum_1 as BIGINT)=concept_id\r\n            WHERE analysis_id in (202, 401, 601, 701, 801, 901, 1001, 1801)\r\n            GROUP BY analysis_id,stratum_1,data_source_id,concept_name,domain_id) ) as q1\r\n    INNER JOIN public.data_source AS source ON q1.data_source_id=source.id\r\nGROUP BY q1.concept_id,q1.concept_name,q1.domain_id,source.name, acronym\r\nORDER BY \"Person_count\" desc"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 15,
+        "fields": {
+            "name": "meta_data_table",
+            "dashboards": null,
+            "query": "SELECT\r\n  acronym,\r\n  stratum_1 as \"name\",\r\n  database_type,\r\n  country,\r\n  stratum_2 as \"source_release_date\",\r\n  stratum_3 as \"cdm_release_date\",\r\n  stratum_4 as \"cdm_version\",\r\n  stratum_5 as \"vocabulary_version\"\r\nFROM achilles_results\r\nJOIN data_source ON achilles_results.data_source_id = data_source.id\r\nJOIN country ON data_source.country_id = country.id\r\nWHERE analysis_id=5000"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 16,
+        "fields": {
+            "name": "age1observation_table",
+            "dashboards": null,
+            "query": "SELECT name,\r\n   acronym,\r\n   SUM(CASE WHEN CAST(stratum_2 AS INTEGER) < 10 THEN count_value END) AS \"0-10\",\r\n   SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 10 AND CAST(stratum_2 AS INTEGER) < 20 THEN count_value END) AS \"10-20\",\r\n   SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 20 AND CAST(stratum_2 AS INTEGER) < 30 THEN count_value END) AS \"20-30\",\r\n   SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 30 AND CAST(stratum_2 AS INTEGER) < 40 THEN count_value END) AS \"30-40\",\r\n   SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 40 AND CAST(stratum_2 AS INTEGER) < 50 THEN count_value END) AS \"40-50\",\r\n   SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 50 AND CAST(stratum_2 AS INTEGER) < 60 THEN count_value END) AS \"50-60\",\r\n   SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 60 AND CAST(stratum_2 AS INTEGER) < 70 THEN count_value END) AS \"60-70\",\r\n   SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 70 AND CAST(stratum_2 AS INTEGER) < 80 THEN count_value END) AS \"70-80\",\r\n   SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 80 AND CAST(stratum_2 AS INTEGER) < 90 THEN count_value END) AS \"80-90\",\r\n   SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 90 THEN count_value END) AS \"90+\"\r\n FROM (\r\n SELECT source.name as name,\r\n             source.acronym,\r\n             count_value,\r\n             stratum_2 \r\n      FROM public.achilles_results AS achilles\r\n      INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id\r\n      INNER JOIN public.concept ON stratum_1 = CAST(concept_id AS text)\r\n      WHERE analysis_id = 102\r\n ) as sub_query\r\n   \r\n GROUP BY name, acronym"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 17,
+        "fields": {
+            "name": "data_provenance",
+            "dashboards": null,
+            "query": "select source.name,\n    source.acronym,\n    case when analysis_id = 405 then 'Condition'\n    when analysis_id = 605 then 'Procedure'\n    when analysis_id = 705 then 'Drug'\n    when analysis_id = 805 then 'Observation'\n    when analysis_id = 1805 then 'Measurement'\n    when analysis_id = 2105 then 'Device'\n    else 'Other' end as domain_name,\n    concept_name, sum(count_value) as num_records\nFROM public.achilles_results AS achilles INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id\nINNER JOIN public.concept AS c1 ON stratum_2 = CAST(concept_id AS text)\nWHERE analysis_id in (405,605,705,805,1805,2105)\nGROUP BY source.name, source.acronym, concept_name, \n    case when analysis_id = 405 then 'Condition'\n    when analysis_id = 605 then 'Procedure'\n    when analysis_id = 705 then 'Drug'\n    when analysis_id = 805 then 'Observation'\n    when analysis_id = 1805 then 'Measurement'\n    when analysis_id = 2105 then 'Device'\n    else 'Other' end"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 18,
+        "fields": {
+            "name": "database_country_filter",
+            "dashboards": "general",
+            "query": "SELECT source.name, \r\n       country.country,\r\n       source.database_type,\r\n       source.acronym\r\nFROM public.data_source AS source INNER JOIN public.country \r\n  AS country ON source.country_id=country.id"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 19,
+        "fields": {
+            "name": "network_patient_growth",
+            "dashboards": "general",
+            "query": "SELECT\r\n country,\r\n database_type,\r\n release_date,\r\n sum(count_value) OVER (ORDER BY release_date ASC)\r\nFROM achilles_results\r\nJOIN data_source ON data_source_id = data_source.id\r\nJOIN country ON data_source.country_id = country.id\r\nWHERE analysis_id = 1"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 20,
+        "fields": {
+            "name": "network_patient_growth_by_date",
+            "dashboards": null,
+            "query": "SELECT  data.source,\r\n        data.country,\r\n        data.database_type,\r\n        data.release_date,\r\n        concept_name AS gender,\r\n        count_value AS count\r\nFROM  (\r\n        SELECT  source.name             AS source,\r\n                achilles.analysis_id    AS analysis_id,\r\n                achilles.stratum_1,\r\n                achilles.stratum_2,\r\n                achilles.stratum_3,\r\n                achilles.stratum_4,\r\n                achilles.stratum_5,\r\n                achilles.count_value,\r\n                country.country,\r\n                source.database_type, \r\n                source.release_date\r\n        FROM public.achilles_results AS achilles INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id\r\n        INNER JOIN public.country AS country ON source.country_id=country.id\r\n        ) data\r\nJOIN (SELECT '8507' AS concept_id, 'Male' AS concept_name UNION SELECT '8532' AS concept_id, 'Female' AS concept_name) AS concepts ON data.stratum_1 = concept_id\r\nWHERE analysis_id =2"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 21,
+        "fields": {
+            "name": "world_map",
+            "dashboards": "general",
+            "query": "SELECT  name,\r\n        acronym,\r\n        database_type,\r\n        latitude,\r\n        longitude,\r\n        country\r\nFROM public.data_source AS source INNER JOIN public.country \r\n  AS country ON source.country_id=country.id"
+        }
+    },
+    {
+        "model": "materialized_queries_manager.materializedquery",
+        "pk": 22,
+        "fields": {
+            "name": "patients_per_country_and_database_type",
+            "dashboards": "general",
+            "query": "SELECT country.country,\r\n       source.database_type,\r\n       count_value\r\nFROM public.achilles_results AS achilles \r\n    INNER JOIN public.data_source AS source ON \r\n      achilles.data_source_id=source.id\r\n    INNER JOIN public.country AS country ON \r\n      source.country_id=country.id\r\nWHERE analysis_id = 1"
+        }
+    }
+]
