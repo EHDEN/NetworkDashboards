@@ -23,13 +23,13 @@ EOF
 source .env
 
 echo_step "1" "Starting" "Setting up admin user"
-docker-compose run superset superset fab create-admin
+docker-compose run --rm superset superset fab create-admin
 echo_step "1" "Complete" "Setting up admin user"
 
 # Import Achilles datasource
 echo_step "2" "Starting" "Importing datasources"
 
-docker-compose run superset sh -c "echo 'import sqlalchemy
+docker-compose run --rm superset sh -c "echo 'import sqlalchemy
 import sys
 from superset import db
 from superset.models.core import Database
