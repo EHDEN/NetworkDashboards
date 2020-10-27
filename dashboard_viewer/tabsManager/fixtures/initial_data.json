@@ -98,7 +98,7 @@
         "model": "tabsManager.tab",
         "pk": 1,
         "fields": {
-            "url": "https://superset.ehden.eu/superset/dashboard/death/?standalone=true",
+            "url": "https://{SUPERSET_URL}/superset/dashboard/death/?standalone=true",
             "group": null
         }
     },
@@ -106,7 +106,7 @@
         "model": "tabsManager.tab",
         "pk": 2,
         "fields": {
-            "url": "https://superset.ehden.eu/superset/dashboard/person/?standalone=true",
+            "url": "https://{SUPERSET_URL}/superset/dashboard/person/?standalone=true",
             "group": null
         }
     },
@@ -114,7 +114,7 @@
         "model": "tabsManager.tab",
         "pk": 3,
         "fields": {
-            "url": "https://superset.ehden.eu/superset/dashboard/visit/?standalone=true",
+            "url": "https://{SUPERSET_URL}/superset/dashboard/visit/?standalone=true",
             "group": null
         }
     },
@@ -122,7 +122,7 @@
         "model": "tabsManager.tab",
         "pk": 4,
         "fields": {
-            "url": "https://superset.ehden.eu/superset/dashboard/concepts-general/?standalone=true",
+            "url": "https://{SUPERSET_URL}/superset/dashboard/concepts-general/?standalone=true",
             "group": 1
         }
     },
@@ -130,7 +130,7 @@
         "model": "tabsManager.tab",
         "pk": 5,
         "fields": {
-            "url": "https://superset.ehden.eu/superset/dashboard/data-domains/?standalone=true",
+            "url": "https://{SUPERSET_URL}/superset/dashboard/data-domains/?standalone=true",
             "group": null
         }
     },
@@ -138,7 +138,7 @@
         "model": "tabsManager.tab",
         "pk": 6,
         "fields": {
-            "url": "https://superset.ehden.eu/superset/dashboard/general/?standalone=true",
+            "url": "https://{SUPERSET_URL}/superset/dashboard/general/?standalone=true",
             "group": null
         }
     },
@@ -146,7 +146,7 @@
         "model": "tabsManager.tab",
         "pk": 7,
         "fields": {
-            "url": "https://superset.ehden.eu/superset/dashboard/period/?standalone=true",
+            "url": "https://{SUPERSET_URL}/superset/dashboard/period/?standalone=true",
             "group": null
         }
     },
@@ -154,7 +154,7 @@
         "model": "tabsManager.tab",
         "pk": 8,
         "fields": {
-            "url": "https://superset.ehden.eu/superset/dashboard/concepts-domains/?standalone=true",
+            "url": "https://{SUPERSET_URL}/superset/dashboard/concepts-domains/?standalone=true",
             "group": 1
         }
     }

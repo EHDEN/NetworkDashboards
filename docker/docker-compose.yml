@@ -120,6 +120,7 @@ services:
       REDIS_CONSTANCE_DB: 2
       SECRET_KEY: ${DASHBOARD_VIEWER_SECRET_KEY}
       DASHBOARD_VIEWER_ENV: ${INSTALLATION_ENV}
+      SUPERSET_URL: ${SUPERSET_URL}
     # ports for development
     #ports:
     # - ${DASHBOARD_VIEWER_PORT}:8000
