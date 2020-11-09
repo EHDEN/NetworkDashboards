@@ -77,7 +77,7 @@ def _extract_data_from_uploaded_file(request):
         achilles_results = pandas.read_csv(
             request.FILES["achilles_results_file"],
             header=0,
-            usecols=range(7),
+            usecols=range(16),
             dtype=str,
             low_memory=False,
         )
@@ -101,21 +101,39 @@ def _extract_data_from_uploaded_file(request):
         "stratum_4",
         "stratum_5",
         "count_value",
+        "min_value",
+        "max_value",
+        "avg_value",
+        "stdev_value",
+        "median_value",
+        "p10_value",
+        "p25_value",
+        "p75_value",
+        "p90_value",
     ]
 
     try:
         achilles_results = achilles_results.astype(
             {
-                "analysis_id": numpy.int32,
-                "count_value": numpy.int32,
+                "analysis_id": numpy.int64,
+                "count_value": numpy.int64,
+                "min_value": numpy.int64,
+                "max_value": numpy.int64,
+                "avg_value": numpy.float,
+                "stdev_value": numpy.float,
+                "median_value": numpy.int64,
+                "p10_value": numpy.int64,
+                "p25_value": numpy.int64,
+                "p75_value": numpy.int64,
+                "p90_value": numpy.int64,
             }
         )
     except ValueError:
         messages.error(
             request,
             mark_safe(
-                "The provided file has invalid values on the columns <i>analysis_id</i> or <i>count_value</i>."
-                " These must be integers."
+                'The provided file has invalid values on some columns. Remember that only the "stratum_*" columns'
+                " accept strings, all the other fields expect numeric types."
             ),
         )
 

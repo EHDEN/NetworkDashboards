@@ -109,6 +109,15 @@ class AchillesResults(models.Model):
     stratum_4 = models.TextField(null=True)
     stratum_5 = models.TextField(null=True)
     count_value = models.BigIntegerField()
+    min_value = models.BigIntegerField(null=True)
+    max_value = models.BigIntegerField(null=True)
+    avg_value = models.FloatField(null=True)
+    stdev_value = models.FloatField(null=True)
+    median_value = models.BigIntegerField(null=True)
+    p10_value = models.BigIntegerField(null=True)
+    p25_value = models.BigIntegerField(null=True)
+    p75_value = models.BigIntegerField(null=True)
+    p90_value = models.BigIntegerField(null=True)
 
 
 class AchillesResultsArchive(models.Model):
@@ -128,3 +137,12 @@ class AchillesResultsArchive(models.Model):
     stratum_4 = models.TextField(null=True)
     stratum_5 = models.TextField(null=True)
     count_value = models.BigIntegerField()
+    min_value = models.BigIntegerField(null=True)
+    max_value = models.BigIntegerField(null=True)
+    avg_value = models.FloatField(null=True)
+    stdev_value = models.FloatField(null=True)
+    median_value = models.BigIntegerField(null=True)
+    p10_value = models.BigIntegerField(null=True)
+    p25_value = models.BigIntegerField(null=True)
+    p75_value = models.BigIntegerField(null=True)
+    p90_value = models.BigIntegerField(null=True)
