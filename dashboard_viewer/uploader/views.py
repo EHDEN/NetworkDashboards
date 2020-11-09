@@ -150,7 +150,7 @@ def _extract_data_from_uploaded_file(request):
     # check mandatory dates
     output = _check_correct(
         [
-            "Achilles generation date (analysis_id=0, stratum3)",
+            "Generation date (analysis_id=0, stratum3)",
             "Source release date (analysis_id=5000, stratum_2)",
             "CDM release date (analysis_id=5000, stratum_3)",
         ],
@@ -174,7 +174,8 @@ def _extract_data_from_uploaded_file(request):
     output = _check_correct(
         [
             "CDM version (analysis_id=0, stratum_1)",
-            "Achilles version (analysis_id=5000, stratum_4)",
+            "R Package
+            version (analysis_id=5000, stratum_4)",
             "Vocabulary version (analysis_id=5000, stratum_5)",
         ],
         [
