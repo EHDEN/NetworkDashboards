@@ -174,8 +174,7 @@ def _extract_data_from_uploaded_file(request):
     output = _check_correct(
         [
             "CDM version (analysis_id=0, stratum_1)",
-            "R Package
-            version (analysis_id=5000, stratum_4)",
+            "R Package version (analysis_id=5000, stratum_4)",
             "Vocabulary version (analysis_id=5000, stratum_5)",
         ],
         [
