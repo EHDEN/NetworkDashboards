@@ -31,7 +31,7 @@ def _convert_to_datetime_from_iso(elem):
     analysis, stratum = elem
 
     result = analysis.loc[0, stratum]
-    if not result or type(result) is not str:
+    if not result or not isinstance(result, str):
         return None
 
     try:
@@ -228,7 +228,9 @@ def _extract_data_from_uploaded_file(request):
             (analysis_5000, "stratum_5"),
         ],
         lambda elem: elem[0].loc[0, elem[1]],
-        lambda version: VERSION_REGEX.fullmatch(version) if version and type(version) is str else None,
+        lambda version: VERSION_REGEX.fullmatch(version)
+        if version and isinstance(version, str)
+        else None,
     )
 
     if isinstance(output, str):
