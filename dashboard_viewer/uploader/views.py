@@ -30,9 +30,13 @@ def _convert_to_datetime_from_iso(elem):
     """
     analysis, stratum = elem
 
+    result = analysis.loc[0, stratum]
+    if not result or type(result) is not str:
+        return None
+
     try:
-        return datetime.datetime.fromisoformat(analysis.loc[0, stratum])
-    except ValueError:
+        return datetime.datetime.fromisoformat(result)
+    except ValueError:  # Invalid date format
         return None
 
 
@@ -112,22 +116,45 @@ def _extract_data_from_uploaded_file(request):
         "p90_value",
     ]
 
+    if achilles_results[["analysis_id", "count_value"]].isna().values.any():
+        messages.error(
+            request,
+            mark_safe(
+                'Some rows have null values either on the column "analysis_id" or "count_value".'
+            ),
+        )
+
+        return None
+
     try:
         achilles_results = achilles_results.astype(
             {
                 "analysis_id": numpy.int64,
                 "count_value": numpy.int64,
-                "min_value": numpy.int64,
-                "max_value": numpy.int64,
-                "avg_value": numpy.float,
-                "stdev_value": numpy.float,
-                "median_value": numpy.int64,
-                "p10_value": numpy.int64,
-                "p25_value": numpy.int64,
-                "p75_value": numpy.int64,
-                "p90_value": numpy.int64,
-            }
+                "min_value": float,
+                "max_value": float,
+                "avg_value": float,
+                "stdev_value": float,
+                "median_value": float,
+                "p10_value": float,
+                "p25_value": float,
+                "p75_value": float,
+                "p90_value": float,
+            },
         )
+        achilles_results = achilles_results.astype(
+            {
+                "min_value": "Int64",
+                "max_value": "Int64",
+                "median_value": "Int64",
+                "p10_value": "Int64",
+                "p25_value": "Int64",
+                "p75_value": "Int64",
+                "p90_value": "Int64",
+            },
+        )
+        # Why are you converting two times ?
+        # https://stackoverflow.com/questions/60024262/error-converting-object-string-to-int32-typeerror-object-cannot-be-converted
     except ValueError:
         messages.error(
             request,
@@ -201,7 +228,7 @@ def _extract_data_from_uploaded_file(request):
             (analysis_5000, "stratum_5"),
         ],
         lambda elem: elem[0].loc[0, elem[1]],
-        VERSION_REGEX.fullmatch,
+        lambda version: VERSION_REGEX.fullmatch(version) if version and type(version) is str else None,
     )
 
     if isinstance(output, str):
