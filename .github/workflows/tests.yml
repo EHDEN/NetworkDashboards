@@ -29,7 +29,7 @@ jobs:
       run: |
         cd docker
         cp docker-compose-tests.yml docker-compose.yml
-        source .env-tests
+        export $(grep -v '^#' .env-tests | xargs -d '\n')
         docker-compose up -d
     - name: Install Dependencies
       run: |
@@ -37,7 +37,7 @@ jobs:
         pip install -r dashboard_viewer/requirements.txt
     - name: tests
       run: |
-        source docker/.env-tests
+        export $(grep -v '^#' docker/.env-tests | xargs -d '\n')
         cd dashboard_viewer
         python manage.py migrate
         python manage.py test
