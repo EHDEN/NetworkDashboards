@@ -1,0 +1,43 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  Unit Testing:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pythonversion: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.pythonversion }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.pythonversion }}
+    - uses: actions/cache@v2
+      id: cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('dashboard_viewer/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Setup Data Containers
+      run: |
+        cd docker
+        cp docker-compose-test.yml docker-compose.yml
+        source .env-tests
+        docker-compose up -d
+    - name: Install Dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r dashboard_viewer/requirements.txt
+    - name: tests
+      run: |
+        source docker/.env-tests
+        cd dashboard_viewer
+        python manage.py migrate
+        python manage.py test
