@@ -27,9 +27,10 @@ jobs:
           ${{ runner.os }}-pip-
     - name: Setup Data Containers
       run: |
+        export $(grep -v '^#' tests/.env | xargs -d '\n')
+        cp tests/docker-compose.yml docker
+        cp tests/init-dbs.sh docker/postgres-entrypoint
         cd docker
-        cp docker-compose-tests.yml docker-compose.yml
-        export $(grep -v '^#' .env-tests | xargs -d '\n')
         docker-compose up -d
     - name: Install Dependencies
       run: |
@@ -37,7 +38,7 @@ jobs:
         pip install -r dashboard_viewer/requirements.txt
     - name: tests
       run: |
-        export $(grep -v '^#' docker/.env-tests | xargs -d '\n')
+        export $(grep -v '^#' tests/.env | xargs -d '\n')
         cd dashboard_viewer
         python manage.py migrate
         python manage.py test
