@@ -5,7 +5,7 @@ on:
     branches: [ dev ]
 
 jobs:
-  Unit Testing:
+  unit_testing:
 
     runs-on: ubuntu-latest
     strategy:
