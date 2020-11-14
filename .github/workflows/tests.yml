@@ -28,7 +28,7 @@ jobs:
     - name: Setup Data Containers
       run: |
         cd docker
-        cp docker-compose-test.yml docker-compose.yml
+        cp docker-compose-tests.yml docker-compose.yml
         source .env-tests
         docker-compose up -d
     - name: Install Dependencies
