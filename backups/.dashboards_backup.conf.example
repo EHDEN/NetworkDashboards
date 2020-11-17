@@ -1,0 +1,4 @@
+RUN=1
+ACHILLES_RESULTS_FILES_DIRECTORY=$HOME/NetworkDashboards/docker/volumes/achilles_results_files
+CREDENTIALS_FILE_PATH=$HOME/NetworkDashboards/backups/.credentials
+UPLOAD_TO_SERVER_SCRIPT_PATH=$HOME/NetworkDashboards/backups/upload_to_server.py
