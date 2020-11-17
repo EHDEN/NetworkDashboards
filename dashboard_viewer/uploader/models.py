@@ -92,6 +92,12 @@ class UploadHistory(models.Model):
     cdm_version = models.CharField(max_length=10)
     vocabulary_version = models.CharField(max_length=10)
 
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return f"{self.data_source.name} - {self.upload_date}"
+
 
 class AchillesResults(models.Model):
     class Meta:
