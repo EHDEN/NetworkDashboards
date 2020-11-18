@@ -1,0 +1,161 @@
+[
+    {
+        "model": "tabsManager.button",
+        "pk": 1,
+        "fields": {
+            "title": "Death",
+            "icon": "times",
+            "position": 15,
+            "visible": true
+        }
+    },
+    {
+        "model": "tabsManager.button",
+        "pk": 2,
+        "fields": {
+            "title": "Person",
+            "icon": "users",
+            "position": 5,
+            "visible": true
+        }
+    },
+    {
+        "model": "tabsManager.button",
+        "pk": 3,
+        "fields": {
+            "title": "Visit",
+            "icon": "calendar-day",
+            "position": 12,
+            "visible": true
+        }
+    },
+    {
+        "model": "tabsManager.button",
+        "pk": 4,
+        "fields": {
+            "title": "General Concepts",
+            "icon": "asterisk",
+            "position": 16,
+            "visible": true
+        }
+    },
+    {
+        "model": "tabsManager.button",
+        "pk": 5,
+        "fields": {
+            "title": "Data Domains",
+            "icon": "table",
+            "position": 19,
+            "visible": true
+        }
+    },
+    {
+        "model": "tabsManager.button",
+        "pk": 6,
+        "fields": {
+            "title": "General",
+            "icon": "asterisk",
+            "position": 1,
+            "visible": true
+        }
+    },
+    {
+        "model": "tabsManager.button",
+        "pk": 7,
+        "fields": {
+            "title": "Population characteristics",
+            "icon": "globe-europe",
+            "position": 6,
+            "visible": true
+        }
+    },
+    {
+        "model": "tabsManager.button",
+        "pk": 8,
+        "fields": {
+            "title": "Concepts",
+            "icon": "book-medical",
+            "position": 16,
+            "visible": true
+        }
+    },
+    {
+        "model": "tabsManager.button",
+        "pk": 9,
+        "fields": {
+            "title": "Concept Domains",
+            "icon": "chart-bar",
+            "position": 17,
+            "visible": true
+        }
+    },
+    {
+        "model": "tabsManager.tabgroup",
+        "pk": 1,
+        "fields": {}
+    },
+    {
+        "model": "tabsManager.tab",
+        "pk": 1,
+        "fields": {
+            "url": "https://{SUPERSET_URL}/superset/dashboard/death/?standalone=true",
+            "group": null
+        }
+    },
+    {
+        "model": "tabsManager.tab",
+        "pk": 2,
+        "fields": {
+            "url": "https://{SUPERSET_URL}/superset/dashboard/person/?standalone=true",
+            "group": null
+        }
+    },
+    {
+        "model": "tabsManager.tab",
+        "pk": 3,
+        "fields": {
+            "url": "https://{SUPERSET_URL}/superset/dashboard/visit/?standalone=true",
+            "group": null
+        }
+    },
+    {
+        "model": "tabsManager.tab",
+        "pk": 4,
+        "fields": {
+            "url": "https://{SUPERSET_URL}/superset/dashboard/concepts-general/?standalone=true",
+            "group": 1
+        }
+    },
+    {
+        "model": "tabsManager.tab",
+        "pk": 5,
+        "fields": {
+            "url": "https://{SUPERSET_URL}/superset/dashboard/data-domains/?standalone=true",
+            "group": null
+        }
+    },
+    {
+        "model": "tabsManager.tab",
+        "pk": 6,
+        "fields": {
+            "url": "https://{SUPERSET_URL}/superset/dashboard/general/?standalone=true",
+            "group": null
+        }
+    },
+    {
+        "model": "tabsManager.tab",
+        "pk": 7,
+        "fields": {
+            "url": "https://{SUPERSET_URL}/superset/dashboard/period/?standalone=true",
+            "group": null
+        }
+    },
+    {
+        "model": "tabsManager.tab",
+        "pk": 8,
+        "fields": {
+            "url": "https://{SUPERSET_URL}/superset/dashboard/concepts-domains/?standalone=true",
+            "group": 1
+        }
+    }
+]

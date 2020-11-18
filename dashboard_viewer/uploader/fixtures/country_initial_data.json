@@ -1,0 +1,1994 @@
+[
+    {
+        "model": "uploader.country",
+        "pk": 1,
+        "fields": {
+            "country": "Afghanistan",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 2,
+        "fields": {
+            "country": "Aland Islands",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 3,
+        "fields": {
+            "country": "Albania",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 4,
+        "fields": {
+            "country": "Algeria",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 5,
+        "fields": {
+            "country": "American Samoa",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 6,
+        "fields": {
+            "country": "Andorra",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 7,
+        "fields": {
+            "country": "Angola",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 8,
+        "fields": {
+            "country": "Anguilla",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 9,
+        "fields": {
+            "country": "Antarctica",
+            "continent": ""
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 10,
+        "fields": {
+            "country": "Antigua and Barbuda",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 11,
+        "fields": {
+            "country": "Argentina",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 12,
+        "fields": {
+            "country": "Armenia",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 13,
+        "fields": {
+            "country": "Aruba",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 14,
+        "fields": {
+            "country": "Australia",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 15,
+        "fields": {
+            "country": "Austria",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 16,
+        "fields": {
+            "country": "Azerbaijan",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 17,
+        "fields": {
+            "country": "Bahamas",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 18,
+        "fields": {
+            "country": "Bahrain",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 19,
+        "fields": {
+            "country": "Bangladesh",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 20,
+        "fields": {
+            "country": "Barbados",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 21,
+        "fields": {
+            "country": "Belarus",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 22,
+        "fields": {
+            "country": "Belgium",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 23,
+        "fields": {
+            "country": "Belize",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 24,
+        "fields": {
+            "country": "Benin",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 25,
+        "fields": {
+            "country": "Bermuda",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 26,
+        "fields": {
+            "country": "Bhutan",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 27,
+        "fields": {
+            "country": "Bolivia (Plurinational State of)",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 28,
+        "fields": {
+            "country": "Bonaire, Sint Eustatius and Saba",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 29,
+        "fields": {
+            "country": "Bosnia and Herzegovina",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 30,
+        "fields": {
+            "country": "Botswana",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 31,
+        "fields": {
+            "country": "Bouvet Island",
+            "continent": ""
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 32,
+        "fields": {
+            "country": "Brazil",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 33,
+        "fields": {
+            "country": "British Indian Ocean Territory",
+            "continent": ""
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 34,
+        "fields": {
+            "country": "Brunei Darussalam",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 35,
+        "fields": {
+            "country": "Bulgaria",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 36,
+        "fields": {
+            "country": "Burkina Faso",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 37,
+        "fields": {
+            "country": "Burundi",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 38,
+        "fields": {
+            "country": "Cambodia",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 39,
+        "fields": {
+            "country": "Cameroon",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 40,
+        "fields": {
+            "country": "Canada",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 41,
+        "fields": {
+            "country": "Cabo Verde",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 42,
+        "fields": {
+            "country": "Cayman Islands",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 43,
+        "fields": {
+            "country": "Central African Republic",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 44,
+        "fields": {
+            "country": "Chad",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 45,
+        "fields": {
+            "country": "Chile",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 46,
+        "fields": {
+            "country": "China",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 47,
+        "fields": {
+            "country": "Christmas Island",
+            "continent": ""
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 48,
+        "fields": {
+            "country": "Cocos (Keeling) Islands",
+            "continent": ""
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 49,
+        "fields": {
+            "country": "Colombia",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 50,
+        "fields": {
+            "country": "Comoros",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 51,
+        "fields": {
+            "country": "Congo",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 52,
+        "fields": {
+            "country": "Congo (Democratic Republic of the)",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 53,
+        "fields": {
+            "country": "Cook Islands",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 54,
+        "fields": {
+            "country": "Costa Rica",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 55,
+        "fields": {
+            "country": "C\u00f4te d'Ivoire",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 56,
+        "fields": {
+            "country": "Croatia",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 57,
+        "fields": {
+            "country": "Cuba",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 58,
+        "fields": {
+            "country": "Cura\u00e7ao",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 59,
+        "fields": {
+            "country": "Cyprus",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 60,
+        "fields": {
+            "country": "Czech Republic",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 61,
+        "fields": {
+            "country": "Denmark",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 62,
+        "fields": {
+            "country": "Djibouti",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 63,
+        "fields": {
+            "country": "Dominica",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 64,
+        "fields": {
+            "country": "Dominican Republic",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 65,
+        "fields": {
+            "country": "Ecuador",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 66,
+        "fields": {
+            "country": "Egypt",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 67,
+        "fields": {
+            "country": "El Salvador",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 68,
+        "fields": {
+            "country": "Equatorial Guinea",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 69,
+        "fields": {
+            "country": "Eritrea",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 70,
+        "fields": {
+            "country": "Estonia",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 71,
+        "fields": {
+            "country": "Ethiopia",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 72,
+        "fields": {
+            "country": "Falkland Islands (Malvinas)",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 73,
+        "fields": {
+            "country": "Faroe Islands",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 74,
+        "fields": {
+            "country": "Fiji",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 75,
+        "fields": {
+            "country": "Finland",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 76,
+        "fields": {
+            "country": "France",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 77,
+        "fields": {
+            "country": "French Guiana",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 78,
+        "fields": {
+            "country": "French Polynesia",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 79,
+        "fields": {
+            "country": "French Southern Territories",
+            "continent": ""
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 80,
+        "fields": {
+            "country": "Gabon",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 81,
+        "fields": {
+            "country": "Gambia",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 82,
+        "fields": {
+            "country": "Georgia",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 83,
+        "fields": {
+            "country": "Germany",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 84,
+        "fields": {
+            "country": "Ghana",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 85,
+        "fields": {
+            "country": "Gibraltar",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 86,
+        "fields": {
+            "country": "Greece",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 87,
+        "fields": {
+            "country": "Greenland",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 88,
+        "fields": {
+            "country": "Grenada",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 89,
+        "fields": {
+            "country": "Guadeloupe",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 90,
+        "fields": {
+            "country": "Guam",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 91,
+        "fields": {
+            "country": "Guatemala",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 92,
+        "fields": {
+            "country": "Guernsey",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 93,
+        "fields": {
+            "country": "Guinea",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 94,
+        "fields": {
+            "country": "Guinea-Bissau",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 95,
+        "fields": {
+            "country": "Guyana",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 96,
+        "fields": {
+            "country": "Haiti",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 97,
+        "fields": {
+            "country": "Heard Island and McDonald Islands",
+            "continent": ""
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 98,
+        "fields": {
+            "country": "Holy See",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 99,
+        "fields": {
+            "country": "Honduras",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 100,
+        "fields": {
+            "country": "Hong Kong",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 101,
+        "fields": {
+            "country": "Hungary",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 102,
+        "fields": {
+            "country": "Iceland",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 103,
+        "fields": {
+            "country": "India",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 104,
+        "fields": {
+            "country": "Indonesia",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 105,
+        "fields": {
+            "country": "Iran (Islamic Republic of)",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 106,
+        "fields": {
+            "country": "Iraq",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 107,
+        "fields": {
+            "country": "Ireland",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 108,
+        "fields": {
+            "country": "Isle of Man",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 109,
+        "fields": {
+            "country": "Israel",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 110,
+        "fields": {
+            "country": "Italy",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 111,
+        "fields": {
+            "country": "Jamaica",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 112,
+        "fields": {
+            "country": "Japan",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 113,
+        "fields": {
+            "country": "Jersey",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 114,
+        "fields": {
+            "country": "Jordan",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 115,
+        "fields": {
+            "country": "Kazakhstan",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 116,
+        "fields": {
+            "country": "Kenya",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 117,
+        "fields": {
+            "country": "Kiribati",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 118,
+        "fields": {
+            "country": "Korea (Democratic People's Republic of)",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 119,
+        "fields": {
+            "country": "Korea (Republic of)",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 120,
+        "fields": {
+            "country": "Kuwait",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 121,
+        "fields": {
+            "country": "Kyrgyzstan",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 122,
+        "fields": {
+            "country": "Lao People's Democratic Republic",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 123,
+        "fields": {
+            "country": "Latvia",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 124,
+        "fields": {
+            "country": "Lebanon",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 125,
+        "fields": {
+            "country": "Lesotho",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 126,
+        "fields": {
+            "country": "Liberia",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 127,
+        "fields": {
+            "country": "Libya",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 128,
+        "fields": {
+            "country": "Liechtenstein",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 129,
+        "fields": {
+            "country": "Lithuania",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 130,
+        "fields": {
+            "country": "Luxembourg",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 131,
+        "fields": {
+            "country": "Macao",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 132,
+        "fields": {
+            "country": "Macedonia (the former Yugoslav Republic of)",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 133,
+        "fields": {
+            "country": "Madagascar",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 134,
+        "fields": {
+            "country": "Malawi",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 135,
+        "fields": {
+            "country": "Malaysia",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 136,
+        "fields": {
+            "country": "Maldives",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 137,
+        "fields": {
+            "country": "Mali",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 138,
+        "fields": {
+            "country": "Malta",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 139,
+        "fields": {
+            "country": "Marshall Islands",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 140,
+        "fields": {
+            "country": "Martinique",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 141,
+        "fields": {
+            "country": "Mauritania",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 142,
+        "fields": {
+            "country": "Mauritius",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 143,
+        "fields": {
+            "country": "Mayotte",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 144,
+        "fields": {
+            "country": "Mexico",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 145,
+        "fields": {
+            "country": "Micronesia (Federated States of)",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 146,
+        "fields": {
+            "country": "Moldova (Republic of)",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 147,
+        "fields": {
+            "country": "Monaco",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 148,
+        "fields": {
+            "country": "Mongolia",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 149,
+        "fields": {
+            "country": "Montenegro",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 150,
+        "fields": {
+            "country": "Montserrat",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 151,
+        "fields": {
+            "country": "Morocco",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 152,
+        "fields": {
+            "country": "Mozambique",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 153,
+        "fields": {
+            "country": "Myanmar",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 154,
+        "fields": {
+            "country": "Namibia",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 155,
+        "fields": {
+            "country": "Nauru",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 156,
+        "fields": {
+            "country": "Nepal",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 157,
+        "fields": {
+            "country": "Netherlands",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 158,
+        "fields": {
+            "country": "New Caledonia",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 159,
+        "fields": {
+            "country": "New Zealand",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 160,
+        "fields": {
+            "country": "Nicaragua",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 161,
+        "fields": {
+            "country": "Niger",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 162,
+        "fields": {
+            "country": "Nigeria",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 163,
+        "fields": {
+            "country": "Niue",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 164,
+        "fields": {
+            "country": "Norfolk Island",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 165,
+        "fields": {
+            "country": "Northern Mariana Islands",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 166,
+        "fields": {
+            "country": "Norway",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 167,
+        "fields": {
+            "country": "Oman",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 168,
+        "fields": {
+            "country": "Pakistan",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 169,
+        "fields": {
+            "country": "Palau",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 170,
+        "fields": {
+            "country": "Palestine, State of",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 171,
+        "fields": {
+            "country": "Panama",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 172,
+        "fields": {
+            "country": "Papua New Guinea",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 173,
+        "fields": {
+            "country": "Paraguay",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 174,
+        "fields": {
+            "country": "Peru",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 175,
+        "fields": {
+            "country": "Philippines",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 176,
+        "fields": {
+            "country": "Pitcairn",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 177,
+        "fields": {
+            "country": "Poland",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 178,
+        "fields": {
+            "country": "Portugal",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 179,
+        "fields": {
+            "country": "Puerto Rico",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 180,
+        "fields": {
+            "country": "Qatar",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 181,
+        "fields": {
+            "country": "R\u00e9union",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 182,
+        "fields": {
+            "country": "Romania",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 183,
+        "fields": {
+            "country": "Russian Federation",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 184,
+        "fields": {
+            "country": "Rwanda",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 185,
+        "fields": {
+            "country": "Saint Barth\u00e9lemy",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 186,
+        "fields": {
+            "country": "Saint Helena, Ascension and Tristan da Cunha",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 187,
+        "fields": {
+            "country": "Saint Kitts and Nevis",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 188,
+        "fields": {
+            "country": "Saint Lucia",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 189,
+        "fields": {
+            "country": "Saint Martin (French part)",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 190,
+        "fields": {
+            "country": "Saint Pierre and Miquelon",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 191,
+        "fields": {
+            "country": "Saint Vincent and the Grenadines",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 192,
+        "fields": {
+            "country": "Samoa",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 193,
+        "fields": {
+            "country": "San Marino",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 194,
+        "fields": {
+            "country": "Sao Tome and Principe",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 195,
+        "fields": {
+            "country": "Saudi Arabia",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 196,
+        "fields": {
+            "country": "Senegal",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 197,
+        "fields": {
+            "country": "Serbia",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 198,
+        "fields": {
+            "country": "Seychelles",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 199,
+        "fields": {
+            "country": "Sierra Leone",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 200,
+        "fields": {
+            "country": "Singapore",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 201,
+        "fields": {
+            "country": "Sint Maarten (Dutch part)",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 202,
+        "fields": {
+            "country": "Slovakia",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 203,
+        "fields": {
+            "country": "Slovenia",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 204,
+        "fields": {
+            "country": "Solomon Islands",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 205,
+        "fields": {
+            "country": "Somalia",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 206,
+        "fields": {
+            "country": "South Africa",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 207,
+        "fields": {
+            "country": "South Georgia and the South Sandwich Islands",
+            "continent": ""
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 208,
+        "fields": {
+            "country": "South Sudan",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 209,
+        "fields": {
+            "country": "Spain",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 210,
+        "fields": {
+            "country": "Sri Lanka",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 211,
+        "fields": {
+            "country": "Sudan",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 212,
+        "fields": {
+            "country": "Suriname",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 213,
+        "fields": {
+            "country": "Svalbard and Jan Mayen",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 214,
+        "fields": {
+            "country": "Swaziland",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 215,
+        "fields": {
+            "country": "Sweden",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 216,
+        "fields": {
+            "country": "Switzerland",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 217,
+        "fields": {
+            "country": "Syrian Arab Republic",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 218,
+        "fields": {
+            "country": "Taiwan, Province of China",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 219,
+        "fields": {
+            "country": "Tajikistan",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 220,
+        "fields": {
+            "country": "Tanzania, United Republic of",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 221,
+        "fields": {
+            "country": "Thailand",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 222,
+        "fields": {
+            "country": "Timor-Leste",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 223,
+        "fields": {
+            "country": "Togo",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 224,
+        "fields": {
+            "country": "Tokelau",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 225,
+        "fields": {
+            "country": "Tonga",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 226,
+        "fields": {
+            "country": "Trinidad and Tobago",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 227,
+        "fields": {
+            "country": "Tunisia",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 228,
+        "fields": {
+            "country": "Turkey",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 229,
+        "fields": {
+            "country": "Turkmenistan",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 230,
+        "fields": {
+            "country": "Turks and Caicos Islands",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 231,
+        "fields": {
+            "country": "Tuvalu",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 232,
+        "fields": {
+            "country": "Uganda",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 233,
+        "fields": {
+            "country": "Ukraine",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 234,
+        "fields": {
+            "country": "United Arab Emirates",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 235,
+        "fields": {
+            "country": "United Kingdom of Great Britain and Northern Ireland",
+            "continent": "Europe"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 236,
+        "fields": {
+            "country": "United States of America",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 237,
+        "fields": {
+            "country": "United States Minor Outlying Islands",
+            "continent": ""
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 238,
+        "fields": {
+            "country": "Uruguay",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 239,
+        "fields": {
+            "country": "Uzbekistan",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 240,
+        "fields": {
+            "country": "Vanuatu",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 241,
+        "fields": {
+            "country": "Venezuela (Bolivarian Republic of)",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 242,
+        "fields": {
+            "country": "Viet Nam",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 243,
+        "fields": {
+            "country": "Virgin Islands (British)",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 244,
+        "fields": {
+            "country": "Virgin Islands (U.S.)",
+            "continent": "Americas"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 245,
+        "fields": {
+            "country": "Wallis and Futuna",
+            "continent": "Oceania"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 246,
+        "fields": {
+            "country": "Western Sahara",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 247,
+        "fields": {
+            "country": "Yemen",
+            "continent": "Asia"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 248,
+        "fields": {
+            "country": "Zambia",
+            "continent": "Africa"
+        }
+    },
+    {
+        "model": "uploader.country",
+        "pk": 249,
+        "fields": {
+            "country": "Zimbabwe",
+            "continent": "Africa"
+        }
+    }
+]
