@@ -53,6 +53,15 @@ def update_achilles_results_data(
                         {AchillesResultsArchive.stratum_4.field_name},
                         {AchillesResultsArchive.stratum_5.field_name},
                         {AchillesResultsArchive.count_value.field_name},
+                        {AchillesResultsArchive.min_value.field_name},
+                        {AchillesResultsArchive.max_value.field_name},
+                        {AchillesResultsArchive.avg_value.field_name},
+                        {AchillesResultsArchive.stdev_value.field_name},
+                        {AchillesResultsArchive.median_value.field_name},
+                        {AchillesResultsArchive.p10_value.field_name},
+                        {AchillesResultsArchive.p25_value.field_name},
+                        {AchillesResultsArchive.p75_value.field_name},
+                        {AchillesResultsArchive.p90_value.field_name},
                         {AchillesResultsArchive.data_source.field.column},
                         {AchillesResultsArchive.upload_info.field.column}
                     )
@@ -64,6 +73,15 @@ def update_achilles_results_data(
                         {AchillesResults.stratum_4.field_name},
                         {AchillesResults.stratum_5.field_name},
                         {AchillesResults.count_value.field_name},
+                        {AchillesResults.min_value.field_name},
+                        {AchillesResults.max_value.field_name},
+                        {AchillesResults.avg_value.field_name},
+                        {AchillesResults.stdev_value.field_name},
+                        {AchillesResults.median_value.field_name},
+                        {AchillesResults.p10_value.field_name},
+                        {AchillesResults.p25_value.field_name},
+                        {AchillesResults.p75_value.field_name},
+                        {AchillesResults.p90_value.field_name},
                         %s, %s
                     FROM {AchillesResults._meta.db_table}
                     """,

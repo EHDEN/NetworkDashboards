@@ -1,3 +1,5 @@
+import random
+import string
 from contextlib import closing
 
 from django.conf import settings
@@ -58,8 +60,27 @@ class MaterializedQuery(models.Model):
                         f"ALTER MATERIALIZED VIEW {old.name} RENAME TO {self.name}"
                     )
                 elif old.query != self.query:
-                    cursor.execute(f"DROP MATERIALIZED VIEW {old.name}")
-                    self._create_materialized_view(cursor)
+                    # don't drop the old view yet. rename the view to a random name
+                    #  just as a backup if there is something wrong with the new
+                    #  query or name
+                    allowed_characters = string.ascii_letters + string.digits + "_"
+                    tmp_name = "".join(
+                        random.choice(allowed_characters) for _ in range(30)
+                    )
+
+                    cursor.execute(
+                        f"ALTER MATERIALIZED VIEW {old.name} RENAME TO {tmp_name}"
+                    )
+
+                    try:
+                        self._create_materialized_view(cursor)
+                    except ValidationError as e:
+                        cursor.execute(
+                            f"ALTER MATERIALIZED VIEW {tmp_name} RENAME TO {old.name}"
+                        )
+                        raise e
+
+                    cursor.execute(f"DROP MATERIALIZED VIEW {tmp_name}")
 
             else:
                 self._create_materialized_view(cursor)

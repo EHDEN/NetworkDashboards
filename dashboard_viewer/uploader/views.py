@@ -1,4 +1,6 @@
+import csv
 import datetime
+import io
 import os
 import re
 
@@ -30,9 +32,13 @@ def _convert_to_datetime_from_iso(elem):
     """
     analysis, stratum = elem
 
+    result = analysis.loc[0, stratum]
+    if not result or not isinstance(result, str):
+        return None
+
     try:
-        return datetime.datetime.fromisoformat(analysis.loc[0, stratum])
-    except ValueError:
+        return datetime.datetime.fromisoformat(result)
+    except ValueError:  # Invalid date format
         return None
 
 
@@ -73,27 +79,7 @@ def _check_correct(names, values, transform, check):
 
 
 def _extract_data_from_uploaded_file(request):
-    try:
-        achilles_results = pandas.read_csv(
-            request.FILES["achilles_results_file"],
-            header=0,
-            usecols=range(7),
-            dtype=str,
-            low_memory=False,
-        )
-    except ValueError:
-        messages.error(
-            request,
-            mark_safe(
-                "The provided file has an invalid csv format. Make sure is a text file separated"
-                " by <b>commas</b> with <b>seven</b> columns (analysis_id, stratum_1,"
-                " stratum_2, stratum_3, stratum_4, stratum_5, count_value)."
-            ),
-        )
-
-        return None
-
-    achilles_results.columns = [  # noqa
+    columns = [
         "analysis_id",
         "stratum_1",
         "stratum_2",
@@ -103,19 +89,107 @@ def _extract_data_from_uploaded_file(request):
         "count_value",
     ]
 
+    wrapper = io.TextIOWrapper(request.FILES["achilles_results_file"])
+    csv_reader = csv.reader(wrapper)
+
+    first_row = next(csv_reader)
+    wrapper.detach()
+
+    if len(first_row) == 16:
+        columns.extend(
+            [
+                "min_value",
+                "max_value",
+                "avg_value",
+                "stdev_value",
+                "median_value",
+                "p10_value",
+                "p25_value",
+                "p75_value",
+                "p90_value",
+            ]
+        )
+    elif len(first_row) != 7:
+        messages.error(
+            request,
+            mark_safe("The provided file has an invalid number of columns."),
+        )
+
+        return None
+
+    request.FILES["achilles_results_file"].seek(0)
+
     try:
-        achilles_results = achilles_results.astype(
-            {
-                "analysis_id": numpy.int32,
-                "count_value": numpy.int32,
-            }
+        achilles_results = pandas.read_csv(
+            request.FILES["achilles_results_file"],
+            header=0,
+            dtype=str,
+            skip_blank_lines=False,
+            index_col=False,
+            names=columns,
         )
     except ValueError:
         messages.error(
             request,
             mark_safe(
-                "The provided file has invalid values on the columns <i>analysis_id</i> or <i>count_value</i>."
-                " These must be integers."
+                "The provided file has an invalid csv format. Make sure is a text file separated"
+                " by <b>commas</b> and you either have 7 (regular achilles results file) or 13 (achilles results file"
+                " with dist columns) columns."
+            ),
+        )
+
+        return None
+
+    if achilles_results[["analysis_id", "count_value"]].isna().values.any():
+        messages.error(
+            request,
+            mark_safe(
+                'Some rows have null values either on the column "analysis_id" or "count_value".'
+            ),
+        )
+
+        return None
+
+    try:
+        achilles_results = achilles_results.astype(
+            {
+                "analysis_id": numpy.int64,
+                "count_value": numpy.int64,
+            },
+        )
+        if len(achilles_results.columns) == 16:
+            achilles_results = achilles_results.astype(
+                {
+                    "min_value": float,
+                    "max_value": float,
+                    "avg_value": float,
+                    "stdev_value": float,
+                    "median_value": float,
+                    "p10_value": float,
+                    "p25_value": float,
+                    "p75_value": float,
+                    "p90_value": float,
+                },
+            )
+            achilles_results = achilles_results.astype(
+                {
+                    "min_value": "Int64",
+                    "max_value": "Int64",
+                    "median_value": "Int64",
+                    "p10_value": "Int64",
+                    "p25_value": "Int64",
+                    "p75_value": "Int64",
+                    "p90_value": "Int64",
+                },
+            )
+            # Why are you converting two times ?
+            # https://stackoverflow.com/questions/60024262/error-converting-object-string-to-int32-typeerror-object-cannot-be-converted
+    except ValueError:
+        messages.error(
+            request,
+            mark_safe(
+                'The provided file has invalid values on some columns. Remember that only the "stratum_*" columns'
+                " accept strings, all the other fields expect numeric types."
             ),
         )
 
@@ -150,7 +224,7 @@ def _extract_data_from_uploaded_file(request):
     # check mandatory dates
     output = _check_correct(
         [
-            "Achilles generation date (analysis_id=0, stratum3)",
+            "Generation date (analysis_id=0, stratum3)",
             "Source release date (analysis_id=5000, stratum_2)",
             "CDM release date (analysis_id=5000, stratum_3)",
         ],
@@ -174,7 +248,7 @@ def _extract_data_from_uploaded_file(request):
     output = _check_correct(
         [
             "CDM version (analysis_id=0, stratum_1)",
-            "Achilles version (analysis_id=5000, stratum_4)",
+            "R Package version (analysis_id=5000, stratum_4)",
             "Vocabulary version (analysis_id=5000, stratum_5)",
         ],
         [
@@ -183,14 +257,16 @@ def _extract_data_from_uploaded_file(request):
             (analysis_5000, "stratum_5"),
         ],
         lambda elem: elem[0].loc[0, elem[1]],
-        VERSION_REGEX.fullmatch,
+        lambda version: VERSION_REGEX.fullmatch(version)
+        if version and isinstance(version, str)
+        else None,
     )
 
     if isinstance(output, str):
         errors.append(f"The field{output} not in a valid version format.")
     else:
         return_value["cdm_version"] = output[0]
-        return_value["achilles_version"] = output[1]
+        return_value["r_package_version"] = output[1]
         return_value["vocabulary_version"] = output[2]
 
     if errors:
