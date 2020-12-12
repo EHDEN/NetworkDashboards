@@ -171,19 +171,6 @@ def _extract_data_from_uploaded_file(request):
                     "p90_value": float,
                 },
             )
-            achilles_results = achilles_results.astype(
-                {
-                    "min_value": "Int64",
-                    "max_value": "Int64",
-                    "median_value": "Int64",
-                    "p10_value": "Int64",
-                    "p25_value": "Int64",
-                    "p75_value": "Int64",
-                    "p90_value": "Int64",
-                },
-            )
-            # Why are you converting two times ?
-            # https://stackoverflow.com/questions/60024262/error-converting-object-string-to-int32-typeerror-object-cannot-be-converted
     except ValueError:
         messages.error(
             request,
