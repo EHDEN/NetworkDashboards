@@ -24,4 +24,4 @@ class SourceForm(forms.ModelForm):
 
 
 class AchillesResultsForm(forms.Form):
-    achilles_results_file = forms.FileField()
+    achilles_results_files = forms.FileField()

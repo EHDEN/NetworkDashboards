@@ -161,10 +161,6 @@ STATICFILES_FINDERS = (
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-
-# Uploader app specific settings
-ACHILLES_RESULTS_STORAGE_PATH = "achilles_results_files"
-
 # User to grant SELECT permissions on the materialized queries
 POSTGRES_SUPERSET_USER = os.environ.get("POSTGRES_DEFAULT_DB", "superset")
 

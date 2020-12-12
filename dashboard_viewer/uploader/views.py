@@ -1,286 +1,18 @@
-import csv
 import datetime
-import io
-import os
-import re
 
 import constance
-import numpy  # noqa
-import pandas
-from django.conf import settings
 from django.contrib import messages
 from django.forms import fields
 from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
 
+from . import zip_handler
 from .forms import AchillesResultsForm, SourceForm
 from .models import Country, DataSource, UploadHistory
 from .tasks import update_achilles_results_data
 
 PAGE_TITLE = "Dashboard Data Upload"
-VERSION_REGEX = re.compile(r"\d+(\.\d+)*")
-
-
-def _convert_to_datetime_from_iso(elem):
-    """
-    Function used to convert string dates received on the uploaded file.
-    Used on the 'transform' argument of the function 'check_correct'.
-
-    :param elem: string to convert to datetime
-    :return: a datetime object or None if the string is not in a valid ISO format
-    """
-    analysis, stratum = elem
-
-    result = analysis.loc[0, stratum]
-    if not result or not isinstance(result, str):
-        return None
-
-    try:
-        return datetime.datetime.fromisoformat(result)
-    except ValueError:  # Invalid date format
-        return None
-
-
-def _check_correct(names, values, transform, check):
-    """
-    Transforms the values of given fields from the uploaded file
-     and check if they end up in the desired format
-
-    :param names: names of the fields to check
-    :param values: values of the fields to transform and check if they are
-     in the right format
-    :param transform: callable to transform the values of the
-     provided fields
-    :param check: callable check if the transform processes generated
-     a valid output
-    :return: the transformed fields or an error string
-    """
-    assert len(names) == len(values)
-
-    transformed_elements = [None] * len(names)
-    bad_elements = []
-
-    for i, _ in enumerate(names):
-        transformed = transform(values[i])
-        if not check(transformed):
-            bad_elements.append(names[i])
-        else:
-            transformed_elements[i] = transformed
-
-    if bad_elements:
-        return (
-            f" {bad_elements[0]} is"
-            if len(bad_elements) == 1
-            else f"s {', '.join(bad_elements[:-1])} and {bad_elements[-1]} are"
-        )
-
-    return transformed_elements
-
-
-def _extract_data_from_uploaded_file(request):
-    columns = [
-        "analysis_id",
-        "stratum_1",
-        "stratum_2",
-        "stratum_3",
-        "stratum_4",
-        "stratum_5",
-        "count_value",
-    ]
-
-    wrapper = io.TextIOWrapper(request.FILES["achilles_results_file"])
-    csv_reader = csv.reader(wrapper)
-
-    first_row = next(csv_reader)
-    wrapper.detach()
-
-    if len(first_row) == 16:
-        columns.extend(
-            [
-                "min_value",
-                "max_value",
-                "avg_value",
-                "stdev_value",
-                "median_value",
-                "p10_value",
-                "p25_value",
-                "p75_value",
-                "p90_value",
-            ]
-        )
-    elif len(first_row) != 7:
-        messages.error(
-            request,
-            mark_safe("The provided file has an invalid number of columns."),
-        )
-
-        return None
-
-    request.FILES["achilles_results_file"].seek(0)
-
-    try:
-        achilles_results = pandas.read_csv(
-            request.FILES["achilles_results_file"],
-            header=0,
-            dtype=str,
-            skip_blank_lines=False,
-            index_col=False,
-            names=columns,
-        )
-    except ValueError:
-        messages.error(
-            request,
-            mark_safe(
-                "The provided file has an invalid csv format. Make sure is a text file separated"
-                " by <b>commas</b> and you either have 7 (regular achilles results file) or 13 (achilles results file"
-                " with dist columns) columns."
-            ),
-        )
-
-        return None
-
-    if achilles_results[["analysis_id", "count_value"]].isna().values.any():
-        messages.error(
-            request,
-            mark_safe(
-                'Some rows have null values either on the column "analysis_id" or "count_value".'
-            ),
-        )
-
-        return None
-
-    try:
-        achilles_results = achilles_results.astype(
-            {
-                "analysis_id": numpy.int64,
-                "count_value": numpy.int64,
-            },
-        )
-        if len(achilles_results.columns) == 16:
-            achilles_results = achilles_results.astype(
-                {
-                    "min_value": float,
-                    "max_value": float,
-                    "avg_value": float,
-                    "stdev_value": float,
-                    "median_value": float,
-                    "p10_value": float,
-                    "p25_value": float,
-                    "p75_value": float,
-                    "p90_value": float,
-                },
-            )
-            achilles_results = achilles_results.astype(
-                {
-                    "min_value": "Int64",
-                    "max_value": "Int64",
-                    "median_value": "Int64",
-                    "p10_value": "Int64",
-                    "p25_value": "Int64",
-                    "p75_value": "Int64",
-                    "p90_value": "Int64",
-                },
-            )
-            # Why are you converting two times ?
-            # https://stackoverflow.com/questions/60024262/error-converting-object-string-to-int32-typeerror-object-cannot-be-converted
-    except ValueError:
-        messages.error(
-            request,
-            mark_safe(
-                'The provided file has invalid values on some columns. Remember that only the "stratum_*" columns'
-                " accept strings, all the other fields expect numeric types."
-            ),
-        )
-
-        return None
-
-    output = _check_correct(
-        ["0", "5000"],
-        [0, 5000],
-        lambda e: achilles_results[achilles_results.analysis_id == e],
-        lambda e: not e.empty,
-    )
-
-    if isinstance(output, str):
-        messages.error(
-            request,
-            mark_safe(
-                f"Analysis id{output} missing. Try (re)running the plugin "
-                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
-                " on your database."
-            ),
-        )
-
-        return None
-
-    return_value = {"achilles_results": achilles_results}
-
-    analysis_0 = output[0].reset_index()
-    analysis_5000 = output[1].reset_index()
-
-    errors = []
-
-    # check mandatory dates
-    output = _check_correct(
-        [
-            "Generation date (analysis_id=0, stratum3)",
-            "Source release date (analysis_id=5000, stratum_2)",
-            "CDM release date (analysis_id=5000, stratum_3)",
-        ],
-        [
-            (analysis_0, "stratum_3"),
-            (analysis_5000, "stratum_2"),
-            (analysis_5000, "stratum_3"),
-        ],
-        _convert_to_datetime_from_iso,
-        lambda date: date,
-    )
-
-    if isinstance(output, str):
-        errors.append(f"The field{output} not in a ISO date format.")
-    else:
-        return_value["generation_date"] = output[0]
-        return_value["source_release_date"] = output[1]
-        return_value["cdm_release_date"] = output[2]
-
-    # check mandatory versions
-    output = _check_correct(
-        [
-            "CDM version (analysis_id=0, stratum_1)",
-            "R Package version (analysis_id=5000, stratum_4)",
-            "Vocabulary version (analysis_id=5000, stratum_5)",
-        ],
-        [
-            (analysis_0, "stratum_2"),
-            (analysis_5000, "stratum_4"),
-            (analysis_5000, "stratum_5"),
-        ],
-        lambda elem: elem[0].loc[0, elem[1]],
-        lambda version: VERSION_REGEX.fullmatch(version)
-        if version and isinstance(version, str)
-        else None,
-    )
-
-    if isinstance(output, str):
-        errors.append(f"The field{output} not in a valid version format.")
-    else:
-        return_value["cdm_version"] = output[0]
-        return_value["r_package_version"] = output[1]
-        return_value["vocabulary_version"] = output[2]
-
-    if errors:
-        messages.error(
-            request,
-            mark_safe(
-                " ".join(errors) + "<br/>Try (re)running the plugin "
-                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
-                " on your database."
-            ),
-        )
-        return None
-
-    return return_value
 
 
 @csrf_exempt
@@ -301,7 +33,7 @@ def upload_achilles_results(request, *args, **kwargs):
         form = AchillesResultsForm(request.POST, request.FILES)
 
         if form.is_valid():
-            data = _extract_data_from_uploaded_file(request)
+            data = zip_handler.handle_zip(request)
 
             if data:
                 # launch an asynchronous task to insert the new data
@@ -322,23 +54,10 @@ def upload_achilles_results(request, *args, **kwargs):
                     cdm_release_date=data["cdm_release_date"],
                     cdm_version=data["cdm_version"],
                     vocabulary_version=data["vocabulary_version"],
+                    zip_file=request.FILES["achilles_results_files"],
                 )
                 latest_upload.save()
                 upload_history = [latest_upload] + upload_history
-
-                # save the achilles result file to disk
-                data_source_storage_path = os.path.join(
-                    settings.BASE_DIR,
-                    settings.ACHILLES_RESULTS_STORAGE_PATH,
-                    obj_data_source.acronym,
-                )
-                os.makedirs(data_source_storage_path, exist_ok=True)
-                data["achilles_results"].to_csv(
-                    os.path.join(
-                        data_source_storage_path, f"{len(upload_history)}.csv"
-                    ),
-                    index=False,
-                )
 
                 messages.success(
                     request,

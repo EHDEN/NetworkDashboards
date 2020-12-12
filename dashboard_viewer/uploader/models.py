@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 
@@ -77,6 +79,10 @@ class DataSource(models.Model):
         return self.__str__()
 
 
+def zip_file_path(instance, _):
+    return f"achilles_results_files/{instance.data_source.id}/{uuid.uuid4().hex}.zip"
+
+
 class UploadHistory(models.Model):
     class Meta:
         ordering = ("-upload_date",)
@@ -91,6 +97,7 @@ class UploadHistory(models.Model):
     )  # TODO aspedrosa: on future migration remove this null=True
     cdm_version = models.CharField(max_length=10)
     vocabulary_version = models.CharField(max_length=10)
+    zip_file = models.FileField(upload_to=zip_file_path)
 
     def __repr__(self):
         return self.__str__()
