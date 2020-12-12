@@ -1,10 +1,11 @@
+x-depends-on: &depends-on
+  - postgres
+  - redis
+
 x-superset-app-build: &superset-app-build
   context: ../superset
   dockerfile: ../docker/superset/Dockerfile
   target: lean
-x-superset-depends-on: &superset-depends-on
-  - postgres
-  - redis
 x-superset-volumes: &superset-volumes
   - ./superset/docker-init.sh:/app/docker-init.sh
   - ./superset/superset_config_overrides.py:/app/pythonpath/superset_config_docker.py
@@ -25,6 +26,27 @@ x-superset-environment: &superset-environment
   MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
   PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
 
+x-dashboard-build: &dashboard-build
+  context: ../dashboard_viewer
+x-dashboard-environment: &dashboard-environment
+  POSTGRES_DEFAULT_HOST: postgres
+  POSTGRES_DEFAULT_PORT: 5432
+  POSTGRES_DEFAULT_USER: ${POSTGRES_DASHBOARD_VIEWER_USER}
+  POSTGRES_DEFAULT_PASSWORD: ${POSTGRES_DASHBOARD_VIEWER_PASSWORD}
+  POSTGRES_DEFAULT_DB: ${POSTGRES_DASHBOARD_VIEWER_DB}
+  POSTGRES_ACHILLES_HOST: postgres
+  POSTGRES_ACHILLES_PORT: 5432
+  POSTGRES_ACHILLES_USER: ${POSTGRES_ACHILLES_USER}
+  POSTGRES_ACHILLES_PASSWORD: ${POSTGRES_ACHILLES_PASSWORD}
+  POSTGRES_ACHILLES_DB: ${POSTGRES_ACHILLES_DB}
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
+  REDIS_CACHE_DB: 0
+  REDIS_CELERY_DB: 1
+  REDIS_CONSTANCE_DB: 2
+  SECRET_KEY: ${DASHBOARD_VIEWER_SECRET_KEY}
+  DASHBOARD_VIEWER_ENV: ${INSTALLATION_ENV}
+
 version: "3.7"
 services:
   #### SUPERSET ####
@@ -32,7 +54,7 @@ services:
     build: *superset-app-build
     restart: unless-stopped
     environment: *superset-environment
-    depends_on: *superset-depends-on
+    depends_on: *depends-on
     volumes: *superset-volumes
     ports:
       - ${SUPERSET_PORT}:8080
@@ -44,7 +66,7 @@ services:
     container_name: superset_init
     command: ["/app/docker-init.sh"]
     environment: *superset-environment
-    depends_on: *superset-depends-on
+    depends_on: *depends-on
     volumes: *superset-volumes
     networks:
       - all
@@ -55,7 +77,7 @@ services:
     command: ["celery", "worker", "--app=superset.tasks.celery_app:app", "-Ofair", "-l", "INFO"]
     restart: unless-stopped
     environment: *superset-environment
-    depends_on: *superset-depends-on
+    depends_on: *depends-on
     volumes: *superset-volumes
     networks:
       - all
@@ -101,33 +123,22 @@ services:
     networks:
       - all
 
+  dashboard_worker:
+    build: *dashboard-build
+    environment: *dashboard-environment
+    command: celery -A dashboard_viewer -Ofair -l INFO worker
+    restart: unless-stopped
+    depends_on: *depends-on
+    networks:
+      - all
+
   dashboard:
-    build:
-      context: ../dashboard_viewer
-    environment:
-      POSTGRES_DEFAULT_HOST: postgres
-      POSTGRES_DEFAULT_PORT: 5432
-      POSTGRES_DEFAULT_USER: ${POSTGRES_DASHBOARD_VIEWER_USER}
-      POSTGRES_DEFAULT_PASSWORD: ${POSTGRES_DASHBOARD_VIEWER_PASSWORD}
-      POSTGRES_DEFAULT_DB: ${POSTGRES_DASHBOARD_VIEWER_DB}
-      POSTGRES_ACHILLES_HOST: postgres
-      POSTGRES_ACHILLES_PORT: 5432
-      POSTGRES_ACHILLES_USER: ${POSTGRES_ACHILLES_USER}
-      POSTGRES_ACHILLES_PASSWORD: ${POSTGRES_ACHILLES_PASSWORD}
-      POSTGRES_ACHILLES_DB: ${POSTGRES_ACHILLES_DB}
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_CACHE_DB: 0
-      REDIS_CELERY_DB: 1
-      REDIS_CONSTANCE_DB: 2
-      SECRET_KEY: ${DASHBOARD_VIEWER_SECRET_KEY}
-      DASHBOARD_VIEWER_ENV: ${INSTALLATION_ENV}
+    build: *dashboard-build
+    environment: *dashboard-environment
     # ports for development
     #ports:
     # - ${DASHBOARD_VIEWER_PORT}:8000
-    depends_on:
-      - postgres
-      - redis
+    depends_on: *depends-on
     volumes:
       # required, to keep the achilles files outside
       - ./volumes/achilles_results_files:/app/achilles_results_files

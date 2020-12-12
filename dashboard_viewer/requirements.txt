@@ -1,4 +1,4 @@
-celery==4.4.7                             # asynchronous task on uploader app
+celery==5.0.4                             # asynchronous task on uploader app
 django-bootstrap-datepicker-plus==3.0.5   # realease date on create data source form on uploader app
 django-bootstrap4==1.1.1                  # forms beautifier
 django-compressor==2.4                    # combines and minifies linked and inline Javascript or CSS in a Django template into cacheable static files
