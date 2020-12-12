@@ -130,7 +130,7 @@ services:
       - redis
     volumes:
       # required, to keep the achilles files outside
-      - ./volumes/achilles_results_files:/app/achilles_results_files
+      - ./volumes/achilles_results_files:/app/media/achilles_results_files
       # production
       - ./static:/app/static
       - ../dashboard_viewer/media:/app/media
