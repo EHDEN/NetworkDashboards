@@ -90,7 +90,7 @@ class UploadHistory(models.Model):
         null=True
     )  # TODO aspedrosa: on future migration remove this null=True
     cdm_version = models.CharField(max_length=10)
-    vocabulary_version = models.CharField(max_length=10)
+    vocabulary_version = models.CharField(max_length=50)
 
     def __repr__(self):
         return self.__str__()

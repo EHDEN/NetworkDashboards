@@ -1,6 +1,7 @@
 import csv
 import datetime
 import io
+import math
 import os
 import re
 
@@ -231,17 +232,15 @@ def _extract_data_from_uploaded_file(request):
         return_value["source_release_date"] = output[1]
         return_value["cdm_release_date"] = output[2]
 
-    # check mandatory versions
+    # check mandatory cdm and r package versions
     output = _check_correct(
         [
             "CDM version (analysis_id=0, stratum_1)",
             "R Package version (analysis_id=5000, stratum_4)",
-            "Vocabulary version (analysis_id=5000, stratum_5)",
         ],
         [
             (analysis_0, "stratum_2"),
             (analysis_5000, "stratum_4"),
-            (analysis_5000, "stratum_5"),
         ],
         lambda elem: elem[0].loc[0, elem[1]],
         lambda version: VERSION_REGEX.fullmatch(version)
@@ -254,7 +253,17 @@ def _extract_data_from_uploaded_file(request):
     else:
         return_value["cdm_version"] = output[0]
         return_value["r_package_version"] = output[1]
-        return_value["vocabulary_version"] = output[2]
+
+    # check mandatory vocabulary versions
+    vocabulary_version = analysis_5000.loc[0, "stratum_5"]
+    if not vocabulary_version or (
+        isinstance(vocabulary_version, float) and math.isnan(vocabulary_version)
+    ):
+        errors.append(
+            "The field vocabulary version (analysis_id=5000, stratum_5) is mandatory."
+        )
+    else:
+        return_value["vocabulary_version"] = analysis_5000.loc[0, "stratum_5"]
 
     if errors:
         messages.error(
