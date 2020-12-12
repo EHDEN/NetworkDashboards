@@ -126,7 +126,7 @@ services:
   dashboard_worker:
     build: *dashboard-build
     environment: *dashboard-environment
-    command: celery -A dashboard_viewer -Ofair -l INFO worker
+    command: celery -A dashboard_viewer worker -Ofair -l INFO 
     restart: unless-stopped
     depends_on: *depends-on
     networks:
