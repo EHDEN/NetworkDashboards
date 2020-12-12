@@ -1,9 +1,9 @@
-# Based on https://github.com/apache/incubator-superset/blob/0.37.0rc3/Dockerfile
+# Based on https://github.com/apache/incubator-superset/blob/0.38.0/Dockerfile
 
 ######################################################################
 # PY stage that simply does a pip install on our requirements
 ######################################################################
-ARG PY_VER=3.6.9
+ARG PY_VER=3.7.9
 FROM python:${PY_VER} AS superset-py
 
 RUN mkdir /app \
@@ -12,20 +12,24 @@ RUN mkdir /app \
             build-essential \
             default-libmysqlclient-dev \
             libpq-dev \
+            libsasl2-dev \
         && rm -rf /var/lib/apt/lists/*
 
 # First, we just wanna install requirements, which will allow us to utilize the cache
 # in order to only build if and only if requirements change
-COPY ./requirements.txt ./docker/requirements-extra.txt /app/
+COPY ./requirements/*.txt  /app/requirements/
+COPY setup.py MANIFEST.in README.md /app/
+COPY superset-frontend/package.json /app/superset-frontend/
 RUN cd /app \
-        && pip install --upgrade pip setuptools \
-        && pip install --no-cache -r requirements.txt -r requirements-extra.txt
+    && mkdir -p superset/static \
+    && touch superset/static/version_info.json \
+    && pip install --no-cache -r requirements/docker.txt
 
 
 ######################################################################
 # Node stage to deal with static asset construction
 ######################################################################
-FROM node:10-jessie AS superset-node
+FROM node:12 AS superset-node
 
 ARG NPM_BUILD_CMD="build"
 ENV BUILD_CMD=${NPM_BUILD_CMD}
@@ -50,7 +54,7 @@ RUN cd /app/superset-frontend \
 ######################################################################
 # Final lean image...
 ######################################################################
-ARG PY_VER=3.6.9
+ARG PY_VER=3.7.9
 FROM python:${PY_VER} AS lean
 
 ENV LANG=C.UTF-8 \
@@ -72,7 +76,7 @@ RUN useradd --user-group --no-create-home --no-log-init --shell /bin/bash supers
 
 COPY ./docker/pythonpath_dev/superset_config.py ${PYTHONPATH}
 
-COPY --from=superset-py /usr/local/lib/python3.6/site-packages/ /usr/local/lib/python3.6/site-packages/
+COPY --from=superset-py /usr/local/lib/python3.7/site-packages/ /usr/local/lib/python3.7/site-packages/
 # Copying site-packages doesn't move the CLIs, so let's copy them one by one
 COPY --from=superset-py /usr/local/bin/gunicorn /usr/local/bin/celery /usr/local/bin/flask /usr/bin/
 COPY --from=superset-node /app/superset/static/assets /app/superset/static/assets
