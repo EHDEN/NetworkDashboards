@@ -1,4 +1,4 @@
-FROM python:3.7.4-stretch
+FROM python:3.8.6
 
 # Install Debian packages
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
