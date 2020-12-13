@@ -28,6 +28,37 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DASHBOARD_VIEWER_ENV", "development") == "development"
 
+
+_LOGS_DIR = os.path.join(BASE_DIR, "logs")
+if not os.path.exists(_LOGS_DIR):
+    os.makedirs(_LOGS_DIR, exist_ok=True)
+elif not os.path.isdir(_LOGS_DIR):
+    raise TypeError('file "logs" is not a directory.')
+
+LOGGING = {
+    "version": 1,
+    "filters": {
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": "ERROR",
+            "filters": ["require_debug_true"],
+            "class": "logging.FileHandler",
+            "filename": "logs/errors.log",
+        }
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "ERROR",
+            "propagate": True,
+        },
+    },
+}
+
 ALLOWED_HOSTS = ["*"]
 
 

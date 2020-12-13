@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_tail %}
+    <link rel="stylesheet" href='{% static "header.css" %}' >
+    <link rel="stylesheet" href='{% static "pages.css" %}' >
+{% endblock %}
+
+{% block content %}
+    <div class="page-container">
+        {% include "header.html" %}
+
+        <div class="content-container">
+            <h1><i style="color: orangered" class="fas fa-times-circle"></i> Bad Request</h1>
+            <p>The request received was malformed or illegal.</p>
+        </div>
+    </div>
+{% endblock %}
+
+

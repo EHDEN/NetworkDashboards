@@ -18,6 +18,13 @@ from django.conf.urls import static
 from django.contrib import admin
 from django.urls import include, path
 
+from .views import bad_request, forbidden, not_found, server_error
+
+handler400 = bad_request
+handler403 = forbidden
+handler404 = not_found
+handler500 = server_error
+
 urlpatterns = [
     path("", include("tabsManager.urls")),
     path("admin/", admin.site.urls),
