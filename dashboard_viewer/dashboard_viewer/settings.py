@@ -227,16 +227,14 @@ CONSTANCE_CONFIG = {
         "markdown",
     ),
     "UPLOADER_UPLOAD": (
-        "Upload the Achilles results file in this platform. The necessary file is named, by default, as "
-        "achilles_results.csv. To upgrade an already existent database, just upload the file again, that the data will "
-        "be replaced. This operation can take a few seconds.",
+        "Upload the catalogue_results.csv results file in this tool to populate the visualisations. To update "
+        "an existing database, just upload the new data. A history of uploads is shown on the page.",
         "Text for the 'Upload Achilles results' section on the uploader app",
         "markdown",
     ),
     "UPLOADER_AUTO_UPDATE": (
-        "All the dashboards will automatically update after an upload. This will replace or introduce a new database "
-        "in all the graphs.",
-        "Text for the 'Auto update dashboard' section on the uploader app",
+        "The dashboards will automatically update once the data is uploaded. This operation can take a few minutes.",
+        "Text for the 'Automatic Updates' section on the uploader app",
         "markdown",
     ),
     "TABS_LOGO_CONTAINER_CSS": (
