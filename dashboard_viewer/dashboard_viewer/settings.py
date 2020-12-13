@@ -220,16 +220,15 @@ CONSTANCE_CONFIG = {
         "Title to use for the several pages",
         str,
     ),
-    "UPLOADER_EXPORT": (
-        "Achilles is intended to be implemented by organizations that have patient-level observational health "
-        "databases available in their local environment. Please run the R package "
-        "(https://github.com/EHDEN/CatalogueExport) against your CDM to generate the results file.",
-        "Text for the 'Export Achilles results' section on the uploader app",
+    "UPLOADER_EXECUTE_EXPORT_PACKAGE": (
+        "The CatalogueExport package extracts all data from the CDM that is needed for the dashboards. Please run "
+        "the R package (https://github.com/EHDEN/CatalogueExport) against your CDM to generate the results file.",
+        "Text for the 'Execute CatalogueExport Package' section on the uploader app",
         "markdown",
     ),
     "UPLOADER_UPLOAD": (
         "Upload the Achilles results file in this platform. The necessary file is named, by default, as "
-        "achilles_results.csv. To upgrade an already existent database, jsut upload the file again, that the data will "
+        "achilles_results.csv. To upgrade an already existent database, just upload the file again, that the data will "
         "be replaced. This operation can take a few seconds.",
         "Text for the 'Upload Achilles results' section on the uploader app",
         "markdown",
