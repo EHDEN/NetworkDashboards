@@ -63,7 +63,7 @@ def _check_correct(names, values, transform, check):
     bad_elements = []
 
     for i, _ in enumerate(names):
-        transformed = transform(values[i])
+        transformed = values[i] if not transform else transform(values[i])
         if not check(transformed):
             bad_elements.append(names[i])
         else:
@@ -189,7 +189,6 @@ def _extract_data_from_uploaded_file(request):
         lambda e: achilles_results[achilles_results.analysis_id == e],
         lambda e: not e.empty,
     )
-
     if isinstance(output, str):
         messages.error(
             request,
@@ -199,13 +198,29 @@ def _extract_data_from_uploaded_file(request):
                 " on your database."
             ),
         )
-
         return None
-
-    return_value = {"achilles_results": achilles_results}
 
     analysis_0 = output[0].reset_index()
     analysis_5000 = output[1].reset_index()
+
+    output = _check_correct(
+        ["0", "5000"],
+        [analysis_0, analysis_5000],
+        None,
+        lambda e: len(e) == 1,
+    )
+    if isinstance(output, str):
+        messages.error(
+            request,
+            mark_safe(
+                f"Analysis id{output} duplicated on multiple rows. Try (re)running the plugin "
+                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
+                " on your database."
+            ),
+        )
+        return None
+
+    return_value = {"achilles_results": achilles_results}
 
     errors = []
 
