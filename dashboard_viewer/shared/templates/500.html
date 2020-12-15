@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_tail %}
+    <link rel="stylesheet" href='{% static "header.css" %}' >
+    <link rel="stylesheet" href='{% static "pages.css" %}' >
+{% endblock %}
+
+{% block content %}
+    <div class="page-container">
+        {% include "header.html" %}
+
+        <div class="content-container">
+            <h1><i style="color: red" class="fas fa-exclamation-circle"></i> Internal Server Error</h1>
+            <p>An unexpected error happened.</p>
+            <p>This will be reported and fixed as soon as possible. Please try again later.</p>
+        </div>
+    </div>
+{% endblock %}
+
+

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_tail %}
+    <link rel="stylesheet" href='{% static "header.css" %}' >
+    <link rel="stylesheet" href='{% static "pages.css" %}' >
+{% endblock %}
+
+{% block content %}
+    <div class="page-container">
+        {% include "header.html" %}
+
+        <div class="content-container">
+            <h1><i style="color: orange" class="fas fa-exclamation-triangle"></i> Not found</h1>
+            <p>No content was found for the specified URL.</p>
+        </div>
+    </div>
+{% endblock %}
+
+
