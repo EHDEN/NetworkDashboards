@@ -23,27 +23,7 @@ PAGE_TITLE = "Dashboard Data Upload"
 VERSION_REGEX = re.compile(r"\d+(\.\d+)*")
 
 
-def _convert_to_datetime_from_iso(elem):
-    """
-    Function used to convert string dates received on the uploaded file.
-    Used on the 'transform' argument of the function 'check_correct'.
-
-    :param elem: string to convert to datetime
-    :return: a datetime object or None if the string is not in a valid ISO format
-    """
-    analysis, stratum = elem
-
-    result = analysis.loc[0, stratum]
-    if not result or not isinstance(result, str):
-        return None
-
-    try:
-        return datetime.datetime.fromisoformat(result)
-    except ValueError:  # Invalid date format
-        return None
-
-
-def _check_correct(names, values, transform, check):
+def _check_correct(names, values, check, transform=None):
     """
     Transforms the values of given fields from the uploaded file
      and check if they end up in the desired format
@@ -62,10 +42,10 @@ def _check_correct(names, values, transform, check):
     transformed_elements = [None] * len(names)
     bad_elements = []
 
-    for i, _ in enumerate(names):
+    for i, name in enumerate(names):
         transformed = values[i] if not transform else transform(values[i])
         if not check(transformed):
-            bad_elements.append(names[i])
+            bad_elements.append(name)
         else:
             transformed_elements[i] = transformed
 
@@ -186,8 +166,8 @@ def _extract_data_from_uploaded_file(request):
     output = _check_correct(
         ["0", "5000"],
         [0, 5000],
-        lambda e: achilles_results[achilles_results.analysis_id == e],
         lambda e: not e.empty,
+        lambda e: achilles_results[achilles_results.analysis_id == e],
     )
     if isinstance(output, str):
         messages.error(
@@ -206,7 +186,6 @@ def _extract_data_from_uploaded_file(request):
     output = _check_correct(
         ["0", "5000"],
         [analysis_0, analysis_5000],
-        None,
         lambda e: len(e) == 1,
     )
     if isinstance(output, str):
@@ -236,12 +215,11 @@ def _extract_data_from_uploaded_file(request):
             (analysis_5000, "stratum_2"),
             (analysis_5000, "stratum_3"),
         ],
-        _convert_to_datetime_from_iso,
-        lambda date: date,
+        lambda date: not pandas.isna(date) and date,
+        lambda value: value[0].loc[0, value[1]],
     )
-
     if isinstance(output, str):
-        errors.append(f"The field{output} not in a ISO date format.")
+        errors.append(f"The field{output} mandatory.")
     else:
         return_value["generation_date"] = output[0]
         return_value["source_release_date"] = output[1]
@@ -257,19 +235,18 @@ def _extract_data_from_uploaded_file(request):
             (analysis_0, "stratum_2"),
             (analysis_5000, "stratum_4"),
         ],
-        lambda elem: elem[0].loc[0, elem[1]],
         lambda version: VERSION_REGEX.fullmatch(version)
         if version and isinstance(version, str)
         else None,
+        lambda elem: elem[0].loc[0, elem[1]],
     )
-
     if isinstance(output, str):
         errors.append(f"The field{output} not in a valid version format.")
     else:
         return_value["cdm_version"] = output[0]
         return_value["r_package_version"] = output[1]
 
-    # check mandatory vocabulary versions
+    # check mandatory vocabulary version
     vocabulary_version = analysis_5000.loc[0, "stratum_5"]
     if not vocabulary_version or (
         isinstance(vocabulary_version, float) and math.isnan(vocabulary_version)

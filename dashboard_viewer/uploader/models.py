@@ -44,7 +44,8 @@ class DataSource(models.Model):
         unique=True,
         help_text="Short label for the data source, containing only letters, numbers, underscores or hyphens.",
     )
-    release_date = models.DateField(
+    release_date = models.CharField(
+        max_length=50,
         help_text="Date at which DB is available for research for current release.",
         null=True,
     )
@@ -84,12 +85,10 @@ class UploadHistory(models.Model):
 
     data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
     upload_date = models.DateTimeField()
-    r_package_version = models.CharField(max_length=10)
-    generation_date = models.DateField()
-    cdm_release_date = models.DateField(
-        null=True
-    )  # TODO aspedrosa: on future migration remove this null=True
-    cdm_version = models.CharField(max_length=10)
+    r_package_version = models.CharField(max_length=50)
+    generation_date = models.CharField(max_length=50)
+    cdm_release_date = models.CharField(max_length=50, null=True)
+    cdm_version = models.CharField(max_length=50)
     vocabulary_version = models.CharField(max_length=50)
 
     def __repr__(self):
