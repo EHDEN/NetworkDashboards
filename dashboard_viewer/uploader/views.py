@@ -1,6 +1,7 @@
 import csv
 import datetime
 import io
+import math
 import os
 import re
 
@@ -22,27 +23,7 @@ PAGE_TITLE = "Dashboard Data Upload"
 VERSION_REGEX = re.compile(r"\d+(\.\d+)*")
 
 
-def _convert_to_datetime_from_iso(elem):
-    """
-    Function used to convert string dates received on the uploaded file.
-    Used on the 'transform' argument of the function 'check_correct'.
-
-    :param elem: string to convert to datetime
-    :return: a datetime object or None if the string is not in a valid ISO format
-    """
-    analysis, stratum = elem
-
-    result = analysis.loc[0, stratum]
-    if not result or not isinstance(result, str):
-        return None
-
-    try:
-        return datetime.datetime.fromisoformat(result)
-    except ValueError:  # Invalid date format
-        return None
-
-
-def _check_correct(names, values, transform, check):
+def _check_correct(names, values, check, transform=None):
     """
     Transforms the values of given fields from the uploaded file
      and check if they end up in the desired format
@@ -61,10 +42,10 @@ def _check_correct(names, values, transform, check):
     transformed_elements = [None] * len(names)
     bad_elements = []
 
-    for i, _ in enumerate(names):
-        transformed = transform(values[i])
+    for i, name in enumerate(names):
+        transformed = values[i] if not transform else transform(values[i])
         if not check(transformed):
-            bad_elements.append(names[i])
+            bad_elements.append(name)
         else:
             transformed_elements[i] = transformed
 
@@ -171,19 +152,6 @@ def _extract_data_from_uploaded_file(request):
                     "p90_value": float,
                 },
             )
-            achilles_results = achilles_results.astype(
-                {
-                    "min_value": "Int64",
-                    "max_value": "Int64",
-                    "median_value": "Int64",
-                    "p10_value": "Int64",
-                    "p25_value": "Int64",
-                    "p75_value": "Int64",
-                    "p90_value": "Int64",
-                },
-            )
-            # Why are you converting two times ?
-            # https://stackoverflow.com/questions/60024262/error-converting-object-string-to-int32-typeerror-object-cannot-be-converted
     except ValueError:
         messages.error(
             request,
@@ -198,10 +166,9 @@ def _extract_data_from_uploaded_file(request):
     output = _check_correct(
         ["0", "5000"],
         [0, 5000],
-        lambda e: achilles_results[achilles_results.analysis_id == e],
         lambda e: not e.empty,
+        lambda e: achilles_results[achilles_results.analysis_id == e],
     )
-
     if isinstance(output, str):
         messages.error(
             request,
@@ -211,13 +178,28 @@ def _extract_data_from_uploaded_file(request):
                 " on your database."
             ),
         )
-
         return None
-
-    return_value = {"achilles_results": achilles_results}
 
     analysis_0 = output[0].reset_index()
     analysis_5000 = output[1].reset_index()
+
+    output = _check_correct(
+        ["0", "5000"],
+        [analysis_0, analysis_5000],
+        lambda e: len(e) == 1,
+    )
+    if isinstance(output, str):
+        messages.error(
+            request,
+            mark_safe(
+                f"Analysis id{output} duplicated on multiple rows. Try (re)running the plugin "
+                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
+                " on your database."
+            ),
+        )
+        return None
+
+    return_value = {"achilles_results": achilles_results}
 
     errors = []
 
@@ -233,41 +215,47 @@ def _extract_data_from_uploaded_file(request):
             (analysis_5000, "stratum_2"),
             (analysis_5000, "stratum_3"),
         ],
-        _convert_to_datetime_from_iso,
-        lambda date: date,
+        lambda date: not pandas.isna(date) and date,
+        lambda value: value[0].loc[0, value[1]],
     )
-
     if isinstance(output, str):
-        errors.append(f"The field{output} not in a ISO date format.")
+        errors.append(f"The field{output} mandatory.")
     else:
         return_value["generation_date"] = output[0]
         return_value["source_release_date"] = output[1]
         return_value["cdm_release_date"] = output[2]
 
-    # check mandatory versions
+    # check mandatory cdm and r package versions
     output = _check_correct(
         [
             "CDM version (analysis_id=0, stratum_1)",
             "R Package version (analysis_id=5000, stratum_4)",
-            "Vocabulary version (analysis_id=5000, stratum_5)",
         ],
         [
             (analysis_0, "stratum_2"),
             (analysis_5000, "stratum_4"),
-            (analysis_5000, "stratum_5"),
         ],
-        lambda elem: elem[0].loc[0, elem[1]],
         lambda version: VERSION_REGEX.fullmatch(version)
         if version and isinstance(version, str)
         else None,
+        lambda elem: elem[0].loc[0, elem[1]],
     )
-
     if isinstance(output, str):
         errors.append(f"The field{output} not in a valid version format.")
     else:
         return_value["cdm_version"] = output[0]
         return_value["r_package_version"] = output[1]
-        return_value["vocabulary_version"] = output[2]
+
+    # check mandatory vocabulary version
+    vocabulary_version = analysis_5000.loc[0, "stratum_5"]
+    if not vocabulary_version or (
+        isinstance(vocabulary_version, float) and math.isnan(vocabulary_version)
+    ):
+        errors.append(
+            "The field vocabulary version (analysis_id=5000, stratum_5) is mandatory."
+        )
+    else:
+        return_value["vocabulary_version"] = analysis_5000.loc[0, "stratum_5"]
 
     if errors:
         messages.error(
