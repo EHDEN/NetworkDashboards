@@ -1,9 +1,7 @@
 import csv
 import datetime
 import io
-import math
 import os
-import re
 
 import constance
 import numpy  # noqa
@@ -20,7 +18,6 @@ from .models import Country, DataSource, UploadHistory
 from .tasks import update_achilles_results_data
 
 PAGE_TITLE = "Dashboard Data Upload"
-VERSION_REGEX = re.compile(r"\d+(\.\d+)*")
 
 
 def _check_correct(names, values, check, transform=None):
@@ -203,19 +200,25 @@ def _extract_data_from_uploaded_file(request):
 
     errors = []
 
-    # check mandatory dates
+    # check mandatory dates and versions
     output = _check_correct(
         [
             "Generation date (analysis_id=0, stratum3)",
             "Source release date (analysis_id=5000, stratum_2)",
             "CDM release date (analysis_id=5000, stratum_3)",
+            "CDM version (analysis_id=0, stratum_1)",
+            "R Package version (analysis_id=5000, stratum_4)",
+            "Vocabulary version (analysis_id=5000, stratum_5)",
         ],
         [
             (analysis_0, "stratum_3"),
             (analysis_5000, "stratum_2"),
             (analysis_5000, "stratum_3"),
+            (analysis_5000, "stratum_4"),
+            (analysis_0, "stratum_2"),
+            (analysis_5000, "stratum_5"),
         ],
-        lambda date: not pandas.isna(date) and date,
+        lambda value: not pandas.isna(value) and value,
         lambda value: value[0].loc[0, value[1]],
     )
     if isinstance(output, str):
@@ -224,38 +227,9 @@ def _extract_data_from_uploaded_file(request):
         return_value["generation_date"] = output[0]
         return_value["source_release_date"] = output[1]
         return_value["cdm_release_date"] = output[2]
-
-    # check mandatory cdm and r package versions
-    output = _check_correct(
-        [
-            "CDM version (analysis_id=0, stratum_1)",
-            "R Package version (analysis_id=5000, stratum_4)",
-        ],
-        [
-            (analysis_0, "stratum_2"),
-            (analysis_5000, "stratum_4"),
-        ],
-        lambda version: VERSION_REGEX.fullmatch(version)
-        if version and isinstance(version, str)
-        else None,
-        lambda elem: elem[0].loc[0, elem[1]],
-    )
-    if isinstance(output, str):
-        errors.append(f"The field{output} not in a valid version format.")
-    else:
-        return_value["cdm_version"] = output[0]
-        return_value["r_package_version"] = output[1]
-
-    # check mandatory vocabulary version
-    vocabulary_version = analysis_5000.loc[0, "stratum_5"]
-    if not vocabulary_version or (
-        isinstance(vocabulary_version, float) and math.isnan(vocabulary_version)
-    ):
-        errors.append(
-            "The field vocabulary version (analysis_id=5000, stratum_5) is mandatory."
-        )
-    else:
-        return_value["vocabulary_version"] = analysis_5000.loc[0, "stratum_5"]
+        return_value["cdm_version"] = output[3]
+        return_value["r_package_version"] = output[4]
+        return_value["vocabulary_version"] = output[5]
 
     if errors:
         messages.error(
