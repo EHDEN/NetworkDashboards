@@ -5,7 +5,7 @@ from django.contrib.admin import helpers
 from django.contrib.admin.exceptions import DisallowedModelAdminToField
 from django.contrib.admin.options import IS_POPUP_VAR, TO_FIELD_VAR
 from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
-from django.contrib.admin.utils import flatten_fieldsets, unquote
+from django.contrib.admin.utils import flatten_fieldsets, unquote, quote
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.db import connections, ProgrammingError
@@ -14,6 +14,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
+from django_celery_results.models import TaskResult
 
 from .models import MaterializedQuery
 from .tasks import create_materialized_view
@@ -33,7 +34,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         with closing(connections["achilles"].cursor()) as cursor:
             for obj in queryset:
                 try:
-                    cursor.execute(f"DROP MATERIALIZED VIEW {obj.name}")
+                    cursor.execute(f"DROP MATERIALIZED VIEW {obj.name}")  # Ignore if the view doesn't exist
                 except ProgrammingError:
                     pass
         super().delete_queryset(request, queryset)
@@ -89,7 +90,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
                 request, new_object, change=not add
             )
             if all_valid(formsets) and form_validated:
-                create_materialized_view.delay(
+                self.background_task = create_materialized_view.delay(
                     request.user.pk,
                     old_values,
                     serializers.serialize("json", [new_object]),
@@ -235,9 +236,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         # elif "_addanother" in request.POST:
         if "_addanother" in request.POST:
             msg = format_html(
-                _(
-                    "The {name} is being created on background. You can consult its status . You may add another {name} below."
-                ),  # TODO
+                _(self.get_first_phrase()),
                 **msg_dict
             )
             self.message_user(request, msg, messages.SUCCESS)
@@ -249,8 +248,9 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
         msg = format_html(
             _(
-                "The {name} is being created on the background. You can consult its results on the ... "
-            ),  # TODO
+                self.get_first_phrase() +
+                " The task might already have finished, for that its entry can already appear on the list below."
+            ),
             **msg_dict
         )
         self.message_user(request, msg, messages.SUCCESS)
@@ -313,9 +313,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         # elif "_addanother" in request.POST:
         if "_addanother" in request.POST:
             msg = format_html(
-                _(
-                    "The {name} was changed successfully. You may add another {name} below."
-                ),  # TODO
+                _(self.get_first_phrase()),
                 **msg_dict
             )
             self.message_user(request, msg, messages.SUCCESS)
@@ -330,9 +328,23 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
         msg = format_html(
             _(
-                "The {name} was changed successfully asldkfjalksdfjlaksdjfçlaksdjfçlkasjdfçlkasjdfçlkasjdf."
-            ),  # TODO
-            **msg_dict
+                self.get_first_phrase() +
+                " The task might already have finished, for that its entry can already appear on the list below."
+            ),
+            **msg_dict,
         )
         self.message_user(request, msg, messages.SUCCESS)
         return self.response_post_save_change(request, obj)
+
+    def get_first_phrase(self):
+        tasks_results_url = reverse(
+            f"admin:{TaskResult._meta.app_label}_{TaskResult._meta.model_name}_changelist",
+            current_app=self.admin_site.name,
+        )
+        if hasattr(self, "background_task"):
+            background_task = getattr(self, "background_task")
+            return f'The {{name}} is being created on the background task with id "{background_task}", ' \
+                   "which you can see its status after a couple of seconds on the " \
+                   f'<a href="{tasks_results_url}">Celery Results app</a>.'
+        else:
+            return "The {name} is being created on a background task."
