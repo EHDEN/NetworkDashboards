@@ -22,9 +22,8 @@ def handle(request):
             "stratum_5",
             "count_value",
         ]
-        return _read_dataframe_from_csv(
+        achilles_results = _read_dataframe_from_csv(
             request,
-            "results_file.csv",
             request.FILES["achilles_results_files"],
             [
                 normal_expected_columns,
@@ -42,6 +41,18 @@ def handle(request):
                 ],
             ],
         )
+
+        if achilles_results is None:
+            return None
+
+        data = _extract_mandatory_fields_from_achilles_results(request, achilles_results)
+
+        if data is None:
+            return None
+
+        data["achilles_results"] = achilles_results
+
+        return data
 
     messages.error(
         request,
@@ -94,7 +105,7 @@ def _handle_zip(request):
             "count_value",
         ]
         achilles_results = _read_dataframe_from_csv(
-            request, "achilles_results.csv", achilles_results_file, [expected_columns]
+            request, achilles_results_file, [expected_columns], "achilles_results.csv"
         )
 
     if achilles_results is None:
@@ -123,9 +134,9 @@ def _handle_zip(request):
             )
             dist_data = _read_dataframe_from_csv(
                 request,
-                "achilles_results_dist.csv",
                 achilles_results_dist_file,
                 [expected_columns],
+                "achilles_results_dist.csv",
             )
 
         if dist_data is None:
@@ -143,19 +154,19 @@ def _handle_zip(request):
     return data
 
 
-def _read_dataframe_from_csv(request, filename, file, allowed_headers):
+def _read_dataframe_from_csv(request, file, allowed_headers, filename=None):
     """
     Validates and Converts the csv content of a received file to a Dataframe.
     :param request: view request
-    :param filename: name of the file being processed
     :param file: file object of the file being processed
     :param allowed_headers: list of all possible headers
+    :param filename: name of the file being processed
     :return: If the csv doesn't not have the expected structure (specific number of columns
      and correct field types) this function returns none.
     """
     assert len(allowed_headers) >= 1
 
-    csv_reader = csv.reader(io.StringIO(file.readline()))
+    csv_reader = csv.reader(io.StringIO(file.readline().decode("utf-8")))
 
     # read just the first line to check the number of column according to the header
     first_row = next(csv_reader)
@@ -173,9 +184,10 @@ def _read_dataframe_from_csv(request, filename, file, allowed_headers):
             else ", ".join([str(len(header)) for header in allowed_headers[:-1]])
             + f" or {len(allowed_headers[:-1])}"
         )
+        filename_to_present = f'file "{filename}"' if filename is not None else "uploaded file"
         messages.error(
             request,
-            f'The file "{filename}" has an invalid number of columns. '
+            f"The {filename_to_present} has an invalid number of columns. "
             f"Expected {expected_amounts} found {len(first_row)}.",
         )
 
@@ -232,7 +244,7 @@ def _read_dataframe_from_csv(request, filename, file, allowed_headers):
                     "p90_value": float,
                 },
             )
-        achilles_results = achilles_results.as_type(dict_type, copy=False)
+        achilles_results = achilles_results.astype(dict_type, copy=False)
     except ValueError:
         messages.error(
             request,
@@ -259,8 +271,8 @@ def _extract_mandatory_fields_from_achilles_results(request, achilles_results):
     output = _check_correct(
         ["0", "5000"],
         [0, 5000],
-        lambda e: achilles_results[achilles_results.analysis_id == e],
         lambda e: not e.empty,
+        lambda e: achilles_results[achilles_results.analysis_id == e],
     )
 
     if isinstance(output, str):
@@ -312,8 +324,8 @@ def _extract_mandatory_fields_from_achilles_results(request, achilles_results):
             (analysis_5000, "stratum_4"),
             (analysis_5000, "stratum_5"),
         ],
-        lambda value: value[0].loc[0, value[1]],
         lambda value: not pandas.isna(value) and value,
+        lambda value: value[0].loc[0, value[1]],
     )
 
     if isinstance(output, str):
@@ -329,14 +341,14 @@ def _extract_mandatory_fields_from_achilles_results(request, achilles_results):
 
     return {
         key: output[i]
-        for i, key in [
+        for i, key in enumerate([
             "generation_date",
             "source_release_date",
             "cdm_release_date",
             "cdm_version",
             "r_package_version",
             "vocabulary_version",
-        ]
+        ])
     }
 
 

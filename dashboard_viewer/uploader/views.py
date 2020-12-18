@@ -54,7 +54,7 @@ def upload_achilles_results(request, *args, **kwargs):
                     cdm_release_date=data["cdm_release_date"],
                     cdm_version=data["cdm_version"],
                     vocabulary_version=data["vocabulary_version"],
-                    zip_file=request.FILES["achilles_results_files"],
+                    upload_file=request.FILES["achilles_results_files"],
                 )
                 latest_upload.save()
                 upload_history = [latest_upload] + upload_history
