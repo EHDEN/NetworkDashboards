@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
 
-from . import zip_handler
+from . import upload_file_handler
 from .forms import AchillesResultsForm, SourceForm
 from .models import Country, DataSource, UploadHistory
 from .tasks import update_achilles_results_data
@@ -33,7 +33,7 @@ def upload_achilles_results(request, *args, **kwargs):
         form = AchillesResultsForm(request.POST, request.FILES)
 
         if form.is_valid():
-            data = zip_handler.handle_zip(request)
+            data = upload_file_handler.handle_zip(request)
 
             if data:
                 # launch an asynchronous task to insert the new data
