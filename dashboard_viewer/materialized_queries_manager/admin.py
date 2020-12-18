@@ -5,7 +5,7 @@ from django.contrib.admin import helpers
 from django.contrib.admin.exceptions import DisallowedModelAdminToField
 from django.contrib.admin.options import IS_POPUP_VAR, TO_FIELD_VAR
 from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
-from django.contrib.admin.utils import flatten_fieldsets, unquote, quote
+from django.contrib.admin.utils import flatten_fieldsets, unquote
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.db import connections, ProgrammingError
@@ -34,7 +34,9 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         with closing(connections["achilles"].cursor()) as cursor:
             for obj in queryset:
                 try:
-                    cursor.execute(f"DROP MATERIALIZED VIEW {obj.name}")  # Ignore if the view doesn't exist
+                    cursor.execute(
+                        f"DROP MATERIALIZED VIEW {obj.name}"
+                    )  # Ignore if the view doesn't exist
                 except ProgrammingError:
                     pass
         super().delete_queryset(request, queryset)
@@ -235,10 +237,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         #    return HttpResponseRedirect(post_url_continue)
         # elif "_addanother" in request.POST:
         if "_addanother" in request.POST:
-            msg = format_html(
-                _(self.get_first_phrase()),
-                **msg_dict
-            )
+            msg = format_html(_(self.get_first_phrase()), **msg_dict)
             self.message_user(request, msg, messages.SUCCESS)
             redirect_url = request.path
             redirect_url = add_preserved_filters(
@@ -248,10 +247,10 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
         msg = format_html(
             _(
-                self.get_first_phrase() +
-                " The task might already have finished, for that its entry can already appear on the list below."
+                self.get_first_phrase()
+                + " The task might already have finished, for that its entry can already appear on the list below."
             ),
-            **msg_dict
+            **msg_dict,
         )
         self.message_user(request, msg, messages.SUCCESS)
         return self.response_post_save_add(request, obj)
@@ -312,10 +311,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         #    return HttpResponseRedirect(redirect_url)
         # elif "_addanother" in request.POST:
         if "_addanother" in request.POST:
-            msg = format_html(
-                _(self.get_first_phrase()),
-                **msg_dict
-            )
+            msg = format_html(_(self.get_first_phrase()), **msg_dict)
             self.message_user(request, msg, messages.SUCCESS)
             redirect_url = reverse(
                 "admin:%s_%s_add" % (opts.app_label, opts.model_name),
@@ -328,8 +324,8 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
         msg = format_html(
             _(
-                self.get_first_phrase() +
-                " The task might already have finished, for that its entry can already appear on the list below."
+                self.get_first_phrase()
+                + " The task might already have finished, for that its entry can already appear on the list below."
             ),
             **msg_dict,
         )
@@ -337,14 +333,16 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         return self.response_post_save_change(request, obj)
 
     def get_first_phrase(self):
-        tasks_results_url = reverse(
-            f"admin:{TaskResult._meta.app_label}_{TaskResult._meta.model_name}_changelist",
-            current_app=self.admin_site.name,
-        )
         if hasattr(self, "background_task"):
+            tasks_results_url = reverse(
+                f"admin:{TaskResult._meta.app_label}_{TaskResult._meta.model_name}_changelist",
+                current_app=self.admin_site.name,
+            )
             background_task = getattr(self, "background_task")
-            return f'The {{name}} is being created on the background task with id "{background_task}", ' \
-                   "which you can see its status after a couple of seconds on the " \
-                   f'<a href="{tasks_results_url}">Celery Results app</a>.'
-        else:
-            return "The {name} is being created on a background task."
+            return (
+                f'The {{name}} is being created on the background task with id "{background_task}", '
+                "which you can see its status after a couple of seconds on the "
+                f'<a href="{tasks_results_url}">Celery Results app</a>.'
+            )
+
+        return "The {name} is being created on a background task."

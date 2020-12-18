@@ -63,7 +63,7 @@ def create_materialized_view(  # noqa
                         self.update_state(
                             state=states.FAILURE,
                             meta="Error while creating the materialized view in the underlying database.",
-                            traceback=e
+                            traceback=e,
                         )
                         cursor.execute(
                             f"ALTER MATERIALIZED VIEW {tmp_name} RENAME TO {old_values['name']}"
@@ -79,7 +79,7 @@ def create_materialized_view(  # noqa
                     self.update_state(
                         state=states.FAILURE,
                         meta="Error while creating the materialized view in the underlying database.",
-                        traceback=e
+                        traceback=e,
                     )
                     raise Ignore()
 
