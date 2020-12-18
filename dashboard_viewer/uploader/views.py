@@ -70,7 +70,7 @@ def _extract_data_from_uploaded_file(request):
         "count_value",
     ]
 
-    wrapper = io.TextIOWrapper(request.FILES["achilles_results_file"])
+    wrapper = io.TextIOWrapper(request.FILES["results_file"])
     csv_reader = csv.reader(wrapper)
 
     first_row = next(csv_reader)
@@ -98,11 +98,11 @@ def _extract_data_from_uploaded_file(request):
 
         return None
 
-    request.FILES["achilles_results_file"].seek(0)
+    request.FILES["results_file"].seek(0)
 
     try:
         achilles_results = pandas.read_csv(
-            request.FILES["achilles_results_file"],
+            request.FILES["results_file"],
             header=0,
             dtype=str,
             skip_blank_lines=False,
