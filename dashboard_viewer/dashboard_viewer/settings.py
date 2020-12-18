@@ -28,6 +28,37 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DASHBOARD_VIEWER_ENV", "development") == "development"
 
+
+_LOGS_DIR = os.path.join(BASE_DIR, "logs")
+if not os.path.exists(_LOGS_DIR):
+    os.makedirs(_LOGS_DIR, exist_ok=True)
+elif not os.path.isdir(_LOGS_DIR):
+    raise TypeError('file "logs" is not a directory.')
+
+LOGGING = {
+    "version": 1,
+    "filters": {
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": "ERROR",
+            "filters": ["require_debug_true"],
+            "class": "logging.FileHandler",
+            "filename": "logs/errors.log",
+        }
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "ERROR",
+            "propagate": True,
+        },
+    },
+}
+
 ALLOWED_HOSTS = ["*"]
 
 
@@ -216,24 +247,21 @@ CONSTANCE_CONFIG = {
         "Title to use for the several pages",
         str,
     ),
-    "UPLOADER_EXPORT": (
-        "Achilles is intended to be implemented by organizations that have patient-level observational health "
-        "databases available in their local environment. Please run the R package "
-        "(https://github.com/EHDEN/CatalogueExport) against your CDM to generate the results file.",
-        "Text for the 'Export Achilles results' section on the uploader app",
+    "UPLOADER_EXECUTE_EXPORT_PACKAGE": (
+        "The CatalogueExport package extracts all data from the CDM that is needed for the dashboards. Please run "
+        "the R package (https://github.com/EHDEN/CatalogueExport) against your CDM to generate the results file.",
+        "Text for the 'Execute CatalogueExport Package' section on the uploader app",
         "markdown",
     ),
     "UPLOADER_UPLOAD": (
-        "Upload the Achilles results file in this platform. The necessary file is named, by default, as "
-        "achilles_results.csv. To upgrade an already existent database, jsut upload the file again, that the data will "
-        "be replaced. This operation can take a few seconds.",
+        "Upload the catalogue_results.csv results file in this tool to populate the visualisations. To update "
+        "an existing database, just upload the new data. A history of uploads is shown on the page.",
         "Text for the 'Upload Achilles results' section on the uploader app",
         "markdown",
     ),
     "UPLOADER_AUTO_UPDATE": (
-        "All the dashboards will automatically update after an upload. This will replace or introduce a new database "
-        "in all the graphs.",
-        "Text for the 'Auto update dashboard' section on the uploader app",
+        "The dashboards will automatically update once the data is uploaded. This operation can take a few minutes.",
+        "Text for the 'Automatic Updates' section on the uploader app",
         "markdown",
     ),
     "TABS_LOGO_CONTAINER_CSS": (

@@ -1,7 +1,7 @@
-FROM python:3.7.4-stretch
+FROM python:3.8.6
 
 # Install Debian packages
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
     apt-get install -y nodejs wait-for-it && \
     rm -rf /var/lib/apt/lists/*
 
@@ -15,9 +15,8 @@ RUN npm install
 # Install Python packages
 COPY requirements.txt .
 
-RUN pip install --upgrade pip setuptools \
- && pip install -r requirements.txt \
- && rm -rf /root/.cache/pip
+RUN pip install --no-cache --upgrade pip setuptools \
+ && pip install --no-cache -r requirements.txt
 
 EXPOSE 8000
 
