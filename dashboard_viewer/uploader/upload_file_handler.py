@@ -45,7 +45,9 @@ def handle(request):
         if achilles_results is None:
             return None
 
-        data = _extract_mandatory_fields_from_achilles_results(request, achilles_results)
+        data = _extract_mandatory_fields_from_achilles_results(
+            request, achilles_results
+        )
 
         if data is None:
             return None
@@ -184,7 +186,9 @@ def _read_dataframe_from_csv(request, file, allowed_headers, filename=None):
             else ", ".join([str(len(header)) for header in allowed_headers[:-1]])
             + f" or {len(allowed_headers[:-1])}"
         )
-        filename_to_present = f'file "{filename}"' if filename is not None else "uploaded file"
+        filename_to_present = (
+            f'file "{filename}"' if filename is not None else "uploaded file"
+        )
         messages.error(
             request,
             f"The {filename_to_present} has an invalid number of columns. "
@@ -341,14 +345,16 @@ def _extract_mandatory_fields_from_achilles_results(request, achilles_results):
 
     return {
         key: output[i]
-        for i, key in enumerate([
-            "generation_date",
-            "source_release_date",
-            "cdm_release_date",
-            "cdm_version",
-            "r_package_version",
-            "vocabulary_version",
-        ])
+        for i, key in enumerate(
+            [
+                "generation_date",
+                "source_release_date",
+                "cdm_release_date",
+                "cdm_version",
+                "r_package_version",
+                "vocabulary_version",
+            ]
+        )
     }
 
 
