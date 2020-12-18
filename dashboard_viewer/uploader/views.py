@@ -33,7 +33,7 @@ def upload_achilles_results(request, *args, **kwargs):
         form = AchillesResultsForm(request.POST, request.FILES)
 
         if form.is_valid():
-            data = upload_file_handler.handle_zip(request)
+            data = upload_file_handler.handle(request)
 
             if data:
                 # launch an asynchronous task to insert the new data

@@ -80,8 +80,11 @@ class DataSource(models.Model):
         return self.__str__()
 
 
-def zip_file_path(instance, _):
-    return f"achilles_results_files/{instance.data_source.id}/{uuid.uuid4().hex}.zip"
+def upload_file_path(instance, filename):
+    final_name = f"achilles_results_files/{instance.data_source.id}/{uuid.uuid4().hex}."
+    if filename.endswith(".zip"):
+        return final_name + "zip"
+    return final_name + "csv"
 
 
 class UploadHistory(models.Model):
@@ -96,7 +99,7 @@ class UploadHistory(models.Model):
     cdm_release_date = models.CharField(max_length=50, null=True)
     cdm_version = models.CharField(max_length=50)
     vocabulary_version = models.CharField(max_length=50)
-    zip_file = models.FileField(upload_to=zip_file_path)
+    upload_file = models.FileField(upload_to=upload_file_path)
 
     def __repr__(self):
         return self.__str__()

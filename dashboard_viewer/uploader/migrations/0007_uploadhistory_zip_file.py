@@ -7,15 +7,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("uploader", "0006_auto_20201109_2152"),
+        ("uploader", "0007_auto_20201212_2012"),
     ]
 
     operations = [
         migrations.AddField(
             model_name="uploadhistory",
-            name="zip_file",
+            name="upload_file",
             field=models.FileField(
-                default=None, upload_to=uploader.models.zip_file_path
+                default=None, upload_to=uploader.models.upload_file_path
             ),
             preserve_default=False,
         ),

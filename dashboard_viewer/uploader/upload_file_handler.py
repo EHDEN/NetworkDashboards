@@ -8,7 +8,50 @@ from django.contrib import messages
 from django.utils.html import mark_safe
 
 
-def handle_zip(request):
+def handle(request):
+    upload_filename = request.FILES["achilles_results_files"].name
+    if upload_filename.endswith(".zip"):
+        return _handle_zip(request)
+    if upload_filename.endswith(".csv"):
+        normal_expected_columns = [
+            "analysis_id",
+            "stratum_1",
+            "stratum_2",
+            "stratum_3",
+            "stratum_4",
+            "stratum_5",
+            "count_value",
+        ]
+        return _read_dataframe_from_csv(
+            request,
+            "results_file.csv",
+            request.FILES["achilles_results_files"],
+            [
+                normal_expected_columns,
+                [
+                    *normal_expected_columns,
+                    "min_value",
+                    "max_value",
+                    "avg_value",
+                    "stdev_value",
+                    "median_value",
+                    "p10_value",
+                    "p25_value",
+                    "p75_value",
+                    "p90_value",
+                ],
+            ],
+        )
+
+    messages.error(
+        request,
+        "Unknown file format. Upload either a zip or a csv file.",
+    )
+
+    return None
+
+
+def _handle_zip(request):
     """
     1. Validates the zip received
     2. Extract the data on the csvs to pandas Dataframes
@@ -27,7 +70,7 @@ def handle_zip(request):
     except zipfile.BadZipFile:
         messages.error(
             request,
-            mark_safe("Invalid zip file provided."),
+            "Invalid zip file provided.",
         )
 
         return None
@@ -35,9 +78,7 @@ def handle_zip(request):
     if "achilles_results.csv" not in uploaded_zipfile.namelist():
         messages.error(
             request,
-            mark_safe(
-                '"achilles_results.csv" file not present on the upload zip file.'
-            ),
+            '"achilles_results.csv" file not present on the upload zip file.',
         )
 
         return None
@@ -53,7 +94,7 @@ def handle_zip(request):
             "count_value",
         ]
         achilles_results = _read_dataframe_from_csv(
-            request, "achilles_results.csv", achilles_results_file, expected_columns
+            request, "achilles_results.csv", achilles_results_file, [expected_columns]
         )
 
     if achilles_results is None:
@@ -84,7 +125,7 @@ def handle_zip(request):
                 request,
                 "achilles_results_dist.csv",
                 achilles_results_dist_file,
-                expected_columns,
+                [expected_columns],
             )
 
         if dist_data is None:
@@ -102,31 +143,40 @@ def handle_zip(request):
     return data
 
 
-def _read_dataframe_from_csv(request, filename, file, expected_columns):
+def _read_dataframe_from_csv(request, filename, file, allowed_headers):
     """
     Validates and Converts the csv content of a received file to a Dataframe.
     :param request: view request
     :param filename: name of the file being processed
     :param file: file object of the file being processed
-    :param expected_columns: names of the expected columns to get on the dataframe
+    :param allowed_headers: list of all possible headers
     :return: If the csv doesn't not have the expected structure (specific number of columns
      and correct field types) this function returns none.
     """
+    assert len(allowed_headers) >= 1
 
-    wrapper = io.TextIOWrapper(file)
-    csv_reader = csv.reader(wrapper)
+    csv_reader = csv.reader(io.StringIO(file.readline()))
 
     # read just the first line to check the number of column according to the header
     first_row = next(csv_reader)
-    wrapper.detach()
 
-    if len(first_row) != len(expected_columns):
+    expected_columns = None
+    for header in allowed_headers:
+        if len(header) == len(first_row):
+            expected_columns = header
+            break
+
+    if expected_columns is None:
+        expected_amounts = (
+            allowed_headers[0]
+            if len(allowed_headers) == 1
+            else ", ".join([str(len(header)) for header in allowed_headers[:-1]])
+            + f" or {len(allowed_headers[:-1])}"
+        )
         messages.error(
             request,
-            mark_safe(
-                f'The file "{filename}" has an invalid number of columns. '
-                f"Expected {len(expected_columns)} found {len(first_row)}."
-            ),
+            f'The file "{filename}" has an invalid number of columns. '
+            f"Expected {expected_amounts} found {len(first_row)}.",
         )
 
         return None
@@ -156,10 +206,8 @@ def _read_dataframe_from_csv(request, filename, file, expected_columns):
     if achilles_results[["analysis_id", "count_value"]].isna().values.any():
         messages.error(
             request,
-            mark_safe(
-                f'Some rows of the file "{filename}" have null values either '
-                'on the column "analysis_id" or "count_value".'
-            ),
+            f'Some rows of the file "{filename}" have null values either '
+            'on the column "analysis_id" or "count_value".',
         )
 
         return None
@@ -188,10 +236,8 @@ def _read_dataframe_from_csv(request, filename, file, expected_columns):
     except ValueError:
         messages.error(
             request,
-            mark_safe(
-                f'The file "{filename}" has invalid values on some columns. Remember that only '
-                'the "stratum_*" columns accept strings, all the other fields expect numeric types.'
-            ),
+            f'The file "{filename}" has invalid values on some columns. Remember that only '
+            'the "stratum_*" columns accept strings, all the other fields expect numeric types.',
         )
 
         return None
