@@ -1,3 +1,5 @@
+from contextlib import closing
+
 from django.contrib import admin, messages
 from django.contrib.admin import helpers
 from django.contrib.admin.exceptions import DisallowedModelAdminToField
@@ -6,6 +8,7 @@ from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
 from django.contrib.admin.utils import flatten_fieldsets, unquote
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
+from django.db import connections, ProgrammingError
 from django.forms import all_valid
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -25,6 +28,15 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         "name",
         "dashboards",
     )
+
+    def delete_queryset(self, request, queryset):
+        with closing(connections["achilles"].cursor()) as cursor:
+            for obj in queryset:
+                try:
+                    cursor.execute(f"DROP MATERIALIZED VIEW {obj.name}")
+                except ProgrammingError:
+                    pass
+        super().delete_queryset(request, queryset)
 
     def _changeform_view(self, request, object_id, form_url, extra_context):  # noqa
         # Copied from django.contrib.admin.options.py
@@ -61,6 +73,12 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
         ModelForm = self.get_form(request, obj, change=not add)
         if request.method == "POST":
+            old_values = None
+            if obj is not None:
+                old_values = {
+                    "name": obj.name,
+                    "query": obj.query,
+                }
             form = ModelForm(request.POST, request.FILES, instance=obj)
             form_validated = form.is_valid()
             if form_validated:
@@ -73,9 +91,8 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
             if all_valid(formsets) and form_validated:
                 create_materialized_view.delay(
                     request.user.pk,
-                    {} if obj is None else {"name": obj.name, "query": obj.query},
+                    old_values,
                     serializers.serialize("json", [new_object]),
-                    add,
                     self.construct_change_message(request, form, formsets, add),
                 )
                 # self.save_model(request, new_object, form, not add)

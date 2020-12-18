@@ -1,6 +1,5 @@
 import random
 import string
-import traceback
 from contextlib import closing
 
 from celery import shared_task, states
@@ -21,7 +20,7 @@ def _create_materialized_view(cursor, name, query):
 
 @shared_task(bind=True)
 def create_materialized_view(  # noqa
-    self, user_id, old_obj: dict, new_obj, add: bool, change_message: str
+    self, user_id, old_values: dict, new_obj, change_message: str
 ):
     new_obj: MaterializedQuery = next(serializers.deserialize("json", new_obj)).object
 
@@ -34,16 +33,18 @@ def create_materialized_view(  # noqa
         if cache.get(worker_var) != self.request.id:
             return
 
+        add = new_obj.id is None
+
         with closing(connections["achilles"].cursor()) as cursor:
             if new_obj.id:
                 if (
-                    old_obj["name"] != new_obj.name
-                    and old_obj["query"] == new_obj.query
+                    old_values["name"] != new_obj.name
+                    and old_values["query"] == new_obj.query
                 ):
                     cursor.execute(
-                        f"ALTER MATERIALIZED VIEW {old_obj['name']} RENAME TO {new_obj.name}"
+                        f"ALTER MATERIALIZED VIEW {old_values['name']} RENAME TO {new_obj.name}"
                     )
-                elif old_obj["query"] != new_obj.query:
+                elif old_values["query"] != new_obj.query:
                     # don't drop the old view yet. rename the view to a random name
                     #  just as a backup if there is something wrong with the new
                     #  query or name
@@ -53,7 +54,7 @@ def create_materialized_view(  # noqa
                     )
 
                     cursor.execute(
-                        f"ALTER MATERIALIZED VIEW {old_obj['name']} RENAME TO {tmp_name}"
+                        f"ALTER MATERIALIZED VIEW {old_values['name']} RENAME TO {tmp_name}"
                     )
 
                     try:
@@ -61,15 +62,12 @@ def create_materialized_view(  # noqa
                     except ProgrammingError as e:
                         self.update_state(
                             state=states.FAILURE,
-                            meta={
-                                "exc_type": type(e).__name__,
-                                "exc_message": traceback.format_exc().split("\n"),
-                            },
+                            meta="Error while creating the materialized view in the underlying database.",
+                            traceback=e
                         )
                         cursor.execute(
-                            f"ALTER MATERIALIZED VIEW {tmp_name} RENAME TO {old_obj['name']}"
+                            f"ALTER MATERIALIZED VIEW {tmp_name} RENAME TO {old_values['name']}"
                         )
-                        cache.unlock("updating:materialized_view:lock:" + new_obj.name)
                         raise Ignore()
 
                     cursor.execute(f"DROP MATERIALIZED VIEW {tmp_name}")
@@ -80,12 +78,9 @@ def create_materialized_view(  # noqa
                 except ProgrammingError as e:
                     self.update_state(
                         state=states.FAILURE,
-                        meta={
-                            "exc_type": type(e).__name__,
-                            "exc_message": traceback.format_exc().split("\n"),
-                        },
+                        meta="Error while creating the materialized view in the underlying database.",
+                        traceback=e
                     )
-                    cache.unlock("updating:materialized_view:lock:" + new_obj.name)
                     raise Ignore()
 
         new_obj.save()
