@@ -20,9 +20,9 @@ class Migration(migrations.Migration):
                 validators=[
                     django.core.validators.RegexValidator(
                         "^[_0-9a-zA-Z]+$",
-                        'Only alphanumeric characters and the character "_" are allowed.'
+                        'Only alphanumeric characters and the character "_" are allowed.',
                     )
-                ]
+                ],
             ),
         ),
     ]
