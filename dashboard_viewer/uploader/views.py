@@ -54,14 +54,14 @@ def upload_achilles_results(request, *args, **kwargs):
                     cdm_release_date=data["cdm_release_date"],
                     cdm_version=data["cdm_version"],
                     vocabulary_version=data["vocabulary_version"],
-                    upload_file=request.FILES["achilles_results_files"],
+                    upload_file=request.FILES["results_files"],
                 )
                 latest_upload.save()
                 upload_history = [latest_upload] + upload_history
 
                 messages.success(
                     request,
-                    "Achilles Results file uploaded with success. The dashboards will update in a few minutes.",
+                    "Results file uploaded with success. The dashboards will update in a few minutes.",
                 )
 
     return render(
@@ -178,7 +178,7 @@ def create_data_source(request, *_, **kwargs):
             messages.success(
                 request,
                 format_html(
-                    "Data source <b>{}</b> created with success. You may now upload achilles results files.",
+                    "Data source <b>{}</b> created with success. You may now upload results files.",
                     obj.name,
                 ),
             )

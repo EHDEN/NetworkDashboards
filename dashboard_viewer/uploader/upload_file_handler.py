@@ -9,7 +9,7 @@ from django.utils.html import mark_safe
 
 
 def handle(request):
-    upload_filename = request.FILES["achilles_results_files"].name
+    upload_filename = request.FILES["results_files"].name
     if upload_filename.endswith(".zip"):
         return _handle_zip(request)
     if upload_filename.endswith(".csv"):
@@ -24,7 +24,7 @@ def handle(request):
         ]
         achilles_results = _read_dataframe_from_csv(
             request,
-            request.FILES["achilles_results_files"],
+            request.FILES["results_files"],
             [
                 normal_expected_columns,
                 [
@@ -79,7 +79,7 @@ def _handle_zip(request):
     """
 
     try:
-        uploaded_zipfile = zipfile.ZipFile(request.FILES["achilles_results_files"])
+        uploaded_zipfile = zipfile.ZipFile(request.FILES["results_files"])
     except zipfile.BadZipFile:
         messages.error(
             request,
@@ -112,7 +112,9 @@ def _handle_zip(request):
 
     if achilles_results is None:
         return None
-    data = _extract_mandatory_fields_from_achilles_results(request, achilles_results)
+    data = _extract_mandatory_fields_from_achilles_results(
+        request, achilles_results, "achilles_results.csv"
+    )
     if data is None:
         return None
 
@@ -149,7 +151,7 @@ def _handle_zip(request):
             [achilles_results, dist_data], ignore_index=True, copy=False
         )
 
-    request.FILES["achilles_results_files"].seek(0)
+    request.FILES["results_files"].seek(0)
 
     data["achilles_results"] = achilles_results
 
@@ -179,6 +181,7 @@ def _read_dataframe_from_csv(request, file, allowed_headers, filename=None):
             expected_columns = header
             break
 
+    filename_display = f'file "{filename}"' if filename is not None else "uploaded file"
     if expected_columns is None:
         expected_amounts = (
             allowed_headers[0]
@@ -186,12 +189,9 @@ def _read_dataframe_from_csv(request, file, allowed_headers, filename=None):
             else ", ".join([str(len(header)) for header in allowed_headers[:-1]])
             + f" or {len(allowed_headers[:-1])}"
         )
-        filename_to_present = (
-            f'file "{filename}"' if filename is not None else "uploaded file"
-        )
         messages.error(
             request,
-            f"The {filename_to_present} has an invalid number of columns. "
+            f"The {filename_display} has an invalid number of columns. "
             f"Expected {expected_amounts} found {len(first_row)}.",
         )
 
@@ -212,7 +212,7 @@ def _read_dataframe_from_csv(request, file, allowed_headers, filename=None):
         messages.error(
             request,
             mark_safe(
-                f'The file "{filename}" has an invalid csv format. Make sure is a text file separated'
+                f"The {filename_display} has an invalid csv format. Make sure is a text file separated"
                 f" by <b>commas</b> and you have {len(expected_columns)} columns."
             ),
         )
@@ -222,7 +222,7 @@ def _read_dataframe_from_csv(request, file, allowed_headers, filename=None):
     if achilles_results[["analysis_id", "count_value"]].isna().values.any():
         messages.error(
             request,
-            f'Some rows of the file "{filename}" have null values either '
+            f"Some rows of the {filename_display} has null values either "
             'on the column "analysis_id" or "count_value".',
         )
 
@@ -252,7 +252,7 @@ def _read_dataframe_from_csv(request, file, allowed_headers, filename=None):
     except ValueError:
         messages.error(
             request,
-            f'The file "{filename}" has invalid values on some columns. Remember that only '
+            f"The {filename_display} has invalid values on some columns. Remember that only "
             'the "stratum_*" columns accept strings, all the other fields expect numeric types.',
         )
 
@@ -261,13 +261,16 @@ def _read_dataframe_from_csv(request, file, allowed_headers, filename=None):
     return achilles_results
 
 
-def _extract_mandatory_fields_from_achilles_results(request, achilles_results):
+def _extract_mandatory_fields_from_achilles_results(
+    request, achilles_results, filename=None
+):
     """
     On the achilles_results.csv file there are several fields on the analysis id
      0 and 5000 that are used to build a UploadHistory record.
     On this function they are extracted and validated.
     :param request: view request
     :param achilles_results: dataframe extract from the csv
+    :param filename: name of the file being processed
     :return: If there is some field with errors then this function returns None.
      If not, a dictionary is returned with the several mandatory fields
      for the UploadHistory model and the achilles_results dataframe.
@@ -279,11 +282,12 @@ def _extract_mandatory_fields_from_achilles_results(request, achilles_results):
         lambda e: achilles_results[achilles_results.analysis_id == e],
     )
 
+    filename_display = f' on the "{filename}" file' if filename is not None else ""
     if isinstance(output, str):
         messages.error(
             request,
             mark_safe(
-                f'Analysis id{output} missing on the "achilles_results.csv" file. Try (re)running the plugin '
+                f"Analysis id{output} missing{filename_display}. Try (re)running the plugin "
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 " on your database."
             ),
@@ -303,7 +307,7 @@ def _extract_mandatory_fields_from_achilles_results(request, achilles_results):
         messages.error(
             request,
             mark_safe(
-                f"Analysis id{output} duplicated on multiple rows. Try (re)running the plugin "
+                f"Analysis id{output} duplicated on multiple rows{filename_display}. Try (re)running the plugin "
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 " on your database."
             ),
@@ -336,7 +340,7 @@ def _extract_mandatory_fields_from_achilles_results(request, achilles_results):
         messages.error(
             request,
             mark_safe(
-                f"The field{output} mandatory. Try (re)running the plugin "
+                f"The field{output} mandatory{filename_display}. Try (re)running the plugin "
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 " on your database."
             ),

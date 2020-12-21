@@ -1,4 +1,3 @@
-from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
 
 from .fields import CoordinatesField
@@ -16,7 +15,6 @@ class SourceForm(forms.ModelForm):
         fields = ("name", "acronym", "country", "link", "database_type")
         widgets = {
             "database_type": ListTextWidget(DatabaseType.objects),
-            "release_date": DatePickerInput(),  # format %m/%d/%Y. Using a ModelForm this can't be changed
         }
 
     def clean_database_type(self):
@@ -24,4 +22,4 @@ class SourceForm(forms.ModelForm):
 
 
 class AchillesResultsForm(forms.Form):
-    achilles_results_files = forms.FileField()
+    results_files = forms.FileField()

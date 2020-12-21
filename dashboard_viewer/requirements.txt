@@ -1,5 +1,4 @@
 celery==5.0.4                             # asynchronous task on uploader app
-django-bootstrap-datepicker-plus==3.0.5   # realease date on create data source form on uploader app
 django-bootstrap4==2.3.1                  # forms beautifier
 django-compressor==2.4                    # combines and minifies linked and inline Javascript or CSS in a Django template into cacheable static files
 django-constance==2.8.0                   # to implement settings that can change at runtime
@@ -26,7 +25,7 @@ beautifulsoup4==4.9.3
 billiard==3.6.3.0
 bleach==3.2.1
 certifi==2020.12.5
-chardet==3.0.4
+chardet==4.0.0
 click==7.1.2
 click-didyoumean==0.0.3
 click-plugins==1.1.1
@@ -44,7 +43,7 @@ python-dateutil==2.8.1
 python-redis-lock==3.7.0
 pytz==2020.4
 rcssmin==1.0.6
-requests==2.25.0
+requests==2.25.1
 rjsmin==1.1.0
 six==1.15.0
 soupsieve==2.1

@@ -11,35 +11,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name="datasource",
-            name="release_date",
-            field=models.CharField(
-                help_text="Date at which DB is available for research for current release.",
-                max_length=50,
-                null=True,
-            ),
-        ),
-        migrations.AlterField(
-            model_name="uploadhistory",
-            name="cdm_release_date",
-            field=models.CharField(max_length=50, null=True),
-        ),
-        migrations.AlterField(
-            model_name="uploadhistory",
-            name="cdm_version",
-            field=models.CharField(max_length=50),
-        ),
-        migrations.AlterField(
-            model_name="uploadhistory",
-            name="generation_date",
-            field=models.CharField(max_length=50),
-        ),
-        migrations.AlterField(
-            model_name="uploadhistory",
-            name="r_package_version",
-            field=models.CharField(max_length=50),
-        ),
-        migrations.AlterField(
             model_name="uploadhistory",
             name="vocabulary_version",
             field=models.CharField(max_length=50),
