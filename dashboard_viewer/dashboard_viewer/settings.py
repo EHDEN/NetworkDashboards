@@ -47,7 +47,7 @@ LOGGING = {
             "level": "ERROR",
             "filters": ["require_debug_true"],
             "class": "logging.FileHandler",
-            "filename": "logs/errors.log",
+            "filename": os.path.join(_LOGS_DIR, "errors.log"),
         }
     },
     "loggers": {
@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "bootstrap4",
     "constance",
+    "django_celery_results",
     "markdownify",
     "martor",
     "rest_framework",
@@ -204,6 +205,7 @@ REDIS_CONSTANCE_DB = os.environ.get("REDIS_CONSTANCE_DB", 2)
 
 # Celery
 CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_DB}"
+CELERY_RESULT_BACKEND = "django-db"
 
 # Cache
 CACHES = {
