@@ -5,7 +5,7 @@ from django.contrib.admin import helpers
 from django.contrib.admin.exceptions import DisallowedModelAdminToField
 from django.contrib.admin.options import IS_POPUP_VAR, TO_FIELD_VAR
 from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
-from django.contrib.admin.utils import flatten_fieldsets, unquote
+from django.contrib.admin.utils import flatten_fieldsets, quote, unquote
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.db import connections, ProgrammingError
@@ -13,6 +13,7 @@ from django.forms import all_valid
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.http import urlquote
 from django.utils.translation import gettext as _
 from django_celery_results.models import TaskResult
 
@@ -334,15 +335,31 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
     def get_first_phrase(self):
         if hasattr(self, "background_task"):
-            tasks_results_url = reverse(
-                f"admin:{TaskResult._meta.app_label}_{TaskResult._meta.model_name}_changelist",
-                current_app=self.admin_site.name,
-            )
-            background_task = getattr(self, "background_task")
-            return (
-                f'The {{name}} is being created on the background task with id "{background_task}", '
-                "which you can see its status after a couple of seconds on the "
-                f'<a href="{tasks_results_url}">Celery Results app</a>.'
-            )
+            background_task_id = getattr(self, "background_task").id
+            try:
+                task_url = reverse(
+                    "admin:%s_%s_change"
+                    % (TaskResult._meta.app_label, TaskResult._meta.model_name),
+                    args=(
+                        quote(TaskResult.objects.get(task_id=background_task_id).pk),
+                    ),
+                    current_app=self.admin_site.name,
+                )
+            except TaskResult.DoesNotExist:
+                tasks_results_url = reverse(
+                    f"admin:{TaskResult._meta.app_label}_{TaskResult._meta.model_name}_changelist",
+                    current_app=self.admin_site.name,
+                )
+                return (
+                    f'The {{name}} is being created on the background task with id "{background_task_id}", '
+                    "which you can see its status after a couple of seconds on the "
+                    f'<a href="{tasks_results_url}">Celery Results app</a>.'
+                )
+            else:
+                link = format_html(
+                    '<a href="{}">{}</a>', urlquote(task_url), background_task_id
+                )
+
+                return f"The {{name}} is being created on the background task {link}."
 
         return "The {name} is being created on a background task."

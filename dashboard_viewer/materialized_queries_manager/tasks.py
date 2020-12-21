@@ -24,6 +24,11 @@ def create_materialized_view(  # noqa
 ):
     new_obj: MaterializedQuery = next(serializers.deserialize("json", new_obj)).object
 
+    self.update_state(
+        state=states.STARTED,
+        meta=f"Processing Materialized Query {new_obj.name}.",
+    )
+
     with cache.lock("updating:materialized_view:worker:lock:" + new_obj.name):
         worker_var = "updating:materialized_view:worker:" + new_obj.name
         cache.get(worker_var)
@@ -31,7 +36,11 @@ def create_materialized_view(  # noqa
 
     with cache.lock("updating:materialized_view:lock:" + new_obj.name):
         if cache.get(worker_var) != self.request.id:
-            return
+            self.update_state(
+                state=states.IGNORED,
+                meta=f"There is another worker with more recent changes for the Materialized Query {new_obj.name}.",
+            )
+            raise Ignore()
 
         add = new_obj.id is None
 
@@ -62,7 +71,7 @@ def create_materialized_view(  # noqa
                     except ProgrammingError as e:
                         self.update_state(
                             state=states.FAILURE,
-                            meta="Error while creating the materialized view in the underlying database.",
+                            meta=f"Error while creating the materialized view {new_obj.name} in the underlying database.",
                             traceback=e,
                         )
                         cursor.execute(
@@ -78,13 +87,17 @@ def create_materialized_view(  # noqa
                 except ProgrammingError as e:
                     self.update_state(
                         state=states.FAILURE,
-                        meta="Error while creating the materialized view in the underlying database.",
+                        meta=f"Error while creating the materialized view {new_obj.name} in the underlying database.",
                         traceback=e,
                     )
                     raise Ignore()
 
         new_obj.save()
         if add:
+            self.update_state(
+                state=states.SUCCESS,
+                meta=f"Materialized view {new_obj.name} successfully created.",
+            )
             LogEntry.objects.log_action(
                 user_id=user_id,
                 content_type_id=get_content_type_for_model(new_obj).pk,
@@ -94,6 +107,10 @@ def create_materialized_view(  # noqa
                 change_message=change_message,
             )
         else:
+            self.update_state(
+                state=states.SUCCESS,
+                meta=f"Materialized view {new_obj.name} successfully change.",
+            )
             LogEntry.objects.log_action(
                 user_id=user_id,
                 content_type_id=get_content_type_for_model(new_obj).pk,
@@ -102,3 +119,5 @@ def create_materialized_view(  # noqa
                 action_flag=CHANGE,
                 change_message=change_message,
             )
+
+        raise Ignore()
