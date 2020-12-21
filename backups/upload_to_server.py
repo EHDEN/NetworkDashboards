@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import datetime
+import pathlib
 import os
 import sys
 
@@ -71,7 +72,7 @@ def main(argc, argv):
         # if we already got 6 files on the current week directory
         #  then the current file is the the final one for this week
 
-        _, extension = os.path.splitext(argv[2])
+        extension = "".join(pathlib.Path(argv[2]).suffixes)
         try:
             m.upload(
                 argv[2],
