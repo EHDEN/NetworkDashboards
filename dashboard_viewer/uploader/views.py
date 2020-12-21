@@ -70,7 +70,7 @@ def _extract_data_from_uploaded_file(request):
         "count_value",
     ]
 
-    wrapper = io.TextIOWrapper(request.FILES["achilles_results_file"])
+    wrapper = io.TextIOWrapper(request.FILES["results_file"])
     csv_reader = csv.reader(wrapper)
 
     first_row = next(csv_reader)
@@ -98,11 +98,11 @@ def _extract_data_from_uploaded_file(request):
 
         return None
 
-    request.FILES["achilles_results_file"].seek(0)
+    request.FILES["results_file"].seek(0)
 
     try:
         achilles_results = pandas.read_csv(
-            request.FILES["achilles_results_file"],
+            request.FILES["results_file"],
             header=0,
             dtype=str,
             skip_blank_lines=False,
@@ -114,7 +114,7 @@ def _extract_data_from_uploaded_file(request):
             request,
             mark_safe(
                 "The provided file has an invalid csv format. Make sure is a text file separated"
-                " by <b>commas</b> and you either have 7 (regular achilles results file) or 13 (achilles results file"
+                " by <b>commas</b> and you either have 7 (regular results file) or 13 (results file"
                 " with dist columns) columns."
             ),
         )
@@ -330,7 +330,7 @@ def upload_achilles_results(request, *args, **kwargs):
 
                 messages.success(
                     request,
-                    "Achilles Results file uploaded with success. The dashboards will update in a few minutes.",
+                    "Results file uploaded with success. The dashboards will update in a few minutes.",
                 )
 
     return render(
@@ -447,7 +447,7 @@ def create_data_source(request, *_, **kwargs):
             messages.success(
                 request,
                 format_html(
-                    "Data source <b>{}</b> created with success. You may now upload achilles results files.",
+                    "Data source <b>{}</b> created with success. You may now upload results files.",
                     obj.name,
                 ),
             )
