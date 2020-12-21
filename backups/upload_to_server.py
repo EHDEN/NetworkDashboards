@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 import datetime
-import pathlib
 import os
+import pathlib
 import sys
 
 import mega
