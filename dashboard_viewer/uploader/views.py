@@ -61,7 +61,7 @@ def upload_achilles_results(request, *args, **kwargs):
 
                 messages.success(
                     request,
-                    "Results file uploaded with success. The dashboards will update in a few minutes.",
+                    "File uploaded with success. The dashboards will update in a few minutes.",
                 )
 
     return render(

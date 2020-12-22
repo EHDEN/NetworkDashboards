@@ -20,14 +20,7 @@
         <div class="content-container">
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert
-                        {% if message.tags %}
-                            {% if message.tags == 'error' %}
-                                alert-danger
-                            {% else %}
-                                alert-success
-                            {% endif %}
-                        {% endif %}" role="alert">
+                    <div class="alert alert-{{ message.tags }}" role="alert">
                         {{ message }}
                     </div>
                 {% endfor %}

@@ -88,15 +88,42 @@ def _handle_zip(request):
 
         return None
 
-    if "achilles_results.csv" not in uploaded_zipfile.namelist():
+    results_filename = results_dist_filename = None
+    prefixes = ["achilles", "catalogue"]
+    prefix_idx = 0
+    for i, prefix in enumerate(prefixes):
+        results_filename_tmp = prefix + "_results.csv"
+        if results_filename_tmp in uploaded_zipfile.namelist():
+            if results_filename is not None:  # contains both nomenclatures
+                messages.error(
+                    request,
+                    "The uploaded zip file contains both achilles_results and catalogue_results files. "
+                    "We support both but please use just one of the two to make sure all files "
+                    "are used correctly.",
+                )
+                return None
+
+            results_filename = results_filename_tmp
+            results_dist_filename = prefix + "_results_dist.csv"
+            prefix_idx = i
+
+    if results_filename is None:   # contains no expected files
         messages.error(
             request,
-            '"achilles_results.csv" file not present on the upload zip file.',
+            'The mandatory file "achilles_results.csv" or "catalogue_results.csv" is missing.'
         )
 
         return None
 
-    with uploaded_zipfile.open("achilles_results.csv") as achilles_results_file:
+    if prefixes[(prefix_idx + 1) % 2] + "_results_dist.csv" in uploaded_zipfile.namelist():
+        messages.warning(
+            request,
+            "The uploaded zip contains a dist file with a different prefix "
+            f"({prefixes[(prefix_idx + 1) % 2]}_results_dist.csv) from the main results file ({results_filename}). "
+            "As a result, the dist file will be ignored."
+        )
+
+    with uploaded_zipfile.open(results_filename) as achilles_results_file:
         expected_columns = [
             "analysis_id",
             "stratum_1",
@@ -107,21 +134,21 @@ def _handle_zip(request):
             "count_value",
         ]
         achilles_results = _read_dataframe_from_csv(
-            request, achilles_results_file, [expected_columns], "achilles_results.csv"
+            request, achilles_results_file, [expected_columns], results_filename
         )
 
     if achilles_results is None:
         return None
     data = _extract_mandatory_fields_from_achilles_results(
-        request, achilles_results, "achilles_results.csv"
+        request, achilles_results, results_filename
     )
     if data is None:
         return None
 
     dist_data = None
-    if "achilles_results_dist.csv" in uploaded_zipfile.namelist():
+    if results_dist_filename in uploaded_zipfile.namelist():
         with uploaded_zipfile.open(
-            "achilles_results_dist.csv"
+            results_dist_filename
         ) as achilles_results_dist_file:
             expected_columns.extend(
                 [
@@ -140,7 +167,7 @@ def _handle_zip(request):
                 request,
                 achilles_results_dist_file,
                 [expected_columns],
-                "achilles_results_dist.csv",
+                results_dist_filename,
             )
 
         if dist_data is None:

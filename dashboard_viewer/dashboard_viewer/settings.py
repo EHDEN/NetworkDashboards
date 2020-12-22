@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 from constance.signals import config_updated
+from django.contrib.messages import constants as messages
 from django.dispatch import receiver
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -255,8 +256,9 @@ CONSTANCE_CONFIG = {
         "markdown",
     ),
     "UPLOADER_UPLOAD": (
-        "Upload the catalogue_results.csv results file in this tool to populate the visualisations. To update "
-        "an existing database, just upload the new data. A history of uploads is shown on the page.",
+        "Upload either a results csv or a zip with results and results_dist in this tool to populate the "
+        "visualizations. To update an existing database, just upload the new data. A history of uploads is "
+        "shown on the page.",
         "Text for the 'Upload Achilles results' section on the uploader app",
         "markdown",
     ),
@@ -304,4 +306,8 @@ MARTOR_ENABLE_CONFIGS = {
     "living": "false",  # to enable/disable live updates in preview
     "spellcheck": "true",
     "hljs": "true",  # to enable/disable hljs highlighting in preview
+}
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
 }
