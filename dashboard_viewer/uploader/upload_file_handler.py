@@ -107,20 +107,23 @@ def _handle_zip(request):
             results_dist_filename = prefix + "_results_dist.csv"
             prefix_idx = i
 
-    if results_filename is None:   # contains no expected files
+    if results_filename is None:  # contains no expected files
         messages.error(
             request,
-            'The mandatory file "achilles_results.csv" or "catalogue_results.csv" is missing.'
+            'The mandatory file "achilles_results.csv" or "catalogue_results.csv" is missing.',
         )
 
         return None
 
-    if prefixes[(prefix_idx + 1) % 2] + "_results_dist.csv" in uploaded_zipfile.namelist():
+    if (
+        prefixes[(prefix_idx + 1) % 2] + "_results_dist.csv"
+        in uploaded_zipfile.namelist()
+    ):
         messages.warning(
             request,
             "The uploaded zip contains a dist file with a different prefix "
             f"({prefixes[(prefix_idx + 1) % 2]}_results_dist.csv) from the main results file ({results_filename}). "
-            "As a result, the dist file will be ignored."
+            "As a result, the dist file will be ignored.",
         )
 
     with uploaded_zipfile.open(results_filename) as achilles_results_file:
@@ -147,9 +150,7 @@ def _handle_zip(request):
 
     dist_data = None
     if results_dist_filename in uploaded_zipfile.namelist():
-        with uploaded_zipfile.open(
-            results_dist_filename
-        ) as achilles_results_dist_file:
+        with uploaded_zipfile.open(results_dist_filename) as achilles_results_dist_file:
             expected_columns.extend(
                 [
                     "min_value",

@@ -309,5 +309,5 @@ MARTOR_ENABLE_CONFIGS = {
 }
 
 MESSAGE_TAGS = {
-    messages.ERROR: 'danger',
+    messages.ERROR: "danger",
 }
