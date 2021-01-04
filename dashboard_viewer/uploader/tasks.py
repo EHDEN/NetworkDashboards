@@ -128,7 +128,9 @@ def update_achilles_results_data(
         with closing(connections["achilles"].cursor()) as cursor:
             for materialized_query in MaterializedQuery.objects.all():
                 try:
-                    cursor.execute(f"REFRESH MATERIALIZED VIEW {materialized_query.name}")
+                    cursor.execute(
+                        f"REFRESH MATERIALIZED VIEW {materialized_query.name}"
+                    )
                 except ProgrammingError:
                     # TODO Log this or give some feed back on the Materialized query list, on admin app, if any
                     #  record doesn't have a materialized view associated.
