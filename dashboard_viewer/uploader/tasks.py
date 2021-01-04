@@ -8,7 +8,7 @@ from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.core.cache import cache
-from django.db import connections
+from django.db import connections, ProgrammingError
 from materialized_queries_manager.models import MaterializedQuery
 from redis_rw_lock import RWLock
 
@@ -127,7 +127,12 @@ def update_achilles_results_data(
         logger.info("Updating materialized views [datasource %d]", db_id)
         with closing(connections["achilles"].cursor()) as cursor:
             for materialized_query in MaterializedQuery.objects.all():
-                cursor.execute(f"REFRESH MATERIALIZED VIEW {materialized_query.name}")
+                try:
+                    cursor.execute(f"REFRESH MATERIALIZED VIEW {materialized_query.name}")
+                except ProgrammingError:
+                    # TODO Log this or give some feed back on the Materialized query list, on admin app, if any
+                    #  record doesn't have a materialized view associated.
+                    pass  # Ignore if the view doesn't exist
 
         write_lock.release()
 
