@@ -26,7 +26,7 @@ handler404 = not_found
 handler500 = server_error
 
 urlpatterns = [
-    path("", include("tabsManager.urls")),
+    # path("", include("tabsManager.urls")),
     path("admin/", admin.site.urls),
     path("martor/", include("martor.urls")),
     path("uploader/", include("uploader.urls")),
