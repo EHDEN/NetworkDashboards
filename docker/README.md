@@ -21,8 +21,9 @@
 
 9. On release 0.37 of superset there is a bug related to the public role and because of that we had to set `PUBLIC_ROLE_LIKE_GAMMA = True` on superset settings. This leads the public role with permissions that he shouldn't have. To solve this, so any anonymous user can view dashboards, you should remove all its permissions and then add the following:
 
-   - can explore JSON on Superset
-   - can dashboard on Superset
    - all datasource access on all_datasource_access
    - can csrf token on Superset
+   - can dashboard on Superset
+   - can explore JSON on Superset
    - can list on CssTemplateAsyncModelView
+   - can list on SliceModelView
