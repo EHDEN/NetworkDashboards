@@ -9,7 +9,6 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.core.cache import cache
 from django.db import connections, ProgrammingError
-
 from materialized_queries_manager.models import MaterializedQuery
 from redis_rw_lock import RWLock
 
