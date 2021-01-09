@@ -2,9 +2,8 @@ from contextlib import closing
 
 from django.core.cache import cache
 from django.db import connections, ProgrammingError
-from redis_rw_lock import RWLock
-
 from materialized_queries_manager.models import MaterializedQuery
+from redis_rw_lock import RWLock
 
 
 def refresh(logger, db_id=None):
@@ -15,12 +14,15 @@ def refresh(logger, db_id=None):
     )
     write_lock.acquire()
 
-    logger.info("Updating materialized views [%s]", "command" if db_id else f"datasource {db_id}")
+    logger.info(
+        "Updating materialized views [%s]",
+        "command" if db_id else f"datasource {db_id}",
+    )
     with closing(connections["achilles"].cursor()) as cursor:
         for materialized_query in MaterializedQuery.objects.all():
             try:
                 logger.info(
-                    f"Refreshing materialized view %s [%s]",
+                    "Refreshing materialized view %s [%s]",
                     materialized_query.name,
                     "command" if db_id else f"datasource {db_id}",
                 )

@@ -8,11 +8,10 @@ from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.core.cache import cache
-from django.db import connections, ProgrammingError
-from materialized_queries_manager.models import MaterializedQuery
+from django.db import connections
+from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
 
-from materialized_queries_manager.utils import refresh
 from .models import AchillesResults, AchillesResultsArchive
 
 logger = get_task_logger(__name__)
@@ -26,7 +25,9 @@ def update_achilles_results_data(
     cache.incr("celery_workers_updating", ignore_key_check=True)
 
     # several workers can update records concurrently -> same as -> several threads can read from the same file
-    read_lock = RWLock(cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None)
+    read_lock = RWLock(
+        cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
+    )
     read_lock.acquire()
 
     # but only one worker can make updates associated to a specific data source at the same time
