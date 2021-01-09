@@ -12,6 +12,7 @@ from django.db import connections, ProgrammingError
 from materialized_queries_manager.models import MaterializedQuery
 from redis_rw_lock import RWLock
 
+from materialized_queries_manager.utils import refresh
 from .models import AchillesResults, AchillesResultsArchive
 
 logger = get_task_logger(__name__)
@@ -25,7 +26,7 @@ def update_achilles_results_data(
     cache.incr("celery_workers_updating", ignore_key_check=True)
 
     # several workers can update records concurrently -> same as -> several threads can read from the same file
-    read_lock = RWLock(cache.client.get_client(), "celery_worker_updating", RWLock.READ)
+    read_lock = RWLock(cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None)
     read_lock.acquire()
 
     # but only one worker can make updates associated to a specific data source at the same time
@@ -117,33 +118,6 @@ def update_achilles_results_data(
     # The lines below can be used to later update materialized views of each chart
     # To be more efficient, they should only be updated when the is no more workers inserting records
     if not cache.decr("celery_workers_updating"):
-        # Only one worker can update the materialized views at the same time -> same as -> only one thread
-        #  can write to a file at the same time
-        write_lock = RWLock(
-            cache.client.get_client(), "celery_worker_updating", RWLock.WRITE
-        )
-        write_lock.acquire()
-
-        logger.info("Updating materialized views [datasource %d]", db_id)
-        with closing(connections["achilles"].cursor()) as cursor:
-            for materialized_query in MaterializedQuery.objects.all():
-                try:
-                    cursor.execute(
-                        f"REFRESH MATERIALIZED VIEW {materialized_query.name}"
-                    )
-                except ProgrammingError:
-                    # If this happen, it is assumed its because the there is no materialized views
-                    #  created on postgres with the given name
-                    # TODO Log this or give some feed back on the Materialized query list, on admin app, if any
-                    #  record doesn't have a materialized view associated.
-                    pass  # Ignore if the view doesn't exist
-                except:  # noqa
-                    logger.exception(
-                        "Some unexpected error happen while refreshing materialized query %s. [datasource %d]",
-                        materialized_query.name,
-                        db_id,
-                    )
-
-        write_lock.release()
+        refresh(logger, db_id)
 
     logger.info("Done [datasource %d]", db_id)
