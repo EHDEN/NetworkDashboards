@@ -39,8 +39,6 @@ export default function transformProps(chartProps) {
   const colorFn = CategoricalColorNamespace.getScale(colorScheme);
   const numberFormatter = getNumberFormatter(numberFormat);
   let transformedData, outlierData;
-  console.log(queriesData);
-  console.log(formData);
 
   if (queryMode == QueryMode.raw) {
     transformedData = data.map(datum => {
@@ -48,7 +46,6 @@ export default function transformProps(chartProps) {
         datum,
         groupby
       });
-      console.log(groupbyLabel);
       return {
         name: groupbyLabel,
         value: [datum[`min`], datum[`q1`], datum[`mean`], datum[`q3`], datum[`max`], datum[`mean`], 1, []],

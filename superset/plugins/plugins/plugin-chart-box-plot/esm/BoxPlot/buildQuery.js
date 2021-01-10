@@ -36,12 +36,6 @@ export default function buildQuery(formData) {
         q3,
         max
       } = formData;
-      console.log("build query");
-      console.log([{ ...baseQueryObject,
-        metrics: [],
-        groupby: [],
-        columns: [groupby[0], min, q1, mean, q3, max]
-      }]);
       return [{ ...baseQueryObject,
         metrics: [],
         groupby: [],

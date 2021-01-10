@@ -44,13 +44,10 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
   const numberFormatter = getNumberFormatter(numberFormat);
 
   let transformedData, outlierData;
-  console.log(queriesData);
-  console.log(formData);
   if (queryMode == QueryMode.raw) {
     transformedData = data
       .map(datum => {
         const groupbyLabel = extractGroupbyLabel({ datum, groupby });
-        console.log(groupbyLabel);
         return {
           name: groupbyLabel,
           value: [
