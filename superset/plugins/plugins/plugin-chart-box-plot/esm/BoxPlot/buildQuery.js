@@ -20,14 +20,39 @@ import { buildQueryContext, getMetricLabel } from '@superset-ui/core';
 const PERCENTILE_REGEX = /(\d+)\/(\d+) percentiles/;
 export default function buildQuery(formData) {
   const {
+    query_mode,
     whiskerOptions
   } = formData;
   return buildQueryContext(formData, baseQueryObject => {
+    const {
+      groupby
+    } = baseQueryObject;
+
+    if (query_mode == 'raw') {
+      const {
+        min,
+        q1,
+        mean,
+        q3,
+        max
+      } = formData;
+      console.log("build query");
+      console.log([{ ...baseQueryObject,
+        metrics: [],
+        groupby: [],
+        columns: [groupby[0], min, q1, mean, q3, max]
+      }]);
+      return [{ ...baseQueryObject,
+        metrics: [],
+        groupby: [],
+        columns: [groupby[0], min, q1, mean, q3, max]
+      }];
+    }
+
     let whiskerType;
     let percentiles;
     const {
       columns,
-      groupby,
       metrics
     } = baseQueryObject;
     const percentileMatch = PERCENTILE_REGEX.exec(whiskerOptions);

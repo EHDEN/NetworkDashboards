@@ -16,13 +16,129 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import React from 'react';
 import { t } from '@superset-ui/core';
-import { D3_FORMAT_OPTIONS, formatSelectOptions, sections } from '@superset-ui/chart-controls';
+import { formatSelectOptions, D3_FORMAT_OPTIONS, ColumnOption, sections } from '@superset-ui/chart-controls';
+export let QueryMode;
+
+(function (QueryMode) {
+  QueryMode["aggregate"] = "aggregate";
+  QueryMode["raw"] = "raw";
+})(QueryMode || (QueryMode = {}));
+
+const QueryModeLabel = {
+  [QueryMode.aggregate]: t('Aggregate'),
+  [QueryMode.raw]: t('Raw Records')
+};
+
+function getQueryMode(controls) {
+  var _controls$query_mode, _controls$all_columns;
+
+  const mode = controls == null ? void 0 : (_controls$query_mode = controls.query_mode) == null ? void 0 : _controls$query_mode.value;
+
+  if (mode === QueryMode.aggregate || mode === QueryMode.raw) {
+    return mode;
+  }
+
+  const rawColumns = controls == null ? void 0 : (_controls$all_columns = controls.all_columns) == null ? void 0 : _controls$all_columns.value;
+  const hasRawColumns = rawColumns && (rawColumns == null ? void 0 : rawColumns.length) > 0;
+  return hasRawColumns ? QueryMode.raw : QueryMode.aggregate;
+}
+/**
+ * Visibility check
+ */
+
+
+function isQueryMode(mode) {
+  return ({
+    controls
+  }) => {
+    return getQueryMode(controls) === mode;
+  };
+}
+
+const isAggMode = isQueryMode(QueryMode.aggregate);
+const isRawMode = isQueryMode(QueryMode.raw);
+const queryMode = {
+  type: 'RadioButtonControl',
+  label: t('Query Mode'),
+  default: null,
+  options: [{
+    label: QueryModeLabel[QueryMode.aggregate],
+    value: QueryMode.aggregate
+  }, {
+    label: QueryModeLabel[QueryMode.raw],
+    value: QueryMode.raw
+  }],
+  mapStateToProps: ({
+    controls
+  }) => {
+    return {
+      value: getQueryMode(controls)
+    };
+  }
+};
+const all_columns = {
+  type: 'SelectControl',
+  label: t('Max'),
+  description: t('Column holding the maximum values'),
+  multi: false,
+  freeForm: false,
+  allowAll: true,
+  commaChoosesOption: false,
+  default: [],
+  optionRenderer: c => /*#__PURE__*/React.createElement(ColumnOption, {
+    showType: true,
+    column: c
+  }),
+  valueRenderer: c => /*#__PURE__*/React.createElement(ColumnOption, {
+    column: c
+  }),
+  valueKey: 'column_name',
+  mapStateToProps: ({
+    datasource,
+    controls
+  }) => ({
+    options: (datasource == null ? void 0 : datasource.columns) || [],
+    queryMode: getQueryMode(controls)
+  }),
+  visibility: isRawMode
+};
 export default {
   controlPanelSections: [sections.legacyTimeseriesTime, {
     label: t('Query'),
     expanded: true,
-    controlSetRows: [['metrics'], ['adhoc_filters'], ['groupby'], ['columns'], ['limit'], [{
+    controlSetRows: [[{
+      name: 'query_mode',
+      config: queryMode
+    }], [{
+      name: 'min',
+      config: { ...all_columns,
+        label: t('Min'),
+        description: t('Column holding the minimum values')
+      }
+    }, {
+      name: 'q1',
+      config: { ...all_columns,
+        label: t('Q1'),
+        description: t('Column holding the first quartile values')
+      }
+    }], [{
+      name: 'mean',
+      config: { ...all_columns,
+        label: t('Mean/Q2'),
+        description: t('Column holding the mean/second quartile values')
+      }
+    }], [{
+      name: 'q3',
+      config: { ...all_columns,
+        label: t('Q3'),
+        description: t('Column holding the third quartile values')
+      }
+    }, {
+      name: 'max',
+      config: all_columns
+    }], ['metrics'], ['adhoc_filters'], ['groupby'], ['columns'], ['limit'], [{
       name: 'whiskerOptions',
       config: {
         type: 'SelectControl',
@@ -30,7 +146,8 @@ export default {
         label: t('Whisker/outlier options'),
         default: 'Tukey',
         description: t('Determines how whiskers and outliers are calculated.'),
-        choices: formatSelectOptions(['Tukey', 'Min/max (no outliers)', '2/98 percentiles', '9/91 percentiles'])
+        choices: formatSelectOptions(['Tukey', 'Min/max (no outliers)', '2/98 percentiles', '9/91 percentiles']),
+        visibility: isAggMode
       }
     }]]
   }, {
@@ -63,12 +180,18 @@ export default {
   controlOverrides: {
     groupby: {
       label: t('Series'),
-      description: t('Categories to group by on the x-axis.')
+      description: t('Categories to group by on the x-axis.'),
+      multi: true
     },
     columns: {
       label: t('Distribute across'),
       multi: true,
-      description: t('Columns to calculate distribution across. Defaults to temporal column if left empty.')
+      description: t('Columns to calculate distribution across. Defaults to temporal column if left empty.'),
+      visibility: isAggMode
+    },
+    metrics: {
+      visibility: isAggMode,
+      validators: []
     }
   }
 };

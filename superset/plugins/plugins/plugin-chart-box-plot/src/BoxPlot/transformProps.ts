@@ -23,6 +23,7 @@ import {
   getMetricLabel,
   getNumberFormatter,
 } from '@superset-ui/core';
+import { QueryMode } from './controlPanel';
 import { BoxPlotQueryFormData } from './types';
 import { EchartsProps } from '../types';
 import { extractGroupbyLabel } from '../utils/series';
@@ -33,6 +34,7 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
   const data: DataRecord[] = queriesData[0].data || [];
   const {
     colorScheme,
+    queryMode,
     groupby = [],
     metrics: formdataMetrics = [],
     numberFormat,
@@ -40,60 +42,94 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
   } = formData as BoxPlotQueryFormData;
   const colorFn = CategoricalColorNamespace.getScale(colorScheme as string);
   const numberFormatter = getNumberFormatter(numberFormat);
-  const metricLabels = formdataMetrics.map(getMetricLabel);
 
-  const transformedData = data
-    .map(datum => {
-      const groupbyLabel = extractGroupbyLabel({ datum, groupby });
-      return metricLabels.map(metric => {
-        const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
+  let transformedData, outlierData;
+  console.log(queriesData);
+  console.log(formData);
+  if (queryMode == QueryMode.raw) {
+    transformedData = data
+      .map(datum => {
+        const groupbyLabel = extractGroupbyLabel({ datum, groupby });
+        console.log(groupbyLabel);
         return {
-          name,
+          name: groupbyLabel,
           value: [
-            datum[`${metric}__min`],
-            datum[`${metric}__q1`],
-            datum[`${metric}__median`],
-            datum[`${metric}__q3`],
-            datum[`${metric}__max`],
-            datum[`${metric}__mean`],
-            datum[`${metric}__count`],
-            datum[`${metric}__outliers`],
+            datum[`min`],
+            datum[`q1`],
+            datum[`mean`],
+            datum[`q3`],
+            datum[`max`],
+            datum[`mean`],
+            1,
+            [],
           ],
           itemStyle: {
             color: colorFn(groupbyLabel),
             opacity: 0.6,
             borderColor: colorFn(groupbyLabel),
           },
-        };
-      });
-    })
-    .flatMap(row => row);
+        }
+      })
+      .flatMap(row => row);
+  }
+  else {
+    const metricLabels = formdataMetrics.map(getMetricLabel);
 
-  const outlierData = data
-    .map(datum => {
-      return metricLabels.map(metric => {
+    transformedData = data
+      .map(datum => {
         const groupbyLabel = extractGroupbyLabel({ datum, groupby });
-        const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
-        // Outlier data is a nested array of numbers (uncommon, therefore no need to add to DataRecordValue)
-        const outlierDatum = (datum[`${metric}__outliers`] || []) as number[];
-        return {
-          name: 'outlier',
-          type: 'scatter',
-          data: outlierDatum.map(val => [name, val]),
-          tooltip: {
-            formatter: (param: { data: [string, number] }) => {
-              const [outlierName, stats] = param.data;
-              const headline = groupby ? `<p><strong>${outlierName}</strong></p>` : '';
-              return `${headline}${numberFormatter(stats)}`;
+        return metricLabels.map(metric => {
+          const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
+          return {
+            name,
+            value: [
+              datum[`${metric}__min`],
+              datum[`${metric}__q1`],
+              datum[`${metric}__median`],
+              datum[`${metric}__q3`],
+              datum[`${metric}__max`],
+              datum[`${metric}__mean`],
+              datum[`${metric}__count`],
+              datum[`${metric}__outliers`],
+            ],
+            itemStyle: {
+              color: colorFn(groupbyLabel),
+              opacity: 0.6,
+              borderColor: colorFn(groupbyLabel),
             },
-          },
-          itemStyle: {
-            color: colorFn(groupbyLabel),
-          },
-        };
-      });
-    })
-    .flat(2);
+          };
+        });
+      })
+      .flatMap(row => row);
+
+    outlierData = data
+      .map(datum => {
+        return metricLabels.map(metric => {
+          const groupbyLabel = extractGroupbyLabel({ datum, groupby });
+          const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
+          // Outlier data is a nested array of numbers (uncommon, therefore no need to add to DataRecordValue)
+          const outlierDatum = (datum[`${metric}__outliers`] || []) as number[];
+          return {
+            name: 'outlier',
+            type: 'scatter',
+            data: outlierDatum.map(val => [name, val]),
+            tooltip: {
+              formatter: (param: { data: [string, number] }) => {
+                const [outlierName, stats] = param.data;
+                const headline = groupby ? `<p><strong>${outlierName}</strong></p>` : '';
+                return `${headline}${numberFormatter(stats)}`;
+              },
+            },
+            itemStyle: {
+              color: colorFn(groupbyLabel),
+            },
+          };
+        });
+      })
+      .flat(2);
+  }
+
+  outlierData = outlierData || [];
 
   let axisLabel;
   if (xTicksLayout === '45°') axisLabel = { rotate: -45 };
@@ -146,17 +182,29 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
               name: string;
             } = param;
             const headline = name ? `<p><strong>${name}</strong></p>` : '';
-            const stats = [
-              `Max: ${numberFormatter(value[5])}`,
-              `3rd Quartile: ${numberFormatter(value[4])}`,
-              `Mean: ${numberFormatter(value[6])}`,
-              `Median: ${numberFormatter(value[3])}`,
-              `1st Quartile: ${numberFormatter(value[2])}`,
-              `Min: ${numberFormatter(value[1])}`,
-              `# Observations: ${numberFormatter(value[7])}`,
-            ];
-            if (value[8].length > 0) {
-              stats.push(`# Outliers: ${numberFormatter(value[8].length)}`);
+            let stats;
+            if (queryMode == QueryMode.raw) {
+              stats = [
+                `Max: ${numberFormatter(value[5])}`,
+                `3rd Quartile: ${numberFormatter(value[4])}`,
+                `Mean: ${numberFormatter(value[6])}`,
+                `1st Quartile: ${numberFormatter(value[2])}`,
+                `Min: ${numberFormatter(value[1])}`,
+              ];
+            }
+            else {
+              stats = [
+                `Max: ${numberFormatter(value[5])}`,
+                `3rd Quartile: ${numberFormatter(value[4])}`,
+                `Mean: ${numberFormatter(value[6])}`,
+                `Median: ${numberFormatter(value[3])}`,
+                `1st Quartile: ${numberFormatter(value[2])}`,
+                `Min: ${numberFormatter(value[1])}`,
+                `# Observations: ${numberFormatter(value[7])}`,
+              ];
+              if (value[8].length > 0) {
+                stats.push(`# Outliers: ${numberFormatter(value[8].length)}`);
+              }
             }
             return headline + stats.join('<br/>');
           },
