@@ -9,7 +9,7 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.core.cache import cache
 from django.db import connections
-from materialized_queries_manager.models import MaterializedQuery
+from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
 
 from .models import AchillesResults, AchillesResultsArchive
@@ -25,7 +25,9 @@ def update_achilles_results_data(
     cache.incr("celery_workers_updating", ignore_key_check=True)
 
     # several workers can update records concurrently -> same as -> several threads can read from the same file
-    read_lock = RWLock(cache.client.get_client(), "celery_worker_updating", RWLock.READ)
+    read_lock = RWLock(
+        cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
+    )
     read_lock.acquire()
 
     # but only one worker can make updates associated to a specific data source at the same time
@@ -117,18 +119,6 @@ def update_achilles_results_data(
     # The lines below can be used to later update materialized views of each chart
     # To be more efficient, they should only be updated when the is no more workers inserting records
     if not cache.decr("celery_workers_updating"):
-        # Only one worker can update the materialized views at the same time -> same as -> only one thread
-        #  can write to a file at the same time
-        write_lock = RWLock(
-            cache.client.get_client(), "celery_worker_updating", RWLock.WRITE
-        )
-        write_lock.acquire()
-
-        logger.info("Updating materialized views [datasource %d]", db_id)
-        with closing(connections["achilles"].cursor()) as cursor:
-            for materialized_query in MaterializedQuery.objects.all():
-                cursor.execute(f"REFRESH MATERIALIZED VIEW {materialized_query.name}")
-
-        write_lock.release()
+        refresh(logger, db_id)
 
     logger.info("Done [datasource %d]", db_id)
