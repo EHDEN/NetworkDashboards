@@ -57,7 +57,7 @@ def create_materialized_view(  # noqa
                     # don't drop the old view yet. rename the view to a random name
                     #  just as a backup if there is something wrong with the new
                     #  query or name
-                    allowed_characters = string.ascii_letters + string.digits + "_"
+                    allowed_characters = string.ascii_letters + "_"
                     tmp_name = "".join(
                         random.choice(allowed_characters) for _ in range(30)
                     )

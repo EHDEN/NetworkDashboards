@@ -1,5 +1,3 @@
-from contextlib import closing
-
 from django.contrib import admin, messages
 from django.contrib.admin import helpers
 from django.contrib.admin.exceptions import DisallowedModelAdminToField
@@ -8,7 +6,6 @@ from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
 from django.contrib.admin.utils import flatten_fieldsets, quote, unquote
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
-from django.db import connections, ProgrammingError
 from django.forms import all_valid
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -30,17 +27,6 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         "name",
         "dashboards",
     )
-
-    def delete_queryset(self, request, queryset):
-        with closing(connections["achilles"].cursor()) as cursor:
-            for obj in queryset:
-                try:
-                    cursor.execute(
-                        f"DROP MATERIALIZED VIEW {obj.name}"
-                    )  # Ignore if the view doesn't exist
-                except ProgrammingError:
-                    pass
-        super().delete_queryset(request, queryset)
 
     def _changeform_view(self, request, object_id, form_url, extra_context):  # noqa
         # Copied from django.contrib.admin.options.py
