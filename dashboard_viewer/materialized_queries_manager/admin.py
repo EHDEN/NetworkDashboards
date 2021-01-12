@@ -23,10 +23,18 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
     save_as_continue = False
     save_as = False
 
-    list_display = (
-        "name",
-        "dashboards",
-    )
+    list_display = ("matviewname",)
+
+    def delete_queryset(self, _, queryset):
+        from django.db import connections  # noqa
+
+        names = [row.matviewname for row in queryset]
+        with connections["achilles"].cursor() as cursor:
+            cursor.execute(
+                f"""
+                DROP MATERIALIZED VIEW {','.join(names)}
+                """
+            )
 
     def _changeform_view(self, request, object_id, form_url, extra_context):  # noqa
         # Copied from django.contrib.admin.options.py
@@ -63,12 +71,6 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
         ModelForm = self.get_form(request, obj, change=not add)
         if request.method == "POST":
-            old_values = None
-            if obj is not None:
-                old_values = {
-                    "name": obj.name,
-                    "query": obj.query,
-                }
             form = ModelForm(request.POST, request.FILES, instance=obj)
             form_validated = form.is_valid()
             if form_validated:
@@ -81,7 +83,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
             if all_valid(formsets) and form_validated:
                 self.background_task = create_materialized_view.delay(
                     request.user.pk,
-                    old_values,
+                    serializers.serialize("json", [obj] if obj else []),
                     serializers.serialize("json", [new_object]),
                     self.construct_change_message(request, form, formsets, add),
                 )
