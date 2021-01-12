@@ -8,19 +8,48 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='MaterializedQuery',
+            name="MaterializedQuery",
             fields=[
-                ('matviewname', models.CharField(max_length=100, primary_key=True, serialize=False, unique=True, validators=[django.core.validators.RegexValidator('^[_0-9a-zA-Z]+$', 'Only alphanumeric characters and the character "_" are allowed.')])),
-                ('definition', models.TextField(validators=[django.core.validators.RegexValidator('--', 'Single line comments are not allowed', inverse_match=True), django.core.validators.RegexValidator('/\\*.*?\\*/', 'Block comments are not allowed', inverse_match=True)])),
+                (
+                    "matviewname",
+                    models.CharField(
+                        max_length=100,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                "^[_0-9a-zA-Z]+$",
+                                '"Only alphanumeric characters and the character "_" are allowed.',
+                            ),
+                        ],
+                    ),
+                ),
+                (
+                    "definition",
+                    models.TextField(
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                "--",
+                                "Single line comments are not allowed",
+                                inverse_match=True,
+                            ),
+                            django.core.validators.RegexValidator(
+                                "/\\*.*?\\*/",
+                                "Block comments are not allowed",
+                                inverse_match=True,
+                            ),
+                        ],
+                    ),
+                ),
             ],
             options={
-                'db_table': 'pg_matviews',
-                'managed': False,
+                "db_table": "pg_matviews",
+                "managed": False,
             },
         ),
     ]
