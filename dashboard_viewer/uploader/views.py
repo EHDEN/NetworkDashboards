@@ -196,53 +196,15 @@ def _extract_data_from_uploaded_file(request):
         )
         return None
 
-    return_value = {"achilles_results": achilles_results}
-
-    errors = []
-
-    # check mandatory dates and versions
-    output = _check_correct(
-        [
-            "Generation date (analysis_id=0, stratum3)",
-            "Source release date (analysis_id=5000, stratum_2)",
-            "CDM release date (analysis_id=5000, stratum_3)",
-            "CDM version (analysis_id=0, stratum_1)",
-            "R Package version (analysis_id=5000, stratum_4)",
-            "Vocabulary version (analysis_id=5000, stratum_5)",
-        ],
-        [
-            (analysis_0, "stratum_3"),
-            (analysis_5000, "stratum_2"),
-            (analysis_5000, "stratum_3"),
-            (analysis_5000, "stratum_4"),
-            (analysis_0, "stratum_2"),
-            (analysis_5000, "stratum_5"),
-        ],
-        lambda value: not pandas.isna(value) and value,
-        lambda value: value[0].loc[0, value[1]],
-    )
-    if isinstance(output, str):
-        errors.append(f"The field{output} mandatory.")
-    else:
-        return_value["generation_date"] = output[0]
-        return_value["source_release_date"] = output[1]
-        return_value["cdm_release_date"] = output[2]
-        return_value["cdm_version"] = output[3]
-        return_value["r_package_version"] = output[4]
-        return_value["vocabulary_version"] = output[5]
-
-    if errors:
-        messages.error(
-            request,
-            mark_safe(
-                " ".join(errors) + "<br/>Try (re)running the plugin "
-                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
-                " on your database."
-            ),
-        )
-        return None
-
-    return return_value
+    return {
+        "achilles_results": achilles_results,
+        "generation_date": analysis_0.loc[0, "stratum_3"],
+        "source_release_date": analysis_5000.loc[0, "stratum_2"],
+        "cdm_release_date": analysis_5000.loc[0, "stratum_3"],
+        "cdm_version": analysis_5000.loc[0, "stratum_4"],
+        "r_package_version": analysis_0.loc[0, "stratum_2"],
+        "vocabulary_version": analysis_5000.loc[0, "stratum_5"],
+    }
 
 
 @csrf_exempt
