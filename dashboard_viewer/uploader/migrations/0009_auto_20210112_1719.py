@@ -6,23 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('uploader', '0008_auto_20201217_1425'),
+        ("uploader", "0008_auto_20201217_1425"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='databasetype',
-            name='type',
-            field=models.CharField(help_text='Defines the database type.', max_length=100, unique=True),
+            model_name="databasetype",
+            name="type",
+            field=models.CharField(
+                help_text="Defines the database type.", max_length=100, unique=True
+            ),
         ),
         migrations.AlterField(
-            model_name='datasource',
-            name='database_type',
-            field=models.CharField(help_text='Type of the data source. You can create a new type.', max_length=100),
+            model_name="datasource",
+            name="database_type",
+            field=models.CharField(
+                help_text="Type of the data source. You can create a new type.",
+                max_length=100,
+            ),
         ),
         migrations.AlterField(
-            model_name='datasource',
-            name='name',
-            field=models.CharField(help_text='Name of the data source.', max_length=100, unique=True),
+            model_name="datasource",
+            name="name",
+            field=models.CharField(
+                help_text="Name of the data source.", max_length=100, unique=True
+            ),
         ),
     ]
