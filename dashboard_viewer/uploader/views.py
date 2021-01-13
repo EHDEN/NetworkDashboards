@@ -160,29 +160,25 @@ def _extract_data_from_uploaded_file(request):
 
         return None
 
-    output = _check_correct(
-        ["0", "5000"],
-        [0, 5000],
-        lambda e: not e.empty,
-        lambda e: achilles_results[achilles_results.analysis_id == e],
-    )
-    if isinstance(output, str):
+    analysis_0 = achilles_results[achilles_results.analysis_id == 0]
+    if analysis_0.empty:
         messages.error(
             request,
             mark_safe(
-                f"Analysis id{output} missing. Try (re)running the plugin "
+                "Analysis id 0 is missing. Try (re)running the plugin "
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 " on your database."
             ),
         )
+
         return None
 
-    analysis_0 = output[0].reset_index()
-    analysis_5000 = output[1].reset_index()
+    analysis_0 = analysis_0.reset_index()
+    analysis_5000 = achilles_results[achilles_results.analysis_id == 5000].reset_index()
 
     output = _check_correct(
-        ["0", "5000"],
-        [analysis_0, analysis_5000],
+        ["0"] + (["5000"] if not analysis_5000.empty else []),
+        [analysis_0] + ([analysis_5000] if not analysis_5000.empty else []),
         lambda e: len(e) == 1,
     )
     if isinstance(output, str):
@@ -196,53 +192,23 @@ def _extract_data_from_uploaded_file(request):
         )
         return None
 
-    return_value = {"achilles_results": achilles_results}
-
-    errors = []
-
-    # check mandatory dates and versions
-    output = _check_correct(
-        [
-            "Generation date (analysis_id=0, stratum3)",
-            "Source release date (analysis_id=5000, stratum_2)",
-            "CDM release date (analysis_id=5000, stratum_3)",
-            "CDM version (analysis_id=0, stratum_1)",
-            "R Package version (analysis_id=5000, stratum_4)",
-            "Vocabulary version (analysis_id=5000, stratum_5)",
-        ],
-        [
-            (analysis_0, "stratum_3"),
-            (analysis_5000, "stratum_2"),
-            (analysis_5000, "stratum_3"),
-            (analysis_5000, "stratum_4"),
-            (analysis_0, "stratum_2"),
-            (analysis_5000, "stratum_5"),
-        ],
-        lambda value: not pandas.isna(value) and value,
-        lambda value: value[0].loc[0, value[1]],
-    )
-    if isinstance(output, str):
-        errors.append(f"The field{output} mandatory.")
-    else:
-        return_value["generation_date"] = output[0]
-        return_value["source_release_date"] = output[1]
-        return_value["cdm_release_date"] = output[2]
-        return_value["cdm_version"] = output[3]
-        return_value["r_package_version"] = output[4]
-        return_value["vocabulary_version"] = output[5]
-
-    if errors:
-        messages.error(
-            request,
-            mark_safe(
-                " ".join(errors) + "<br/>Try (re)running the plugin "
-                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
-                " on your database."
-            ),
-        )
-        return None
-
-    return return_value
+    return {
+        "achilles_results": achilles_results,
+        "generation_date": analysis_0.loc[0, "stratum_3"],
+        "source_release_date": analysis_5000.loc[0, "stratum_2"]
+        if not analysis_5000.empty
+        else None,
+        "cdm_release_date": analysis_5000.loc[0, "stratum_3"]
+        if not analysis_5000.empty
+        else None,
+        "cdm_version": analysis_5000.loc[0, "stratum_4"]
+        if not analysis_5000.empty
+        else None,
+        "r_package_version": analysis_0.loc[0, "stratum_2"],
+        "vocabulary_version": analysis_5000.loc[0, "stratum_5"]
+        if not analysis_5000.empty
+        else None,
+    }
 
 
 @csrf_exempt
