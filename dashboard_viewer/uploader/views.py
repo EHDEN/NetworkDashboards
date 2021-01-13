@@ -160,36 +160,33 @@ def _extract_data_from_uploaded_file(request):
 
         return None
 
-    output = _check_correct(
-        ["0", "5000"],
-        [0, 5000],
-        lambda e: not e.empty,
-        lambda e: achilles_results[achilles_results.analysis_id == e],
-    )
-    if isinstance(output, str):
+    analysis_0 = achilles_results[achilles_results.analysis_id == 0]
+    if analysis_0.empty:
+        filename_display = f' on the "{filename}" file' if filename is not None else ""
         messages.error(
             request,
             mark_safe(
-                f"Analysis id{output} missing. Try (re)running the plugin "
+                f"Analysis id 0 is missing{filename_display}. Try (re)running the plugin "
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 " on your database."
             ),
         )
+
         return None
 
-    analysis_0 = output[0].reset_index()
-    analysis_5000 = output[1].reset_index()
+    analysis_0 = analysis_0.reset_index()
+    analysis_5000 = achilles_results[achilles_results.analysis_id == 5000].reset_index()
 
     output = _check_correct(
-        ["0", "5000"],
-        [analysis_0, analysis_5000],
+        ["0"] + (["5000"] if not analysis_5000.empty else []),
+        [analysis_0] + ([analysis_5000] if not analysis_5000.empty else []),
         lambda e: len(e) == 1,
     )
     if isinstance(output, str):
         messages.error(
             request,
             mark_safe(
-                f"Analysis id{output} duplicated on multiple rows. Try (re)running the plugin "
+                f"Analysis id{output} duplicated on multiple rows{filename_display}. Try (re)running the plugin "
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 " on your database."
             ),
