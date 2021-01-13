@@ -165,7 +165,7 @@ def _extract_data_from_uploaded_file(request):
         messages.error(
             request,
             mark_safe(
-                f"Analysis id 0 is missing. Try (re)running the plugin "
+                "Analysis id 0 is missing. Try (re)running the plugin "
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 " on your database."
             ),
