@@ -45,7 +45,7 @@ def handle(request):
         if achilles_results is None:
             return None
 
-        data = _extract_mandatory_fields_from_achilles_results(
+        data = _extract_fields_from_achilles_results(
             request, achilles_results
         )
 
@@ -142,7 +142,7 @@ def _handle_zip(request):
 
     if achilles_results is None:
         return None
-    data = _extract_mandatory_fields_from_achilles_results(
+    data = _extract_fields_from_achilles_results(
         request, achilles_results, results_filename
     )
     if data is None:
@@ -289,7 +289,7 @@ def _read_dataframe_from_csv(request, file, allowed_headers, filename=None):
     return achilles_results
 
 
-def _extract_mandatory_fields_from_achilles_results(
+def _extract_fields_from_achilles_results(
     request, achilles_results, filename=None
 ):
     """
@@ -300,7 +300,7 @@ def _extract_mandatory_fields_from_achilles_results(
     :param achilles_results: dataframe extract from the csv
     :param filename: name of the file being processed
     :return: If there is some field with errors then this function returns None.
-     If not, a dictionary is returned with the several mandatory fields
+     If not, a dictionary is returned with the several fields
      for the UploadHistory model and the achilles_results dataframe.
     """
     output = _check_correct(
@@ -342,51 +342,13 @@ def _extract_mandatory_fields_from_achilles_results(
         )
         return None
 
-    # check mandatory dates
-    output = _check_correct(
-        [
-            "Generation date (analysis_id=0, stratum3)",
-            "Source release date (analysis_id=5000, stratum_2)",
-            "CDM release date (analysis_id=5000, stratum_3)",
-            "CDM version (analysis_id=5000, stratum_4)",
-            "R Package version (analysis_id=0, stratum_2)",
-            "Vocabulary version (analysis_id=5000, stratum_5)",
-        ],
-        [
-            (analysis_0, "stratum_3"),
-            (analysis_5000, "stratum_2"),
-            (analysis_5000, "stratum_3"),
-            (analysis_5000, "stratum_4"),
-            (analysis_0, "stratum_2"),
-            (analysis_5000, "stratum_5"),
-        ],
-        lambda value: not pandas.isna(value) and value,
-        lambda value: value[0].loc[0, value[1]],
-    )
-
-    if isinstance(output, str):
-        messages.error(
-            request,
-            mark_safe(
-                f"The field{output} mandatory{filename_display}. Try (re)running the plugin "
-                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
-                " on your database."
-            ),
-        )
-        return None
-
     return {
-        key: output[i]
-        for i, key in enumerate(
-            [
-                "generation_date",
-                "source_release_date",
-                "cdm_release_date",
-                "cdm_version",
-                "r_package_version",
-                "vocabulary_version",
-            ]
-        )
+        "generation_date": analysis_0.loc[0, "stratum_3"],
+        "source_release_date": analysis_5000.loc[0, "stratum_2"],
+        "cdm_release_date": analysis_5000.loc[0, "stratum_3"],
+        "cdm_version": analysis_5000.loc[0, "stratum_4"],
+        "r_package_version": analysis_0.loc[0, "stratum_2"],
+        "vocabulary_version": analysis_5000.loc[0, "stratum_5"],
     }
 
 
