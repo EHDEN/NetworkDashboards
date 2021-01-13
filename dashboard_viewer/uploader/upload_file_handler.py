@@ -299,19 +299,13 @@ def _extract_fields_from_achilles_results(request, achilles_results, filename=No
      If not, a dictionary is returned with the several fields
      for the UploadHistory model and the achilles_results dataframe.
     """
-    output = _check_correct(
-        ["0", "5000"],
-        [0, 5000],
-        lambda e: not e.empty,
-        lambda e: achilles_results[achilles_results.analysis_id == e],
-    )
-
-    filename_display = f' on the "{filename}" file' if filename is not None else ""
-    if isinstance(output, str):
+    analysis_0 = achilles_results[achilles_results.analysis_id == 0]
+    if achilles_results[achilles_results.analysis_id == 0].empty:
+        filename_display = f' on the "{filename}" file' if filename is not None else ""
         messages.error(
             request,
             mark_safe(
-                f"Analysis id{output} missing{filename_display}. Try (re)running the plugin "
+                f"Analysis id 0 is missing{filename_display}. Try (re)running the plugin "
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 " on your database."
             ),
@@ -319,12 +313,12 @@ def _extract_fields_from_achilles_results(request, achilles_results, filename=No
 
         return None
 
-    analysis_0 = output[0].reset_index()
-    analysis_5000 = output[1].reset_index()
+    analysis_0 = analysis_0.reset_index()
+    analysis_5000 = achilles_results[achilles_results.analysis_id == 5000].reset_index()
 
     output = _check_correct(
-        ["0", "5000"],
-        [analysis_0, analysis_5000],
+        ["0"] + (["5000"] if not analysis_5000.empty else []),
+        [analysis_0] + ([analysis_5000] if not analysis_5000.empty else []),
         lambda e: len(e) == 1,
     )
     if isinstance(output, str):
