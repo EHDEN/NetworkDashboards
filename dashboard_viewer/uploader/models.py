@@ -85,11 +85,11 @@ class UploadHistory(models.Model):
 
     data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
     upload_date = models.DateTimeField()
-    r_package_version = models.CharField(max_length=50)
-    generation_date = models.CharField(max_length=50)
+    r_package_version = models.CharField(max_length=50, null=True)
+    generation_date = models.CharField(max_length=50, null=True)
     cdm_release_date = models.CharField(max_length=50, null=True)
-    cdm_version = models.CharField(max_length=50)
-    vocabulary_version = models.CharField(max_length=50)
+    cdm_version = models.CharField(max_length=50, null=True)
+    vocabulary_version = models.CharField(max_length=50, null=True)
 
     def __repr__(self):
         return self.__str__()

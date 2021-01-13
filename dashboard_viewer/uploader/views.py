@@ -162,11 +162,10 @@ def _extract_data_from_uploaded_file(request):
 
     analysis_0 = achilles_results[achilles_results.analysis_id == 0]
     if analysis_0.empty:
-        filename_display = f' on the "{filename}" file' if filename is not None else ""
         messages.error(
             request,
             mark_safe(
-                f"Analysis id 0 is missing{filename_display}. Try (re)running the plugin "
+                f"Analysis id 0 is missing. Try (re)running the plugin "
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 " on your database."
             ),
@@ -186,7 +185,7 @@ def _extract_data_from_uploaded_file(request):
         messages.error(
             request,
             mark_safe(
-                f"Analysis id{output} duplicated on multiple rows{filename_display}. Try (re)running the plugin "
+                f"Analysis id{output} duplicated on multiple rows. Try (re)running the plugin "
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 " on your database."
             ),
@@ -196,11 +195,19 @@ def _extract_data_from_uploaded_file(request):
     return {
         "achilles_results": achilles_results,
         "generation_date": analysis_0.loc[0, "stratum_3"],
-        "source_release_date": analysis_5000.loc[0, "stratum_2"],
-        "cdm_release_date": analysis_5000.loc[0, "stratum_3"],
-        "cdm_version": analysis_5000.loc[0, "stratum_4"],
+        "source_release_date": analysis_5000.loc[0, "stratum_2"]
+        if not analysis_5000.empty
+        else None,
+        "cdm_release_date": analysis_5000.loc[0, "stratum_3"]
+        if not analysis_5000.empty
+        else None,
+        "cdm_version": analysis_5000.loc[0, "stratum_4"]
+        if not analysis_5000.empty
+        else None,
         "r_package_version": analysis_0.loc[0, "stratum_2"],
-        "vocabulary_version": analysis_5000.loc[0, "stratum_5"],
+        "vocabulary_version": analysis_5000.loc[0, "stratum_5"]
+        if not analysis_5000.empty
+        else None,
     }
 
 

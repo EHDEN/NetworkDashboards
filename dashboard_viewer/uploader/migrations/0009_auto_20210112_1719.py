@@ -32,4 +32,24 @@ class Migration(migrations.Migration):
                 help_text="Name of the data source.", max_length=100, unique=True
             ),
         ),
+        migrations.AlterField(
+            model_name="uploadhistory",
+            name="cdm_version",
+            field=models.CharField(max_length=50, null=True),
+        ),
+        migrations.AlterField(
+            model_name="uploadhistory",
+            name="generation_date",
+            field=models.CharField(max_length=50, null=True),
+        ),
+        migrations.AlterField(
+            model_name="uploadhistory",
+            name="r_package_version",
+            field=models.CharField(max_length=50, null=True),
+        ),
+        migrations.AlterField(
+            model_name="uploadhistory",
+            name="vocabulary_version",
+            field=models.CharField(max_length=50, null=True),
+        ),
     ]
