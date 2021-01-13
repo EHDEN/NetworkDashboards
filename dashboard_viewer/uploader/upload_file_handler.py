@@ -45,9 +45,7 @@ def handle(request):
         if achilles_results is None:
             return None
 
-        data = _extract_fields_from_achilles_results(
-            request, achilles_results
-        )
+        data = _extract_fields_from_achilles_results(request, achilles_results)
 
         if data is None:
             return None
@@ -289,9 +287,7 @@ def _read_dataframe_from_csv(request, file, allowed_headers, filename=None):
     return achilles_results
 
 
-def _extract_fields_from_achilles_results(
-    request, achilles_results, filename=None
-):
+def _extract_fields_from_achilles_results(request, achilles_results, filename=None):
     """
     On the achilles_results.csv file there are several fields on the analysis id
      0 and 5000 that are used to build a UploadHistory record.
