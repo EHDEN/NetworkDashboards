@@ -300,7 +300,7 @@ def _extract_fields_from_achilles_results(request, achilles_results, filename=No
      for the UploadHistory model and the achilles_results dataframe.
     """
     analysis_0 = achilles_results[achilles_results.analysis_id == 0]
-    if achilles_results[achilles_results.analysis_id == 0].empty:
+    if analysis_0.empty:
         filename_display = f' on the "{filename}" file' if filename is not None else ""
         messages.error(
             request,
@@ -322,6 +322,7 @@ def _extract_fields_from_achilles_results(request, achilles_results, filename=No
         lambda e: len(e) == 1,
     )
     if isinstance(output, str):
+        filename_display = f' on the "{filename}" file' if filename is not None else ""
         messages.error(
             request,
             mark_safe(
@@ -334,11 +335,19 @@ def _extract_fields_from_achilles_results(request, achilles_results, filename=No
 
     return {
         "generation_date": analysis_0.loc[0, "stratum_3"],
-        "source_release_date": analysis_5000.loc[0, "stratum_2"],
-        "cdm_release_date": analysis_5000.loc[0, "stratum_3"],
-        "cdm_version": analysis_5000.loc[0, "stratum_4"],
+        "source_release_date": analysis_5000.loc[0, "stratum_2"]
+        if not analysis_5000.empty
+        else None,
+        "cdm_release_date": analysis_5000.loc[0, "stratum_3"]
+        if not analysis_5000.empty
+        else None,
+        "cdm_version": analysis_5000.loc[0, "stratum_4"]
+        if not analysis_5000.empty
+        else None,
         "r_package_version": analysis_0.loc[0, "stratum_2"],
-        "vocabulary_version": analysis_5000.loc[0, "stratum_5"],
+        "vocabulary_version": analysis_5000.loc[0, "stratum_5"]
+        if not analysis_5000.empty
+        else None,
     }
 
 
