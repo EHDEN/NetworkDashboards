@@ -21,7 +21,7 @@ class DatabaseType(models.Model):
         db_table = "database_type"
 
     type = models.CharField(
-        max_length=40, unique=True, help_text="Defines the database type."
+        max_length=100, unique=True, help_text="Defines the database type."
     )
 
     def __str__(self):
@@ -37,7 +37,7 @@ class DataSource(models.Model):
         db_table = "data_source"
 
     name = models.CharField(
-        max_length=40, unique=True, help_text="Name of the data source."
+        max_length=100, unique=True, help_text="Name of the data source."
     )
     acronym = models.CharField(
         max_length=50,
@@ -50,7 +50,7 @@ class DataSource(models.Model):
         null=True,
     )
     database_type = models.CharField(
-        max_length=40, help_text="Type of the data source. You can create a new type."
+        max_length=100, help_text="Type of the data source. You can create a new type."
     )
     country = models.ForeignKey(
         Country,
@@ -85,11 +85,11 @@ class UploadHistory(models.Model):
 
     data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
     upload_date = models.DateTimeField()
-    r_package_version = models.CharField(max_length=50)
-    generation_date = models.CharField(max_length=50)
+    r_package_version = models.CharField(max_length=50, null=True)
+    generation_date = models.CharField(max_length=50, null=True)
     cdm_release_date = models.CharField(max_length=50, null=True)
-    cdm_version = models.CharField(max_length=50)
-    vocabulary_version = models.CharField(max_length=50)
+    cdm_version = models.CharField(max_length=50, null=True)
+    vocabulary_version = models.CharField(max_length=50, null=True)
 
     def __repr__(self):
         return self.__str__()
