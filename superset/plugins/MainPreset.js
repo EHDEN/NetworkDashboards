@@ -56,16 +56,16 @@ import {
 import { DeckGLChartPreset } from '@superset-ui/legacy-preset-chart-deckgl';
 import {
   EchartsPieChartPlugin,
+  //EchartsBoxPlotChartPlugin,
   EchartsTimeseriesChartPlugin,
 } from '@superset-ui/plugin-chart-echarts';
 import {
   EchartsBoxPlotChartPlugin,
 } from '@superset-ui/plugin-chart-box-plot';
 import {
-  AntdRangeFilterPlugin,
   AntdSelectFilterPlugin,
-} from '@superset-ui/plugin-filter-antd';
-
+  AntdRangeFilterPlugin,
+} from 'src/filters/components/';
 import FilterBoxChartPlugin from '../FilterBox/FilterBoxChartPlugin';
 import TimeTableChartPlugin from '../TimeTable/TimeTableChartPlugin';
 
