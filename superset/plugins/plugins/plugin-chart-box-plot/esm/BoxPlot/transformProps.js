@@ -76,32 +76,30 @@ export default function transformProps(chartProps) {
         };
       });
     }).flatMap(row => row);
-    outlierData = data.map(datum => {
-      return metricLabels.map(metric => {
-        const groupbyLabel = extractGroupbyLabel({
-          datum,
-          groupby
-        });
-        const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`; // Outlier data is a nested array of numbers (uncommon, therefore no need to add to DataRecordValue)
-
-        const outlierDatum = datum[`${metric}__outliers`] || [];
-        return {
-          name: 'outlier',
-          type: 'scatter',
-          data: outlierDatum.map(val => [name, val]),
-          tooltip: {
-            formatter: param => {
-              const [outlierName, stats] = param.data;
-              const headline = groupby ? `<p><strong>${outlierName}</strong></p>` : '';
-              return `${headline}${numberFormatter(stats)}`;
-            }
-          },
-          itemStyle: {
-            color: colorFn(groupbyLabel)
-          }
-        };
+    outlierData = data.map(datum => metricLabels.map(metric => {
+      const groupbyLabel = extractGroupbyLabel({
+        datum,
+        groupby
       });
-    }).flat(2);
+      const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`; // Outlier data is a nested array of numbers (uncommon, therefore no need to add to DataRecordValue)
+
+      const outlierDatum = datum[`${metric}__outliers`] || [];
+      return {
+        name: 'outlier',
+        type: 'scatter',
+        data: outlierDatum.map(val => [name, val]),
+        tooltip: {
+          formatter: param => {
+            const [outlierName, stats] = param.data;
+            const headline = groupby ? `<p><strong>${outlierName}</strong></p>` : '';
+            return `${headline}${numberFormatter(stats)}`;
+          }
+        },
+        itemStyle: {
+          color: colorFn(groupbyLabel)
+        }
+      };
+    })).flat(2);
   }
 
   outlierData = outlierData || [];

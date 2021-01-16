@@ -100,8 +100,8 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
       .flatMap(row => row);
 
     outlierData = data
-      .map(datum => {
-        return metricLabels.map(metric => {
+      .map(datum =>
+        metricLabels.map(metric => {
           const groupbyLabel = extractGroupbyLabel({ datum, groupby });
           const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
           // Outlier data is a nested array of numbers (uncommon, therefore no need to add to DataRecordValue)
@@ -121,8 +121,8 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
               color: colorFn(groupbyLabel),
             },
           };
-        });
-      })
+        }),
+      )
       .flat(2);
   }
 

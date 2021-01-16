@@ -83,6 +83,7 @@ export default function buildQuery(formData) {
     return [{ ...baseQueryObject,
       is_timeseries: distributionColumns.length === 0,
       groupby: (groupby || []).concat(distributionColumns),
+      columns: [],
       post_processing: [{
         operation: 'boxplot',
         options: {
