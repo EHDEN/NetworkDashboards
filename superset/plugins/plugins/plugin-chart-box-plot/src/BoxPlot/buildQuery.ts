@@ -35,6 +35,25 @@ export default function buildQuery(formData: BoxPlotQueryFormData) {
         max,
       } = formData;
 
+      if (groupby.length == 0) {
+        throw new Error(`Error: No series column defined.`);
+      }
+      else if (groupby.length > 1) {
+        throw new Error(`Error: Only one series column should be provided.`);
+      }
+
+      const missing_columns = ['min', 'q1', 'mean', 'q3', 'max']
+        .filter(c => !formData[c] || Array.isArray(formData[c]))
+        .map(c => c.toUpperCase());
+      if (missing_columns.length > 0) {
+        if (missing_columns.length > 1) {
+          throw new Error(`Error: Columns ${missing_columns.slice(0, missing_columns.length - 1).join(', ')} and ${missing_columns[missing_columns.length - 1]} are not defined.`);
+        }
+        else {
+          throw new Error(`Error: Column ${missing_columns[0]} is not defined.`);
+        }
+      }
+
       return [
         {
           ...baseQueryObject,
