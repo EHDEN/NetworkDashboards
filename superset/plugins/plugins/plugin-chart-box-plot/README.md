@@ -2,6 +2,8 @@
 
 Box Plot Chart with a raw mode. Based on the Box Plot present [here](https://github.com/apache-superset/superset-ui/tree/v0.16.8/plugins/plugin-chart-echarts)
 
+To check if there are changes on the original repo you can use the `has_changes.py` script.
+
 [![Version](https://img.shields.io/npm/v/@superset-ui/plugin-chart-echarts.svg?style=flat-square)](https://www.npmjs.com/package/@superset-ui/plugin-chart-echarts)
 [![David (path)](https://img.shields.io/david/apache-superset/superset-ui.svg?path=packages%2Fsuperset-ui-plugin-chart-echarts&style=flat-square)](https://david-dm.org/apache-superset/superset-ui?path=packages/superset-ui-plugin-chart-echarts)
 
