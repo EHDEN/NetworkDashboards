@@ -1,7 +1,9 @@
 from contextlib import closing
 
 from django.core.validators import RegexValidator
-from django.db import connections, models
+from django.db import connections, models, ProgrammingError
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 
 class MaterializedQuery(models.Model):
@@ -35,14 +37,18 @@ class MaterializedQuery(models.Model):
         )
     )
 
-    def delete(self, using=None, keep_parents=False):
-        super().delete(using, keep_parents)
-
-        with closing(connections["achilles"].cursor()) as cursor:
-            cursor.execute(f"DROP MATERIALIZED VIEW {self.name}")
-
     def __repr__(self):
         return self.__str__()
 
     def __str__(self):
         return self.name
+
+
+@receiver(post_delete, sender=MaterializedQuery)
+def drop_materialized_view(sender, **kwargs):  # noqa
+    instance = kwargs["instance"]
+    with closing(connections["achilles"].cursor()) as cursor:
+        try:
+            cursor.execute(f"DROP MATERIALIZED VIEW {instance.name}")
+        except ProgrammingError:
+            pass  # Ignore if the view doesn't exist
