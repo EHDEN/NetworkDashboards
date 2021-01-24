@@ -45,18 +45,26 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
 
   let transformedData, outlierData;
   if (queryMode == QueryMode.raw) {
+    const {
+      min,
+      q1,
+      mean,
+      q3,
+      max,
+    } = formData as BoxPlotQueryFormData;
+
     transformedData = data
       .map(datum => {
         const groupbyLabel = extractGroupbyLabel({ datum, groupby });
         return {
           name: groupbyLabel,
           value: [
-            datum[`min`],
-            datum[`q1`],
-            datum[`mean`],
-            datum[`q3`],
-            datum[`max`],
-            datum[`mean`],
+            datum[min],
+            datum[q1],
+            datum[mean],
+            datum[q3],
+            datum[max],
+            datum[mean],
             1,
             [],
           ],
