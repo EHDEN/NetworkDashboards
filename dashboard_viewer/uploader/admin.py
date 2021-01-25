@@ -12,8 +12,7 @@ from .actions import custom_delete_selected
 from .models import Country, DatabaseType, DataSource, UploadHistory
 from .tasks import delete_datasource
 
-
-IS_POPUP_VAR = '_popup'
+IS_POPUP_VAR = "_popup"
 
 
 admin.site.register(Country)
@@ -44,9 +43,7 @@ class DataSourceAdmin(admin.ModelAdmin):
         return actions
 
     def delete_model(self, request, obj):
-        delete_datasource.delay(
-            serializers.serialize("json", [obj])
-        )
+        delete_datasource.delay(serializers.serialize("json", [obj]))
 
     def response_delete(self, request, obj_display, obj_id):
         """
@@ -57,17 +54,25 @@ class DataSourceAdmin(admin.ModelAdmin):
         opts = self.model._meta
 
         if IS_POPUP_VAR in request.POST:
-            popup_response_data = json.dumps({
-                "action": "delete",
-                "value": str(obj_id),
-            })
-            return TemplateResponse(request, self.popup_response_template or [
-                "admin/%s/%s/popup_response.html" % (opts.app_label, opts.model_name),
-                "admin/%s/popup_response.html" % opts.app_label,
-                "admin/popup_response.html",
-                ], {
-                                        "popup_response_data": popup_response_data,
-                                    })
+            popup_response_data = json.dumps(
+                {
+                    "action": "delete",
+                    "value": str(obj_id),
+                }
+            )
+            return TemplateResponse(
+                request,
+                self.popup_response_template
+                or [
+                    "admin/%s/%s/popup_response.html"
+                    % (opts.app_label, opts.model_name),
+                    "admin/%s/popup_response.html" % opts.app_label,
+                    "admin/popup_response.html",
+                ],
+                {
+                    "popup_response_data": popup_response_data,
+                },
+            )
 
         self.message_user(
             request,
@@ -75,18 +80,19 @@ class DataSourceAdmin(admin.ModelAdmin):
             _(
                 'The %(name)s "%(obj)s" is being deleted on background. '
                 "In a few minutes it will stop appearing on the objects list."
-            ) % {
+            )
+            % {
                 "name": opts.verbose_name,
                 "obj": obj_display,
             },
             messages.SUCCESS,
-            )
+        )
 
         if self.has_change_permission(request, None):
             post_url = reverse(
                 "admin:%s_%s_changelist" % (opts.app_label, opts.model_name),
                 current_app=self.admin_site.name,
-                )
+            )
             preserved_filters = self.get_preserved_filters(request)
             post_url = add_preserved_filters(
                 {"preserved_filters": preserved_filters, "opts": opts}, post_url
@@ -96,6 +102,4 @@ class DataSourceAdmin(admin.ModelAdmin):
         return HttpResponseRedirect(post_url)
 
     def delete_queryset(self, request, queryset):
-        delete_datasource.delay(
-            serializers.serialize("json", [obj for obj in queryset])
-        )
+        delete_datasource.delay(serializers.serialize("json", list(queryset)))

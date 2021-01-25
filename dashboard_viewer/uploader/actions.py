@@ -14,7 +14,12 @@ def custom_delete_selected(modeladmin, request, queryset):
     """
     opts = modeladmin.model._meta
 
-    deletable_objects, model_count, perms_needed, protected = modeladmin.get_deleted_objects(queryset, request)
+    (
+        deletable_objects,
+        model_count,
+        perms_needed,
+        protected,
+    ) = modeladmin.get_deleted_objects(queryset, request)
 
     if request.POST.get("post") and not protected:
         if perms_needed:
@@ -31,10 +36,9 @@ def custom_delete_selected(modeladmin, request, queryset):
                 _(
                     "Deleting %(count)d %(items)s on background. "
                     "In a few minutes they will stop showing on the objects list."
-                ) % {
-                    "count": n, "items": model_ngettext(modeladmin.opts, n)
-                },
-                messages.SUCCESS
+                )
+                % {"count": n, "items": model_ngettext(modeladmin.opts, n)},
+                messages.SUCCESS,
             )
         # Return None to display the change list page again.
         return None
@@ -64,11 +68,11 @@ def custom_delete_selected(modeladmin, request, queryset):
 
     # Display the confirmation page
     return TemplateResponse(
-        request,
-        "admin/datasource/delete_selected_confirmation.html",
-        context
+        request, "admin/datasource/delete_selected_confirmation.html", context
     )
 
 
-custom_delete_selected.allowed_permissions = ('delete',)
-custom_delete_selected.short_description = gettext_lazy("Delete selected %(verbose_name_plural)s")
+custom_delete_selected.allowed_permissions = ("delete",)
+custom_delete_selected.short_description = gettext_lazy(
+    "Delete selected %(verbose_name_plural)s"
+)
