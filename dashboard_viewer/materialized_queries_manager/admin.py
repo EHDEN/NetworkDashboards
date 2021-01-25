@@ -30,11 +30,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
         names = [row.matviewname for row in queryset]
         with connections["achilles"].cursor() as cursor:
-            cursor.execute(
-                f"""
-                DROP MATERIALIZED VIEW {','.join(names)}
-                """
-            )
+            cursor.execute(f"DROP MATERIALIZED VIEW {','.join(names)}")
 
     def _changeform_view(self, request, object_id, form_url, extra_context):  # noqa
         # Copied from django.contrib.admin.options.py
