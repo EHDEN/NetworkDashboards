@@ -19,11 +19,11 @@
    - Go to `http://localhost` to access the dashboard viewer app.
    - Go to `http://localhost:8088` to access superset.
 
-9. On release 0.37 of superset there is a bug related to the public role and because of that we had to set `PUBLIC_ROLE_LIKE_GAMMA = True` on superset settings. This leads the public role with permissions that he shouldn't have. To solve this, so any anonymous user can view dashboards, you should remove all its permissions and then add the following:
+9. To any anonymous user view dashboards, add the following:
 
    - all datasource access on all_datasource_access
    - can csrf token on Superset
    - can dashboard on Superset
-   - can explore JSON on Superset
-   - can list on CssTemplateAsyncModelView
-   - can list on SliceModelView
+   - can explore json on Superset
+   - can read on Chart
+   - can read on CssTemplate

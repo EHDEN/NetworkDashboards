@@ -1,6 +1,5 @@
 import random
 import string
-from contextlib import closing
 
 from celery import shared_task, states
 from celery.exceptions import Ignore
@@ -20,40 +19,44 @@ def _create_materialized_view(cursor, name, query):
 
 @shared_task(bind=True)
 def create_materialized_view(  # noqa
-    self, user_id, old_values: dict, new_obj, change_message: str
+    self, user_id, old_obj, new_obj, change_message: str
 ):
+    try:
+        old_obj = next(serializers.deserialize("json", old_obj)).object
+    except StopIteration:
+        old_obj = None
     new_obj: MaterializedQuery = next(serializers.deserialize("json", new_obj)).object
 
     self.update_state(
         state=states.STARTED,
-        meta=f"Processing Materialized Query {new_obj.name}.",
+        meta=f"Processing Materialized Query {new_obj.matviewname}.",
     )
 
-    with cache.lock("updating:materialized_view:worker:lock:" + new_obj.name):
-        worker_var = "updating:materialized_view:worker:" + new_obj.name
+    with cache.lock("updating:materialized_view:worker:lock:" + new_obj.matviewname):
+        worker_var = "updating:materialized_view:worker:" + new_obj.matviewname
         cache.get(worker_var)
         cache.set(worker_var, self.request.id)
 
-    with cache.lock("updating:materialized_view:lock:" + new_obj.name):
+    with cache.lock("updating:materialized_view:lock:" + new_obj.matviewname):
         if cache.get(worker_var) != self.request.id:
             self.update_state(
                 state=states.IGNORED,
-                meta=f"There is another worker with more recent changes for the Materialized Query {new_obj.name}.",
+                meta=f"There is another worker with more recent changes for the Materialized Query {new_obj.matviewname}.",
             )
             raise Ignore()
 
-        add = new_obj.id is None
+        add = old_obj is None
 
-        with closing(connections["achilles"].cursor()) as cursor:
-            if new_obj.id:
+        with connections["achilles"].cursor() as cursor:
+            if not add:
                 if (
-                    old_values["name"] != new_obj.name
-                    and old_values["query"] == new_obj.query
+                    old_obj.matviewname != new_obj.matviewname
+                    and old_obj.definition == new_obj.definition
                 ):
                     cursor.execute(
-                        f"ALTER MATERIALIZED VIEW {old_values['name']} RENAME TO {new_obj.name}"
+                        f"ALTER MATERIALIZED VIEW {old_obj.matviewname} RENAME TO {new_obj.matviewname}"
                     )
-                elif old_values["query"] != new_obj.query:
+                elif old_obj.definition != new_obj.definition:
                     # don't drop the old view yet. rename the view to a random name
                     #  just as a backup if there is something wrong with the new
                     #  query or name
@@ -63,19 +66,21 @@ def create_materialized_view(  # noqa
                     )
 
                     cursor.execute(
-                        f"ALTER MATERIALIZED VIEW {old_values['name']} RENAME TO {tmp_name}"
+                        f"ALTER MATERIALIZED VIEW {old_obj.matviewname} RENAME TO {tmp_name}"
                     )
 
                     try:
-                        _create_materialized_view(cursor, new_obj.name, new_obj.query)
+                        _create_materialized_view(
+                            cursor, new_obj.matviewname, new_obj.definition
+                        )
                     except ProgrammingError as e:
                         self.update_state(
                             state=states.FAILURE,
-                            meta=f"Error while creating the materialized view {new_obj.name} in the underlying database.",
+                            meta=f"Error while creating the materialized view {new_obj.matviewname} in the underlying database.",
                             traceback=e,
                         )
                         cursor.execute(
-                            f"ALTER MATERIALIZED VIEW {tmp_name} RENAME TO {old_values['name']}"
+                            f"ALTER MATERIALIZED VIEW {tmp_name} RENAME TO {old_obj.matviewname}"
                         )
                         raise Ignore()
 
@@ -83,20 +88,21 @@ def create_materialized_view(  # noqa
 
             else:
                 try:
-                    _create_materialized_view(cursor, new_obj.name, new_obj.query)
+                    _create_materialized_view(
+                        cursor, new_obj.matviewname, new_obj.definition
+                    )
                 except ProgrammingError as e:
                     self.update_state(
                         state=states.FAILURE,
-                        meta=f"Error while creating the materialized view {new_obj.name} in the underlying database.",
+                        meta=f"Error while creating the materialized view {new_obj.matviewname} in the underlying database.",
                         traceback=e,
                     )
                     raise Ignore()
 
-        new_obj.save()
         if add:
             self.update_state(
                 state=states.SUCCESS,
-                meta=f"Materialized view {new_obj.name} successfully created.",
+                meta=f"Materialized view {new_obj.matviewname} successfully created.",
             )
             LogEntry.objects.log_action(
                 user_id=user_id,
@@ -109,7 +115,7 @@ def create_materialized_view(  # noqa
         else:
             self.update_state(
                 state=states.SUCCESS,
-                meta=f"Materialized view {new_obj.name} successfully change.",
+                meta=f"Materialized view {new_obj.matviewname} successfully change.",
             )
             LogEntry.objects.log_action(
                 user_id=user_id,
