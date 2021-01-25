@@ -7,7 +7,6 @@ x-superset-app-build: &superset-app-build
   dockerfile: ../docker/superset/Dockerfile
 x-superset-volumes: &superset-volumes
   - ./superset/docker-init.sh:/app/docker/docker-init.sh
-  - ./superset/superset_config_overrides.py:/app/pythonpath/superset_config_docker.py
   - superset_home:/app/superset_home
 x-superset-environment: &superset-environment
   DATABASE_DIALECT: postgresql
@@ -18,7 +17,7 @@ x-superset-environment: &superset-environment
   DATABASE_DB: ${POSTGRES_SUPERSET_DB}
   REDIS_HOST: redis
   REDIS_PORT: 6379
-  REDIS_CACHE_DB: 3
+  REDIS_RESULTS_DB: 3
   REDIS_CELERY_DB: 4
   FLASK_ENV: production
   SUPERSET_ENV: production
