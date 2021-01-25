@@ -33,7 +33,7 @@ class MaterializedQuery(models.Model):
         from django.db import connections  # noqa
 
         with connections["achilles"].cursor() as cursor:
-            cursor.execute("DELETE MATERIALIZED VIEW " + self.matviewname)
+            cursor.execute("DROP MATERIALIZED VIEW " + self.matviewname)
 
     def __repr__(self):
         return self.__str__()
