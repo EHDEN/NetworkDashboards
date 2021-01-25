@@ -7,6 +7,7 @@ import pandas
 from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.conf import settings
+from django.core import serializers
 from django.core.cache import cache
 from django.db import connections
 from materialized_queries_manager.utils import refresh
@@ -106,7 +107,7 @@ def update_achilles_results_data(
         )
         entries.to_sql(
             AchillesResults._meta.db_table,
-            "postgresql"  # TODO aspedrosa: this shouldn't be hardcoded
+            "postgresql"
             f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
             f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
             f"/{settings.DATABASES['achilles']['NAME']}",
@@ -122,3 +123,25 @@ def update_achilles_results_data(
         refresh(logger, db_id)
 
     logger.info("Done [datasource %d]", db_id)
+
+
+@shared_task
+def delete_datasource(objs):
+    cache.incr("celery_workers_updating", ignore_key_check=True)
+
+    read_lock = RWLock(
+        cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
+    )
+    read_lock.acquire()
+
+    objs = serializers.deserialize("json", objs)
+
+    for obj in objs:
+        obj = obj.object
+        with cache.lock(f"celery_worker_lock_db_{obj.pk}"):
+            obj.delete()
+
+    read_lock.release()
+
+    if not cache.decr("celery_workers_updating"):
+        refresh(logger)
