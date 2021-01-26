@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 from constance.signals import config_updated
+from django.contrib.messages import constants as messages
 from django.dispatch import receiver
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -72,7 +73,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "bootstrap4",
-    "bootstrap_datepicker_plus",
     "constance",
     "django_celery_results",
     "markdownify",
@@ -193,10 +193,6 @@ STATICFILES_FINDERS = (
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-
-# Uploader app specific settings
-ACHILLES_RESULTS_STORAGE_PATH = "achilles_results_files"
-
 # User to grant SELECT permissions on the materialized queries
 POSTGRES_SUPERSET_USER = os.environ.get("POSTGRES_DEFAULT_DB", "superset")
 
@@ -260,8 +256,9 @@ CONSTANCE_CONFIG = {
         "markdown",
     ),
     "UPLOADER_UPLOAD": (
-        "Upload the catalogue_results.csv results file in this tool to populate the visualisations. To update "
-        "an existing database, just upload the new data. A history of uploads is shown on the page.",
+        "Upload either a results csv or a zip with results and results_dist in this tool to populate the "
+        "visualizations. To update an existing database, just upload the new data. A history of uploads is "
+        "shown on the page.",
         "Text for the 'Upload Achilles results' section on the uploader app",
         "markdown",
     ),
@@ -309,4 +306,8 @@ MARTOR_ENABLE_CONFIGS = {
     "living": "false",  # to enable/disable live updates in preview
     "spellcheck": "true",
     "hljs": "true",  # to enable/disable hljs highlighting in preview
+}
+
+MESSAGE_TAGS = {
+    messages.ERROR: "danger",
 }
