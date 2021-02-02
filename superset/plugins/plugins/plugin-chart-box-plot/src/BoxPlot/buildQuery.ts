@@ -22,27 +22,24 @@ import { BoxPlotQueryFormData, BoxPlotQueryObjectWhiskerType } from './types';
 const PERCENTILE_REGEX = /(\d+)\/(\d+) percentiles/;
 
 export default function buildQuery(formData: BoxPlotQueryFormData) {
-  const { query_mode, whiskerOptions } = formData;
+  const { query_mode, whiskerOptions, columns: distributionColumns = [] } = formData;
   return buildQueryContext(formData, baseQueryObject => {
-    const { groupby } = baseQueryObject;
-
     if (query_mode == 'raw') {
+      const { groupby } = baseQueryObject;
+
       const {
-        min,
-        q1,
-        mean,
-        q3,
-        max,
+        p10,
+        p25,
+        median,
+        p75,
+        p90,
       } = formData;
 
       if (groupby.length == 0) {
         throw new Error(`Error: No series column defined.`);
       }
-      else if (groupby.length > 1) {
-        throw new Error(`Error: Only one series column should be provided.`);
-      }
 
-      const missing_columns = ['min', 'q1', 'mean', 'q3', 'max']
+      const missing_columns = ['p10', 'p25', 'median', 'p75', 'p90']
         .filter(c => !formData[c] || Array.isArray(formData[c]))
         .map(c => c.toUpperCase());
       if (missing_columns.length > 0) {
@@ -54,21 +51,33 @@ export default function buildQuery(formData: BoxPlotQueryFormData) {
         }
       }
 
-      return [
+      const { outliers } = formData;
+
+      const queries = [
         {
           ...baseQueryObject,
           metrics: [],
           groupby: [],
-          columns: [groupby[0], min, q1, mean, q3, max],
+          columns: [...groupby, p10, p25, median, p75, p90],
         },
-      ]
+      ].concat(
+        outliers && !Array.isArray(outliers)
+        ? {
+          ...baseQueryObject,
+          metrics: [],
+          groupby: [],
+          columns: [...groupby, outliers],
+        }
+        : []
+      );
+
+      return queries;
     }
 
     let whiskerType: BoxPlotQueryObjectWhiskerType;
     let percentiles: [number, number] | undefined;
     const { columns, metrics } = baseQueryObject;
     const percentileMatch = PERCENTILE_REGEX.exec(whiskerOptions as string);
-    const distributionColumns = columns || [];
 
     if (whiskerOptions === 'Tukey') {
       whiskerType = 'tukey';
@@ -84,15 +93,13 @@ export default function buildQuery(formData: BoxPlotQueryFormData) {
       {
         ...baseQueryObject,
         is_timeseries: distributionColumns.length === 0,
-        groupby: (groupby || []).concat(distributionColumns),
-        columns: [],
         post_processing: [
           {
             operation: 'boxplot',
             options: {
               whisker_type: whiskerType,
               percentiles,
-              groupby,
+              groupby: columns.filter(x => !distributionColumns.includes(x)),
               metrics: metrics.map(getMetricLabel),
             },
           },

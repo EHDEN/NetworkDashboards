@@ -28,10 +28,10 @@ import { BoxPlotQueryFormData } from './types';
 import { EchartsProps } from '../types';
 import { extractGroupbyLabel } from '../utils/series';
 import { defaultGrid, defaultTooltip, defaultYAxis } from '../defaults';
+import d3 from 'd3';
 
 export default function transformProps(chartProps: ChartProps): EchartsProps {
   const { width, height, formData, queriesData } = chartProps;
-  const data: DataRecord[] = queriesData[0].data || [];
   const {
     colorScheme,
     queryMode,
@@ -45,28 +45,71 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
 
   let transformedData, outlierData;
   if (queryMode == QueryMode.raw) {
+    const data = d3
+      .nest()
+      .key(row => extractGroupbyLabel({ datum: row as DataRecord, groupby }))
+      .entries(queriesData[0].data)
+      .reduce((result: {[key: string]: DataRecord}, item, _) => {
+        result[item.key] = item.values[0];
+        return result;
+      }, {})
+
+    const { outliers }  = formData;
+    let outlierMapping: {[key: string]: DataRecord[]};
+    if (outliers && !Array.isArray(outliers)) {
+      outlierMapping = d3
+        .nest()
+        .key(row => extractGroupbyLabel({ datum: row as DataRecord, groupby }))
+        .entries(queriesData[1].data)
+        .reduce((result: {[key: string]: DataRecord[]}, item, _) => {
+          result[item.key] = item.values;
+          return result;
+        }, {});
+
+      outlierData = Object.entries(outlierMapping)
+        .map(([groupbyLabel, outlierDatum]) => {
+            return {
+              name: 'outlier',
+              type: 'scatter',
+              data: outlierDatum.map(val => [groupbyLabel, val[outliers]]),
+              tooltip: {
+                formatter: (param: { data: [string, number] }) => {
+                  const [outlierName, stats] = param.data;
+                  const headline = groupby ? `<p><strong>${outlierName}</strong></p>` : '';
+                  return `${headline}${numberFormatter(stats)}`;
+                },
+              },
+              itemStyle: {
+                color: colorFn(groupbyLabel),
+              },
+            };
+          },
+        )
+        .flat(2);
+    }
+
     const {
-      min,
-      q1,
-      mean,
-      q3,
-      max,
+      p10,
+      p25,
+      median,
+      p75,
+      p90,
     } = formData as BoxPlotQueryFormData;
 
-    transformedData = data
-      .map(datum => {
-        const groupbyLabel = extractGroupbyLabel({ datum, groupby });
+    transformedData = Object.entries(data)
+      .map(([groupbyLabel, datum]) => {
+        
         return {
           name: groupbyLabel,
           value: [
-            datum[min],
-            datum[q1],
-            datum[mean],
-            datum[q3],
-            datum[max],
-            datum[mean],
+            datum[p10],
+            datum[p25],
+            datum[median],
+            datum[p75],
+            datum[p90],
+            datum[median],
             1,
-            [],
+            outlierMapping ? outlierMapping[groupbyLabel] : []
           ],
           itemStyle: {
             color: colorFn(groupbyLabel),
@@ -78,6 +121,7 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
       .flatMap(row => row);
   }
   else {
+    const data: DataRecord[] = queriesData[0].data || [];
     const metricLabels = formdataMetrics.map(getMetricLabel);
 
     transformedData = data
@@ -190,11 +234,11 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
             let stats;
             if (queryMode == QueryMode.raw) {
               stats = [
-                `Max: ${numberFormatter(value[5])}`,
-                `3rd Quartile: ${numberFormatter(value[4])}`,
-                `Mean: ${numberFormatter(value[6])}`,
-                `1st Quartile: ${numberFormatter(value[2])}`,
-                `Min: ${numberFormatter(value[1])}`,
+                `90th Percentile: ${numberFormatter(value[5])}`,
+                `75th Percentile: ${numberFormatter(value[4])}`,
+                `Median: ${numberFormatter(value[6])}`,
+                `25th Percentile: ${numberFormatter(value[2])}`,
+                `10th Percentile: ${numberFormatter(value[1])}`,
               ];
             }
             else {
@@ -207,9 +251,9 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
                 `Min: ${numberFormatter(value[1])}`,
                 `# Observations: ${numberFormatter(value[7])}`,
               ];
-              if (value[8].length > 0) {
-                stats.push(`# Outliers: ${numberFormatter(value[8].length)}`);
-              }
+            }
+            if (value[8].length > 0) {
+              stats.push(`# Outliers: ${numberFormatter(value[8].length)}`);
             }
             return headline + stats.join('<br/>');
           },

@@ -13,7 +13,7 @@ if response.status_code == 200:
     commits = response.json()
     if not commits:
         print("Commits list is empty", file=sys.stderr)
-    elif commits[0]["sha"] == "514594d0562e21946710fe3c252c7e153591dec8":
+    elif commits[0]["sha"] == "7142c9ab7eb61c119b205aed31615651e640d771":
         print("No changes were made to the echarts plugin")
     else:
         print("Changes were made to the echarts plugin", file=sys.stderr)

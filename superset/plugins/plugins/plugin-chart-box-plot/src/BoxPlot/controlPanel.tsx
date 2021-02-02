@@ -82,8 +82,8 @@ const queryMode: ControlConfig<'RadioButtonControl'> = {
 
 const all_columns: typeof sharedControls.groupby = {
   type: 'SelectControl',
-  label: t('Max'),
-  description: t('Column holding the maximum values'),
+  label: t('P90'),
+  description: t('Column holding the 90th percentile values'),
   multi: false,
   freeForm: false,
   allowAll: true,
@@ -115,44 +115,54 @@ export default {
         ],
         [
           {
-            name: 'min',
+            name: 'p10',
             config: {
               ...all_columns,
-              label: t('Min'),
-              description: t('Column holding the minimum values'),
+              label: t('P10'),
+              description: t('Column holding the 10th percentile values'),
             },
           },
           {
-            name: 'q1',
+            name: 'p25',
             config: {
               ...all_columns,
-              label: t('Q1'),
-              description: t('Column holding the first quartile values'),
-            },
-          },
-        ],
-        [
-          {
-            name: 'mean',
-            config: {
-              ...all_columns,
-              label: t('Mean/Q2'),
-              description: t('Column holding the mean/second quartile values'),
+              label: t('P25'),
+              description: t('Column holding the 25th percentile values'),
             },
           },
         ],
         [
           {
-            name: 'q3',
+            name: 'median',
             config: {
               ...all_columns,
-              label: t('Q3'),
-              description: t('Column holding the third quartile values'),
+              label: t('Median/P50'),
+              description: t('Column holding the median values'),
+            },
+          },
+        ],
+        [
+          {
+            name: 'p75',
+            config: {
+              ...all_columns,
+              label: t('P75'),
+              description: t('Column holding the 75th percentile values'),
             },
           },
           {
-            name: 'max',
+            name: 'p90',
             config: all_columns,
+          },
+        ],
+        [
+          {
+            name: 'outliers',
+            config: {
+              ...all_columns,
+              label: t('Outliers'),
+              description: t('Column holding outliers values'),
+            },
           },
         ],
         ['metrics'],
