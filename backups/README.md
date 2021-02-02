@@ -25,7 +25,11 @@
    
    - `CREDENTIALS_FILE_PATH`: File containing the credentials to access the server to upload the backup file.
 
-3. Schedule your backups
+3. Install mega python package: `pip install mega.py`.
+
+4. Create a directory `dashboards_backups` under `/var/lib` and create a file named `counters.json`. Change counters file permissions: `chmod 0666 counters.json`.
+
+5. Schedule your backups
    
    ```sh
    *    *    *   *    *  Command_to_execute
