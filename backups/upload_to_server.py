@@ -38,7 +38,7 @@ class Directory(ABC):
     upload_folder = None
     counters = None
 
-    def __init__(
+    def __init__(  # noqa
         self,
         name: Optional[str],
         capacity: Optional[int],
@@ -85,7 +85,7 @@ class LastDirectory(Directory):
 
 
 class DirectoryWithNext(Directory):
-    def __init__(
+    def __init__(  # noqa
         self,
         name: str,
         capacity: int,
