@@ -17,7 +17,6 @@
  * under the License.
  */
 import { QueryFormData } from '@superset-ui/core';
-import { PostProcessingBoxplot } from '@superset-ui/core/src/query/types/PostProcessing';
 
 export type BoxPlotQueryFormData = QueryFormData & {
   numberFormat?: string;
@@ -33,4 +32,4 @@ export type BoxPlotFormDataWhiskerOptions =
 
 export type BoxPlotFormXTickLayout = '45°' | '90°' | 'auto' | 'flat' | 'staggered';
 
-export type BoxPlotQueryObjectWhiskerType = PostProcessingBoxplot['options']['whisker_type'];
+export type BoxPlotQueryObjectWhiskerType = 'tukey' | 'min/max' | 'percentile';
