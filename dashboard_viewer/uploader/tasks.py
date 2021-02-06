@@ -25,7 +25,9 @@ def update_achilles_results_data(
     cache.incr("celery_workers_updating", ignore_key_check=True)
 
     # several workers can update records concurrently -> same as -> several threads can read from the same file
-    with RWLock(cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None):
+    with RWLock(
+        cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
+    ):
         # but only one worker can make updates associated to a specific data source at the same time
         with cache.lock(f"celery_worker_lock_db_{db_id}"):
             logger.info("Updating achilles results records [datasource %d]", db_id)

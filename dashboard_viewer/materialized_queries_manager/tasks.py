@@ -1,6 +1,5 @@
 import random
 import string
-from typing import List
 
 from celery import shared_task, states
 from celery.exceptions import Ignore

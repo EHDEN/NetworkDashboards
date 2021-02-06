@@ -7,14 +7,18 @@ from redis_rw_lock import RWLock
 def refresh(logger, db_id=None, query_set=None):
     # Only one worker can update the materialized views at the same time -> same as -> only one thread
     #  can write to a file at the same time
-    with RWLock(cache.client.get_client(), "celery_worker_updating", RWLock.WRITE, expire=None):
+    with RWLock(
+        cache.client.get_client(), "celery_worker_updating", RWLock.WRITE, expire=None
+    ):
         logger.info(
             "Updating materialized views [%s]",
             "command" if not db_id else f"datasource {db_id}",
         )
 
         with connections["achilles"].cursor() as cursor:
-            for materialized_query in MaterializedQuery.objects.all() if not query_set else query_set:
+            for materialized_query in (
+                MaterializedQuery.objects.all() if not query_set else query_set
+            ):
                 try:
                     logger.info(
                         "Refreshing materialized view %s [%s]",
