@@ -14,6 +14,7 @@ from django.utils.http import urlquote
 from django.utils.translation import gettext as _
 from django_celery_results.models import TaskResult
 
+from .actions import refresh_materialized_views_action
 from .models import MaterializedQuery
 from .tasks import create_materialized_view
 
@@ -24,6 +25,8 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
     save_as = False
 
     list_display = ("matviewname",)
+
+    actions = (refresh_materialized_views_action,)
 
     def delete_queryset(self, _, queryset):
         from django.db import connections  # noqa

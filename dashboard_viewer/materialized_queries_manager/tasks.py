@@ -1,8 +1,10 @@
 import random
 import string
+from typing import List
 
 from celery import shared_task, states
 from celery.exceptions import Ignore
+from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.contrib.admin.models import ADDITION, CHANGE, LogEntry
 from django.contrib.admin.options import get_content_type_for_model
@@ -10,6 +12,9 @@ from django.core import serializers
 from django.core.cache import cache
 from django.db import connections, ProgrammingError
 from materialized_queries_manager.models import MaterializedQuery
+from materialized_queries_manager.utils import refresh
+
+logger = get_task_logger(__name__)
 
 
 def _create_materialized_view(cursor, name, query):
@@ -127,3 +132,9 @@ def create_materialized_view(  # noqa
             )
 
         raise Ignore()
+
+
+@shared_task
+def refresh_materialized_views_task(query_set):
+    query_set = serializers.deserialize("json", query_set)
+    refresh(logger, query_set=[mat_query.object for mat_query in query_set])
