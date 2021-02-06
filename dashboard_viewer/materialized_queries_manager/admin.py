@@ -1,5 +1,3 @@
-import copy
-
 from django.contrib import admin, messages
 from django.contrib.admin import helpers
 from django.contrib.admin.exceptions import DisallowedModelAdminToField

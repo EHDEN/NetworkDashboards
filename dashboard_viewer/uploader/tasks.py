@@ -1,6 +1,5 @@
 from __future__ import absolute_import, unicode_literals
 
-from contextlib import closing
 from typing import Union
 
 import pandas
