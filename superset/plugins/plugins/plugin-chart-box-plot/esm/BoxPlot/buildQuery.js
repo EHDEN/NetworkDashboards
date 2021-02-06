@@ -20,7 +20,13 @@ import { buildQueryContext, getMetricLabel } from '@superset-ui/core';
 const PERCENTILE_REGEX = /(\d+)\/(\d+) percentiles/;
 export default function buildQuery(formData) {
   const {
-    query_mode
+    query_mode,
+    p10,
+    p25,
+    median,
+    p75,
+    p90,
+    whiskerOptions
   } = formData;
   return buildQueryContext(formData, baseQueryObject => {
     const {
@@ -28,14 +34,6 @@ export default function buildQuery(formData) {
     } = baseQueryObject;
 
     if (query_mode == 'raw') {
-      const {
-        p10,
-        p25,
-        median,
-        p75,
-        p90
-      } = formData;
-
       if (groupby.length == 0) {
         throw new Error(`Error: No series column defined.`);
       }
@@ -65,9 +63,6 @@ export default function buildQuery(formData) {
       return queries;
     }
 
-    const {
-      whiskerOptions
-    } = formData;
     let whiskerType;
     let percentiles;
     const {

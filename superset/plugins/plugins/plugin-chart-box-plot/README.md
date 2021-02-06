@@ -15,7 +15,7 @@ This plugin provides Echarts viz plugins for Superset:
 
 1. Check what release version of the `@superset-ui/plugin-chart-echarts` npm plugin, superset is using (see the file at `superset-frontend/package.json`).
 
-2. If it is greater than 0.16.4, go to the [history](https://github.com/apache-superset/superset-ui/commits/master/plugins/plugin-chart-echarts) of commits done to the plugin-chart-echarts plugin of the superset-ui repository and update to the most recent commit that has the same version that is being used by your superset version. A fast way check the changes done between two commits: `git diff [old_commit_hash] [recent_commit_hash] -- plugins/plugin-chart-echarts`
+2. If it is greater than 0.16.9, go to the [history](https://github.com/apache-superset/superset-ui/commits/master/plugins/plugin-chart-echarts) of commits done to the plugin-chart-echarts plugin of the superset-ui repository and update to the most recent commit that has the same version that is being used by your superset version. A fast way check the changes done between two commits: `git diff [old_commit_hash] [recent_commit_hash] -- plugins/plugin-chart-echarts`
 
 ### Usage
 
