@@ -112,6 +112,12 @@ export default {
       name: 'query_mode',
       config: queryMode
     }], [{
+      name: 'minimum',
+      config: { ...all_columns,
+        label: t('Min'),
+        description: t('Column holding the minimum values')
+      }
+    }], [{
       name: 'p10',
       config: { ...all_columns,
         label: t('P10'),
@@ -138,6 +144,12 @@ export default {
     }, {
       name: 'p90',
       config: all_columns
+    }], [{
+      name: 'maximum',
+      config: { ...all_columns,
+        label: t('Max'),
+        description: t('Column holding the maximum values')
+      }
     }], [{
       name: 'outliers',
       config: { ...all_columns,

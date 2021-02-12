@@ -17,6 +17,15 @@ This plugin provides Echarts viz plugins for Superset:
 
 2. If it is greater than 0.16.9, go to the [history](https://github.com/apache-superset/superset-ui/commits/master/plugins/plugin-chart-echarts) of commits done to the plugin-chart-echarts plugin of the superset-ui repository and update to the most recent commit that has the same version that is being used by your superset version. A fast way check the changes done between two commits: `git diff [old_commit_hash] [recent_commit_hash] -- plugins/plugin-chart-echarts`
 
+### Demo
+
+![demo](demo.png)
+
+Note the Data section:
+- Multiple column series are supported. Their value is then concatenated by adding `", "` between them.
+- Columns Min, P10, P25, Median, P75, P90 and Max are mandatory.
+- To add several outliers to the same box, you must have several rows with the same data but with different outlier values.
+
 ### Usage
 
 Configure `key`, which can be any `string`, and register the plugin. This `key` will be used to

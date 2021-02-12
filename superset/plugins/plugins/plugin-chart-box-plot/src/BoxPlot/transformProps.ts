@@ -62,7 +62,10 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
         .key(row => extractGroupbyLabel({ datum: row as DataRecord, groupby }))
         .entries(queriesData[1].data)
         .reduce((result: {[key: string]: DataRecord[]}, item, _) => {
-          result[item.key] = item.values;
+          const values = item.values.filter((v: DataRecord) => v[outliers])
+          if (values.length > 0) {
+            result[item.key] = values;
+          }
           return result;
         }, {});
 
@@ -89,32 +92,34 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
     }
 
     const {
+      minimum,
       p10,
       p25,
       median,
       p75,
       p90,
+      maximum,
     } = formData as BoxPlotQueryFormData;
 
     transformedData = Object.entries(data)
-      .map(([groupbyLabel, datum]) => {
+      .map(([groupByLabel, datum]) => {
         
         return {
-          name: groupbyLabel,
+          name: groupByLabel,
           value: [
             datum[p10],
             datum[p25],
             datum[median],
             datum[p75],
             datum[p90],
-            datum[median],
-            1,
-            outlierMapping ? outlierMapping[groupbyLabel] : []
+            datum[minimum],
+            datum[maximum],
+            outlierMapping ? (groupByLabel in outlierMapping ? outlierMapping[groupByLabel] : []) : []
           ],
           itemStyle: {
-            color: colorFn(groupbyLabel),
+            color: colorFn(groupByLabel),
             opacity: 0.6,
-            borderColor: colorFn(groupbyLabel),
+            borderColor: colorFn(groupByLabel),
           },
         }
       })
@@ -234,11 +239,13 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
             let stats;
             if (queryMode == QueryMode.raw) {
               stats = [
+                `Max: ${numberFormatter(value[7])}`,
                 `90th Percentile: ${numberFormatter(value[5])}`,
                 `75th Percentile: ${numberFormatter(value[4])}`,
-                `Median: ${numberFormatter(value[6])}`,
+                `Median: ${numberFormatter(value[3])}`,
                 `25th Percentile: ${numberFormatter(value[2])}`,
                 `10th Percentile: ${numberFormatter(value[1])}`,
+                `Min: ${numberFormatter(value[6])}`,
               ];
             }
             else {

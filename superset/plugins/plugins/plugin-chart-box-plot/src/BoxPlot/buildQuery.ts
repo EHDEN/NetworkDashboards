@@ -24,11 +24,13 @@ const PERCENTILE_REGEX = /(\d+)\/(\d+) percentiles/;
 export default function buildQuery(formData: BoxPlotQueryFormData) {
   const {
     query_mode,
+    minimum,
     p10,
     p25,
     median,
     p75,
     p90,
+    maximum,
     whiskerOptions,
   } = formData;
   return buildQueryContext(formData, baseQueryObject => {
@@ -39,7 +41,7 @@ export default function buildQuery(formData: BoxPlotQueryFormData) {
         throw new Error(`Error: No series column defined.`);
       }
 
-      const missing_columns = ['p10', 'p25', 'median', 'p75', 'p90']
+      const missing_columns = ['minimum', 'p10', 'p25', 'median', 'p75', 'p90', 'maximum']
         .filter(c => !formData[c] || Array.isArray(formData[c]))
         .map(c => c.toUpperCase());
       if (missing_columns.length > 0) {
@@ -58,7 +60,7 @@ export default function buildQuery(formData: BoxPlotQueryFormData) {
           ...baseQueryObject,
           metrics: [],
           groupby: [],
-          columns: [...groupby, p10, p25, median, p75, p90],
+          columns: [...groupby, minimum, p10, p25, median, p75, p90, maximum],
         },
       ].concat(
         outliers && !Array.isArray(outliers)

@@ -58,7 +58,12 @@ export default function transformProps(chartProps) {
         datum: row,
         groupby
       })).entries(queriesData[1].data).reduce((result, item, _) => {
-        result[item.key] = item.values;
+        const values = item.values.filter(v => v[outliers]);
+
+        if (values.length > 0) {
+          result[item.key] = values;
+        }
+
         return result;
       }, {});
       outlierData = Object.entries(outlierMapping).map(([groupbyLabel, outlierDatum]) => {
@@ -81,20 +86,22 @@ export default function transformProps(chartProps) {
     }
 
     const {
+      minimum,
       p10,
       p25,
       median,
       p75,
-      p90
+      p90,
+      maximum
     } = formData;
-    transformedData = Object.entries(data).map(([groupbyLabel, datum]) => {
+    transformedData = Object.entries(data).map(([groupByLabel, datum]) => {
       return {
-        name: groupbyLabel,
-        value: [datum[p10], datum[p25], datum[median], datum[p75], datum[p90], datum[median], 1, outlierMapping ? outlierMapping[groupbyLabel] : []],
+        name: groupByLabel,
+        value: [datum[p10], datum[p25], datum[median], datum[p75], datum[p90], datum[minimum], datum[maximum], outlierMapping ? groupByLabel in outlierMapping ? outlierMapping[groupByLabel] : [] : []],
         itemStyle: {
-          color: colorFn(groupbyLabel),
+          color: colorFn(groupByLabel),
           opacity: 0.6,
-          borderColor: colorFn(groupbyLabel)
+          borderColor: colorFn(groupByLabel)
         }
       };
     }).flatMap(row => row);
@@ -200,7 +207,7 @@ export default function transformProps(chartProps) {
           let stats;
 
           if (queryMode == QueryMode.raw) {
-            stats = [`90th Percentile: ${numberFormatter(value[5])}`, `75th Percentile: ${numberFormatter(value[4])}`, `Median: ${numberFormatter(value[6])}`, `25th Percentile: ${numberFormatter(value[2])}`, `10th Percentile: ${numberFormatter(value[1])}`];
+            stats = [`Max: ${numberFormatter(value[7])}`, `90th Percentile: ${numberFormatter(value[5])}`, `75th Percentile: ${numberFormatter(value[4])}`, `Median: ${numberFormatter(value[3])}`, `25th Percentile: ${numberFormatter(value[2])}`, `10th Percentile: ${numberFormatter(value[1])}`, `Min: ${numberFormatter(value[6])}`];
           } else {
             stats = [`Max: ${numberFormatter(value[5])}`, `3rd Quartile: ${numberFormatter(value[4])}`, `Mean: ${numberFormatter(value[6])}`, `Median: ${numberFormatter(value[3])}`, `1st Quartile: ${numberFormatter(value[2])}`, `Min: ${numberFormatter(value[1])}`, `# Observations: ${numberFormatter(value[7])}`];
           }
