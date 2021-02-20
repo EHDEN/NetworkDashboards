@@ -3,18 +3,12 @@ import string
 
 from celery import shared_task, states
 from celery.exceptions import Ignore
-from django.conf import settings
 from django.contrib.admin.models import ADDITION, CHANGE, LogEntry
 from django.contrib.admin.options import get_content_type_for_model
 from django.core import serializers
 from django.core.cache import cache
 from django.db import connections, ProgrammingError, router, transaction
 from materialized_queries_manager.models import MaterializedQuery
-
-
-def _create_materialized_view(cursor, name, query):
-    cursor.execute(f"CREATE MATERIALIZED VIEW {name} AS {query}")
-    cursor.execute(f"GRANT SELECT ON {name} TO {settings.POSTGRES_SUPERSET_USER}")
 
 
 @shared_task(bind=True)
@@ -68,13 +62,14 @@ def create_materialized_view(  # noqa
                     )
 
                     try:
-                        _create_materialized_view(
-                            cursor, new_obj.matviewname, new_obj.definition
-                        )
+                        cursor.execute(f"CREATE MATERIALIZED VIEW {new_obj.matviewname} AS {new_obj.definition}")
                     except ProgrammingError as e:
                         self.update_state(
                             state=states.FAILURE,
-                            meta=f"Error while creating the materialized view {new_obj.matviewname} in the underlying database.",
+                            meta={
+                                "exc_type": type(e).__name__,
+                                "exc_message": f"Error while changing the materialized view {new_obj.matviewname} in the underlying database.",
+                            },
                             traceback=e,
                         )
                         raise Ignore()
@@ -85,13 +80,14 @@ def create_materialized_view(  # noqa
 
             else:
                 try:
-                    _create_materialized_view(
-                        cursor, new_obj.matviewname, new_obj.definition
-                    )
+                    cursor.execute(f"CREATE MATERIALIZED VIEW {new_obj.matviewname} AS {new_obj.definition}")
                 except ProgrammingError as e:
                     self.update_state(
                         state=states.FAILURE,
-                        meta=f"Error while creating the materialized view {new_obj.matviewname} in the underlying database.",
+                        meta={
+                            "exc_type": type(e).__name__,
+                            "exc_message": f"Error while creating the materialized view {new_obj.matviewname} in the underlying database.",
+                        },
                         traceback=e,
                     )
                     raise Ignore()
