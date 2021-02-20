@@ -62,7 +62,9 @@ def create_materialized_view(  # noqa
                     )
 
                     try:
-                        cursor.execute(f"CREATE MATERIALIZED VIEW {new_obj.matviewname} AS {new_obj.definition}")
+                        cursor.execute(
+                            f"CREATE MATERIALIZED VIEW {new_obj.matviewname} AS {new_obj.definition}"
+                        )
                     except ProgrammingError as e:
                         self.update_state(
                             state=states.FAILURE,
@@ -80,7 +82,9 @@ def create_materialized_view(  # noqa
 
             else:
                 try:
-                    cursor.execute(f"CREATE MATERIALIZED VIEW {new_obj.matviewname} AS {new_obj.definition}")
+                    cursor.execute(
+                        f"CREATE MATERIALIZED VIEW {new_obj.matviewname} AS {new_obj.definition}"
+                    )
                 except ProgrammingError as e:
                     self.update_state(
                         state=states.FAILURE,
