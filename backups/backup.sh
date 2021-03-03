@@ -7,7 +7,9 @@ if [ $RUN -eq 0 ] ; then
     exit 0
 fi
 
-TMP_BACKUP_DIRECTORY=/tmp/dashboards_backups_$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 40)
+
+BACKUP_DIRECTORY_NAME=dashboards_backups_$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 40)
+TMP_BACKUP_DIRECTORY=/tmp/$BACKUP_DIRECTORY_NAME
 
 mkdir $TMP_BACKUP_DIRECTORY
 
@@ -35,7 +37,7 @@ cp -r $ACHILLES_RESULTS_FILES_DIRECTORY $TMP_BACKUP_DIRECTORY/achilles_results_f
 # compression
 COMPRESSED_FILE_PATH=/tmp/$(date +"%Y%m%d%H%M%S").tar.xz
 echo "compressing files"
-tar -cvJf $COMPRESSED_FILE_PATH $TMP_BACKUP_DIRECTORY
+tar -C /tmp -cvJf $COMPRESSED_FILE_PATH $BACKUP_DIRECTORY_NAME
 
 # send to server
 echo "sending to backup server"
