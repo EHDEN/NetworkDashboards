@@ -33,7 +33,10 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
             cursor.execute(f"DROP MATERIALIZED VIEW {','.join(names)}")
 
     def _changeform_view(self, request, object_id, form_url, extra_context):  # noqa
-        # Copied from django.contrib.admin.options.py
+        """
+        Based on https://github.com/django/django/blob/2.2.17/django/contrib/admin/options.py#L1531
+        The creation of the materialized view needed to happen on background
+        """
         to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
         if to_field and not self.to_field_allowed(request, to_field):
             raise DisallowedModelAdminToField(
@@ -149,9 +152,9 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
     def response_add(self, request, obj, post_url_continue=None):
         """
-        Determine the HttpResponse for the add_view stage.
+        Based on https://github.com/django/django/blob/2.2.17/django/contrib/admin/options.py#L1165
+        Customizations of the returned messages
         """
-        # Copied from django.contrib.admin.options.py
         opts = obj._meta
         preserved_filters = self.get_preserved_filters(request)
         msg_dict = {
@@ -159,7 +162,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         }
 
         if "_addanother" in request.POST:
-            msg = format_html(_(self.get_first_phrase()), **msg_dict)
+            msg = format_html(_(self._get_first_phrase()), **msg_dict)
             self.message_user(request, msg, messages.SUCCESS)
             redirect_url = request.path
             redirect_url = add_preserved_filters(
@@ -169,7 +172,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
         msg = format_html(
             _(
-                self.get_first_phrase()
+                self._get_first_phrase()
                 + " The task might already have finished, for that its entry can already appear on the list below."
             ),
             **msg_dict,
@@ -179,9 +182,9 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
     def response_change(self, request, obj):
         """
-        Determine the HttpResponse for the change_view stage.
+        Based on https://github.com/django/django/blob/2.2.17/django/contrib/admin/options.py#L1242
+        Customize the messages returned
         """
-        # Copied from django.contrib.admin.options.py
 
         opts = self.model._meta
         preserved_filters = self.get_preserved_filters(request)
@@ -192,7 +195,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         }
 
         if "_addanother" in request.POST:
-            msg = format_html(_(self.get_first_phrase()), **msg_dict)
+            msg = format_html(_(self._get_first_phrase()), **msg_dict)
             self.message_user(request, msg, messages.SUCCESS)
             redirect_url = reverse(
                 "admin:%s_%s_add" % (opts.app_label, opts.model_name),
@@ -205,7 +208,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
         msg = format_html(
             _(
-                self.get_first_phrase()
+                self._get_first_phrase()
                 + " The task might already have finished, for that its entry can already appear on the list below."
             ),
             **msg_dict,
@@ -213,7 +216,10 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         self.message_user(request, msg, messages.SUCCESS)
         return self.response_post_save_change(request, obj)
 
-    def get_first_phrase(self):
+    def _get_first_phrase(self):
+        """
+        Method to build the message to return after creation or update
+        """
         if hasattr(self, "background_task"):
             background_task_id = getattr(self, "background_task").id
             try:
