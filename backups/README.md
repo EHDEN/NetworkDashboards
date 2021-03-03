@@ -25,7 +25,11 @@
    
    - `CREDENTIALS_FILE_PATH`: File containing the credentials to access the server to upload the backup file.
 
-3. Schedule your backups
+3. Install mega python package: `pip install mega.py`.
+
+4. Create a directory `dashboards_backups` under `/var/lib` and create a file named `counters.json`. Change counters file permissions: `chmod 0666 counters.json`.
+
+5. Schedule your backups
    
    ```sh
    *    *    *   *    *  Command_to_execute
@@ -65,10 +69,7 @@
          
          ```shell
          chmod 0644 docker/volumes/redis/dump.rdb
-         
-         # if you created the redis directory then also execute
-         chmod 0755 docker/volumes/redis
-         chown -R 999:999 docker/volumes/redis
+         sudo chown -R 999:999 docker/volumes/redis
          ```
    
    2. **Postgres**
@@ -89,9 +90,9 @@
          
          `docker exec -u root dashboard_viewer_postgres_1 psql -f /tmp/postgres_backup.sql postgres`.
    
-   3. **Achilles Results Files** 
+   3. **Achilles Results Files**
       
-      1. Move all directories under `achilles_results_files_backup` to  the `achilles_results_files` volume directory. By default the `achilles_results_files` volume directory is located where this repository was cloned on the directory `docker/volumes`.
+      1. Replace all directories under `achilles_results_files_backup` to  the `achilles_results_files` volume directory. By default the `achilles_results_files` volume directory is located where this repository was cloned on the directory `docker/volumes`.
       
       2. Change owner and group:
          

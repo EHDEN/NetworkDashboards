@@ -80,8 +80,8 @@ const queryMode = {
 };
 const all_columns = {
   type: 'SelectControl',
-  label: t('Max'),
-  description: t('Column holding the maximum values'),
+  label: t('P90'),
+  description: t('Column holding the 90th percentile values'),
   multi: false,
   freeForm: false,
   allowAll: true,
@@ -112,32 +112,50 @@ export default {
       name: 'query_mode',
       config: queryMode
     }], [{
-      name: 'min',
+      name: 'minimum',
       config: { ...all_columns,
         label: t('Min'),
         description: t('Column holding the minimum values')
       }
-    }, {
-      name: 'q1',
-      config: { ...all_columns,
-        label: t('Q1'),
-        description: t('Column holding the first quartile values')
-      }
     }], [{
-      name: 'mean',
+      name: 'p10',
       config: { ...all_columns,
-        label: t('Mean/Q2'),
-        description: t('Column holding the mean/second quartile values')
-      }
-    }], [{
-      name: 'q3',
-      config: { ...all_columns,
-        label: t('Q3'),
-        description: t('Column holding the third quartile values')
+        label: t('P10'),
+        description: t('Column holding the 10th percentile values')
       }
     }, {
-      name: 'max',
+      name: 'p25',
+      config: { ...all_columns,
+        label: t('P25'),
+        description: t('Column holding the 25th percentile values')
+      }
+    }], [{
+      name: 'median',
+      config: { ...all_columns,
+        label: t('Median/P50'),
+        description: t('Column holding the median values')
+      }
+    }], [{
+      name: 'p75',
+      config: { ...all_columns,
+        label: t('P75'),
+        description: t('Column holding the 75th percentile values')
+      }
+    }, {
+      name: 'p90',
       config: all_columns
+    }], [{
+      name: 'maximum',
+      config: { ...all_columns,
+        label: t('Max'),
+        description: t('Column holding the maximum values')
+      }
+    }], [{
+      name: 'outliers',
+      config: { ...all_columns,
+        label: t('Outliers'),
+        description: t('Column holding outliers values')
+      }
     }], ['metrics'], ['adhoc_filters'], ['groupby'], ['columns'], ['limit'], [{
       name: 'whiskerOptions',
       config: {

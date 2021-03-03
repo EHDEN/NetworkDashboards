@@ -40,3 +40,6 @@ class MaterializedQuery(models.Model):
 
     def __str__(self):
         return self.matviewname
+
+    def to_dict(self):
+        return {field.name: getattr(self, field.name) for field in self._meta.fields}
