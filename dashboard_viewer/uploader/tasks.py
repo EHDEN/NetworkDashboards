@@ -1,6 +1,5 @@
 from __future__ import absolute_import, unicode_literals
 
-from contextlib import closing
 from typing import Union
 
 import pandas
@@ -9,7 +8,7 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.core import serializers
 from django.core.cache import cache
-from django.db import connections
+from django.db import connections, router, transaction
 from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
 
@@ -43,7 +42,9 @@ def update_achilles_results_data(
                     AchillesResultsArchive._meta.db_table,
                     db_id,
                 )
-                with closing(connections["achilles"].cursor()) as cursor:
+                with transaction.atomic(
+                    using=router.db_for_write(AchillesResults)
+                ), connections["achilles"].cursor() as cursor:
                     cursor.execute(
                         f"""
                         INSERT INTO {AchillesResultsArchive._meta.db_table} (
@@ -103,6 +104,7 @@ def update_achilles_results_data(
                 AchillesResults._meta.db_table,
                 db_id,
             )
+
             entries.to_sql(
                 AchillesResults._meta.db_table,
                 "postgresql"

@@ -73,6 +73,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
 
         ModelForm = self.get_form(request, obj, change=not add)
         if request.method == "POST":
+            obj_dict = obj.to_dict() if obj else None
             form = ModelForm(request.POST, request.FILES, instance=obj)
             form_validated = form.is_valid()
             if form_validated:
@@ -85,7 +86,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
             if all_valid(formsets) and form_validated:
                 self.background_task = create_materialized_view.delay(
                     request.user.pk,
-                    serializers.serialize("json", [obj] if obj else []),
+                    obj_dict,
                     serializers.serialize("json", [new_object]),
                     self.construct_change_message(request, form, formsets, add),
                 )
