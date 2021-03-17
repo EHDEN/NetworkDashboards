@@ -327,7 +327,7 @@ if not SINGLE_APPLICATION_MODE:
             "If the application is not running on single application mode then the "
             "MAIN_APPLICATION_HOST variable must be defined."
         )
-    elif not _lazy_re_compile(URLValidator.host_re).fullmatch(MAIN_APPLICATION_HOST):
+    if not _lazy_re_compile(URLValidator.host_re).fullmatch(MAIN_APPLICATION_HOST):
         raise ValueError(
             "The variable MAIN_APPLICATION_HOST contains an invalid hostname. "
             "Only include the hostname part of the URL."

@@ -11,7 +11,6 @@ from django.contrib import messages
 from django.forms import fields
 from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
-from django.views.decorators.csrf import csrf_exempt
 
 from .decorators import uploader_decorator
 from .forms import AchillesResultsForm, SourceForm
