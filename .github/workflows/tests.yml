@@ -40,5 +40,5 @@ jobs:
       run: |
         export $(grep -v '^#' tests/.env | xargs -d '\n')
         cd dashboard_viewer
-        python manage.py migrate
-        python manage.py test
+        python manage.py test --exclude-tag third-party-app
+        SINGLE_APPLICATION_MODE=n MAIN_APPLICATION_HOST=mainapp.host.com python manage.py test --tag third-party-app
