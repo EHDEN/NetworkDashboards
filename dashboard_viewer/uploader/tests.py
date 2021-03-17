@@ -4,6 +4,12 @@ from django.test import override_settings, tag, TestCase
 @tag("third-party-app")
 @override_settings(ALLOWED_HOSTS=["thisapp.host.com", "mainapp.host.com"])
 class UploaderRestrictedAccess(TestCase):
+    """
+    Assumes the following environment variables values:
+      SINGLE_APPLICATION_MODE=n
+      MAIN_APPLICATION_HOST=mainapp.host.com
+    """
+
     databases = "__all__"
 
     def test_block_if_wrong_host(self):
@@ -31,6 +37,11 @@ class UploaderRestrictedAccess(TestCase):
 
 
 class UploaderNonRestrictedAccess(TestCase):
+    """
+    Assumes the following environment variables values:
+      SINGLE_APPLICATION_MODE=y
+    """
+
     databases = "__all__"
 
     @override_settings(ALLOWED_HOSTS=["some.domain.com"])
