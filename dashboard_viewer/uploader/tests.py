@@ -1,4 +1,4 @@
-from django.test import TestCase, override_settings, tag
+from django.test import override_settings, tag, TestCase
 
 
 @tag("third-party-app")
@@ -16,14 +16,18 @@ class UploaderRestrictedAccess(TestCase):
 
         self.assertEqual(200, response.status_code)
         self.assertTrue(response.has_header("X-Frame-Options"))
-        self.assertEqual("ALLOW-FROM HTTPS://MAINAPP.HOST.COM/", response["X-Frame-Options"])
+        self.assertEqual(
+            "ALLOW-FROM HTTPS://MAINAPP.HOST.COM/", response["X-Frame-Options"]
+        )
 
     def test_not_block_other_urls(self):
         response = self.client.get("/admin/login/", HTTP_HOST="thisapp.host.com")
 
         self.assertEqual(200, response.status_code)
         self.assertTrue(response.has_header("X-Frame-Options"))
-        self.assertEqual("ALLOW-FROM HTTPS://MAINAPP.HOST.COM/", response["X-Frame-Options"])
+        self.assertEqual(
+            "ALLOW-FROM HTTPS://MAINAPP.HOST.COM/", response["X-Frame-Options"]
+        )
 
 
 class UploaderNonRestrictedAccess(TestCase):
