@@ -13,6 +13,7 @@ from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
 
+from .decorators import uploader_decorator
 from .forms import AchillesResultsForm, SourceForm
 from .models import Country, DataSource, UploadHistory
 from .tasks import update_achilles_results_data
@@ -211,7 +212,7 @@ def _extract_data_from_uploaded_file(request):
     }
 
 
-@csrf_exempt
+@uploader_decorator
 def upload_achilles_results(request, *args, **kwargs):
     data_source = kwargs.get("data_source")
     try:
@@ -331,7 +332,7 @@ def _leave_valid_fields_values_only(request, initial, aux_form):
                 del initial[field_name]
 
 
-@csrf_exempt
+@uploader_decorator
 def create_data_source(request, *_, **kwargs):
     data_source = kwargs.get("data_source")
     if request.method == "GET":
@@ -408,7 +409,7 @@ def create_data_source(request, *_, **kwargs):
     )
 
 
-@csrf_exempt
+@uploader_decorator
 def edit_data_source(request, *_, **kwargs):
     data_source = kwargs.get("data_source")
     try:

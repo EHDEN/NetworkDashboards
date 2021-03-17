@@ -11,8 +11,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from distutils.util import strtobool
 
 from constance.signals import config_updated
+from django.core.validators import _lazy_re_compile, URLValidator
 from django.dispatch import receiver
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -308,4 +310,27 @@ MARTOR_ENABLE_CONFIGS = {
     "hljs": "true",  # to enable/disable hljs highlighting in preview
 }
 
+
 TEST_RUNNER = "dashboard_viewer.runners.CeleryTestSuiteRunner"
+
+
+"""
+Variables that allow restricting the access to the uploader app if this Django
+app is being used as a third-party tool and is being iframed. 
+"""
+SINGLE_APPLICATION_MODE = strtobool(os.environ.get("SINGLE_APPLICATION_MODE", "y")) == 1
+MAIN_APPLICATION_HOST = os.environ.get("MAIN_APPLICATION_HOST")
+
+if not SINGLE_APPLICATION_MODE:
+    if MAIN_APPLICATION_HOST is None:
+        raise ValueError(
+            "If the application is not running on single application mode then the "
+            "MAIN_APPLICATION_HOST variable must be defined."
+        )
+    elif not _lazy_re_compile(URLValidator.host_re).fullmatch(MAIN_APPLICATION_HOST):
+        raise ValueError(
+            "The variable MAIN_APPLICATION_HOST contains an invalid hostname. "
+            "Only include the hostname part of the URL."
+        )
+
+    X_FRAME_OPTIONS = f"ALLOW-FROM https://{MAIN_APPLICATION_HOST}/"

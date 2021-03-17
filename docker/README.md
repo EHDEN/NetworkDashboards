@@ -4,6 +4,8 @@
 
 2. Create a `.env` file on the `docker` directory, using `.env-example` as reference, setting all necessary environment variables (SUPERSET\_MAPBOX\_API\_KEY and DASHBOARD\_VIEWER\_SECRET\_KEY).
 
+   2.1 If you will use this application as a third-party application and will iframe it, set the variable SINGLE\_APPLICATION\_MODE to `False` and define the host of the main application on the variable MAIN\_APPLICATION\_HOST. Also make sure to add this last host to the list of ALLOWED\_HOSTS.
+
 3. Create a `docker-init.sh` file on `docker/superset` based on the file `docker/superset/docker-init-example.sh` to set up admin credentials for superset.
 
 4. If you wish to expose the dashboard viewer app through a specific domain(s) you must add it/them to the ALLOWED_HOSTS list on file `dashboard_viewer/dashboard_viewer/settings.py` and remove the `'*'` entry.
