@@ -1,8 +1,6 @@
 ## @superset-ui/plugin-chart-box-plot
 
-Box Plot Chart with a raw mode. Based on the Box Plot present [here](https://github.com/apache-superset/superset-ui/tree/v0.16.8/plugins/plugin-chart-echarts)
-
-To check if there are changes on the original repo you can use the `has_changes.py` script.
+Box Plot Chart with a raw mode. Based on the Box Plot present [here](https://github.com/apache-superset/superset-ui/tree/v0.17.10/plugins/plugin-chart-echarts)
 
 [![Version](https://img.shields.io/npm/v/@superset-ui/plugin-chart-echarts.svg?style=flat-square)](https://www.npmjs.com/package/@superset-ui/plugin-chart-echarts)
 [![David (path)](https://img.shields.io/david/apache-superset/superset-ui.svg?path=packages%2Fsuperset-ui-plugin-chart-echarts&style=flat-square)](https://david-dm.org/apache-superset/superset-ui?path=packages/superset-ui-plugin-chart-echarts)
@@ -15,7 +13,7 @@ This plugin provides Echarts viz plugins for Superset:
 
 1. Check what release version of the `@superset-ui/plugin-chart-echarts` npm plugin, superset is using (see the file at `superset-frontend/package.json`).
 
-2. If it is greater than 0.16.9, go to the [history](https://github.com/apache-superset/superset-ui/commits/master/plugins/plugin-chart-echarts) of commits done to the plugin-chart-echarts plugin of the superset-ui repository and update to the most recent commit that has the same version that is being used by your superset version. A fast way check the changes done between two commits: `git diff [old_commit_hash] [recent_commit_hash] -- plugins/plugin-chart-echarts`
+2. If it is greater than 0.17.10, go to the [history](https://github.com/apache-superset/superset-ui/commits/master/plugins/plugin-chart-echarts) of commits done to the plugin-chart-echarts plugin of the superset-ui repository and update to the most recent commit that has the same version that is being used by your superset version. A fast way check the changes done between two commits: `git diff [old_commit_hash] [recent_commit_hash] -- plugins/plugin-chart-echarts`
 
 ### Demo
 

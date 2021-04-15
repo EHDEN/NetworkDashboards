@@ -1,4 +1,4 @@
-# Based on https://github.com/apache/superset/blob/1.0.0rc1/Dockerfile
+# Based on https://github.com/apache/superset/blob/1.1.0/Dockerfile
 
 ######################################################################
 # PY stage that simply does a pip install on our requirements
@@ -30,7 +30,10 @@ RUN cd /app \
 ######################################################################
 # Node stage to deal with static asset construction
 ######################################################################
-FROM node:12 AS superset-node
+FROM node:14 AS superset-node
+
+ARG NPM_VER=7
+RUN npm install -g npm@${NPM_VER}
 
 ARG NPM_BUILD_CMD="build"
 ENV BUILD_CMD=${NPM_BUILD_CMD}
@@ -45,7 +48,7 @@ COPY ./plugins/plugins /app/superset-frontend/plugins
 
 RUN /frontend-mem-nag.sh \
         && cd /app/superset-frontend \
-        && for f in $(ls /app/superset-frontend/plugins) ; do npm install --save plugins/$f ; done \
+        && for f in $(ls /app/superset-frontend/plugins) ; do npm install --save ./plugins/$f ; done \
         && npm ci \
         && mkdir -p package_json_files \
         && cp package*.json package_json_files
