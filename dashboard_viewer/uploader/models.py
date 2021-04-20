@@ -7,6 +7,7 @@ class Country(models.Model):
         ordering = ("country",)
 
     country = models.CharField(max_length=100, unique=True, help_text="Country name.")
+    alpha2 = models.CharField(max_length=3, unique=True, help_text=" ISO 3166-1 Alpha-2 Code")
     continent = models.CharField(max_length=50, help_text="Continent associated.")
 
     def __str__(self):
