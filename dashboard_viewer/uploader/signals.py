@@ -1,5 +1,5 @@
 from django.db import connections, router, transaction
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 from .models import AchillesResults, AchillesResultsDraft, DataSource
@@ -11,9 +11,9 @@ def set_draft_change(instance, **kwargs):
     """
     Since the save method can fail, here just check if the draft field changed
     """
-    if instance.id is not None:
-        instance._draft_change = DataSource.objects.get(id=instance.id).draft != instance.draft
-    else:
+    try:
+        instance._draft_change = DataSource.objects.get(hash=instance.hash).draft != instance.draft
+    except DataSource.DoesNotExist:
         instance._draft_change = False
 
 

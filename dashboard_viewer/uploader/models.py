@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 
@@ -43,6 +45,13 @@ class DataSource(models.Model):
         max_length=50,
         unique=True,
         help_text="Short label for the data source, containing only letters, numbers, underscores or hyphens.",
+    )
+    hash = models.CharField(
+        blank=True,
+        default=lambda: uuid.uuid4().hex,
+        max_length=255,
+        null=False,
+        unique=True,
     )
     release_date = models.CharField(
         max_length=50,
