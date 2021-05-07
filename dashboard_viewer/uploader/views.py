@@ -484,9 +484,9 @@ class DataSourceUpdate(GenericViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        if getattr(instance, "_prefetched_objects_cache", None):  # noqa
+        if getattr(instance, "_prefetched_objects_cache", None):
             # If 'prefetch_related' has been applied to a queryset, we need to
             # forcibly invalidate the prefetch cache on the instance.
-            instance._prefetched_objects_cache = {}
+            instance._prefetched_objects_cache = {}  # noqa
 
         return Response(serializer.data)
