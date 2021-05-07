@@ -267,6 +267,11 @@ CONSTANCE_CONFIG = {
         "Text for the 'Automatic Updates' section on the uploader app",
         "markdown",
     ),
+    "UPLOADER_ALLOW_EDIT_DRAFT_STATUS": (
+        False,
+        "If a Data Source owner can change the draft status when editing its details",
+        bool,
+    ),
     "TABS_LOGO_CONTAINER_CSS": (
         "padding: 5px 5px 5px 5px;\nheight: 100px;\nmargin-bottom: 10px;\n",
         "Css for the div container of the logo image",
