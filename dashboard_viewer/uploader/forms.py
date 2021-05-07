@@ -28,7 +28,8 @@ class SourceForm(forms.ModelForm):
 class EditSourceForm(SourceForm):
     class Meta(SourceForm.Meta):
         fields = ("name", "country", "link", "database_type") + (
-            ("draft",) if constance.config.UPLOADER_ALLOW_EDIT_DRAFT_STATUS else ())
+            ("draft",) if constance.config.UPLOADER_ALLOW_EDIT_DRAFT_STATUS else ()
+        )
 
 
 class AchillesResultsForm(forms.Form):

@@ -7,24 +7,26 @@ from .utils import move_achilles_results_records
 
 
 @receiver(pre_save, sender=DataSource)
-def set_draft_change(instance, **kwargs):
+def set_draft_change(instance, **_):
     """
     Since the save method can fail, here just check if the draft field changed
     """
     try:
-        instance._draft_change = DataSource.objects.get(hash=instance.hash).draft != instance.draft
+        instance._draft_change = (  # noqa
+                DataSource.objects.get(hash=instance.hash).draft != instance.draft
+        )
     except DataSource.DoesNotExist:
-        instance._draft_change = False
+        instance._draft_change = False  # noqa
 
 
 @receiver(post_save, sender=DataSource)
-def handle_draft_change(instance, **kwargs):
+def handle_draft_change(instance, **_):
     """
     If the save method didn't fail this will be executed
     """
-    if instance._draft_change:
+    if instance._draft_change:  # noqa
         with transaction.atomic(
-            using=router.db_for_write(AchillesResults)
+                using=router.db_for_write(AchillesResults)
         ), connections["achilles"].cursor() as cursor:
             if instance.draft:
                 move_achilles_results_records(

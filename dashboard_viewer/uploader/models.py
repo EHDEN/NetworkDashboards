@@ -118,7 +118,9 @@ class AchillesResults(models.Model):
             models.Index(fields=("analysis_id",)),
         ]
 
-    data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE, limit_choices_to={"draft": False})
+    data_source = models.ForeignKey(
+        DataSource, on_delete=models.CASCADE, limit_choices_to={"draft": False}
+    )
     analysis_id = models.BigIntegerField()
     stratum_1 = models.TextField(null=True)
     stratum_2 = models.TextField(null=True)
@@ -144,7 +146,9 @@ class AchillesResultsDraft(models.Model):
             models.Index(fields=("data_source",)),
         ]
 
-    data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE, limit_choices_to={"draft": True})
+    data_source = models.ForeignKey(
+        DataSource, on_delete=models.CASCADE, limit_choices_to={"draft": True}
+    )
     analysis_id = models.BigIntegerField()
     stratum_1 = models.TextField(null=True)
     stratum_2 = models.TextField(null=True)

@@ -1,8 +1,15 @@
 import datetime
 
-from django.test import TestCase, SimpleTestCase
+from django.test import SimpleTestCase, TestCase
 
-from .models import AchillesResults, AchillesResultsArchive, AchillesResultsDraft, Country, DataSource, UploadHistory
+from .models import (
+    AchillesResults,
+    AchillesResultsArchive,
+    AchillesResultsDraft,
+    Country,
+    DataSource,
+    UploadHistory,
+)
 from .tasks import update_achilles_results_data
 
 
@@ -21,7 +28,7 @@ class DataSourceCreator:
             latitude=0,
             longitude=0,
             link="",
-            draft=draft
+            draft=draft,
         )
 
 
@@ -51,7 +58,9 @@ class DraftChangeTestCase(TestCase):
         db.draft = False
         db.save()
 
-        self.assertEqual(DraftChangeTestCase.records_count, AchillesResults.objects.count())
+        self.assertEqual(
+            DraftChangeTestCase.records_count, AchillesResults.objects.count()
+        )
         self.assertEqual(0, AchillesResultsDraft.objects.count())
         self.assertEqual(0, AchillesResultsArchive.objects.count())
 
@@ -61,7 +70,9 @@ class DraftChangeTestCase(TestCase):
         db.save()
 
         self.assertEqual(0, AchillesResults.objects.count())
-        self.assertEqual(DraftChangeTestCase.records_count, AchillesResultsDraft.objects.count())
+        self.assertEqual(
+            DraftChangeTestCase.records_count, AchillesResultsDraft.objects.count()
+        )
         self.assertEqual(0, AchillesResultsArchive.objects.count())
 
     def test_empty_makedraft(self):
@@ -91,7 +102,9 @@ class DraftChangeTestCase(TestCase):
 
 class InsertAchillesResultsTestCase(SimpleTestCase):
     databases = "__all__"
-    records = '[{"analysis_id": 1, "count_value": 1}, {"analysis_id": 2, "count_value": 2}]'
+    records = (
+        '[{"analysis_id": 1, "count_value": 1}, {"analysis_id": 2, "count_value": 2}]'
+    )
 
     @classmethod
     def setUpClass(cls):
@@ -104,7 +117,9 @@ class InsertAchillesResultsTestCase(SimpleTestCase):
         AchillesResultsDraft.objects.filter().delete()
 
     def _update_and_check(self, last_upload_id, count, draft_count, archive_count):
-        task = update_achilles_results_data.delay(self.db.id, last_upload_id, self.records)
+        task = update_achilles_results_data.delay(
+            self.db.id, last_upload_id, self.records
+        )
         task.wait(timeout=None)
 
         self.assertEqual(count, AchillesResults.objects.count())
@@ -117,9 +132,13 @@ class InsertAchillesResultsTestCase(SimpleTestCase):
             self.db.save()
 
         self._update_and_check(None, 0, 2, 0)
-        last_upload_id = UploadHistory.objects.create(data_source=self.db, upload_date=datetime.datetime.now()).id
+        last_upload_id = UploadHistory.objects.create(
+            data_source=self.db, upload_date=datetime.datetime.now()
+        ).id
         self._update_and_check(last_upload_id, 0, 2, 2)
-        last_upload_id = UploadHistory.objects.create(data_source=self.db, upload_date=datetime.datetime.now()).id
+        last_upload_id = UploadHistory.objects.create(
+            data_source=self.db, upload_date=datetime.datetime.now()
+        ).id
         self._update_and_check(last_upload_id, 0, 2, 4)
 
     def test_insert_nondraft(self):
@@ -128,9 +147,13 @@ class InsertAchillesResultsTestCase(SimpleTestCase):
             self.db.save()
 
         self._update_and_check(None, 2, 0, 0)
-        last_upload_id = UploadHistory.objects.create(data_source=self.db, upload_date=datetime.datetime.now()).id
+        last_upload_id = UploadHistory.objects.create(
+            data_source=self.db, upload_date=datetime.datetime.now()
+        ).id
         self._update_and_check(last_upload_id, 2, 0, 2)
-        last_upload_id = UploadHistory.objects.create(data_source=self.db, upload_date=datetime.datetime.now()).id
+        last_upload_id = UploadHistory.objects.create(
+            data_source=self.db, upload_date=datetime.datetime.now()
+        ).id
         self._update_and_check(last_upload_id, 2, 0, 4)
 
     def test_move_records_of_only_one_db(self):
@@ -143,7 +166,9 @@ class InsertAchillesResultsTestCase(SimpleTestCase):
         task.wait(timeout=None)
         # counts are at -> (4, 0, 0) or (0, 4, 0)
 
-        last_upload_id = UploadHistory.objects.create(data_source=self.db, upload_date=datetime.datetime.now()).id
+        last_upload_id = UploadHistory.objects.create(
+            data_source=self.db, upload_date=datetime.datetime.now()
+        ).id
 
         if self.db.draft:
             counts = (0, 4)

@@ -222,9 +222,7 @@ def upload_achilles_results(request, *args, **kwargs):
     except DataSource.DoesNotExist:
         return create_data_source(request, *args, **kwargs)
 
-    upload_history = list(
-        UploadHistory.objects.filter(data_source=obj_data_source)
-    )
+    upload_history = list(UploadHistory.objects.filter(data_source=obj_data_source))
     if request.method == "GET":
         form = AchillesResultsForm()
 
@@ -328,7 +326,10 @@ def _leave_valid_fields_values_only(request, initial, aux_form):
             if decompressed:
                 initial[field_name] = field.compress(decompressed)
         else:
-            if field_name in aux_form.cleaned_data and aux_form.cleaned_data[field_name] not in field.empty_values:
+            if (
+                    field_name in aux_form.cleaned_data
+                    and aux_form.cleaned_data[field_name] not in field.empty_values
+            ):
                 initial[field_name] = aux_form.cleaned_data[field_name]
             elif field_name in initial:
                 del initial[field_name]
@@ -477,13 +478,13 @@ class DataSourceUpdate(GenericViewSet):
     serializer_class = DataSourceSerializer
     queryset = DataSource.objects.all()
 
-    def partial_update(self, request, *args, **kwargs):
+    def partial_update(self, request, *_, **__):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        if getattr(instance, '_prefetched_objects_cache', None):
+        if getattr(instance, "_prefetched_objects_cache", None):  # noqa
             # If 'prefetch_related' has been applied to a queryset, we need to
             # forcibly invalidate the prefetch cache on the instance.
             instance._prefetched_objects_cache = {}

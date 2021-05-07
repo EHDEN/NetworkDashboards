@@ -1,26 +1,41 @@
+from .models import (
+    AchillesResults,
+    AchillesResultsArchive,
+    AchillesResultsDraft,
+    DataSource,
+    UploadHistory,
+)
 
-from .models import AchillesResults, AchillesResultsArchive, AchillesResultsDraft, DataSource, UploadHistory
 
-
-def move_achilles_results_records(cursor, origin_model, destination_model, db_id, last_upload_id=None):
+def move_achilles_results_records(
+        cursor, origin_model, destination_model, db_id, last_upload_id=None
+):
     allowed_models = (AchillesResults, AchillesResultsArchive, AchillesResultsDraft)
 
     if origin_model not in allowed_models or destination_model not in allowed_models:
-        raise ValueError(f"The only allowed models are {''.join(model.__name__ for model in allowed_models)}")
-    elif origin_model == AchillesResultsArchive:
-        raise ValueError("AchillesResultsArchive can only be used as a destination model")
-    elif origin_model == destination_model:
+        raise ValueError(
+            f"The only allowed models are {''.join(model.__name__ for model in allowed_models)}"
+        )
+    if origin_model == AchillesResultsArchive:
+        raise ValueError(
+            "AchillesResultsArchive can only be used as a destination model"
+        )
+    if origin_model == destination_model:
         raise ValueError("Origin and destination models can't be the same")
-    elif not DataSource.objects.filter(id=db_id).exists():
+    if not DataSource.objects.filter(id=db_id).exists():
         raise ValueError("No datasource with the provided id")
 
     if destination_model == AchillesResultsArchive:
         if last_upload_id is None:
             try:
-                last_upload_id = UploadHistory.objects.filter(data_source_id=db_id).latest().id
+                last_upload_id = (
+                    UploadHistory.objects.filter(data_source_id=db_id).latest().id
+                )
             except UploadHistory.DoesNotExist:
                 return  # nothing to move
-        elif not UploadHistory.objects.filter(id=last_upload_id, data_source_id=db_id).exists():
+        elif not UploadHistory.objects.filter(
+                id=last_upload_id, data_source_id=db_id
+        ).exists():
             raise ValueError("There is no UploadHistory with the provided id")
 
         upload_info_column = f", {destination_model.upload_info.field.column}"

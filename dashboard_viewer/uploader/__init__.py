@@ -1,2 +1,1 @@
-
-default_app_config = 'uploader.apps.UploaderConfig'
+default_app_config = "uploader.apps.UploaderConfig"
