@@ -1,6 +1,6 @@
 import datetime
 
-from django.test import SimpleTestCase, TestCase
+from django.test import TestCase, TransactionTestCase
 
 from .models import (
     AchillesResults,
@@ -100,21 +100,11 @@ class DraftChangeTestCase(TestCase):
         self.assertEqual(0, AchillesResultsArchive.objects.count())
 
 
-class InsertAchillesResultsTestCase(SimpleTestCase):
+class InsertAchillesResultsTestCase(TransactionTestCase):
     databases = "__all__"
     records = (
         '[{"analysis_id": 1, "count_value": 1}, {"analysis_id": 2, "count_value": 2}]'
     )
-
-    @classmethod
-    def setUpClass(cls):
-        super(InsertAchillesResultsTestCase, cls).setUpClass()
-        cls.db = datasource_creator.create(True)
-
-    def setUp(self) -> None:
-        AchillesResults.objects.filter().delete()
-        AchillesResultsArchive.objects.filter().delete()
-        AchillesResultsDraft.objects.filter().delete()
 
     def _update_and_check(self, last_upload_id, count, draft_count, archive_count):
         task = update_achilles_results_data.delay(
@@ -127,9 +117,7 @@ class InsertAchillesResultsTestCase(SimpleTestCase):
         self.assertEqual(archive_count, AchillesResultsArchive.objects.count())
 
     def test_insert_draft(self):
-        if not self.db.draft:
-            self.db.draft = True
-            self.db.save()
+        self.db = datasource_creator.create(True)
 
         self._update_and_check(None, 0, 2, 0)
         last_upload_id = UploadHistory.objects.create(
@@ -142,9 +130,7 @@ class InsertAchillesResultsTestCase(SimpleTestCase):
         self._update_and_check(last_upload_id, 0, 2, 4)
 
     def test_insert_nondraft(self):
-        if self.db.draft:
-            self.db.draft = False
-            self.db.save()
+        self.db = datasource_creator.create(False)
 
         self._update_and_check(None, 2, 0, 0)
         last_upload_id = UploadHistory.objects.create(
@@ -157,21 +143,18 @@ class InsertAchillesResultsTestCase(SimpleTestCase):
         self._update_and_check(last_upload_id, 2, 0, 4)
 
     def test_move_records_of_only_one_db(self):
-        db2 = datasource_creator.create(self.db.draft)
+        self.db = datasource_creator.create(True)
+        db2 = datasource_creator.create(True)
 
         task = update_achilles_results_data.delay(self.db.id, None, self.records)
         task.wait(timeout=None)
 
         task = update_achilles_results_data.delay(db2.id, None, self.records)
         task.wait(timeout=None)
-        # counts are at -> (4, 0, 0) or (0, 4, 0)
+        # counts are at (0, 4, 0)
 
         last_upload_id = UploadHistory.objects.create(
             data_source=self.db, upload_date=datetime.datetime.now()
         ).id
 
-        if self.db.draft:
-            counts = (0, 4)
-        else:
-            counts = (4, 0)
-        self._update_and_check(last_upload_id, *counts, 2)
+        self._update_and_check(last_upload_id, 0, 4, 2)

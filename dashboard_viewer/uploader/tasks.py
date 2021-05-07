@@ -1,5 +1,3 @@
-from __future__ import absolute_import, unicode_literals
-
 from typing import Union
 
 import pandas
@@ -11,6 +9,7 @@ from django.core.cache import cache
 from django.db import connections, router, transaction
 from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
+from sqlalchemy import create_engine
 
 from .models import (
     AchillesResults,
@@ -64,15 +63,22 @@ def update_achilles_results_data(
                 store_table._meta.db_table,
                 db_id,
             )
-            entries.to_sql(
-                store_table._meta.db_table,
-                "postgresql"
-                f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
-                f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
-                f"/{settings.DATABASES['achilles']['NAME']}",
-                if_exists="append",
-                index=False,
-            )
+
+            try:
+                engine = create_engine(
+                    "postgresql"
+                    f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
+                    f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
+                    f"/{settings.DATABASES['achilles']['NAME']}"
+                )
+                entries.to_sql(
+                    store_table._meta.db_table,
+                    engine,
+                    if_exists="append",
+                    index=False,
+                )
+            finally:
+                engine.dispose()
 
     # The lines below can be used to later update materialized views of each chart
     # To be more efficient, they should only be updated when the is no more workers inserting records
