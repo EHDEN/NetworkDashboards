@@ -3,7 +3,7 @@ from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
 
 from .fields import CoordinatesField
-from .models import DataSource, DatabaseType
+from .models import DatabaseType, DataSource
 from .widgets import ListTextWidget
 
 

@@ -327,8 +327,8 @@ def _leave_valid_fields_values_only(request, initial, aux_form):
                 initial[field_name] = field.compress(decompressed)
         else:
             if (
-                    field_name in aux_form.cleaned_data
-                    and aux_form.cleaned_data[field_name] not in field.empty_values
+                field_name in aux_form.cleaned_data
+                and aux_form.cleaned_data[field_name] not in field.empty_values
             ):
                 initial[field_name] = aux_form.cleaned_data[field_name]
             elif field_name in initial:

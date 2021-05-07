@@ -9,9 +9,9 @@ from django.conf import settings
 from django.core import serializers
 from django.core.cache import cache
 from django.db import connections, router, transaction
+from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
 
-from materialized_queries_manager.utils import refresh
 from .models import (
     AchillesResults,
     AchillesResultsArchive,
@@ -25,14 +25,14 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def update_achilles_results_data(
-        db_id: int, last_upload_id: Union[int, None], achilles_results: str
+    db_id: int, last_upload_id: Union[int, None], achilles_results: str
 ) -> None:
     logger.info("Worker started [datasource %d]", db_id)
     cache.incr("celery_workers_updating", ignore_key_check=True)
 
     # several workers can update records concurrently -> same as -> several threads can read from the same file
     with RWLock(
-            cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
+        cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
     ):
         store_table = (
             AchillesResultsDraft
@@ -42,7 +42,7 @@ def update_achilles_results_data(
 
         # but only one worker can make updates associated to a specific data source at the same time
         with transaction.atomic(using=router.db_for_write(store_table)), cache.lock(
-                f"celery_worker_lock_db_{db_id}"
+            f"celery_worker_lock_db_{db_id}"
         ):
             logger.info("Updating achilles results records [datasource %d]", db_id)
 

@@ -8,7 +8,7 @@ from .models import (
 
 
 def move_achilles_results_records(
-        cursor, origin_model, destination_model, db_id, last_upload_id=None
+    cursor, origin_model, destination_model, db_id, last_upload_id=None
 ):
     allowed_models = (AchillesResults, AchillesResultsArchive, AchillesResultsDraft)
 
@@ -34,7 +34,7 @@ def move_achilles_results_records(
             except UploadHistory.DoesNotExist:
                 return  # nothing to move
         elif not UploadHistory.objects.filter(
-                id=last_upload_id, data_source_id=db_id
+            id=last_upload_id, data_source_id=db_id
         ).exists():
             raise ValueError("There is no UploadHistory with the provided id")
 
