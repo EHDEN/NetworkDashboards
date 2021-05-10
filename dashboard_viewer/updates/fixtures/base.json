@@ -1,0 +1,24 @@
+[
+{
+    "model": "uploader.country",
+    "pk": 1,
+    "fields": {
+        "country": "test",
+        "continent": "test"
+    }
+},
+{
+    "model": "uploader.datasource",
+    "pk": 1,
+    "fields": {
+        "name": "test",
+        "acronym": "test",
+        "release_date": null,
+        "database_type": "test",
+        "country": 1,
+        "latitude": 35.0524837066247,
+        "longitude": -103.095703125,
+        "link": ""
+    }
+}
+]

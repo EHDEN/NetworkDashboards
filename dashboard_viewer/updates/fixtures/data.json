@@ -1,0 +1,84 @@
+[
+  {
+    "model": "uploader.uploadhistory",
+    "pk": 1,
+    "fields": {
+      "data_source": 1,
+      "upload_date": "2021-05-10T14:46:11.609Z",
+      "r_package_version": "nan",
+      "generation_date": "nan",
+      "cdm_release_date": null,
+      "cdm_version": null,
+      "vocabulary_version": null
+    }
+  },
+  {
+    "model": "uploader.achillesresults",
+    "pk": 1,
+    "fields": {
+      "data_source": 1,
+      "analysis_id": 0,
+      "stratum_1": "test",
+      "stratum_2": null,
+      "stratum_3": null,
+      "stratum_4": null,
+      "stratum_5": null,
+      "count_value": 1171,
+      "min_value": null,
+      "max_value": null,
+      "avg_value": null,
+      "stdev_value": null,
+      "median_value": null,
+      "p10_value": null,
+      "p25_value": null,
+      "p75_value": null,
+      "p90_value": null
+    }
+  },
+  {
+    "model": "uploader.achillesresults",
+    "pk": 2,
+    "fields": {
+      "data_source": 1,
+      "analysis_id": 2000000,
+      "stratum_1": "0.151157 secs",
+      "stratum_2": null,
+      "stratum_3": null,
+      "stratum_4": null,
+      "stratum_5": null,
+      "count_value": 6,
+      "min_value": null,
+      "max_value": null,
+      "avg_value": null,
+      "stdev_value": null,
+      "median_value": null,
+      "p10_value": null,
+      "p25_value": null,
+      "p75_value": null,
+      "p90_value": null
+    }
+  },
+  {
+    "model": "uploader.achillesresults",
+    "pk": 3,
+    "fields": {
+      "data_source": 1,
+      "analysis_id": 103,
+      "stratum_1": null,
+      "stratum_2": null,
+      "stratum_3": null,
+      "stratum_4": null,
+      "stratum_5": null,
+      "count_value": 1171,
+      "min_value": 0,
+      "max_value": 61,
+      "avg_value": 14.1289496157,
+      "stdev_value": 12.4272078335,
+      "median_value": 14,
+      "p10_value": 0,
+      "p25_value": 2,
+      "p75_value": 21,
+      "p90_value": 32
+    }
+  }
+]
