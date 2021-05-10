@@ -10,6 +10,7 @@ django-redis==4.12.1                      # acess redis through a programmatic A
 django-sass-processor==0.8.2              # automate scss devolopment
 django==2.2.17
 djangorestframework==3.12.2               # expose tabs content through an API
+Jinja2==2.11.3                            # to render custom code to publish upload updates
 libsass==0.20.1                           # to compile scss files into css
 gunicorn==20.0.4                          # for production deployment
 martor==1.5.8                             # markdown editor in admin app
@@ -36,6 +37,7 @@ django-appconf==1.0.4
 idna==2.10
 kombu==5.0.2
 Markdown==3.3.3
+MarkupSafe==1.1.1
 numpy==1.20.0
 packaging==20.9
 prompt-toolkit==3.0.14

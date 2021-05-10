@@ -95,7 +95,7 @@ class UploadHistory(models.Model):
         return self.__str__()
 
     def __str__(self):
-        return f"{self.data_source.name} - {self.upload_date}"
+        return f"Data Source: {self.data_source.name} - Upload Date: {self.upload_date}"
 
 
 class AchillesResults(models.Model):

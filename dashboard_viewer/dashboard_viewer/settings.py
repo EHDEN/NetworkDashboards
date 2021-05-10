@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     "martor",
     "rest_framework",
     "sass_processor",
+    "updates",
     "materialized_queries_manager",
     "tabsManager",
     "uploader",

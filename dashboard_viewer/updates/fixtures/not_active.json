@@ -1,0 +1,28 @@
+[
+{
+    "model": "updates.requestsgroup",
+    "pk": 1,
+    "fields": {
+        "name": "test",
+        "active": false
+    }
+},
+{
+    "model": "updates.request",
+    "pk": 1,
+    "fields": {
+        "group": 1,
+        "request_arguments_template": "{\"url\": \"http://localhost:8383\",\"method\": \"get\",\"data\": {\"patient_count\": \"{{ achilles_results.0.0.count_value }}\"}}",
+        "order": 1
+    }
+},
+{
+    "model": "updates.request",
+    "pk": 2,
+    "fields": {
+        "group": 1,
+        "request_arguments_template": "{\"url\": \"https://stackoverflow.com?response={{ responses|last|attr(\"text\") }}\",\"method\": \"GET\"}",
+        "order": 2
+    }
+}
+]

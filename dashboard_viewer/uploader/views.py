@@ -12,6 +12,8 @@ from django.forms import fields
 from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
+from updates.models import RequestsGroup
+from updates.tasks import send_updates
 
 from .forms import AchillesResultsForm, SourceForm
 from .models import Country, DataSource, UploadHistory
@@ -232,11 +234,13 @@ def upload_achilles_results(request, *args, **kwargs):
             data = _extract_data_from_uploaded_file(request)
 
             if data:
+                achilles_results_json = data["achilles_results"].to_json()
+
                 # launch an asynchronous task to insert the new data
                 update_achilles_results_data.delay(
                     obj_data_source.id,
                     upload_history[0].id if len(upload_history) > 0 else None,
-                    data["achilles_results"].to_json(),
+                    achilles_results_json,
                 )
 
                 obj_data_source.release_date = data["source_release_date"]
@@ -253,6 +257,11 @@ def upload_achilles_results(request, *args, **kwargs):
                 )
                 latest_upload.save()
                 upload_history = [latest_upload] + upload_history
+
+                if RequestsGroup.objects.filter(active=True).count() > 0:
+                    send_updates.delay(
+                        obj_data_source.id, latest_upload.id, achilles_results_json
+                    )
 
                 # save the achilles result file to disk
                 data_source_storage_path = os.path.join(

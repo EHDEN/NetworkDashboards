@@ -9,7 +9,7 @@ class AchillesRouter:
      achilles database. The rest will be stored on the default database
     """
 
-    achilles_apps = ["uploader", "materialized_queries_manager"]
+    achilles_apps = ["uploader", "materialized_queries_manager", "updates"]
     achilles_db = "achilles"
 
     def db_for_read(self, model, **_):

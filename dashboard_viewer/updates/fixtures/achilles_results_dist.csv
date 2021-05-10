@@ -1,0 +1,4 @@
+analysis_id,stratum_1,stratum_2,stratum_3,stratum_4,stratum_5,count_value,min_value,max_value,avg_value,stdev_value,median_value,p10_value,p25_value,p75_value,p90_value
+0,test,NULL,NULL,NULL,NULL,1171,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+2000000,0.151157 secs,NULL,NULL,NULL,NULL,6,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+103,NULL,NULL,NULL,NULL,NULL,1171,0,61,14.1289496157131,12.4272078334908,14,0,2,21,32
