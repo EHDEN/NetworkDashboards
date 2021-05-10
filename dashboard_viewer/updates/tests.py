@@ -92,7 +92,8 @@ class LogsTestCase(BaseInitialDataTestCase):
 
         self._execute_and_check("missing 1 required positional argument")
 
-    def test_invalid_condition_expression(self):
+    @patch("requests.Session.request")
+    def test_invalid_condition_expression(self, _):
         first_request = models.Request.objects.get(order=1)
         first_request.success_condition_template = "def function():"
         first_request.save()
