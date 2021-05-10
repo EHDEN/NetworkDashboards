@@ -14,16 +14,14 @@ from .models import RequestLog, RequestsGroup, RequestsGroupLog
 def send_updates(db_id: int, upload_history_id: int, achilles_results: str):
     data_source = DataSource.objects.get(id=db_id)
 
-    achilles_results = {
-        analysis_id: rows[rows.columns[1:]].to_dict("records")
-        for analysis_id, rows in pandas.read_json(achilles_results).groupby(
-            "analysis_id"
-        )
-    }
-
     responses = []
     context = {
-        "achilles_results": achilles_results,
+        "achilles_results": {
+            analysis_id: rows[rows.columns[1:]].to_dict("records")
+            for analysis_id, rows in pandas.read_json(achilles_results).groupby(
+                "analysis_id"
+            )
+        },
         "data_source": data_source,
         "responses": responses,
     }
@@ -51,13 +49,14 @@ def send_updates(db_id: int, upload_history_id: int, achilles_results: str):
 
                     if request.success_condition_template is not None:
                         template = Template(request.success_condition_template)  # noqa
+                        render_result = template.render(response=response)  # noqa
 
-                        request_log.success_condition_template_render = template.render(  # noqa
-                            response=response
-                        )
+                        request_log.success_condition_template_render = render_result
 
                         if not bool(
-                            eval(request_log.success_condition_template_render)  # noqa - we trust the admins
+                            eval(  # noqa - we trust the admins
+                                request_log.success_condition_template_render
+                            )
                         ):
                             raise AssertionError("Success condition not met")
 
