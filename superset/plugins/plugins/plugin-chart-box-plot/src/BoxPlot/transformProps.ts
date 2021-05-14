@@ -18,38 +18,65 @@
  */
 import {
   CategoricalColorNamespace,
-  ChartProps,
+  DataRecordValue,
   DataRecord,
   getMetricLabel,
   getNumberFormatter,
+  getTimeFormatter,
+  QueryMode,
 } from '@superset-ui/core';
 import { EChartsOption, BoxplotSeriesOption } from 'echarts';
-import { CallbackDataParams } from 'echarts/types/src/util/types';
-import { QueryMode } from './controlPanel';
-import { BoxPlotQueryFormData } from './types';
-import { EchartsProps } from '../types';
-import { extractGroupbyLabel } from '../utils/series';
+import { CallbackDataParams,  } from 'echarts/types/src/util/types';
+import {
+  BoxPlotChartTransformedProps,
+  BoxPlotQueryFormData,
+  EchartsBoxPlotChartProps,
+} from './types';
+import { extractGroupbyLabel, getColtypesMapping } from '../utils/series';
 import { defaultGrid, defaultTooltip, defaultYAxis } from '../defaults';
 import d3 from 'd3';
 
-export default function transformProps(chartProps: ChartProps): EchartsProps {
-  const { width, height, formData, queriesData } = chartProps;
+export default function transformProps(
+  chartProps: EchartsBoxPlotChartProps,
+): BoxPlotChartTransformedProps {
+  const { width, height, formData, hooks, ownState, queriesData } = chartProps;
+  const { data: original_data = [] } = queriesData[0];
+  const { setDataMask = () => {} } = hooks;
+  const coltypeMapping = getColtypesMapping(queriesData[0]);
   const {
     colorScheme,
     queryMode,
     groupby = [],
     metrics: formdataMetrics = [],
     numberFormat,
+    dateFormat,
     xTicksLayout,
+    emitFilter,
   } = formData as BoxPlotQueryFormData;
   const colorFn = CategoricalColorNamespace.getScale(colorScheme as string);
   const numberFormatter = getNumberFormatter(numberFormat);
 
-  let transformedData, outlierData;
+  let transformedData: {
+    name: string;
+    value: any[];
+    itemStyle: {
+        color: string;
+        opacity: number;
+        borderColor: string;
+    };
+  }[], outlierData;
+
   if (queryMode == QueryMode.raw) {
     const data = d3
       .nest()
-      .key(row => extractGroupbyLabel({ datum: row as DataRecord, groupby }))
+      .key(row => extractGroupbyLabel(
+        {
+          datum: row as DataRecord,
+          groupby,
+          coltypeMapping,
+          timeFormatter: getTimeFormatter(dateFormat),
+        }
+      ))
       .entries(queriesData[0].data)
       .reduce((result: {[key: string]: DataRecord}, item, _) => {
         result[item.key] = item.values[0];
@@ -61,7 +88,13 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
     if (outliers && !Array.isArray(outliers)) {
       outlierMapping = d3
         .nest()
-        .key(row => extractGroupbyLabel({ datum: row as DataRecord, groupby }))
+        .key(row => extractGroupbyLabel(
+          {
+            datum: row as DataRecord,
+            groupby,
+            coltypeMapping,
+            timeFormatter: getTimeFormatter(dateFormat),
+          }))
         .entries(queriesData[1].data)
         .reduce((result: {[key: string]: DataRecord[]}, item, _) => {
           const values = item.values.filter((v: DataRecord) => v[outliers])
@@ -93,6 +126,7 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
         .flat(2);
     }
 
+    
     const {
       minimum,
       p10,
@@ -128,12 +162,16 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
       .flatMap(row => row);
   }
   else {
-    const data: DataRecord[] = queriesData[0].data || [];
     const metricLabels = formdataMetrics.map(getMetricLabel);
 
-    transformedData = data
+    transformedData = original_data
       .map((datum: any) => {
-        const groupbyLabel = extractGroupbyLabel({ datum, groupby });
+        const groupbyLabel = extractGroupbyLabel({
+          datum,
+          groupby,
+          coltypeMapping,
+          timeFormatter: getTimeFormatter(dateFormat),
+        });
         return metricLabels.map(metric => {
           const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
           return {
@@ -158,10 +196,15 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
       })
       .flatMap(row => row);
 
-    outlierData = data
+    outlierData = original_data
       .map(datum =>
         metricLabels.map(metric => {
-          const groupbyLabel = extractGroupbyLabel({ datum, groupby });
+          const groupbyLabel = extractGroupbyLabel({
+            datum,
+            groupby,
+            coltypeMapping,
+            timeFormatter: getTimeFormatter(dateFormat),
+          });
           const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
           // Outlier data is a nested array of numbers (uncommon, therefore no need to add to DataRecordValue)
           const outlierDatum = (datum[`${metric}__outliers`] || []) as number[];
@@ -185,7 +228,29 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
       .flat(2);
   }
 
-  outlierData = outlierData || [];
+  const labelMap = original_data.reduce((acc: Record<string, DataRecordValue[]>, datum) => {
+    const label = extractGroupbyLabel({
+      datum,
+      groupby,
+      coltypeMapping,
+      timeFormatter: getTimeFormatter(dateFormat),
+    });
+    return {
+      ...acc,
+      [label]: groupby.map(col => datum[col]),
+    };
+  }, {});
+
+  const selectedValues = (ownState.selectedValues || []).reduce(
+    (acc: Record<string, number>, selectedValue: string) => {
+      const index = transformedData.findIndex(({ name }) => name === selectedValue);
+      return {
+        ...acc,
+        [index]: selectedValue,
+      };
+    },
+    {},
+  );
 
   let axisLabel;
   if (xTicksLayout === '45°') axisLabel = { rotate: -45 };
@@ -193,6 +258,8 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
   else if (xTicksLayout === 'flat') axisLabel = { rotate: 0 };
   else if (xTicksLayout === 'staggered') axisLabel = { rotate: -45 };
   else axisLabel = { show: true };
+
+  outlierData = outlierData || [];
 
   const series: BoxplotSeriesOption[] = [
     {
@@ -273,8 +340,14 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
   };
 
   return {
+    formData,
     width,
     height,
     echartOptions,
+    setDataMask,
+    emitFilter,
+    labelMap,
+    groupby,
+    selectedValues,
   };
 }

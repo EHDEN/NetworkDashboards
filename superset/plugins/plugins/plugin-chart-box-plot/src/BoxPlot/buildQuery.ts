@@ -78,7 +78,7 @@ export default function buildQuery(formData: BoxPlotQueryFormData) {
 
     let whiskerType: BoxPlotQueryObjectWhiskerType;
     let percentiles: [number, number] | undefined;
-    const { columns, metrics } = baseQueryObject;
+    const { columns = [], metrics = [] } = baseQueryObject;
     const percentileMatch = PERCENTILE_REGEX.exec(whiskerOptions as string);
 
     if (whiskerOptions === 'Tukey') {
