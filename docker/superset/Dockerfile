@@ -56,7 +56,8 @@ RUN /frontend-mem-nag.sh \
 # Next, copy in the rest and let webpack do its thing
 COPY ./repo/superset-frontend /app/superset-frontend
 
-COPY ./plugins/MainPreset.js /app/superset-frontend/src/visualizations/presets/MainPreset.js
+COPY ./plugins/setupPluginsExtra.ts /app/superset-frontend/src/setup/setupPluginsExtra.ts
+#COPY ./plugins/MainPreset.js /app/superset-frontend/src/visualizations/presets/MainPreset.js
 
 # This is BY FAR the most expensive step (thanks Terser!)
 RUN cd /app/superset-frontend \
@@ -78,7 +79,7 @@ ENV LANG=C.UTF-8 \
     FLASK_APP="superset.app:create_app()" \
     PYTHONPATH="/app/pythonpath" \
     SUPERSET_HOME="/app/superset_home" \
-    SUPERSET_PORT=8080
+    SUPERSET_PORT=8088
 
 RUN useradd --user-group --no-create-home --no-log-init --shell /bin/bash superset \
         && mkdir -p ${SUPERSET_HOME} ${PYTHONPATH} \
@@ -86,6 +87,7 @@ RUN useradd --user-group --no-create-home --no-log-init --shell /bin/bash supers
         && apt-get install -y --no-install-recommends \
             build-essential \
             default-libmysqlclient-dev \
+            libsasl2-modules-gssapi-mit \
             libpq-dev \
         && rm -rf /var/lib/apt/lists/*
 
@@ -106,6 +108,7 @@ RUN cd /app \
         && pip install -e .
 
 COPY ./repo/docker/docker-entrypoint.sh /usr/bin/
+COPY ./repo/docker/docker-bootstrap.sh /usr/bin/
 
 WORKDIR /app
 
