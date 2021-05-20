@@ -14,8 +14,7 @@ def set_hash(apps, schema_editor):
     data_sources = DataSource.objects.all()
     if data_sources.exists():
         achilles_results_storage_path = os.path.join(
-            settings.BASE_DIR,
-            settings.ACHILLES_RESULTS_STORAGE_PATH,
+            settings.BASE_DIR, settings.ACHILLES_RESULTS_STORAGE_PATH
         )
 
         try:
@@ -36,13 +35,9 @@ def set_hash(apps, schema_editor):
                 for data_source in data_sources:
                     shutil.move(
                         os.path.join(
-                            achilles_results_storage_path,
-                            data_source.acronym,
+                            achilles_results_storage_path, data_source.acronym
                         ),
-                        os.path.join(
-                            achilles_results_storage_path,
-                            data_source.hash,
-                        )
+                        os.path.join(achilles_results_storage_path, data_source.hash),
                     )
         except FileNotFoundError:
             raise FileNotFoundError(
