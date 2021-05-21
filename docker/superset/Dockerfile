@@ -56,8 +56,8 @@ RUN /frontend-mem-nag.sh \
 # Next, copy in the rest and let webpack do its thing
 COPY ./repo/superset-frontend /app/superset-frontend
 
-COPY ./plugins/setupPluginsExtra.ts /app/superset-frontend/src/setup/setupPluginsExtra.ts
-#COPY ./plugins/MainPreset.js /app/superset-frontend/src/visualizations/presets/MainPreset.js
+#COPY ./plugins/setupPluginsExtra.ts /app/superset-frontend/src/setup/setupPluginsExtra.ts
+COPY ./plugins/MainPreset.js /app/superset-frontend/src/visualizations/presets/MainPreset.js
 
 # This is BY FAR the most expensive step (thanks Terser!)
 RUN cd /app/superset-frontend \
