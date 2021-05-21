@@ -1,5 +1,3 @@
-from __future__ import absolute_import, unicode_literals
-
 from typing import Union
 
 import pandas
@@ -11,8 +9,15 @@ from django.core.cache import cache
 from django.db import connections, router, transaction
 from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
+from sqlalchemy import create_engine
 
-from .models import AchillesResults, AchillesResultsArchive
+from .models import (
+    AchillesResults,
+    AchillesResultsArchive,
+    AchillesResultsDraft,
+    DataSource,
+)
+from .utils import move_achilles_results_records
 
 logger = get_task_logger(__name__)
 
@@ -28,92 +33,52 @@ def update_achilles_results_data(
     with RWLock(
         cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
     ):
+        store_table = (
+            AchillesResultsDraft
+            if DataSource.objects.get(id=db_id).draft
+            else AchillesResults
+        )
+
         # but only one worker can make updates associated to a specific data source at the same time
-        with cache.lock(f"celery_worker_lock_db_{db_id}"):
+        with transaction.atomic(using=router.db_for_write(store_table)), cache.lock(
+            f"celery_worker_lock_db_{db_id}"
+        ):
             logger.info("Updating achilles results records [datasource %d]", db_id)
 
+            logger.info(
+                "Moving old records to the %s table [datasource %d]",
+                AchillesResultsArchive._meta.db_table,
+                db_id,
+            )
+            with connections["achilles"].cursor() as cursor:
+                move_achilles_results_records(
+                    cursor, store_table, AchillesResultsArchive, db_id, last_upload_id
+                )
+
             entries = pandas.read_json(achilles_results)
-
-            if last_upload_id:
-                # if there were any records uploaded before
-                #  move them to the AchillesResultsArchive table
-                logger.info(
-                    "Moving old records to the %s table [datasource %d]",
-                    AchillesResultsArchive._meta.db_table,
-                    db_id,
-                )
-                with transaction.atomic(
-                    using=router.db_for_write(AchillesResults)
-                ), connections["achilles"].cursor() as cursor:
-                    cursor.execute(
-                        f"""
-                        INSERT INTO {AchillesResultsArchive._meta.db_table} (
-                            {AchillesResultsArchive.analysis_id.field_name},
-                            {AchillesResultsArchive.stratum_1.field_name},
-                            {AchillesResultsArchive.stratum_2.field_name},
-                            {AchillesResultsArchive.stratum_3.field_name},
-                            {AchillesResultsArchive.stratum_4.field_name},
-                            {AchillesResultsArchive.stratum_5.field_name},
-                            {AchillesResultsArchive.count_value.field_name},
-                            {AchillesResultsArchive.min_value.field_name},
-                            {AchillesResultsArchive.max_value.field_name},
-                            {AchillesResultsArchive.avg_value.field_name},
-                            {AchillesResultsArchive.stdev_value.field_name},
-                            {AchillesResultsArchive.median_value.field_name},
-                            {AchillesResultsArchive.p10_value.field_name},
-                            {AchillesResultsArchive.p25_value.field_name},
-                            {AchillesResultsArchive.p75_value.field_name},
-                            {AchillesResultsArchive.p90_value.field_name},
-                            {AchillesResultsArchive.data_source.field.column},
-                            {AchillesResultsArchive.upload_info.field.column}
-                        )
-                        SELECT
-                            {AchillesResults.analysis_id.field_name},
-                            {AchillesResults.stratum_1.field_name},
-                            {AchillesResults.stratum_2.field_name},
-                            {AchillesResults.stratum_3.field_name},
-                            {AchillesResults.stratum_4.field_name},
-                            {AchillesResults.stratum_5.field_name},
-                            {AchillesResults.count_value.field_name},
-                            {AchillesResults.min_value.field_name},
-                            {AchillesResults.max_value.field_name},
-                            {AchillesResults.avg_value.field_name},
-                            {AchillesResults.stdev_value.field_name},
-                            {AchillesResults.median_value.field_name},
-                            {AchillesResults.p10_value.field_name},
-                            {AchillesResults.p25_value.field_name},
-                            {AchillesResults.p75_value.field_name},
-                            {AchillesResults.p90_value.field_name},
-                            %s, %s
-                        FROM {AchillesResults._meta.db_table}
-                        """,
-                        (db_id, last_upload_id),
-                    )
-
-                logger.info(
-                    "Deleting old records from %s table [datasource %d]",
-                    AchillesResults._meta.db_table,
-                    db_id,
-                )
-                AchillesResults.objects.filter(data_source_id=db_id).delete()
-
             entries["data_source_id"] = db_id
 
             logger.info(
                 "Inserting new records on %s table [datasource %d]",
-                AchillesResults._meta.db_table,
+                store_table._meta.db_table,
                 db_id,
             )
 
-            entries.to_sql(
-                AchillesResults._meta.db_table,
-                "postgresql"
-                f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
-                f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
-                f"/{settings.DATABASES['achilles']['NAME']}",
-                if_exists="append",
-                index=False,
-            )
+            try:
+                engine = create_engine(
+                    "postgresql"
+                    f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
+                    f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
+                    f"/{settings.DATABASES['achilles']['NAME']}"
+                )
+                entries.to_sql(
+                    store_table._meta.db_table,
+                    engine,
+                    if_exists="append",
+                    index=False,
+                )
+            finally:
+                engine.dispose()
 
     # The lines below can be used to later update materialized views of each chart
     # To be more efficient, they should only be updated when the is no more workers inserting records

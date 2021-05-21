@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 
@@ -7,6 +9,9 @@ class Country(models.Model):
         ordering = ("country",)
 
     country = models.CharField(max_length=100, unique=True, help_text="Country name.")
+    alpha2 = models.CharField(
+        max_length=3, unique=True, help_text=" ISO 3166-1 Alpha-2 Code"
+    )
     continent = models.CharField(max_length=50, help_text="Continent associated.")
 
     def __str__(self):
@@ -44,10 +49,18 @@ class DataSource(models.Model):
         unique=True,
         help_text="Short label for the data source, containing only letters, numbers, underscores or hyphens.",
     )
+    hash = models.CharField(
+        blank=True,
+        default=lambda: uuid.uuid4().hex,
+        max_length=255,
+        null=False,
+        unique=True,
+    )
     release_date = models.CharField(
         max_length=50,
         help_text="Date at which DB is available for research for current release.",
         null=True,
+        blank=True,
     )
     database_type = models.CharField(
         max_length=100, help_text="Type of the data source. You can create a new type."
@@ -61,6 +74,7 @@ class DataSource(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     link = models.URLField(help_text="Link to home page of the data source", blank=True)
+    draft = models.BooleanField(default=True)
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
@@ -80,6 +94,7 @@ class DataSource(models.Model):
 
 class UploadHistory(models.Model):
     class Meta:
+        get_latest_by = "upload_date"
         ordering = ("-upload_date",)
         db_table = "upload_history"
 
@@ -106,7 +121,37 @@ class AchillesResults(models.Model):
             models.Index(fields=("analysis_id",)),
         ]
 
-    data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
+    data_source = models.ForeignKey(
+        DataSource, on_delete=models.CASCADE, limit_choices_to={"draft": False}
+    )
+    analysis_id = models.BigIntegerField()
+    stratum_1 = models.TextField(null=True)
+    stratum_2 = models.TextField(null=True)
+    stratum_3 = models.TextField(null=True)
+    stratum_4 = models.TextField(null=True)
+    stratum_5 = models.TextField(null=True)
+    count_value = models.BigIntegerField()
+    min_value = models.BigIntegerField(null=True)
+    max_value = models.BigIntegerField(null=True)
+    avg_value = models.FloatField(null=True)
+    stdev_value = models.FloatField(null=True)
+    median_value = models.BigIntegerField(null=True)
+    p10_value = models.BigIntegerField(null=True)
+    p25_value = models.BigIntegerField(null=True)
+    p75_value = models.BigIntegerField(null=True)
+    p90_value = models.BigIntegerField(null=True)
+
+
+class AchillesResultsDraft(models.Model):
+    class Meta:
+        db_table = "achilles_results_draft"
+        indexes = [
+            models.Index(fields=("data_source",)),
+        ]
+
+    data_source = models.ForeignKey(
+        DataSource, on_delete=models.CASCADE, limit_choices_to={"draft": True}
+    )
     analysis_id = models.BigIntegerField()
     stratum_1 = models.TextField(null=True)
     stratum_2 = models.TextField(null=True)

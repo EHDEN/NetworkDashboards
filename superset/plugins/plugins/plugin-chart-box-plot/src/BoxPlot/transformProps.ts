@@ -18,36 +18,65 @@
  */
 import {
   CategoricalColorNamespace,
-  ChartProps,
+  DataRecordValue,
   DataRecord,
   getMetricLabel,
   getNumberFormatter,
+  getTimeFormatter,
+  QueryMode,
 } from '@superset-ui/core';
-import { QueryMode } from './controlPanel';
-import { BoxPlotQueryFormData } from './types';
-import { EchartsProps } from '../types';
-import { extractGroupbyLabel } from '../utils/series';
+import { EChartsOption, BoxplotSeriesOption } from 'echarts';
+import { CallbackDataParams,  } from 'echarts/types/src/util/types';
+import {
+  BoxPlotChartTransformedProps,
+  BoxPlotQueryFormData,
+  EchartsBoxPlotChartProps,
+} from './types';
+import { extractGroupbyLabel, getColtypesMapping } from '../utils/series';
 import { defaultGrid, defaultTooltip, defaultYAxis } from '../defaults';
 import d3 from 'd3';
 
-export default function transformProps(chartProps: ChartProps): EchartsProps {
-  const { width, height, formData, queriesData } = chartProps;
+export default function transformProps(
+  chartProps: EchartsBoxPlotChartProps,
+): BoxPlotChartTransformedProps {
+  const { width, height, formData, hooks, ownState, queriesData } = chartProps;
+  const { data: original_data = [] } = queriesData[0];
+  const { setDataMask = () => {} } = hooks;
+  const coltypeMapping = getColtypesMapping(queriesData[0]);
   const {
     colorScheme,
     queryMode,
     groupby = [],
     metrics: formdataMetrics = [],
     numberFormat,
+    dateFormat,
     xTicksLayout,
+    emitFilter,
   } = formData as BoxPlotQueryFormData;
   const colorFn = CategoricalColorNamespace.getScale(colorScheme as string);
   const numberFormatter = getNumberFormatter(numberFormat);
 
-  let transformedData, outlierData;
+  let transformedData: {
+    name: string;
+    value: any[];
+    itemStyle: {
+        color: string;
+        opacity: number;
+        borderColor: string;
+    };
+  }[], outlierData;
+
   if (queryMode == QueryMode.raw) {
     const data = d3
       .nest()
-      .key(row => extractGroupbyLabel({ datum: row as DataRecord, groupby }))
+      .key(row => extractGroupbyLabel(
+        {
+          datum: row as DataRecord,
+          groupby,
+          coltypeMapping,
+          timeFormatter: getTimeFormatter(dateFormat),
+        }
+      ))
       .entries(queriesData[0].data)
       .reduce((result: {[key: string]: DataRecord}, item, _) => {
         result[item.key] = item.values[0];
@@ -59,7 +88,13 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
     if (outliers && !Array.isArray(outliers)) {
       outlierMapping = d3
         .nest()
-        .key(row => extractGroupbyLabel({ datum: row as DataRecord, groupby }))
+        .key(row => extractGroupbyLabel(
+          {
+            datum: row as DataRecord,
+            groupby,
+            coltypeMapping,
+            timeFormatter: getTimeFormatter(dateFormat),
+          }))
         .entries(queriesData[1].data)
         .reduce((result: {[key: string]: DataRecord[]}, item, _) => {
           const values = item.values.filter((v: DataRecord) => v[outliers])
@@ -91,6 +126,7 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
         .flat(2);
     }
 
+    
     const {
       minimum,
       p10,
@@ -126,12 +162,16 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
       .flatMap(row => row);
   }
   else {
-    const data: DataRecord[] = queriesData[0].data || [];
     const metricLabels = formdataMetrics.map(getMetricLabel);
 
-    transformedData = data
-      .map(datum => {
-        const groupbyLabel = extractGroupbyLabel({ datum, groupby });
+    transformedData = original_data
+      .map((datum: any) => {
+        const groupbyLabel = extractGroupbyLabel({
+          datum,
+          groupby,
+          coltypeMapping,
+          timeFormatter: getTimeFormatter(dateFormat),
+        });
         return metricLabels.map(metric => {
           const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
           return {
@@ -156,10 +196,15 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
       })
       .flatMap(row => row);
 
-    outlierData = data
+    outlierData = original_data
       .map(datum =>
         metricLabels.map(metric => {
-          const groupbyLabel = extractGroupbyLabel({ datum, groupby });
+          const groupbyLabel = extractGroupbyLabel({
+            datum,
+            groupby,
+            coltypeMapping,
+            timeFormatter: getTimeFormatter(dateFormat),
+          });
           const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
           // Outlier data is a nested array of numbers (uncommon, therefore no need to add to DataRecordValue)
           const outlierDatum = (datum[`${metric}__outliers`] || []) as number[];
@@ -183,7 +228,29 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
       .flat(2);
   }
 
-  outlierData = outlierData || [];
+  const labelMap = original_data.reduce((acc: Record<string, DataRecordValue[]>, datum) => {
+    const label = extractGroupbyLabel({
+      datum,
+      groupby,
+      coltypeMapping,
+      timeFormatter: getTimeFormatter(dateFormat),
+    });
+    return {
+      ...acc,
+      [label]: groupby.map(col => datum[col]),
+    };
+  }, {});
+
+  const selectedValues = (ownState.selectedValues || []).reduce(
+    (acc: Record<string, number>, selectedValue: string) => {
+      const index = transformedData.findIndex(({ name }) => name === selectedValue);
+      return {
+        ...acc,
+        [index]: selectedValue,
+      };
+    },
+    {},
+  );
 
   let axisLabel;
   if (xTicksLayout === '45°') axisLabel = { rotate: -45 };
@@ -192,8 +259,59 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
   else if (xTicksLayout === 'staggered') axisLabel = { rotate: -45 };
   else axisLabel = { show: true };
 
-  // @ts-ignore
-  const echartOptions: echarts.EChartOption<echarts.EChartOption.SeriesBoxplot> = {
+  outlierData = outlierData || [];
+
+  const series: BoxplotSeriesOption[] = [
+    {
+      name: 'boxplot',
+      type: 'boxplot',
+      data: transformedData,
+      tooltip: {
+        formatter: (param: CallbackDataParams) => {
+          // @ts-ignore
+          const {
+            value,
+            name,
+          }: {
+            value: [number, number, number, number, number, number, number, number, number[]];
+            name: string;
+          } = param;
+          const headline = name ? `<p><strong>${name}</strong></p>` : '';
+          let stats;
+          if (queryMode == QueryMode.raw) {
+            stats = [
+              `Max: ${numberFormatter(value[7])}`,
+              `90th Percentile: ${numberFormatter(value[5])}`,
+              `75th Percentile: ${numberFormatter(value[4])}`,
+              `Median: ${numberFormatter(value[3])}`,
+              `25th Percentile: ${numberFormatter(value[2])}`,
+              `10th Percentile: ${numberFormatter(value[1])}`,
+              `Min: ${numberFormatter(value[6])}`,
+            ];
+          }
+          else {
+            stats = [
+              `Max: ${numberFormatter(value[5])}`,
+              `3rd Quartile: ${numberFormatter(value[4])}`,
+              `Mean: ${numberFormatter(value[6])}`,
+              `Median: ${numberFormatter(value[3])}`,
+              `1st Quartile: ${numberFormatter(value[2])}`,
+              `Min: ${numberFormatter(value[1])}`,
+              `# Observations: ${numberFormatter(value[7])}`,
+            ];
+          }
+          if (value[8].length > 0) {
+            stats.push(`# Outliers: ${numberFormatter(value[8].length)}`);
+          }
+          return headline + stats.join('<br/>');
+        },
+      },
+    },
+    // @ts-ignore
+    ...outlierData,
+  ];
+
+  const echartOptions: EChartsOption = {
     grid: {
       ...defaultGrid,
       top: 30,
@@ -218,62 +336,18 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
         type: 'shadow',
       },
     },
-    series: [
-      {
-        name: 'boxplot',
-        type: 'boxplot',
-        avoidLabelOverlap: true,
-        // @ts-ignore
-        data: transformedData,
-        tooltip: {
-          formatter: param => {
-            // @ts-ignore
-            const {
-              value,
-              name,
-            }: {
-              value: [number, number, number, number, number, number, number, number, number[]];
-              name: string;
-            } = param;
-            const headline = name ? `<p><strong>${name}</strong></p>` : '';
-            let stats;
-            if (queryMode == QueryMode.raw) {
-              stats = [
-                `Max: ${numberFormatter(value[7])}`,
-                `90th Percentile: ${numberFormatter(value[5])}`,
-                `75th Percentile: ${numberFormatter(value[4])}`,
-                `Median: ${numberFormatter(value[3])}`,
-                `25th Percentile: ${numberFormatter(value[2])}`,
-                `10th Percentile: ${numberFormatter(value[1])}`,
-                `Min: ${numberFormatter(value[6])}`,
-              ];
-            }
-            else {
-              stats = [
-                `Max: ${numberFormatter(value[5])}`,
-                `3rd Quartile: ${numberFormatter(value[4])}`,
-                `Mean: ${numberFormatter(value[6])}`,
-                `Median: ${numberFormatter(value[3])}`,
-                `1st Quartile: ${numberFormatter(value[2])}`,
-                `Min: ${numberFormatter(value[1])}`,
-                `# Observations: ${numberFormatter(value[7])}`,
-              ];
-            }
-            if (value[8].length > 0) {
-              stats.push(`# Outliers: ${numberFormatter(value[8].length)}`);
-            }
-            return headline + stats.join('<br/>');
-          },
-        },
-      },
-      // @ts-ignore
-      ...outlierData,
-    ],
+    series,
   };
 
   return {
+    formData,
     width,
     height,
     echartOptions,
+    setDataMask,
+    emitFilter,
+    labelMap,
+    groupby,
+    selectedValues,
   };
 }

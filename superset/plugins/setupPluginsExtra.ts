@@ -16,7 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-// @ts-ignore
-export const DEFAULT_FORM_DATA = {
-  emitFilter: false
-};
+
+import {
+  EchartsBoxPlotChartPlugin,
+} from '@superset-ui/plugin-chart-box-plot';
+
+// For individual deployments to add custom overrides
+export default function setupPluginsExtra() {
+  new EchartsBoxPlotChartPlugin()
+    .configure({ key: 'box_plot' })
+    .register();
+}
