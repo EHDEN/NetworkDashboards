@@ -26,42 +26,17 @@ const Styles = styled.div<EchartsStylesProps>`
   width: ${({ width }) => width};
 `;
 
-export default function Echart({
-  width,
-  height,
-  echartOptions,
-  eventHandlers,
-  selectedValues = {},
-}: EchartsProps) {
+export default function Echart({ width, height, echartOptions }: EchartsProps) {
   const divRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<ECharts>();
-  const currentSelection = Object.keys(selectedValues) || [];
-  const previousSelection = useRef<string[]>([]);
 
   useEffect(() => {
     if (!divRef.current) return;
     if (!chartRef.current) {
       chartRef.current = init(divRef.current);
     }
-    Object.entries(eventHandlers || {}).forEach(([name, handler]) => {
-      chartRef.current?.off(name);
-      chartRef.current?.on(name, handler);
-    });
-
     chartRef.current.setOption(echartOptions, true);
-
-    chartRef.current.dispatchAction({
-      type: 'downplay',
-      dataIndex: previousSelection.current.filter(value => !currentSelection.includes(value)),
-    });
-    if (currentSelection.length) {
-      chartRef.current.dispatchAction({
-        type: 'highlight',
-        dataIndex: currentSelection,
-      });
-    }
-    previousSelection.current = currentSelection;
-}, [echartOptions, eventHandlers, selectedValues]);
+  }, [echartOptions]);
 
   useEffect(() => {
     if (chartRef.current) {

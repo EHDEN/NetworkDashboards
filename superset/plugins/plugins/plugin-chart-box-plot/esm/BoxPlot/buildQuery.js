@@ -21,7 +21,7 @@ const PERCENTILE_REGEX = /(\d+)\/(\d+) percentiles/;
 export default function buildQuery(formData) {
   const {
     query_mode,
-    groupby = [],
+    groupby,
     minimum,
     p10,
     p25,
@@ -66,8 +66,8 @@ export default function buildQuery(formData) {
     let whiskerType;
     let percentiles;
     const {
-      columns = [],
-      metrics = []
+      columns,
+      metrics
     } = baseQueryObject;
     const percentileMatch = PERCENTILE_REGEX.exec(whiskerOptions);
 

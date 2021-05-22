@@ -16,67 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useCallback } from 'react';
+import React from 'react';
 import Echart from '../components/Echart';
-import { jsx as ___EmotionJSX } from "@emotion/react";
 export default function EchartsBoxPlot({
   height,
   width,
-  echartOptions,
-  setDataMask,
-  labelMap,
-  groupby,
-  selectedValues,
-  formData
+  echartOptions
 }) {
-  const handleChange = useCallback(values => {
-    if (!formData.emitFilter) {
-      return;
-    }
-
-    const groupbyValues = values.map(value => labelMap[value]);
-    setDataMask({
-      extraFormData: {
-        filters: values.length === 0 ? [] : groupby.map((col, idx) => {
-          const val = groupbyValues.map(v => v[idx]);
-          if (val === null || val === undefined) return {
-            col,
-            op: 'IS NULL'
-          };
-          return {
-            col,
-            op: 'IN',
-            val: val
-          };
-        })
-      },
-      filterState: {
-        value: groupbyValues.length ? groupbyValues : null
-      },
-      ownState: {
-        selectedValues: values.length ? values : null
-      }
-    });
-  }, [groupby, labelMap, setDataMask, selectedValues]);
-  const eventHandlers = {
-    click: props => {
-      const {
-        name
-      } = props;
-      const values = Object.values(selectedValues);
-
-      if (values.includes(name)) {
-        handleChange(values.filter(v => v !== name));
-      } else {
-        handleChange([...values, name]);
-      }
-    }
-  };
-  return ___EmotionJSX(Echart, {
+  return /*#__PURE__*/React.createElement(Echart, {
     height: height,
     width: width,
-    echartOptions: echartOptions,
-    eventHandlers: eventHandlers,
-    selectedValues: selectedValues
+    echartOptions: echartOptions
   });
 }

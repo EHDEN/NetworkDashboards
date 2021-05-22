@@ -21,7 +21,6 @@ x-superset-environment: &superset-environment
   REDIS_CELERY_DB: 4
   FLASK_ENV: production
   SUPERSET_ENV: production
-  CYPRESS_CONFIG: "false"
   MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
   PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
 
@@ -57,7 +56,7 @@ services:
     depends_on: *depends-on
     volumes: *superset-volumes
     ports:
-      - ${SUPERSET_PORT}:8088
+      - ${SUPERSET_PORT}:8080
     networks:
       - all
 
@@ -73,18 +72,7 @@ services:
 
   superset-worker:
     build: *superset-app-build
-    command: ["/usr/bin/docker-bootstrap.sh", "worker"]
-    restart: unless-stopped
-    environment: *superset-environment
-    user: "root"
-    depends_on: *depends-on
-    volumes: *superset-volumes
-    networks:
-      - all
-
-  superset-worker-beat:
-    build: *superset-app-build
-    command: ["/usr/bin/docker-bootstrap.sh", "beat"]
+    command: celery worker --app=superset.tasks.celery_app:app -Ofair -l INFO
     restart: unless-stopped
     environment: *superset-environment
     user: "root"
