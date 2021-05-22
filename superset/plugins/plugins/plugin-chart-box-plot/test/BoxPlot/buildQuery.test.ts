@@ -37,7 +37,8 @@ describe('BoxPlot buildQuery', () => {
     const [query] = queryContext.queries;
     expect(query.is_timeseries).toEqual(true);
     expect(query.metrics).toEqual(['foo']);
-    expect(query.columns).toEqual(['bar']);
+    expect(query.groupby).toEqual(['bar']);
+    expect(query.columns).toEqual([]);
   });
 
   it('should build non-timeseries query object when columns is defined', () => {
@@ -45,6 +46,7 @@ describe('BoxPlot buildQuery', () => {
     const [query] = queryContext.queries;
     expect(query.is_timeseries).toEqual(false);
     expect(query.metrics).toEqual(['foo']);
-    expect(query.columns).toEqual(['qwerty', 'bar']);
+    expect(query.groupby).toEqual(['bar', 'qwerty']);
+    expect(query.columns).toEqual([]);
   });
 });

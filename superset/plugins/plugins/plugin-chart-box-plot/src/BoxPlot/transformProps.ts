@@ -23,8 +23,6 @@ import {
   getMetricLabel,
   getNumberFormatter,
 } from '@superset-ui/core';
-import { EChartsOption, BoxplotSeriesOption } from 'echarts';
-import { CallbackDataParams } from 'echarts/types/src/util/types';
 import { QueryMode } from './controlPanel';
 import { BoxPlotQueryFormData } from './types';
 import { EchartsProps } from '../types';
@@ -132,7 +130,7 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
     const metricLabels = formdataMetrics.map(getMetricLabel);
 
     transformedData = data
-      .map((datum: any) => {
+      .map(datum => {
         const groupbyLabel = extractGroupbyLabel({ datum, groupby });
         return metricLabels.map(metric => {
           const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
@@ -194,57 +192,8 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
   else if (xTicksLayout === 'staggered') axisLabel = { rotate: -45 };
   else axisLabel = { show: true };
 
-  const series: BoxplotSeriesOption[] = [
-    {
-      name: 'boxplot',
-      type: 'boxplot',
-      data: transformedData,
-      tooltip: {
-        formatter: (param: CallbackDataParams) => {
-          // @ts-ignore
-          const {
-            value,
-            name,
-          }: {
-            value: [number, number, number, number, number, number, number, number, number[]];
-            name: string;
-          } = param;
-          const headline = name ? `<p><strong>${name}</strong></p>` : '';
-          let stats;
-          if (queryMode == QueryMode.raw) {
-            stats = [
-              `Max: ${numberFormatter(value[7])}`,
-              `90th Percentile: ${numberFormatter(value[5])}`,
-              `75th Percentile: ${numberFormatter(value[4])}`,
-              `Median: ${numberFormatter(value[3])}`,
-              `25th Percentile: ${numberFormatter(value[2])}`,
-              `10th Percentile: ${numberFormatter(value[1])}`,
-              `Min: ${numberFormatter(value[6])}`,
-            ];
-          }
-          else {
-            stats = [
-              `Max: ${numberFormatter(value[5])}`,
-              `3rd Quartile: ${numberFormatter(value[4])}`,
-              `Mean: ${numberFormatter(value[6])}`,
-              `Median: ${numberFormatter(value[3])}`,
-              `1st Quartile: ${numberFormatter(value[2])}`,
-              `Min: ${numberFormatter(value[1])}`,
-              `# Observations: ${numberFormatter(value[7])}`,
-            ];
-          }
-          if (value[8].length > 0) {
-            stats.push(`# Outliers: ${numberFormatter(value[8].length)}`);
-          }
-          return headline + stats.join('<br/>');
-        },
-      },
-    },
-    // @ts-ignore
-    ...outlierData,
-  ];
-
-  const echartOptions: EChartsOption = {
+  // @ts-ignore
+  const echartOptions: echarts.EChartOption<echarts.EChartOption.SeriesBoxplot> = {
     grid: {
       ...defaultGrid,
       top: 30,
@@ -269,7 +218,57 @@ export default function transformProps(chartProps: ChartProps): EchartsProps {
         type: 'shadow',
       },
     },
-    series,
+    series: [
+      {
+        name: 'boxplot',
+        type: 'boxplot',
+        avoidLabelOverlap: true,
+        // @ts-ignore
+        data: transformedData,
+        tooltip: {
+          formatter: param => {
+            // @ts-ignore
+            const {
+              value,
+              name,
+            }: {
+              value: [number, number, number, number, number, number, number, number, number[]];
+              name: string;
+            } = param;
+            const headline = name ? `<p><strong>${name}</strong></p>` : '';
+            let stats;
+            if (queryMode == QueryMode.raw) {
+              stats = [
+                `Max: ${numberFormatter(value[7])}`,
+                `90th Percentile: ${numberFormatter(value[5])}`,
+                `75th Percentile: ${numberFormatter(value[4])}`,
+                `Median: ${numberFormatter(value[3])}`,
+                `25th Percentile: ${numberFormatter(value[2])}`,
+                `10th Percentile: ${numberFormatter(value[1])}`,
+                `Min: ${numberFormatter(value[6])}`,
+              ];
+            }
+            else {
+              stats = [
+                `Max: ${numberFormatter(value[5])}`,
+                `3rd Quartile: ${numberFormatter(value[4])}`,
+                `Mean: ${numberFormatter(value[6])}`,
+                `Median: ${numberFormatter(value[3])}`,
+                `1st Quartile: ${numberFormatter(value[2])}`,
+                `Min: ${numberFormatter(value[1])}`,
+                `# Observations: ${numberFormatter(value[7])}`,
+              ];
+            }
+            if (value[8].length > 0) {
+              stats.push(`# Outliers: ${numberFormatter(value[8].length)}`);
+            }
+            return headline + stats.join('<br/>');
+          },
+        },
+      },
+      // @ts-ignore
+      ...outlierData,
+    ],
   };
 
   return {

@@ -164,36 +164,8 @@ export default function transformProps(chartProps) {
     rotate: -45
   };else axisLabel = {
     show: true
-  };
-  const series = [{
-    name: 'boxplot',
-    type: 'boxplot',
-    data: transformedData,
-    tooltip: {
-      formatter: param => {
-        // @ts-ignore
-        const {
-          value,
-          name
-        } = param;
-        const headline = name ? `<p><strong>${name}</strong></p>` : '';
-        let stats;
+  }; // @ts-ignore
 
-        if (queryMode == QueryMode.raw) {
-          stats = [`Max: ${numberFormatter(value[7])}`, `90th Percentile: ${numberFormatter(value[5])}`, `75th Percentile: ${numberFormatter(value[4])}`, `Median: ${numberFormatter(value[3])}`, `25th Percentile: ${numberFormatter(value[2])}`, `10th Percentile: ${numberFormatter(value[1])}`, `Min: ${numberFormatter(value[6])}`];
-        } else {
-          stats = [`Max: ${numberFormatter(value[5])}`, `3rd Quartile: ${numberFormatter(value[4])}`, `Mean: ${numberFormatter(value[6])}`, `Median: ${numberFormatter(value[3])}`, `1st Quartile: ${numberFormatter(value[2])}`, `Min: ${numberFormatter(value[1])}`, `# Observations: ${numberFormatter(value[7])}`];
-        }
-
-        if (value[8].length > 0) {
-          stats.push(`# Outliers: ${numberFormatter(value[8].length)}`);
-        }
-
-        return headline + stats.join('<br/>');
-      }
-    }
-  }, // @ts-ignore
-  ...outlierData];
   const echartOptions = {
     grid: { ...defaultGrid,
       top: 30,
@@ -218,7 +190,37 @@ export default function transformProps(chartProps) {
         type: 'shadow'
       }
     },
-    series
+    series: [{
+      name: 'boxplot',
+      type: 'boxplot',
+      avoidLabelOverlap: true,
+      // @ts-ignore
+      data: transformedData,
+      tooltip: {
+        formatter: param => {
+          // @ts-ignore
+          const {
+            value,
+            name
+          } = param;
+          const headline = name ? `<p><strong>${name}</strong></p>` : '';
+          let stats;
+
+          if (queryMode == QueryMode.raw) {
+            stats = [`Max: ${numberFormatter(value[7])}`, `90th Percentile: ${numberFormatter(value[5])}`, `75th Percentile: ${numberFormatter(value[4])}`, `Median: ${numberFormatter(value[3])}`, `25th Percentile: ${numberFormatter(value[2])}`, `10th Percentile: ${numberFormatter(value[1])}`, `Min: ${numberFormatter(value[6])}`];
+          } else {
+            stats = [`Max: ${numberFormatter(value[5])}`, `3rd Quartile: ${numberFormatter(value[4])}`, `Mean: ${numberFormatter(value[6])}`, `Median: ${numberFormatter(value[3])}`, `1st Quartile: ${numberFormatter(value[2])}`, `Min: ${numberFormatter(value[1])}`, `# Observations: ${numberFormatter(value[7])}`];
+          }
+
+          if (value[8].length > 0) {
+            stats.push(`# Outliers: ${numberFormatter(value[8].length)}`);
+          }
+
+          return headline + stats.join('<br/>');
+        }
+      }
+    }, // @ts-ignore
+    ...outlierData]
   };
   return {
     width,

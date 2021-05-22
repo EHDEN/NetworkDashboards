@@ -25,6 +25,7 @@ import CalendarChartPlugin from '@superset-ui/legacy-plugin-chart-calendar';
 import ChordChartPlugin from '@superset-ui/legacy-plugin-chart-chord';
 import CountryMapChartPlugin from '@superset-ui/legacy-plugin-chart-country-map';
 import EventFlowChartPlugin from '@superset-ui/legacy-plugin-chart-event-flow';
+import ForceDirectedChartPlugin from '@superset-ui/legacy-plugin-chart-force-directed';
 import HeatmapChartPlugin from '@superset-ui/legacy-plugin-chart-heatmap';
 import HistogramChartPlugin from '@superset-ui/legacy-plugin-chart-histogram';
 import HorizonChartPlugin from '@superset-ui/legacy-plugin-chart-horizon';
@@ -57,15 +58,13 @@ import {
   EchartsPieChartPlugin,
   //EchartsBoxPlotChartPlugin,
   EchartsTimeseriesChartPlugin,
-  EchartsGraphChartPlugin,
 } from '@superset-ui/plugin-chart-echarts';
 import {
   EchartsBoxPlotChartPlugin,
 } from '@superset-ui/plugin-chart-box-plot';
 import {
-  SelectFilterPlugin,
-  RangeFilterPlugin,
-  TimeFilterPlugin,
+  AntdSelectFilterPlugin,
+  AntdRangeFilterPlugin,
 } from 'src/filters/components/';
 import FilterBoxChartPlugin from '../FilterBox/FilterBoxChartPlugin';
 import TimeTableChartPlugin from '../TimeTable/TimeTableChartPlugin';
@@ -91,7 +90,7 @@ export default class MainPreset extends Preset {
         new DualLineChartPlugin().configure({ key: 'dual_line' }),
         new EventFlowChartPlugin().configure({ key: 'event_flow' }),
         new FilterBoxChartPlugin().configure({ key: 'filter_box' }),
-        new EchartsGraphChartPlugin().configure({ key: 'graph_chart' }),
+        new ForceDirectedChartPlugin().configure({ key: 'directed_force' }),
         new HeatmapChartPlugin().configure({ key: 'heatmap' }),
         new HistogramChartPlugin().configure({ key: 'histogram' }),
         new HorizonChartPlugin().configure({ key: 'horizon' }),
@@ -115,9 +114,8 @@ export default class MainPreset extends Preset {
         new EchartsTimeseriesChartPlugin().configure({
           key: 'echarts_timeseries',
         }),
-        new SelectFilterPlugin().configure({ key: 'filter_select' }),
-        new RangeFilterPlugin().configure({ key: 'filter_range' }),
-        new TimeFilterPlugin().configure({ key: 'filter_time' }),
+        new AntdSelectFilterPlugin().configure({ key: 'filter_select' }),
+        new AntdRangeFilterPlugin().configure({ key: 'filter_range' }),
       ],
     });
   }

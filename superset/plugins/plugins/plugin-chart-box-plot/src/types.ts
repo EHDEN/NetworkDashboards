@@ -16,8 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- import { EChartsOption } from 'echarts';
-
 export type EchartsStylesProps = {
   height: number;
   width: number;
@@ -26,5 +24,5 @@ export type EchartsStylesProps = {
 export interface EchartsProps {
   height: number;
   width: number;
-  echartOptions: EChartsOption;
+  echartOptions: echarts.EChartOption;
 }

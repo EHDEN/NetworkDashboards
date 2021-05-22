@@ -18,7 +18,7 @@
  */
 import React, { useRef, useEffect } from 'react';
 import { styled } from '@superset-ui/core';
-import { ECharts, init } from 'echarts';
+import { init } from 'echarts';
 import { EchartsProps, EchartsStylesProps } from '../types';
 
 const Styles = styled.div<EchartsStylesProps>`
@@ -28,7 +28,7 @@ const Styles = styled.div<EchartsStylesProps>`
 
 export default function Echart({ width, height, echartOptions }: EchartsProps) {
   const divRef = useRef<HTMLDivElement>(null);
-  const chartRef = useRef<ECharts>();
+  const chartRef = useRef<echarts.ECharts>();
 
   useEffect(() => {
     if (!divRef.current) return;
