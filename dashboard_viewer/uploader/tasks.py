@@ -11,10 +11,7 @@ from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
 from sqlalchemy import create_engine
 
-from .models import (
-    AchillesResults,
-    AchillesResultsArchive,
-)
+from .models import AchillesResults, AchillesResultsArchive
 from .utils import move_achilles_results_records
 
 logger = get_task_logger(__name__)
@@ -45,7 +42,11 @@ def update_achilles_results_data(
             )
             with connections["achilles"].cursor() as cursor:
                 move_achilles_results_records(
-                    cursor, AchillesResults, AchillesResultsArchive, db_id, last_upload_id
+                    cursor,
+                    AchillesResults,
+                    AchillesResultsArchive,
+                    db_id,
+                    last_upload_id,
                 )
 
             entries = pandas.read_json(achilles_results)
