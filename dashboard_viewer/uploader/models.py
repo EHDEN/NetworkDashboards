@@ -10,7 +10,7 @@ class Country(models.Model):
 
     country = models.CharField(max_length=100, unique=True, help_text="Country name.")
     alpha2 = models.CharField(
-        max_length=3, unique=True, help_text=" ISO 3166-1 Alpha-2 Code"
+        max_length=3, unique=True, help_text="ISO 3166-1 Alpha-2 Code"
     )
     continent = models.CharField(max_length=50, help_text="Continent associated.")
 
@@ -36,6 +36,10 @@ class DatabaseType(models.Model):
         return self.__str__()
 
 
+def default_hash_generator():
+    return uuid.uuid4().hex
+
+
 # Not following the relational rules in the database_type field, but it will simplify the SQL queries in the SQL Lab
 class DataSource(models.Model):
     class Meta:
@@ -51,7 +55,7 @@ class DataSource(models.Model):
     )
     hash = models.CharField(
         blank=True,
-        default=lambda: uuid.uuid4().hex,
+        default=default_hash_generator,
         max_length=255,
         null=False,
         unique=True,
