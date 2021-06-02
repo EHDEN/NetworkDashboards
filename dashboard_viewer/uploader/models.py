@@ -142,34 +142,6 @@ class AchillesResults(models.Model):
     p90_value = models.BigIntegerField(null=True)
 
 
-class AchillesResultsDraft(models.Model):
-    class Meta:
-        db_table = "achilles_results_draft"
-        indexes = [
-            models.Index(fields=("data_source",)),
-        ]
-
-    data_source = models.ForeignKey(
-        DataSource, on_delete=models.CASCADE, limit_choices_to={"draft": True}
-    )
-    analysis_id = models.BigIntegerField()
-    stratum_1 = models.TextField(null=True)
-    stratum_2 = models.TextField(null=True)
-    stratum_3 = models.TextField(null=True)
-    stratum_4 = models.TextField(null=True)
-    stratum_5 = models.TextField(null=True)
-    count_value = models.BigIntegerField()
-    min_value = models.BigIntegerField(null=True)
-    max_value = models.BigIntegerField(null=True)
-    avg_value = models.FloatField(null=True)
-    stdev_value = models.FloatField(null=True)
-    median_value = models.BigIntegerField(null=True)
-    p10_value = models.BigIntegerField(null=True)
-    p25_value = models.BigIntegerField(null=True)
-    p75_value = models.BigIntegerField(null=True)
-    p90_value = models.BigIntegerField(null=True)
-
-
 class AchillesResultsArchive(models.Model):
     class Meta:
         db_table = "achilles_results_archive"

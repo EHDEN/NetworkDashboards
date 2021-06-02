@@ -14,8 +14,6 @@ from sqlalchemy import create_engine
 from .models import (
     AchillesResults,
     AchillesResultsArchive,
-    AchillesResultsDraft,
-    DataSource,
 )
 from .utils import move_achilles_results_records
 
@@ -33,14 +31,9 @@ def update_achilles_results_data(
     with RWLock(
         cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
     ):
-        store_table = (
-            AchillesResultsDraft
-            if DataSource.objects.get(id=db_id).draft
-            else AchillesResults
-        )
 
         # but only one worker can make updates associated to a specific data source at the same time
-        with transaction.atomic(using=router.db_for_write(store_table)), cache.lock(
+        with transaction.atomic(using=router.db_for_write(AchillesResults)), cache.lock(
             f"celery_worker_lock_db_{db_id}"
         ):
             logger.info("Updating achilles results records [datasource %d]", db_id)
@@ -52,7 +45,7 @@ def update_achilles_results_data(
             )
             with connections["achilles"].cursor() as cursor:
                 move_achilles_results_records(
-                    cursor, store_table, AchillesResultsArchive, db_id, last_upload_id
+                    cursor, AchillesResults, AchillesResultsArchive, db_id, last_upload_id
                 )
 
             entries = pandas.read_json(achilles_results)
@@ -60,7 +53,7 @@ def update_achilles_results_data(
 
             logger.info(
                 "Inserting new records on %s table [datasource %d]",
-                store_table._meta.db_table,
+                AchillesResults._meta.db_table,
                 db_id,
             )
 
@@ -72,7 +65,7 @@ def update_achilles_results_data(
                     f"/{settings.DATABASES['achilles']['NAME']}"
                 )
                 entries.to_sql(
-                    store_table._meta.db_table,
+                    AchillesResults._meta.db_table,
                     engine,
                     if_exists="append",
                     index=False,

@@ -1,7 +1,6 @@
 from .models import (
     AchillesResults,
     AchillesResultsArchive,
-    AchillesResultsDraft,
     DataSource,
     UploadHistory,
 )
@@ -10,7 +9,7 @@ from .models import (
 def move_achilles_results_records(
     cursor, origin_model, destination_model, db_id, last_upload_id=None
 ):
-    allowed_models = (AchillesResults, AchillesResultsArchive, AchillesResultsDraft)
+    allowed_models = (AchillesResults, AchillesResultsArchive)
 
     if origin_model not in allowed_models or destination_model not in allowed_models:
         raise ValueError(
