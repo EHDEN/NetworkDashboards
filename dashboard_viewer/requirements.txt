@@ -8,7 +8,7 @@ django-markdownify==0.8.2                 # markdown to html
 django-model-utils==4.1.1                 # get specific type of subclasses after requesting buttons on tabsManager app
 django-redis==4.12.1                      # acess redis through a programmatic API
 django-sass-processor==0.8.2              # automate scss devolopment
-django==2.2.17
+django==2.2.22
 djangorestframework==3.12.2               # expose tabs content through an API
 libsass==0.20.1                           # to compile scss files into css
 gunicorn==20.0.4                          # for production deployment
