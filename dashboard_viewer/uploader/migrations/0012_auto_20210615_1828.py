@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ('upload_date', models.DateTimeField(auto_now_add=True)),
                 ('status', models.IntegerField(choices=[(1, 'PENDING'), (2, 'STARTED'), (3, 'CANCELED'), (4, 'FAILED')], default=1)),
                 ('uploaded_file', models.FileField(upload_to=uploader.models.failure_data_source_directory)),
-                ('task', models.IntegerField(null=True)),
+                ('task_id', models.CharField(max_length=255, null=True)),
                 ('data_source', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='uploader.DataSource')),
             ],
             options={

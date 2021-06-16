@@ -132,7 +132,7 @@ class PendingUpload(models.Model):
     upload_date = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATES, default=STATE_PENDING)
     uploaded_file = models.FileField(upload_to=failure_data_source_directory)
-    task = models.IntegerField(null=True)
+    task_id = models.CharField(max_length=255, null=True)
 
 
 def success_data_source_directory(instance, filename):

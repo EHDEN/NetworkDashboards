@@ -44,7 +44,10 @@ def upload_achilles_results(request, *args, **kwargs):
 
             messages.success(request, "A background task back processing the uploaded file. You can check its status on the Pending uploads tab")
 
-            upload_results_file.delay(pending_upload.id)
+            task = upload_results_file.delay(pending_upload.id)
+
+            pending_upload.task_id = task.task_id
+            pending_upload.save()
 
     return render(
         request,
