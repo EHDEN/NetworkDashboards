@@ -57,15 +57,16 @@ def upload_results_file(pending_upload_id: int):
             cdm_release_date=data["cdm_release_date"],
             cdm_version=data["cdm_version"],
             vocabulary_version=data["vocabulary_version"],
-            uploaded_file=pending_upload.uploaded_file,
+            uploaded_file=pending_upload.uploaded_file.file,
         )
+
+        pending_upload.uploaded_file.delete()
+        pending_upload.delete()
 
     # The lines below can be used to later update materialized views of each chart
     # To be more efficient, they should only be updated when the is no more workers inserting records
     if not cache.decr("celery_workers_updating"):
         refresh(logger, data_source.id)
-
-    pending_upload.delete()
 
 
 @shared_task

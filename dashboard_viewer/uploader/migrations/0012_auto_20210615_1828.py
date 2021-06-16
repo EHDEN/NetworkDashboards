@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='uploadhistory',
             name='uploaded_file',
-            field=models.FileField(null=True, upload_to=''),
+            field=models.FileField(null=True, upload_to=uploader.models.success_data_source_directory),
         ),
         migrations.AlterField(
             model_name='datasource',
@@ -33,13 +33,18 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('upload_date', models.DateTimeField(auto_now_add=True)),
                 ('status', models.IntegerField(choices=[(1, 'PENDING'), (2, 'STARTED'), (3, 'CANCELED'), (4, 'FAILED')], default=1)),
-                ('uploaded_file', models.FileField(upload_to='')),
+                ('uploaded_file', models.FileField(upload_to=uploader.models.failure_data_source_directory)),
                 ('task', models.IntegerField(null=True)),
                 ('data_source', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='uploader.DataSource')),
             ],
             options={
                 'ordering': ('-upload_date',),
             },
+        ),
+        migrations.AlterField(
+            model_name='achillesresults',
+            name='data_source',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='uploader.DataSource'),
         ),
         migrations.RunSQL(
             "INSERT INTO achilles_results ("

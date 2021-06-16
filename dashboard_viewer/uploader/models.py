@@ -1,5 +1,9 @@
 import uuid
+import os
+import pathlib
+import datetime
 
+from django.conf import settings
 from django.db import models
 from django_celery_results.models import TaskResult
 
@@ -97,6 +101,17 @@ class DataSource(models.Model):
         return self.__str__()
 
 
+def failure_data_source_directory(instance, filename):
+    file_path = os.path.join(
+        settings.ACHILLES_RESULTS_STORAGE_PATH,
+        instance.data_source.hash,
+        "failure",
+        "%Y%m%d%H%M%S%f" + "".join(pathlib.Path(filename).suffixes),
+    )
+
+    return datetime.datetime.now().strftime(file_path)
+
+
 class PendingUpload(models.Model):
     STATE_PENDING = 1
     STATE_STARTED = 2
@@ -116,8 +131,19 @@ class PendingUpload(models.Model):
     data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
     upload_date = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATES, default=STATE_PENDING)
-    uploaded_file = models.FileField()
+    uploaded_file = models.FileField(upload_to=failure_data_source_directory)
     task = models.IntegerField(null=True)
+
+
+def success_data_source_directory(instance, filename):
+    file_path = os.path.join(
+        settings.ACHILLES_RESULTS_STORAGE_PATH,
+        instance.data_source.hash,
+        "success",
+        "%Y%m%d%H%M%S%f" + "".join(pathlib.Path(filename).suffixes),
+    )
+
+    return datetime.datetime.now().strftime(file_path)
 
 
 class UploadHistory(models.Model):
@@ -133,7 +159,7 @@ class UploadHistory(models.Model):
     cdm_release_date = models.CharField(max_length=50, null=True)
     cdm_version = models.CharField(max_length=50, null=True)
     vocabulary_version = models.CharField(max_length=50, null=True)
-    uploaded_file = models.FileField(null=True)  # For backwards compatibility its easier to make this null=True
+    uploaded_file = models.FileField(null=True, upload_to=success_data_source_directory)  # For backwards compatibility its easier to make this null=True
 
     def __repr__(self):
         return self.__str__()
