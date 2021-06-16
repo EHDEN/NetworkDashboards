@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from .actions import custom_delete_selected
-from .models import Country, DatabaseType, DataSource, UploadHistory
+from .models import Country, DatabaseType, DataSource, UploadHistory, PendingUpload
 from .tasks import delete_datasource
 
 IS_POPUP_VAR = "_popup"
@@ -24,6 +24,17 @@ class UploadHistoryAdmin(admin.ModelAdmin):
     list_display = ("data_source", "upload_date")
 
     def has_add_permission(self, *_, **__):
+        return False
+
+
+@admin.register(PendingUpload)
+class PendingUploadAdmin(admin.ModelAdmin):
+    list_display = ("data_source", "upload_date", "status")
+
+    def has_add_permission(self, *_, **__):
+        return False
+
+    def has_change_permission(self, request, obj=None):
         return False
 
 
