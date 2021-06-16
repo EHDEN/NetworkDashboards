@@ -1,3 +1,4 @@
+import json
 import uuid
 import os
 import pathlib
@@ -139,6 +140,23 @@ class PendingUpload(models.Model):
             if self.status == id:
                 return name
 
+    def failure_message(self):
+        if self.status != self.STATE_FAILED:
+            return None
+
+        try:
+            task = TaskResult.objects.get(task_id=self.task_id, task_name="uploader.tasks.upload_results_file")
+        except TaskResult.DoesNotExist:
+            return "The information about this failure was deleted. Probably because this upload history " \
+                   "record is an old one. If not please contact the system administrator for more details. "
+        else:
+            result = json.loads(task.result)
+            if result["exc_module"] == "uploader.file_handler.checks":
+                return result["exc_message"][0]
+            else:
+                return "An unexpected error occurred while processing your file. Please contact the " \
+                       "system administrator for more details."
+
 
 def success_data_source_directory(instance, filename):
     file_path = os.path.join(
@@ -165,6 +183,7 @@ class UploadHistory(models.Model):
     cdm_version = models.CharField(max_length=50, null=True)
     vocabulary_version = models.CharField(max_length=50, null=True)
     uploaded_file = models.FileField(null=True, upload_to=success_data_source_directory)  # For backwards compatibility its easier to make this null=True
+    pending_upload_id = models.IntegerField(null=True)
 
     def __repr__(self):
         return self.__str__()

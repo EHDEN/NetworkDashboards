@@ -53,6 +53,7 @@ def upload_results_file(pending_upload_id: int):
                 cdm_version=data["cdm_version"],
                 vocabulary_version=data["vocabulary_version"],
                 uploaded_file=pending_upload.uploaded_file.file,
+                pending_upload_id=pending_upload.id,
             )
 
             pending_upload.uploaded_file.delete()

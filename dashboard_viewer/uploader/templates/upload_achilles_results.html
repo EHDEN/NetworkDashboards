@@ -52,7 +52,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for up_hi, status, failed_msg in upload_history %}
+                {% for up_hi, status in upload_history %}
                     <tr>
                         <td>{{ up_hi.upload_date }}</td>
                         <td>{% if up_hi.r_package_version %}{{ up_hi.r_package_version }}{% else %}--{% endif %}</td>
@@ -60,26 +60,42 @@
                         <td>{% if up_hi.cdm_version %}{{ up_hi.cdm_version }}{% else %}--{% endif %}</td>
                         <td>{% if up_hi.vocabulary_version %}{{ up_hi.vocabulary_version }}{% else %}--{% endif %}</td>
                         <td
-                          data-failed="{% if status == "Failed" %}yes{% else %}no{% endif %}"
-                          data-processing="{% if status != "Failed" and status != "Done" %}yes{% else %}no{% endif %}"
-                          {% if failed_msg %}data-failed-msg="{{ failed_msg }}"{% endif %}
-                          >{% spaceless %}
-                          <span
-                            {% if status == "Done" %}
-                              style="color: forestgreen ">
-                              <i class="fas fa-check"></i>
-                            {% elif status == "Failed" %}
-                              style="color: red">
-                              <i class="fas fa-times"></i>
-                            {% else %}
-                              style="color: #ffc107">
-                              <i class="fas fa-spinner"></i>
-                            {% endif %}
-                            {{ status }}
-                          </span>
                           {% if status == "Failed" %}
-                            <a class="btn btn-danger failed-upload-msg"><i class="far fa-comment-alt"></i></a>
+                          data-failed="yes"
+                          data-failure-msg="{{ up_hi.failure_message }}"
+                          {% else %}
+                          data-failed="no"
                           {% endif %}
+
+                          data-processing="{% if status != "Failed" and status != "Done" %}yes{% else %}no{% endif %}"
+
+                          {% if status != "Done" %}data-upload-id="{{ up_hi.id }}"{% endif %}
+
+                          {% if status == "Done" %}
+                            class="status-done"
+                          {% elif status == "Failed" %}
+                            class="status-failed"
+                          {% else %}
+                            class="status-processing"
+                          {% endif %}
+                          >{% spaceless %}
+
+                              {% if status == "Done" %}
+                                <i class="fas fa-check"></i>
+                              {% elif status == "Failed" %}
+                                <i class="fas fa-times"></i>
+                              {% else %}
+                                <i class="fas fa-spinner"></i>
+                              {% endif %}
+
+
+                              <span class="status-text">
+                                {{ status }}
+                              </span>
+
+                            {% if status == "Failed" %}
+                              <a class="btn btn-danger failed-upload-msg"><i class="far fa-comment-alt"></i></a>
+                            {% endif %}
                         {% endspaceless %}</td>
                     </tr>
                 {% endfor %}

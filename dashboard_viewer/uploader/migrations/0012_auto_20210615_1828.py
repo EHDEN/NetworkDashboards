@@ -27,12 +27,17 @@ class Migration(migrations.Migration):
             name='upload_date',
             field=models.DateTimeField(auto_now_add=True),
         ),
+        migrations.AddField(
+            model_name='uploadhistory',
+            name='pending_upload_id',
+            field=models.IntegerField(null=True),
+        ),
         migrations.CreateModel(
             name='PendingUpload',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('upload_date', models.DateTimeField(auto_now_add=True)),
-                ('status', models.IntegerField(choices=[(1, 'PENDING'), (2, 'STARTED'), (3, 'CANCELED'), (4, 'FAILED')], default=1)),
+                ('status', models.IntegerField(choices=[(1, 'Pending'), (2, 'Started'), (3, 'Canceled'), (4, 'Failed')], default=1)),
                 ('uploaded_file', models.FileField(upload_to=uploader.models.failure_data_source_directory)),
                 ('task_id', models.CharField(max_length=255, null=True)),
                 ('data_source', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='uploader.DataSource')),

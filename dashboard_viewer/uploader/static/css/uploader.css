@@ -38,7 +38,22 @@ form {
 	margin-top: 30px;
 }
 
+
+/* upload status specific*/
+
 .failed-upload-msg {
   cursor: default !important;
   padding: 0 .35rem;
+}
+
+.status-processing {
+  color: #ffc107;
+}
+
+.status-failed {
+  color: red;
+}
+
+.status-done {
+  color: forestgreen;
 }

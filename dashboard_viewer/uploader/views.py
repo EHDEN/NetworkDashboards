@@ -1,13 +1,12 @@
 import itertools
-import json
 
 import constance
 from django.contrib import messages
 from django.forms import fields
-from django.shortcuts import redirect, render
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
-from django_celery_results.models import TaskResult
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -57,26 +56,9 @@ def upload_achilles_results(request, *args, **kwargs):
 
     for i, obj in enumerate(upload_history):
         if isinstance(obj, UploadHistory):
-            upload_history[i] = (obj, "Done", None)
+            upload_history[i] = (obj, "Done")
         else:
-            if obj.status == PendingUpload.STATE_FAILED:
-                try:
-                    task = TaskResult.objects.get(task_id=obj.task_id, task_name="uploader.tasks.upload_results_file")
-                except TaskResult.DoesNotExist:
-                    failed_msg = "The information about this failure was deleted. Probably because this upload " \
-                                 "history record is an old one. If not please contact the system administrator " \
-                                 "for more details. "
-                else:
-                    result = json.loads(task.result)
-                    if result["exc_module"] == "uploader.file_handler.checks":
-                        failed_msg = result["exc_message"][0]
-                    else:
-                        failed_msg = "An unexpected error occurred while processing your file. Please contact the " \
-                                     "system administrator for more details."
-            else:
-                failed_msg = None
-
-            upload_history[i] = (obj, obj.get_status(), failed_msg)
+            upload_history[i] = (obj, obj.get_status())
 
     return render(
         request,
@@ -90,6 +72,31 @@ def upload_achilles_results(request, *args, **kwargs):
             "page_title": PAGE_TITLE,
         },
     )
+
+
+def get_upload_task_status(request, data_source, upload_id):
+    data_source = get_object_or_404(DataSource, hash=data_source)
+
+    try:
+        pending_upload = PendingUpload.objects.get(id=upload_id, data_source=data_source)
+    except PendingUpload.DoesNotExist:
+        # assume if the objects doesn't exist it finished
+        upload = get_object_or_404(UploadHistory, data_source=data_source, pending_upload_id=upload_id)
+
+        return JsonResponse({
+            "status": "Done",
+            "data": {
+                "r_package_version": upload.r_package_version,
+                "generation_date": upload.generation_date,
+                "cdm_version": upload.cdm_version,
+                "vocabulary_version": upload.vocabulary_version
+            }
+        })
+
+    if pending_upload.status != PendingUpload.STATE_FAILED:
+        return JsonResponse({"status": pending_upload.get_status()})
+
+    return JsonResponse({"status": "Failed", "failure_msg": pending_upload.failure_message()})
 
 
 def _get_fields_initial_values(request, initial):
