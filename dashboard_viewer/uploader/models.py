@@ -119,10 +119,10 @@ class PendingUpload(models.Model):
     STATE_FAILED = 4
 
     STATES = (
-        (STATE_PENDING, "PENDING"),
-        (STATE_STARTED, "STARTED"),
-        (STATE_CANCELED, "CANCELED"),
-        (STATE_FAILED, "FAILED"),
+        (STATE_PENDING, "Pending"),
+        (STATE_STARTED, "Started"),
+        (STATE_CANCELED, "Canceled"),
+        (STATE_FAILED, "Failed"),
     )
 
     class Meta:
@@ -133,6 +133,11 @@ class PendingUpload(models.Model):
     status = models.IntegerField(choices=STATES, default=STATE_PENDING)
     uploaded_file = models.FileField(upload_to=failure_data_source_directory)
     task_id = models.CharField(max_length=255, null=True)
+
+    def get_status(self):
+        for id, name in self.STATES:
+            if self.status == id:
+                return name
 
 
 def success_data_source_directory(instance, filename):

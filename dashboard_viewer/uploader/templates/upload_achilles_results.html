@@ -41,22 +41,49 @@
         <h3>Upload history</h3>
         {% if upload_history|length > 0 %}
             <table class="table">
-                <tr>
-                    <th>Upload Date</th>
-                    <th>R Package Version</th>
-                    <th>Generation Date</th>
-                    <th>CDM Version</th>
-                    <th>Vocabulary Version</th>
-                </tr>
-                {% for up_hi in upload_history %}
+                <thead>
+                    <tr>
+                        <th>Upload Date</th>
+                        <th>R Package Version</th>
+                        <th>Generation Date</th>
+                        <th>CDM Version</th>
+                        <th>Vocabulary Version</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for up_hi, status, failed_msg in upload_history %}
                     <tr>
                         <td>{{ up_hi.upload_date }}</td>
-                        <td>{{ up_hi.r_package_version }}</td>
-                        <td>{{ up_hi.generation_date }}</td>
-                        <td>{{ up_hi.cdm_version }}</td>
-                        <td>{{ up_hi.vocabulary_version }}</td>
+                        <td>{% if up_hi.r_package_version %}{{ up_hi.r_package_version }}{% else %}--{% endif %}</td>
+                        <td>{% if up_hi.generation_date %}{{ up_hi.generation_date }}{% else %}--{% endif %}</td>
+                        <td>{% if up_hi.cdm_version %}{{ up_hi.cdm_version }}{% else %}--{% endif %}</td>
+                        <td>{% if up_hi.vocabulary_version %}{{ up_hi.vocabulary_version }}{% else %}--{% endif %}</td>
+                        <td
+                          data-failed="{% if status == "Failed" %}yes{% else %}no{% endif %}"
+                          data-processing="{% if status != "Failed" and status != "Done" %}yes{% else %}no{% endif %}"
+                          {% if failed_msg %}data-failed-msg="{{ failed_msg }}"{% endif %}
+                          >{% spaceless %}
+                          <span
+                            {% if status == "Done" %}
+                              style="color: forestgreen ">
+                              <i class="fas fa-check"></i>
+                            {% elif status == "Failed" %}
+                              style="color: red">
+                              <i class="fas fa-times"></i>
+                            {% else %}
+                              style="color: #ffc107">
+                              <i class="fas fa-spinner"></i>
+                            {% endif %}
+                            {{ status }}
+                          </span>
+                          {% if status == "Failed" %}
+                            <a class="btn btn-danger failed-upload-msg"><i class="far fa-comment-alt"></i></a>
+                          {% endif %}
+                        {% endspaceless %}</td>
                     </tr>
                 {% endfor %}
+                </tbody>
             </table>
         {% else %}
             <p>No results files were uploaded.</p>

@@ -6,6 +6,7 @@ from django.forms import fields
 from django.shortcuts import redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
+from django_celery_results.models import TaskResult
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -25,9 +26,6 @@ def upload_achilles_results(request, *args, **kwargs):
     except DataSource.DoesNotExist:
         return create_data_source(request, *args, **kwargs)
 
-    upload_history = UploadHistory.objects.filter(data_source=obj_data_source)
-    pending_upload_history = PendingUpload.objects.filter(data_source=obj_data_source)
-
     if request.method == "GET":
         form = AchillesResultsForm()
 
@@ -40,14 +38,38 @@ def upload_achilles_results(request, *args, **kwargs):
                 uploaded_file=request.FILES["results_file"]
             )
 
-            pending_upload_history = itertools.chain(pending_upload, pending_upload_history)
-
             messages.success(request, "A background task back processing the uploaded file. You can check its status on the Pending uploads tab")
 
             task = upload_results_file.delay(pending_upload.id)
 
             pending_upload.task_id = task.task_id
             pending_upload.save()
+
+    upload_history = sorted(
+        itertools.chain(
+            UploadHistory.objects.filter(data_source=obj_data_source),
+            PendingUpload.objects.filter(data_source=obj_data_source),
+        ),
+        key=lambda upload: upload.upload_date,
+        reverse=True
+    )
+
+    for i, obj in enumerate(upload_history):
+        if isinstance(obj, UploadHistory):
+            upload_history[i] = (obj, "Done", None)
+        else:
+            if obj.status == PendingUpload.STATE_FAILED:
+                try:
+                    task = TaskResult.objects.get(task_id=obj.task_id)
+                except TaskResult.DoesNotExist:
+                    failed_msg = "does not exist"
+                else:
+                    # todo check if is expected one
+                    failed_msg = "results mesage"
+            else:
+                failed_msg = None
+
+            upload_history[i] = (obj, obj.get_status(), failed_msg)
 
     return render(
         request,
@@ -56,7 +78,6 @@ def upload_achilles_results(request, *args, **kwargs):
             "form": form,
             "obj_data_source": obj_data_source,
             "upload_history": upload_history,
-            "pending_uploads_history": pending_upload_history,
             "submit_button_text": mark_safe("<i class='fas fa-upload'></i> Upload"),
             "constance_config": constance.config,
             "page_title": PAGE_TITLE,

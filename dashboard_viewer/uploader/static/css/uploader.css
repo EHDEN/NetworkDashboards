@@ -37,3 +37,8 @@
 form {
 	margin-top: 30px;
 }
+
+.failed-upload-msg {
+  cursor: default !important;
+  padding: 0 .35rem;
+}
