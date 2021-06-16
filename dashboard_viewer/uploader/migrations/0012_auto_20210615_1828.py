@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='datasource',
             name='hash',
-            field=models.CharField(blank=True, default=uploader.models.generate_hash, max_length=255, unique=True),
+            field=models.CharField(blank=True, default=uploader.models.hash_generator, max_length=255, unique=True),
         ),
         migrations.AlterField(
             model_name='uploadhistory',
@@ -40,5 +40,29 @@ class Migration(migrations.Migration):
             options={
                 'ordering': ('-upload_date',),
             },
+        ),
+        migrations.RunSQL(
+            "INSERT INTO achilles_results ("
+            "    analysis_id,"
+            "    stratum_1, stratum_2, stratum_3, stratum_4, stratum_5,"
+            "    count_value,"
+            "    min_value, max_value,"
+            "    avg_value, stdev_value,"
+            "    median_value,"
+            "    p10_value, p25_value, p75_value, p90_value,"
+            "    data_source_id"
+            ") select "
+            "    analysis_id,"
+            "    stratum_1, stratum_2, stratum_3, stratum_4, stratum_5,"
+            "    count_value,"
+            "    min_value, max_value,"
+            "    avg_value, stdev_value,"
+            "    median_value,"
+            "    p10_value, p25_value, p75_value, p90_value,"
+            "    data_source_id "
+            "from achilles_results_draft;"
+        ),
+        migrations.DeleteModel(
+            name="AchillesResultsDraft",
         ),
     ]

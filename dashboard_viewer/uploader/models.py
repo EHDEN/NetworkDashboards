@@ -37,7 +37,7 @@ class DatabaseType(models.Model):
         return self.__str__()
 
 
-def generate_hash():
+def hash_generator():
     return uuid.uuid4().hex
 
 
@@ -56,7 +56,7 @@ class DataSource(models.Model):
     )
     hash = models.CharField(
         blank=True,
-        default=generate_hash,
+        default=hash_generator,
         max_length=255,
         null=False,
         unique=True,
@@ -150,37 +150,7 @@ class AchillesResults(models.Model):
             models.Index(fields=("analysis_id",)),
         ]
 
-    data_source = models.ForeignKey(
-        DataSource, on_delete=models.CASCADE, limit_choices_to={"draft": False}
-    )
-    analysis_id = models.BigIntegerField()
-    stratum_1 = models.TextField(null=True)
-    stratum_2 = models.TextField(null=True)
-    stratum_3 = models.TextField(null=True)
-    stratum_4 = models.TextField(null=True)
-    stratum_5 = models.TextField(null=True)
-    count_value = models.BigIntegerField()
-    min_value = models.BigIntegerField(null=True)
-    max_value = models.BigIntegerField(null=True)
-    avg_value = models.FloatField(null=True)
-    stdev_value = models.FloatField(null=True)
-    median_value = models.BigIntegerField(null=True)
-    p10_value = models.BigIntegerField(null=True)
-    p25_value = models.BigIntegerField(null=True)
-    p75_value = models.BigIntegerField(null=True)
-    p90_value = models.BigIntegerField(null=True)
-
-
-class AchillesResultsDraft(models.Model):
-    class Meta:
-        db_table = "achilles_results_draft"
-        indexes = [
-            models.Index(fields=("data_source",)),
-        ]
-
-    data_source = models.ForeignKey(
-        DataSource, on_delete=models.CASCADE, limit_choices_to={"draft": True}
-    )
+    data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
     analysis_id = models.BigIntegerField()
     stratum_1 = models.TextField(null=True)
     stratum_2 = models.TextField(null=True)
