@@ -1,16 +1,69 @@
-from .models import (
-    AchillesResults,
-    AchillesResultsArchive,
-    AchillesResultsDraft,
-    DataSource,
-    UploadHistory,
-)
+import pandas
+from django.conf import settings
+from django.db import connections
+from sqlalchemy import create_engine
+
+from uploader.models import AchillesResults, AchillesResultsArchive, DataSource, PendingUpload, UploadHistory
+
+
+def update_achilles_results_data(pending_upload: PendingUpload, file_metadata):
+    #logger.info("Updating achilles results records [datasource %d]", db_id)
+
+    #logger.info(
+    #    "Moving old records to the %s table [datasource %d]",
+    #    AchillesResultsArchive._meta.db_table,
+    #    db_id,
+    #)
+    with connections["achilles"].cursor() as cursor:
+        move_achilles_results_records(
+            cursor,
+            AchillesResults,
+            AchillesResultsArchive,
+            pending_upload.data_source.id,
+        )
+
+    reader = pandas.read_csv(
+        pending_upload.uploaded_file,
+        header=0,
+        dtype=file_metadata["types"],
+        skip_blank_lines=False,
+        index_col=False,
+        names=file_metadata["columns"],
+        chunksize=500,
+    )
+
+    #logger.info(
+    #    "Inserting new records on %s table [datasource %d]",
+    #    store_table._meta.db_table,
+    #    db_id,
+    #)
+
+    try:
+        engine = create_engine(
+            "postgresql"
+            f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
+            f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
+            f"/{settings.DATABASES['achilles']['NAME']}"
+        )
+
+        for chunk in reader:
+            chunk = chunk.assign(data_source_id=pending_upload.data_source.id)
+            chunk.to_sql(
+                AchillesResults._meta.db_table,
+                engine,
+                if_exists="append",
+                index=False,
+            )
+    finally:
+        engine.dispose()
+
+    #logger.info("Done [datasource %d]", db_id)
 
 
 def move_achilles_results_records(
-    cursor, origin_model, destination_model, db_id, last_upload_id=None
+        cursor, origin_model, destination_model, db_id, last_upload_id=None
 ):
-    allowed_models = (AchillesResults, AchillesResultsArchive, AchillesResultsDraft)
+    allowed_models = (AchillesResults, AchillesResultsArchive)
 
     if origin_model not in allowed_models or destination_model not in allowed_models:
         raise ValueError(
@@ -25,26 +78,17 @@ def move_achilles_results_records(
     if not DataSource.objects.filter(id=db_id).exists():
         raise ValueError("No datasource with the provided id")
 
-    if destination_model == AchillesResultsArchive:
-        if last_upload_id is None:
-            try:
-                last_upload_id = (
-                    UploadHistory.objects.filter(data_source_id=db_id).latest().id
-                )
-            except UploadHistory.DoesNotExist:
-                return  # nothing to move
-        elif not UploadHistory.objects.filter(
+    if last_upload_id is None:
+        try:
+            last_upload_id = (
+                UploadHistory.objects.filter(data_source_id=db_id).latest().id
+            )
+        except UploadHistory.DoesNotExist:
+            return  # nothing to move
+    elif not UploadHistory.objects.filter(
             id=last_upload_id, data_source_id=db_id
-        ).exists():
-            raise ValueError("There is no UploadHistory with the provided id")
-
-        upload_info_column = f", {destination_model.upload_info.field.column}"
-        upload_info_value = ", %s"
-        query_args = (last_upload_id, db_id)
-    else:
-        upload_info_column = ""
-        upload_info_value = ""
-        query_args = (db_id,)
+    ).exists():
+        raise ValueError("There is no UploadHistory with the provided id")
 
     cursor.execute(
         f"""
@@ -65,8 +109,8 @@ def move_achilles_results_records(
             {destination_model.p25_value.field_name},
             {destination_model.p75_value.field_name},
             {destination_model.p90_value.field_name},
-            {destination_model.data_source.field.column}
-            {upload_info_column}
+            {destination_model.data_source.field.column},
+            {destination_model.upload_info.field.column}
         )
         SELECT
             {origin_model.analysis_id.field_name},
@@ -85,12 +129,12 @@ def move_achilles_results_records(
             {origin_model.p25_value.field_name},
             {origin_model.p75_value.field_name},
             {origin_model.p90_value.field_name},
-            {origin_model.data_source.field.column}
-            {upload_info_value}
+            {origin_model.data_source.field.column},
+            %s
         FROM {origin_model._meta.db_table}
         WHERE {origin_model.data_source.field.column} = %s
         """,
-        query_args,
+        (last_upload_id, db_id),
     )
 
     origin_model.objects.filter(data_source_id=db_id).delete()

@@ -1,91 +1,71 @@
-from typing import Union
-
-import pandas
 from celery import shared_task
 from celery.utils.log import get_task_logger
-from django.conf import settings
 from django.core import serializers
 from django.core.cache import cache
-from django.db import connections, router, transaction
+from django.db import router, transaction
+
 from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
-from sqlalchemy import create_engine
 
 from .models import (
     AchillesResults,
-    AchillesResultsArchive,
-    AchillesResultsDraft,
-    DataSource,
+    UploadHistory,
+    PendingUpload,
 )
-from .utils import move_achilles_results_records
+
+from .file_handler.checks import extract_data_from_uploaded_file
+from .file_handler.updates import update_achilles_results_data
 
 logger = get_task_logger(__name__)
 
 
 @shared_task
-def update_achilles_results_data(
-    db_id: int, last_upload_id: Union[int, None], achilles_results: str
-) -> None:
-    logger.info("Worker started [datasource %d]", db_id)
+def upload_results_file(pending_upload_id: int):
+    pending_upload = PendingUpload.objects.get(id=pending_upload_id)
+
+    pending_upload.status = PendingUpload.STATE_STARTED
+    pending_upload.save()
+
+    try:
+        file_metadata, data = extract_data_from_uploaded_file(pending_upload.uploaded_file)
+    except Exception as e:
+        pending_upload.status = PendingUpload.STATE_FAILED
+        pending_upload.save()
+
+        raise e
+
+    data_source = pending_upload.data_source
+
     cache.incr("celery_workers_updating", ignore_key_check=True)
 
-    # several workers can update records concurrently -> same as -> several threads can read from the same file
-    with RWLock(
+    with RWLock(  # several workers can update their records in paralel -> same as -> several threads can read from the same file
         cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
-    ):
-        store_table = (
-            AchillesResultsDraft
-            if DataSource.objects.get(id=db_id).draft
-            else AchillesResults
+    ), cache.lock(  # but only one worker can make updates associated to a specific data source at the same time
+        f"celery_worker_lock_db_{data_source.id}"
+    ), transaction.atomic(using=router.db_for_write(AchillesResults)):
+        pending_upload.uploaded_file.seek(0)
+        update_achilles_results_data(pending_upload, file_metadata)
+
+        data_source.release_date = data["source_release_date"]
+        data_source.save()
+
+        pending_upload.uploaded_file.seek(0)
+        UploadHistory.objects.create(
+            data_source=data_source,
+            r_package_version=data["r_package_version"],
+            generation_date=data["generation_date"],
+            cdm_release_date=data["cdm_release_date"],
+            cdm_version=data["cdm_version"],
+            vocabulary_version=data["vocabulary_version"],
+            uploaded_file=pending_upload.uploaded_file,
         )
-
-        # but only one worker can make updates associated to a specific data source at the same time
-        with transaction.atomic(using=router.db_for_write(store_table)), cache.lock(
-            f"celery_worker_lock_db_{db_id}"
-        ):
-            logger.info("Updating achilles results records [datasource %d]", db_id)
-
-            logger.info(
-                "Moving old records to the %s table [datasource %d]",
-                AchillesResultsArchive._meta.db_table,
-                db_id,
-            )
-            with connections["achilles"].cursor() as cursor:
-                move_achilles_results_records(
-                    cursor, store_table, AchillesResultsArchive, db_id, last_upload_id
-                )
-
-            entries = pandas.read_json(achilles_results)
-            entries["data_source_id"] = db_id
-
-            logger.info(
-                "Inserting new records on %s table [datasource %d]",
-                store_table._meta.db_table,
-                db_id,
-            )
-
-            try:
-                engine = create_engine(
-                    "postgresql"
-                    f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
-                    f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
-                    f"/{settings.DATABASES['achilles']['NAME']}"
-                )
-                entries.to_sql(
-                    store_table._meta.db_table,
-                    engine,
-                    if_exists="append",
-                    index=False,
-                )
-            finally:
-                engine.dispose()
 
     # The lines below can be used to later update materialized views of each chart
     # To be more efficient, they should only be updated when the is no more workers inserting records
     if not cache.decr("celery_workers_updating"):
-        refresh(logger, db_id)
+        refresh(logger, data_source.id)
 
-    logger.info("Done [datasource %d]", db_id)
+    pending_upload.delete()
 
 
 @shared_task
