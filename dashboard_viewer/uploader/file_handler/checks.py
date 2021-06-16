@@ -5,19 +5,23 @@ import numpy
 import pandas
 
 
-class InvalidFileFormat(Exception):
+class FileChecksException(Exception):
     pass
 
 
-class InvalidFieldValue(Exception):
+class InvalidFileFormat(FileChecksException):
     pass
 
 
-class DuplicateMetadataRow(Exception):
+class InvalidFieldValue(FileChecksException):
     pass
 
 
-class MissingFieldValue(Exception):
+class DuplicateMetadataRow(FileChecksException):
+    pass
+
+
+class MissingFieldValue(FileChecksException):
     pass
 
 
