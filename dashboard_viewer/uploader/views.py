@@ -1,4 +1,5 @@
 import itertools
+import json
 
 import constance
 from django.contrib import messages
@@ -60,12 +61,18 @@ def upload_achilles_results(request, *args, **kwargs):
         else:
             if obj.status == PendingUpload.STATE_FAILED:
                 try:
-                    task = TaskResult.objects.get(task_id=obj.task_id)
+                    task = TaskResult.objects.get(task_id=obj.task_id, task_name="uploader.tasks.upload_results_file")
                 except TaskResult.DoesNotExist:
-                    failed_msg = "does not exist"
+                    failed_msg = "The information about this failure was deleted. Probably because this upload " \
+                                 "history record is an old one. If not please contact the system administrator " \
+                                 "for more details. "
                 else:
-                    # todo check if is expected one
-                    failed_msg = "results mesage"
+                    result = json.loads(task.result)
+                    if result["exc_module"] == "uploader.file_handler.checks":
+                        failed_msg = result["exc_message"][0]
+                    else:
+                        failed_msg = "An unexpected error occurred while processing your file. Please contact the " \
+                                     "system administrator for more details."
             else:
                 failed_msg = None
 
