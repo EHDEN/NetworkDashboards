@@ -109,11 +109,11 @@ def extract_data_from_uploaded_file(uploaded_file):
 
     types = {
         "analysis_id": numpy.int64,
-        "stratum_1": str,
-        "stratum_2": str,
-        "stratum_3": str,
-        "stratum_4": str,
-        "stratum_5": str,
+        "stratum_1": "string",
+        "stratum_2": "string",
+        "stratum_3": "string",
+        "stratum_4": "string",
+        "stratum_5": "string",
         "count_value": numpy.int64,
     }
     if len(columns) == 16:
@@ -193,18 +193,21 @@ def extract_data_from_uploaded_file(uploaded_file):
         "types": types,
            },\
            {
-        "generation_date": analysis_0.loc[0, "stratum_3"],
-        "source_release_date": analysis_5000.loc[0, "stratum_2"]
-        if not analysis_5000.empty
-        else None,
-        "cdm_release_date": analysis_5000.loc[0, "stratum_3"]
-        if not analysis_5000.empty
-        else None,
-        "cdm_version": analysis_5000.loc[0, "stratum_4"]
-        if not analysis_5000.empty
-        else None,
-        "r_package_version": analysis_0.loc[0, "stratum_2"],
-        "vocabulary_version": analysis_5000.loc[0, "stratum_5"]
-        if not analysis_5000.empty
-        else None,
+        "generation_date": _get_upload_attr(analysis_0, "stratum_3"),
+        "source_release_date": _get_upload_attr(analysis_5000, "stratum_2"),
+        "cdm_release_date": _get_upload_attr(analysis_5000, "stratum_3"),
+        "cdm_version": _get_upload_attr(analysis_5000, "stratum_4"),
+        "r_package_version": _get_upload_attr(analysis_0, "stratum_2"),
+        "vocabulary_version": _get_upload_attr(analysis_5000, "stratum_5"),
     }
+
+
+def _get_upload_attr(analysis, stratum):
+    if analysis.empty:
+        return None
+
+    value = analysis.loc[0, stratum]
+
+    if pandas.isna(value):
+        return None
+    return value
