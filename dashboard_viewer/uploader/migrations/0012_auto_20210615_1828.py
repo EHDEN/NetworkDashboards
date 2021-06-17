@@ -93,6 +93,10 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.CASCADE, to="uploader.DataSource"
             ),
         ),
+        migrations.RemoveField(
+            model_name="datasource",
+            name="draft",
+        ),
         migrations.RunSQL(
             "INSERT INTO achilles_results ("
             "    analysis_id,"

@@ -17,7 +17,7 @@ class InvalidFieldValue(FileChecksException):
     pass
 
 
-class DuplicateMetadataRow(FileChecksException):
+class DuplicatedMetadataRow(FileChecksException):
     pass
 
 
@@ -176,7 +176,7 @@ def extract_data_from_uploaded_file(uploaded_file):
             lambda e: len(e) <= 1,
         )
         if isinstance(output, str):
-            raise DuplicateMetadataRow(
+            raise DuplicatedMetadataRow(
                 f"Analysis id{output} duplicated on multiple rows. Try (re)running the plugin "
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 " on your database."
