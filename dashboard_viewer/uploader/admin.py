@@ -9,7 +9,13 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from .actions import custom_delete_selected
-from .models import Country, DatabaseType, DataSource, UploadHistory, PendingUpload
+from .models import (
+    Country,
+    DatabaseType,
+    DataSource,
+    PendingUpload,
+    UploadHistory,
+)
 from .tasks import delete_datasource
 
 IS_POPUP_VAR = "_popup"

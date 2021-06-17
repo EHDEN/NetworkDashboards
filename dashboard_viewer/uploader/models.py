@@ -1,8 +1,8 @@
+import datetime
 import json
-import uuid
 import os
 import pathlib
-import datetime
+import uuid
 
 from django.conf import settings
 from django.db import models
@@ -147,17 +147,22 @@ class PendingUpload(models.Model):
             return None
 
         try:
-            task = TaskResult.objects.get(task_id=self.task_id, task_name="uploader.tasks.upload_results_file")
+            task = TaskResult.objects.get(
+                task_id=self.task_id, task_name="uploader.tasks.upload_results_file"
+            )
         except TaskResult.DoesNotExist:
-            return "The information about this failure was deleted. Probably because this upload history " \
-                   "record is an old one. If not please contact the system administrator for more details. "
+            return (
+                "The information about this failure was deleted. Probably because this upload history "
+                "record is an old one. If not please contact the system administrator for more details. "
+            )
 
         result = json.loads(task.result)
         if result["exc_module"] == "uploader.file_handler.checks":
             return result["exc_message"][0]
-        else:
-            return "An unexpected error occurred while processing your file. Please contact the " \
-                   "system administrator for more details."
+        return (
+            "An unexpected error occurred while processing your file. Please contact the "
+            "system administrator for more details."
+        )
 
 
 def success_data_source_directory(instance, filename):
@@ -188,9 +193,15 @@ class UploadHistory(models.Model):
     cdm_release_date = models.CharField(max_length=50, null=True)
     cdm_version = models.CharField(max_length=50, null=True)
     vocabulary_version = models.CharField(max_length=50, null=True)
-    uploaded_file = models.FileField(null=True, upload_to=success_data_source_directory)  # For backwards compatibility its easier to make this null=True
-    pending_upload_id = models.IntegerField(null=True, help_text="The id of the PendingUpload record that originated "
-                                                                 "this successful upload.")  # aspedrosa: A foreign key is not used here since a PendingUpload record is erased once is successful. This is field is then only used to get the result data of pending upload through the get_upload_task_status view
+    uploaded_file = models.FileField(
+        null=True, upload_to=success_data_source_directory
+    )  # For backwards compatibility its easier to make this null=True
+    pending_upload_id = models.IntegerField(
+        null=True,
+        help_text="The id of the PendingUpload record that originated this successful upload."
+        # aspedrosa: A foreign key is not used here since a PendingUpload record is erased once is successful. This
+        #  is field is then only used to get the result data of pending upload through the get_upload_task_status view
+    )
 
     def __repr__(self):
         return self.__str__()

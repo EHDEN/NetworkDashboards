@@ -3,18 +3,12 @@ from celery.utils.log import get_task_logger
 from django.core import serializers
 from django.core.cache import cache
 from django.db import router, transaction
-
 from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
 
-from .models import (
-    AchillesResults,
-    UploadHistory,
-    PendingUpload,
-)
-
 from .file_handler.checks import extract_data_from_uploaded_file
 from .file_handler.updates import update_achilles_results_data
+from .models import AchillesResults, PendingUpload, UploadHistory
 
 logger = get_task_logger(__name__)
 
@@ -28,28 +22,49 @@ def upload_results_file(pending_upload_id: int):
 
     data_source = pending_upload.data_source
 
-    logger.info("Started to process file [datasource %d, pending upload %d]", data_source.id, pending_upload_id)
+    logger.info(
+        "Started to process file [datasource %d, pending upload %d]",
+        data_source.id,
+        pending_upload_id,
+    )
 
     try:
-        logger.info("Checking file format and data [datasource %d, pending upload %d]", data_source.id, pending_upload_id)
-        file_metadata, data = extract_data_from_uploaded_file(pending_upload.uploaded_file)
+        logger.info(
+            "Checking file format and data [datasource %d, pending upload %d]",
+            data_source.id,
+            pending_upload_id,
+        )
+        file_metadata, data = extract_data_from_uploaded_file(
+            pending_upload.uploaded_file
+        )
 
         try:
             cache.incr("celery_workers_updating", ignore_key_check=True)
 
             with RWLock(  # several workers can update their records in paralel -> same as -> several threads can read from the same file
-                cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
+                cache.client.get_client(),
+                "celery_worker_updating",
+                RWLock.READ,
+                expire=None,
             ), cache.lock(  # but only one worker can make updates associated to a specific data source at the same time
                 f"celery_worker_lock_db_{data_source.id}"
-            ), transaction.atomic(using=router.db_for_write(AchillesResults)):
-                logger.info("Updating results data [datasource %d, pending upload %d]", data_source.id,
-                            pending_upload_id)
+            ), transaction.atomic(
+                using=router.db_for_write(AchillesResults)
+            ):
+                logger.info(
+                    "Updating results data [datasource %d, pending upload %d]",
+                    data_source.id,
+                    pending_upload_id,
+                )
 
                 pending_upload.uploaded_file.seek(0)
                 update_achilles_results_data(logger, pending_upload, file_metadata)
 
-                logger.info("Creating an upload history record [datasource %d, pending upload %d]", data_source.id,
-                            pending_upload_id)
+                logger.info(
+                    "Creating an upload history record [datasource %d, pending upload %d]",
+                    data_source.id,
+                    pending_upload_id,
+                )
 
                 data_source.release_date = data["source_release_date"]
                 data_source.save()

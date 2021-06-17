@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from .forms import AchillesResultsForm, EditSourceForm, SourceForm
-from .models import Country, DataSource, UploadHistory, PendingUpload
+from .models import Country, DataSource, PendingUpload, UploadHistory
 from .serializers import DataSourceSerializer
 from .tasks import upload_results_file
 
@@ -31,14 +31,13 @@ def upload_achilles_results(request, *args, **kwargs):
 
         if form.is_valid():
             pending_upload = PendingUpload.objects.create(
-                data_source=obj_data_source,
-                uploaded_file=request.FILES["results_file"]
+                data_source=obj_data_source, uploaded_file=request.FILES["results_file"]
             )
 
             messages.success(
                 request,
                 "File uploaded with success. The file is being processed and its status, on the upload history table "
-                "should update in the meantime. "
+                "should update in the meantime.",
             )
 
             task = upload_results_file.delay(pending_upload.id)
@@ -54,7 +53,7 @@ def upload_achilles_results(request, *args, **kwargs):
             PendingUpload.objects.filter(data_source=obj_data_source),
         ),
         key=lambda upload: upload.upload_date,
-        reverse=True
+        reverse=True,
     )
 
     upload_history = list(map(lambda obj: (obj, obj.get_status()), upload_history))
@@ -77,25 +76,33 @@ def get_upload_task_status(request, data_source, upload_id):
     data_source = get_object_or_404(DataSource, hash=data_source)
 
     try:
-        pending_upload = PendingUpload.objects.get(id=upload_id, data_source=data_source)
+        pending_upload = PendingUpload.objects.get(
+            id=upload_id, data_source=data_source
+        )
     except PendingUpload.DoesNotExist:
         # assume if the objects doesn't exist it finished
-        upload = get_object_or_404(UploadHistory, data_source=data_source, pending_upload_id=upload_id)
+        upload = get_object_or_404(
+            UploadHistory, data_source=data_source, pending_upload_id=upload_id
+        )
 
-        return JsonResponse({
-            "status": "Done",
-            "data": {
-                "r_package_version": upload.r_package_version,
-                "generation_date": upload.generation_date,
-                "cdm_version": upload.cdm_version,
-                "vocabulary_version": upload.vocabulary_version
+        return JsonResponse(
+            {
+                "status": "Done",
+                "data": {
+                    "r_package_version": upload.r_package_version,
+                    "generation_date": upload.generation_date,
+                    "cdm_version": upload.cdm_version,
+                    "vocabulary_version": upload.vocabulary_version,
+                },
             }
-        })
+        )
 
     if pending_upload.status != PendingUpload.STATE_FAILED:
         return JsonResponse({"status": pending_upload.get_status()})
 
-    return JsonResponse({"status": "Failed", "failure_msg": pending_upload.failure_message()})
+    return JsonResponse(
+        {"status": "Failed", "failure_msg": pending_upload.failure_message()}
+    )
 
 
 def _get_fields_initial_values(request, initial):

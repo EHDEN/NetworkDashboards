@@ -104,7 +104,7 @@ def extract_data_from_uploaded_file(uploaded_file):
         skip_blank_lines=False,
         index_col=False,
         names=columns,
-        chunksize=100
+        chunksize=100,
     )
 
     types = {
@@ -163,13 +163,18 @@ def extract_data_from_uploaded_file(uploaded_file):
         if metadata is None:
             metadata = metadata_rows
         else:
-            metadata = pandas.concat((metadata, metadata_rows), ignore_index=True, copy=False)
+            metadata = pandas.concat(
+                (metadata, metadata_rows), ignore_index=True, copy=False
+            )
 
         output = _check_correct(
             ["0", "5000"],
-            (metadata[metadata.analysis_id == 0], metadata[metadata.analysis_id == 5000]),
+            (
+                metadata[metadata.analysis_id == 0],
+                metadata[metadata.analysis_id == 5000],
+            ),
             lambda e: len(e) <= 1,
-            )
+        )
         if isinstance(output, str):
             raise DuplicateMetadataRow(
                 f"Analysis id{output} duplicated on multiple rows. Try (re)running the plugin "
@@ -188,11 +193,7 @@ def extract_data_from_uploaded_file(uploaded_file):
     analysis_0 = analysis_0.reset_index()
     analysis_5000 = metadata[metadata.analysis_id == 5000].reset_index()
 
-    return {
-        "columns": columns,
-        "types": types,
-           },\
-           {
+    return {"columns": columns, "types": types}, {
         "generation_date": _get_upload_attr(analysis_0, "stratum_3"),
         "source_release_date": _get_upload_attr(analysis_5000, "stratum_2"),
         "cdm_release_date": _get_upload_attr(analysis_5000, "stratum_3"),

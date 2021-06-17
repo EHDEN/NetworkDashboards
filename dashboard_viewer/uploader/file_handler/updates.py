@@ -2,8 +2,13 @@ import pandas
 from django.conf import settings
 from django.db import connections
 from sqlalchemy import create_engine
-
-from uploader.models import AchillesResults, AchillesResultsArchive, DataSource, PendingUpload, UploadHistory
+from uploader.models import (
+    AchillesResults,
+    AchillesResultsArchive,
+    DataSource,
+    PendingUpload,
+    UploadHistory,
+)
 
 
 def update_achilles_results_data(logger, pending_upload: PendingUpload, file_metadata):
@@ -61,7 +66,7 @@ def update_achilles_results_data(logger, pending_upload: PendingUpload, file_met
 
 
 def move_achilles_results_records(
-        cursor, origin_model, destination_model, db_id, last_upload_id=None
+    cursor, origin_model, destination_model, db_id, last_upload_id=None
 ):
     allowed_models = (AchillesResults, AchillesResultsArchive)
 
@@ -86,7 +91,7 @@ def move_achilles_results_records(
         except UploadHistory.DoesNotExist:
             return  # nothing to move
     elif not UploadHistory.objects.filter(
-            id=last_upload_id, data_source_id=db_id
+        id=last_upload_id, data_source_id=db_id
     ).exists():
         raise ValueError("There is no UploadHistory with the provided id")
 
