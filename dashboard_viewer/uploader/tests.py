@@ -206,7 +206,6 @@ class ExtractDataFromUploadedFileTestCase(TestCase):
             self.fail("Exception raised")
 
     def test_invalid_column_count(self):
-        self.file_7_invalid_column_count.seek(0)
         self.assertRaises(
             InvalidFileFormat,
             extract_data_from_uploaded_file,
@@ -266,14 +265,21 @@ class UploadResultsFileTestCase(TransactionTestCase):
 
     fixtures = ("countries", "two_data_sources")
 
-    def test_invalid_file(self):
-        ExtractDataFromUploadedFileTestCase.file_7_invalid_column_count.seek(0)
+    # files that fail lead to django closing them somewhere so I store the content here
+    #  instead of using the BytesIO pointer of the ExtractDataFromUploadedFileTestCase class
+    file_7_invalid_column_count = bytes(
+        "analysis_id,stratum_1,stratum_2,stratum_3,stratum_4,stratum_5,count_value\n"
+        "0,,,,,,1000\n"
+        "1,,,,,,1000,,,,,\n",
+        "utf8",
+    )
 
+    def test_invalid_file(self):
         pending_upload_id = PendingUpload.objects.create(
             data_source=DataSource.objects.get(acronym="test1"),
             uploaded_file=SimpleUploadedFile(
                 "dummy",
-                ExtractDataFromUploadedFileTestCase.file_7_invalid_column_count.read(),
+                self.file_7_invalid_column_count,
             ),
         ).id
 
