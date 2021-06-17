@@ -26,10 +26,13 @@ def upload_results_file(pending_upload_id: int):
     pending_upload.status = PendingUpload.STATE_STARTED
     pending_upload.save()
 
-    try:
-        file_metadata, data = extract_data_from_uploaded_file(pending_upload.uploaded_file)
+    data_source = pending_upload.data_source
 
-        data_source = pending_upload.data_source
+    logger.info("Started to process file [datasource %d, pending upload %d]", data_source.id, pending_upload_id)
+
+    try:
+        logger.info("Checking file format and data [datasource %d, pending upload %d]", data_source.id, pending_upload_id)
+        file_metadata, data = extract_data_from_uploaded_file(pending_upload.uploaded_file)
 
         try:
             cache.incr("celery_workers_updating", ignore_key_check=True)
@@ -39,8 +42,14 @@ def upload_results_file(pending_upload_id: int):
             ), cache.lock(  # but only one worker can make updates associated to a specific data source at the same time
                 f"celery_worker_lock_db_{data_source.id}"
             ), transaction.atomic(using=router.db_for_write(AchillesResults)):
+                logger.info("Updating results data [datasource %d, pending upload %d]", data_source.id,
+                            pending_upload_id)
+
                 pending_upload.uploaded_file.seek(0)
-                update_achilles_results_data(pending_upload, file_metadata)
+                update_achilles_results_data(logger, pending_upload, file_metadata)
+
+                logger.info("Creating an upload history record [datasource %d, pending upload %d]", data_source.id,
+                            pending_upload_id)
 
                 data_source.release_date = data["source_release_date"]
                 data_source.save()

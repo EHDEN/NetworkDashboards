@@ -6,20 +6,20 @@ from sqlalchemy import create_engine
 from uploader.models import AchillesResults, AchillesResultsArchive, DataSource, PendingUpload, UploadHistory
 
 
-def update_achilles_results_data(pending_upload: PendingUpload, file_metadata):
-    #logger.info("Updating achilles results records [datasource %d]", db_id)
+def update_achilles_results_data(logger, pending_upload: PendingUpload, file_metadata):
+    data_source_id = pending_upload.data_source.id
 
-    #logger.info(
-    #    "Moving old records to the %s table [datasource %d]",
-    #    AchillesResultsArchive._meta.db_table,
-    #    db_id,
-    #)
+    logger.info(
+        "Moving old records to the AchillesResultsArchive table [datasource %d, pending upload %d]",
+        data_source_id,
+        pending_upload.id,
+    )
     with connections["achilles"].cursor() as cursor:
         move_achilles_results_records(
             cursor,
             AchillesResults,
             AchillesResultsArchive,
-            pending_upload.data_source.id,
+            data_source_id,
         )
 
     reader = pandas.read_csv(
@@ -32,12 +32,13 @@ def update_achilles_results_data(pending_upload: PendingUpload, file_metadata):
         chunksize=500,
     )
 
-    #logger.info(
-    #    "Inserting new records on %s table [datasource %d]",
-    #    store_table._meta.db_table,
-    #    db_id,
-    #)
+    logger.info(
+        "Inserting new results records [datasource %d, pending upload %d]",
+        data_source_id,
+        pending_upload.id,
+    )
 
+    engine = None
     try:
         engine = create_engine(
             "postgresql"
@@ -47,7 +48,7 @@ def update_achilles_results_data(pending_upload: PendingUpload, file_metadata):
         )
 
         for chunk in reader:
-            chunk = chunk.assign(data_source_id=pending_upload.data_source.id)
+            chunk = chunk.assign(data_source_id=data_source_id)
             chunk.to_sql(
                 AchillesResults._meta.db_table,
                 engine,
@@ -55,9 +56,8 @@ def update_achilles_results_data(pending_upload: PendingUpload, file_metadata):
                 index=False,
             )
     finally:
-        engine.dispose()
-
-    #logger.info("Done [datasource %d]", db_id)
+        if engine is not None:
+            engine.dispose()
 
 
 def move_achilles_results_records(
