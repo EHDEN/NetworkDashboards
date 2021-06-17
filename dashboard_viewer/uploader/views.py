@@ -26,10 +26,7 @@ def upload_achilles_results(request, *args, **kwargs):
     except DataSource.DoesNotExist:
         return create_data_source(request, *args, **kwargs)
 
-    if request.method == "GET":
-        form = AchillesResultsForm()
-
-    elif request.method == "POST":
+    if request.method == "POST":
         form = AchillesResultsForm(request.POST, request.FILES)
 
         if form.is_valid():
@@ -38,12 +35,18 @@ def upload_achilles_results(request, *args, **kwargs):
                 uploaded_file=request.FILES["results_file"]
             )
 
-            messages.success(request, "A background task back processing the uploaded file. You can check its status on the Pending uploads tab")
+            messages.success(
+                request,
+                "File uploaded with success. The file is being processed and its status, on the upload history table "
+                "should update in the meantime. "
+            )
 
             task = upload_results_file.delay(pending_upload.id)
 
             pending_upload.task_id = task.task_id
             pending_upload.save()
+    else:
+        form = AchillesResultsForm()
 
     upload_history = sorted(
         itertools.chain(
@@ -54,11 +57,7 @@ def upload_achilles_results(request, *args, **kwargs):
         reverse=True
     )
 
-    for i, obj in enumerate(upload_history):
-        if isinstance(obj, UploadHistory):
-            upload_history[i] = (obj, "Done")
-        else:
-            upload_history[i] = (obj, obj.get_status())
+    upload_history = list(map(lambda obj: (obj, obj.get_status()), upload_history))
 
     return render(
         request,

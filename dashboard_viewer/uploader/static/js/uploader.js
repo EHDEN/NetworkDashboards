@@ -1,7 +1,7 @@
 function update_upload_status(td, new_text, new_icon, new_color) {
     td.getElementsByClassName("status-text")[0].innerText = ` ${new_text}`;
 
-    if (new_icon) {
+    if (new_icon) {  // assume if new_icon is not undefined, new_color is also not undefined
         td.getElementsByTagName("i")[0].className = new_icon;
         td.className = new_color;
     }

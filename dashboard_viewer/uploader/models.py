@@ -122,7 +122,7 @@ class PendingUpload(models.Model):
     STATES = (
         (STATE_PENDING, "Pending"),
         (STATE_STARTED, "Started"),
-        (STATE_CANCELED, "Canceled"),
+        (STATE_CANCELED, "Canceled"),  # currently not being used
         (STATE_FAILED, "Failed"),
     )
 
@@ -136,9 +136,11 @@ class PendingUpload(models.Model):
     task_id = models.CharField(max_length=255, null=True)
 
     def get_status(self):
-        for id, name in self.STATES:
-            if self.status == id:
+        for status_id, name in self.STATES:
+            if self.status == status_id:
                 return name
+
+        return None  # should never happen
 
     def failure_message(self):
         if self.status != self.STATE_FAILED:
@@ -149,13 +151,13 @@ class PendingUpload(models.Model):
         except TaskResult.DoesNotExist:
             return "The information about this failure was deleted. Probably because this upload history " \
                    "record is an old one. If not please contact the system administrator for more details. "
+
+        result = json.loads(task.result)
+        if result["exc_module"] == "uploader.file_handler.checks":
+            return result["exc_message"][0]
         else:
-            result = json.loads(task.result)
-            if result["exc_module"] == "uploader.file_handler.checks":
-                return result["exc_message"][0]
-            else:
-                return "An unexpected error occurred while processing your file. Please contact the " \
-                       "system administrator for more details."
+            return "An unexpected error occurred while processing your file. Please contact the " \
+                   "system administrator for more details."
 
 
 def success_data_source_directory(instance, filename):
@@ -170,6 +172,10 @@ def success_data_source_directory(instance, filename):
 
 
 class UploadHistory(models.Model):
+    """
+    Successful uploads only
+    """
+
     class Meta:
         get_latest_by = "upload_date"
         ordering = ("-upload_date",)
@@ -183,13 +189,17 @@ class UploadHistory(models.Model):
     cdm_version = models.CharField(max_length=50, null=True)
     vocabulary_version = models.CharField(max_length=50, null=True)
     uploaded_file = models.FileField(null=True, upload_to=success_data_source_directory)  # For backwards compatibility its easier to make this null=True
-    pending_upload_id = models.IntegerField(null=True)
+    pending_upload_id = models.IntegerField(null=True, help_text="The id of the PendingUpload record that originated "
+                                                                 "this successful upload.")  # aspedrosa: A foreign key is not used here since a PendingUpload record is erased once is successful. This is field is then only used to get the result data of pending upload through the get_upload_task_status view
 
     def __repr__(self):
         return self.__str__()
 
     def __str__(self):
         return f"{self.data_source.name} - {self.upload_date}"
+
+    def get_status(self):
+        return "Done"
 
 
 class AchillesResults(models.Model):

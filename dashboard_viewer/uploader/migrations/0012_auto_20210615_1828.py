@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='uploadhistory',
             name='pending_upload_id',
-            field=models.IntegerField(null=True),
+            field=models.IntegerField(help_text='The id of the PendingUpload record that originated this successful upload.', null=True),
         ),
         migrations.CreateModel(
             name='PendingUpload',
