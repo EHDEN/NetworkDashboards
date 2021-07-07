@@ -14,19 +14,19 @@
 
    - `CONSTANCE_REDIS_DB`: Number of the Redis database where the django constance config is stored. The default value is 2. This value should be the same as the environment variable `REDIS_CONSTANCE_DB` of the dashboard container.
    
-   - `APP_NAME`: The backup process will generate some directories with this name in places that are shared with other applications.
+   - The following variables are associated with the arguemtns of the `backup_uploader` python package. Check its [usage](https://github.com/aspedrosa/BackupUploader#usage) for more details:
    
-   - `SERVER`: The name of the target cloud server to where backups should be uploaded (dropbox or mega).
+      - `APP_NAME`: The backup process will generate some directories with this name in places that are shared with other applications.
+    
+      - `SERVER`: The name of the target cloud server to where backups should be uploaded (dropbox or mega).
+    
+      - `BACKUP_CHAIN_CONFIG`: Allows having different directories with backups of different ages.
    
-   - `BACKUP_CHAIN_CONFIG`: Allows having different directories with backups of different ages.
-   
-   - `CREDENTIALS_FILE_PATH`: File containing the credentials to access the server to upload the backup file.
+      - `CREDENTIALS_FILE_PATH`: File containing the credentials to access the server to upload the backup file.
 
-3. Install `backup_uploader` python package (On the install command you should specify the cloud server, so necessary dependencies are installed): `pip install backup_uploader[dropbox]`.
+3. Install the `backup_uploader` python package by following its [install](https://github.com/aspedrosa/BackupUploader#install) instructions.
 
-4. Create a directory `dashboards_backups` under `/var/lib` and create a file named `counters.json`. Change counters file permissions: `chmod 0666 counters.json`.
-
-5. Schedule your backups
+4. Schedule your backups
    
    ```sh
    *    *    *   *    *  Command_to_execute
