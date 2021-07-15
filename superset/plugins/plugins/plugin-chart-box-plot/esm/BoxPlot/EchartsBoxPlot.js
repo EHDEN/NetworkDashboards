@@ -51,9 +51,7 @@ export default function EchartsBoxPlot({
         })
       },
       filterState: {
-        value: groupbyValues.length ? groupbyValues : null
-      },
-      ownState: {
+        value: groupbyValues.length ? groupbyValues : null,
         selectedValues: values.length ? values : null
       }
     });

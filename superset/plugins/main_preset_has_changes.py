@@ -13,7 +13,7 @@ if response.status_code == 200:
     commits = response.json()
     if not commits:
         print("Commits list is empty", file=sys.stderr)
-    elif commits[0]["sha"] == "bc1e208c1db1b6c57a7cd46c69beb9fc0e3184ea":
+    elif commits[0]["sha"] == "e466066229ec8262583bc118af1f39e2dbf77bcf":
         print("No changes were made to the MainPresets file")
     else:
         print("Changes were made to the MainPresets file", file=sys.stderr)

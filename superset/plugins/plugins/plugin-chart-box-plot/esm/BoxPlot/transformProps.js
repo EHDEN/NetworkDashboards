@@ -26,7 +26,7 @@ export default function transformProps(chartProps) {
     height,
     formData,
     hooks,
-    ownState,
+    filterState,
     queriesData
   } = chartProps;
   const {
@@ -180,7 +180,7 @@ export default function transformProps(chartProps) {
       [label]: groupby.map(col => datum[col])
     };
   }, {});
-  const selectedValues = (ownState.selectedValues || []).reduce((acc, selectedValue) => {
+  const selectedValues = (filterState.selectedValues || []).reduce((acc, selectedValue) => {
     const index = transformedData.findIndex(({
       name
     }) => name === selectedValue);
