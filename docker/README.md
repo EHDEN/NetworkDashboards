@@ -4,20 +4,20 @@
 
 2. Create a `.env` file on the `docker` directory, using `.env-example` as reference, setting all necessary environment variables (SUPERSET\_MAPBOX\_API\_KEY and DASHBOARD\_VIEWER\_SECRET\_KEY).
 
-3. Create a `docker-init.sh` file on `docker/superset` based on the file `docker/superset/docker-init-example.sh` to set up admin credentials for superset.
+3. If you wish to expose the dashboard viewer app through a specific domain(s) you must add it/them to the ALLOWED_HOSTS list on file `dashboard_viewer/dashboard_viewer/settings.py` and remove the `'*'` entry.
 
-4. If you wish to expose the dashboard viewer app through a specific domain(s) you must add it/them to the ALLOWED_HOSTS list on file `dashboard_viewer/dashboard_viewer/settings.py` and remove the `'*'` entry.
+4. Build containers' images: `docker-compose build`. This might take several minutes.
 
-5. Build containers' images: `docker-compose build`. This might take several minutes.
+5. Set up the database for the dashboard viewer app: `docker-compose run --rm dashboard ./docker-init.sh`.
 
-6. Set up the database for the dashboard viewer app: `docker-compose run --rm dashboard ./docker-init.sh`.
+6. Bring up the containers: `docker-compose up -d`.
 
-7. Bring up the containers: `docker-compose up -d`.
-
-8. If you used the default ports:
+7. If you used the default ports:
 
    - Go to `http://localhost` to access the dashboard viewer app.
    - Go to `http://localhost:8088` to access superset.
+
+8. By default Superset's admin user credentials are admin/admin. It is recommended that you change the password if you will use this in a production environment.
 
 9. To any anonymous user view dashboards, add the following:
 
@@ -27,3 +27,4 @@
    - can explore json on Superset
    - can read on Chart
    - can read on CssTemplate
+   - can read on Dashboard

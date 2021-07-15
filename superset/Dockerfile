@@ -1,4 +1,4 @@
-# Based on https://github.com/apache/superset/blob/1.1.0/Dockerfile
+# Based on https://github.com/apache/superset/blob/1.3.0/Dockerfile
 
 ######################################################################
 # PY stage that simply does a pip install on our requirements
@@ -81,8 +81,8 @@ ENV LANG=C.UTF-8 \
     SUPERSET_HOME="/app/superset_home" \
     SUPERSET_PORT=8088
 
-RUN useradd --user-group --no-create-home --no-log-init --shell /bin/bash superset \
-        && mkdir -p ${SUPERSET_HOME} ${PYTHONPATH} \
+RUN mkdir -p ${PYTHONPATH} \
+        && useradd --user-group -d ${SUPERSET_HOME} -m --no-log-init --shell /bin/bash superset \
         && apt-get update -y \
         && apt-get install -y --no-install-recommends \
             build-essential \

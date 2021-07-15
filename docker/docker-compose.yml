@@ -4,9 +4,8 @@ x-depends-on: &depends-on
 
 x-superset-app-build: &superset-app-build
   context: ../superset
-  dockerfile: ../docker/superset/Dockerfile
 x-superset-volumes: &superset-volumes
-  - ./superset/docker-init.sh:/app/docker/docker-init.sh
+  - ../superset/repo/docker:/app/docker
   - superset_home:/app/superset_home
 x-superset-environment: &superset-environment
   DATABASE_DIALECT: postgresql
@@ -21,7 +20,6 @@ x-superset-environment: &superset-environment
   REDIS_CELERY_DB: 4
   FLASK_ENV: production
   SUPERSET_ENV: production
-  CYPRESS_CONFIG: "false"
   MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
   PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
 
@@ -51,6 +49,7 @@ services:
   #### SUPERSET ####
   superset:
     build: *superset-app-build
+    command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
     restart: unless-stopped
     environment: *superset-environment
     user: "root"
@@ -73,7 +72,7 @@ services:
 
   superset-worker:
     build: *superset-app-build
-    command: ["/usr/bin/docker-bootstrap.sh", "worker"]
+    command: ["/app/docker/docker-bootstrap.sh", "worker"]
     restart: unless-stopped
     environment: *superset-environment
     user: "root"
@@ -84,7 +83,7 @@ services:
 
   superset-worker-beat:
     build: *superset-app-build
-    command: ["/usr/bin/docker-bootstrap.sh", "beat"]
+    command: ["/app/docker/docker-bootstrap.sh", "beat"]
     restart: unless-stopped
     environment: *superset-environment
     user: "root"
