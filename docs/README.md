@@ -4,11 +4,16 @@ Instead of having a long document with all the documentation, below you have the
 
 # Index
 
-1. Processes: a description of the main processes an admin and/or a platform user can perform
-1.1 [Data Sources](processes#data-sources)
-1.2 [Catalogue Results Files](processes#catalogue-resutls-files)
-1.3 [Materialized views](processes#materialized-views)
-1.4 [Tabs View [Deprecated](processes#tabs-view[deprecated])
+1. [Processes](processes.md): a description of the main processes an admin and/or a platform user can perform
+
+   1.1. [Data Sources](processes.md#data-sources)
+  
+   1.2. [Catalogue Results Files](processes.md#catalogue-results-files)
+  
+   1.3. [Materialized views](processes.md#materialized-views)
+  
+   1.4. [Tabs View [Deprecated]](processes.md#tabs-view-deprecated)
+  
 
 2. Other Features
 2.1
