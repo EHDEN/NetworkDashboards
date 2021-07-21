@@ -43,7 +43,11 @@
     </div>
 {% endblock %}
 
+{% block body_before_bootstrap %}
+  <script src="{% static 'popper.js/dist/umd/popper.min.js' %}"></script>
+{% endblock %}
+
 {% block body_tail %}
     {{ form.media.js }}
-    <script src="{% static 'js/uploader.js' %}"></script>  
+    <script src="{% static 'js/uploader.js' %}"></script>
 {% endblock %}

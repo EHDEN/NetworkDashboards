@@ -5,10 +5,8 @@ x-depends-on: &depends-on
 x-superset-app-build: &superset-app-build
   context: ../superset
   dockerfile: ../docker/superset/Dockerfile
-  target: lean
 x-superset-volumes: &superset-volumes
-  - ./superset/docker-init.sh:/app/docker-init.sh
-  - ./superset/superset_config_overrides.py:/app/pythonpath/superset_config_docker.py
+  - ./superset/docker-init.sh:/app/docker/docker-init.sh
   - superset_home:/app/superset_home
 x-superset-environment: &superset-environment
   DATABASE_DIALECT: postgresql
@@ -19,10 +17,11 @@ x-superset-environment: &superset-environment
   DATABASE_DB: ${POSTGRES_SUPERSET_DB}
   REDIS_HOST: redis
   REDIS_PORT: 6379
-  REDIS_CACHE_DB: 3
+  REDIS_RESULTS_DB: 3
   REDIS_CELERY_DB: 4
   FLASK_ENV: production
   SUPERSET_ENV: production
+  CYPRESS_CONFIG: "false"
   MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
   PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
 
@@ -54,18 +53,19 @@ services:
     build: *superset-app-build
     restart: unless-stopped
     environment: *superset-environment
+    user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
     ports:
-      - ${SUPERSET_PORT}:8080
+      - ${SUPERSET_PORT}:8088
     networks:
       - all
 
   superset-init:
     build: *superset-app-build
-    container_name: superset_init
-    command: ["/app/docker-init.sh"]
+    command: ["/app/docker/docker-init.sh"]
     environment: *superset-environment
+    user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
     networks:
@@ -73,10 +73,21 @@ services:
 
   superset-worker:
     build: *superset-app-build
-    container_name: superset_worker
-    command: ["celery", "worker", "--app=superset.tasks.celery_app:app", "-Ofair", "-l", "INFO"]
+    command: ["/usr/bin/docker-bootstrap.sh", "worker"]
     restart: unless-stopped
     environment: *superset-environment
+    user: "root"
+    depends_on: *depends-on
+    volumes: *superset-volumes
+    networks:
+      - all
+
+  superset-worker-beat:
+    build: *superset-app-build
+    command: ["/usr/bin/docker-bootstrap.sh", "beat"]
+    restart: unless-stopped
+    environment: *superset-environment
+    user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
     networks:
@@ -116,7 +127,7 @@ services:
       - ${NGINX_PORT}:80
     volumes:
       - ./nginx-config:/etc/nginx/conf.d
-      - ./static:/static/dashboard
+      - dashboard_static:/static/dashboard
       - ../dashboard_viewer/media:/media
     depends_on:
       - dashboard
@@ -129,6 +140,8 @@ services:
     command: celery -A dashboard_viewer worker -Ofair -l INFO
     restart: unless-stopped
     depends_on: *depends-on
+    volumes:
+      - ../dashboard_viewer/media:/app/media
     networks:
       - all
 
@@ -139,11 +152,10 @@ services:
     #ports:
     # - ${DASHBOARD_VIEWER_PORT}:8000
     depends_on: *depends-on
+    restart: unless-stopped
     volumes:
-      # required, to keep the achilles files outside
-      - ./volumes/achilles_results_files:/app/media/achilles_results_files
       # production
-      - ./static:/app/static
+      - dashboard_static:/app/static
       - ../dashboard_viewer/media:/app/media
       # development
       #- ../dashboard_viewer:/app
@@ -152,6 +164,7 @@ services:
 
 volumes:
   superset_home:
+  dashboard_static:
 
 networks:
   all:

@@ -190,11 +190,11 @@ STATICFILES_FINDERS = (
 )
 
 # Media files (Uploaded images, ...)
-MEDIA_URL = "media/"
+MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-# User to grant SELECT permissions on the materialized queries
-POSTGRES_SUPERSET_USER = os.environ.get("POSTGRES_DEFAULT_DB", "superset")
+# Uploader app specific settings
+ACHILLES_RESULTS_STORAGE_PATH = "achilles_results_files"
 
 
 # Redis
@@ -267,6 +267,11 @@ CONSTANCE_CONFIG = {
         "Text for the 'Automatic Updates' section on the uploader app",
         "markdown",
     ),
+    "UPLOADER_ALLOW_EDIT_DRAFT_STATUS": (
+        False,
+        "If a Data Source owner can change the draft status when editing its details",
+        bool,
+    ),
     "TABS_LOGO_CONTAINER_CSS": (
         "padding: 5px 5px 5px 5px;\nheight: 100px;\nmargin-bottom: 10px;\n",
         "Css for the div container of the logo image",
@@ -311,3 +316,6 @@ MARTOR_ENABLE_CONFIGS = {
 MESSAGE_TAGS = {
     messages.ERROR: "danger",
 }
+
+
+TEST_RUNNER = "dashboard_viewer.runners.CeleryTestSuiteRunner"
