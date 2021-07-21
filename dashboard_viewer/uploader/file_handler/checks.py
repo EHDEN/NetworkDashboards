@@ -3,8 +3,12 @@ import io
 
 import numpy
 import pandas
-
-from uploader.file_handler.errors import DuplicatedMetadataRow, InvalidFieldValue, InvalidFileFormat, MissingFieldValue
+from uploader.file_handler.errors import (
+    DuplicatedMetadataRow,
+    InvalidFieldValue,
+    InvalidFileFormat,
+    MissingFieldValue,
+)
 from uploader.file_handler.files_extractor import ResultsFileType
 
 
@@ -77,7 +81,9 @@ def extract_data_from_uploaded_file(uploaded_file, results_file_type, metadata=N
                 )
             )
         elif len(first_row) != 7:
-            raise InvalidFileFormat("The provided file has an invalid number of columns.")
+            raise InvalidFileFormat(
+                "The provided file has an invalid number of columns."
+            )
 
         uploaded_file.seek(0)
     else:

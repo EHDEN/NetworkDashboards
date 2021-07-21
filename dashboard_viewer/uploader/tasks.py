@@ -1,14 +1,21 @@
 from celery import shared_task
 from celery.utils.log import get_task_logger
+from django.conf import settings
 from django.core import serializers
 from django.core.cache import cache
-from django.db import router, transaction
+from django.db import connections, router, transaction
 from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
+from sqlalchemy import create_engine
 
-from .file_handler import checks, files_extractor
+from .file_handler import checks, files_extractor, updates
 from .file_handler.updates import update_achilles_results_data
-from .models import AchillesResults, PendingUpload, UploadHistory
+from .models import (
+    AchillesResults,
+    AchillesResultsArchive,
+    PendingUpload,
+    UploadHistory,
+)
 
 logger = get_task_logger(__name__)
 
@@ -37,8 +44,12 @@ def upload_results_file(pending_upload_id: int):
 
         files = []
         metadata = None
-        for file, results_file_type in files_extractor.extract_files(pending_upload.uploaded_file):
-            file_metadata, metadata = checks.extract_data_from_uploaded_file(file, results_file_type, metadata)
+        for file, results_file_type in files_extractor.extract_files(
+            pending_upload.uploaded_file
+        ):
+            file_metadata, metadata = checks.extract_data_from_uploaded_file(
+                file, results_file_type, metadata
+            )
             files.append((file, file_metadata))
 
         metadata = checks.check_metadata(metadata)
@@ -62,8 +73,34 @@ def upload_results_file(pending_upload_id: int):
                     pending_upload_id,
                 )
 
-                for file, file_metadata in files:
-                    update_achilles_results_data(logger, data_source.id, pending_upload_id, file, file_metadata)
+                with connections["achilles"].cursor() as cursor:
+                    updates.move_achilles_results_records(
+                        cursor,
+                        AchillesResults,
+                        AchillesResultsArchive,
+                        data_source.id,
+                    )
+
+                engine = None
+                try:
+                    engine = create_engine(
+                        "postgresql"
+                        f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
+                        f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
+                        f"/{settings.DATABASES['achilles']['NAME']}"
+                    )
+
+                    for file, file_metadata in files:
+                        update_achilles_results_data(
+                            logger,
+                            pending_upload,
+                            file,
+                            file_metadata,
+                            engine,
+                        )
+                finally:
+                    if engine is not None:
+                        engine.dispose()
 
                 logger.info(
                     "Creating an upload history record [datasource %d, pending upload %d]",

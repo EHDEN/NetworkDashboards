@@ -1,7 +1,4 @@
 import pandas
-from django.conf import settings
-from django.db import connections
-from sqlalchemy import create_engine
 from uploader.models import (
     AchillesResults,
     AchillesResultsArchive,
@@ -11,19 +8,16 @@ from uploader.models import (
 )
 
 
-def update_achilles_results_data(logger, data_source_id, pending_upload_id, file, file_metadata):
+def update_achilles_results_data(
+    logger, pending_upload: PendingUpload, file, file_metadata, engine
+):
+    data_source_id = pending_upload.data_source.id
+
     logger.info(
         "Moving old records to the AchillesResultsArchive table [datasource %d, pending upload %d]",
         data_source_id,
-        pending_upload_id,
+        pending_upload.id,
     )
-    with connections["achilles"].cursor() as cursor:
-        move_achilles_results_records(
-            cursor,
-            AchillesResults,
-            AchillesResultsArchive,
-            data_source_id,
-        )
 
     reader = pandas.read_csv(
         file,
@@ -38,29 +32,17 @@ def update_achilles_results_data(logger, data_source_id, pending_upload_id, file
     logger.info(
         "Inserting new results records [datasource %d, pending upload %d]",
         data_source_id,
-        pending_upload_id,
+        pending_upload.id,
     )
 
-    engine = None
-    try:
-        engine = create_engine(
-            "postgresql"
-            f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
-            f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
-            f"/{settings.DATABASES['achilles']['NAME']}"
+    for chunk in reader:
+        chunk = chunk.assign(data_source_id=data_source_id)
+        chunk.to_sql(
+            AchillesResults._meta.db_table,
+            engine,
+            if_exists="append",
+            index=False,
         )
-
-        for chunk in reader:
-            chunk = chunk.assign(data_source_id=data_source_id)
-            chunk.to_sql(
-                AchillesResults._meta.db_table,
-                engine,
-                if_exists="append",
-                index=False,
-            )
-    finally:
-        if engine is not None:
-            engine.dispose()
 
 
 def move_achilles_results_records(

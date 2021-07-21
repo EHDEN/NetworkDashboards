@@ -1,7 +1,12 @@
 import zipfile
 from enum import Enum
 
-from uploader.file_handler.errors import BothNomenclaturesUsed, InvalidZipFile, NoExpectedFiles, UnsupportedExtension
+from uploader.file_handler.errors import (
+    BothNomenclaturesUsed,
+    InvalidZipFile,
+    NoExpectedFiles,
+    UnsupportedExtension,
+)
 
 
 class ResultsFileType(Enum):
@@ -14,7 +19,7 @@ def extract_files(uploaded_file):
     if uploaded_file.name.endswith(".zip"):
         return _extract_from_zip(uploaded_file)
     if uploaded_file.name.endswith(".csv"):
-        return (uploaded_file, ResultsFileType.UNKNOWN),
+        return ((uploaded_file, ResultsFileType.UNKNOWN),)
 
     raise UnsupportedExtension()
 
@@ -52,7 +57,13 @@ def _extract_from_zip(uploaded_file):
             "As a result, the dist file will be ignored.",
         )
 
-    main_results_file = (uploaded_zipfile.open(results_filename), ResultsFileType.NORMAL)
+    main_results_file = (
+        uploaded_zipfile.open(results_filename),
+        ResultsFileType.NORMAL,
+    )
     if results_dist_filename in uploaded_zipfile.namelist():
-        return main_results_file, (uploaded_zipfile.open(results_dist_filename), ResultsFileType.DIST)
-    return main_results_file,
+        return main_results_file, (
+            uploaded_zipfile.open(results_dist_filename),
+            ResultsFileType.DIST,
+        )
+    return (main_results_file,)

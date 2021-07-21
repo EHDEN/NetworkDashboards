@@ -31,7 +31,8 @@ def upload_achilles_results(request, *args, **kwargs):
 
         if form.is_valid():
             pending_upload = PendingUpload.objects.create(
-                data_source=obj_data_source, uploaded_file=request.FILES["results_files"]
+                data_source=obj_data_source,
+                uploaded_file=request.FILES["results_files"],
             )
 
             messages.success(
