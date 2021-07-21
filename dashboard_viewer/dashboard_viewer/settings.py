@@ -315,3 +315,6 @@ MARTOR_ENABLE_CONFIGS = {
 }
 
 TEST_RUNNER = "dashboard_viewer.runners.CeleryTestSuiteRunner"
+
+# required since django 3.2
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
