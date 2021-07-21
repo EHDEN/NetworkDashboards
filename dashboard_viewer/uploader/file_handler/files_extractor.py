@@ -21,14 +21,16 @@ def extract_files(uploaded_file):
     if uploaded_file.name.endswith(".csv"):
         return ((uploaded_file, ResultsFileType.UNKNOWN),)
 
-    raise UnsupportedExtension()
+    raise UnsupportedExtension(
+        "Unknown file format. Upload either a zip or a csv file."
+    )
 
 
 def _extract_from_zip(uploaded_file):
     try:
         uploaded_zipfile = zipfile.ZipFile(uploaded_file)
     except zipfile.BadZipFile:
-        raise InvalidZipFile()
+        raise InvalidZipFile("Invalid zip file provided.")
 
     results_filename = results_dist_filename = None
     prefixes = ("achilles", "catalogue")
@@ -37,14 +39,20 @@ def _extract_from_zip(uploaded_file):
         results_filename_tmp = prefix + "_results.csv"
         if results_filename_tmp in uploaded_zipfile.namelist():
             if results_filename is not None:  # contains both nomenclatures
-                raise BothNomenclaturesUsed()
+                raise BothNomenclaturesUsed(
+                    "The uploaded zip file contains both achilles_results and catalogue_results files. "
+                    "We support both but please use just one of the two to make sure all files "
+                    "are used correctly.",
+                )
 
             results_filename = results_filename_tmp
             results_dist_filename = prefix + "_results_dist.csv"
             prefix_idx = i
 
     if results_filename is None:  # contains no expected files
-        raise NoExpectedFiles()
+        raise NoExpectedFiles(
+            'The mandatory file "achilles_results.csv" or "catalogue_results.csv" is missing.'
+        )
 
     if (
         prefixes[(prefix_idx + 1) % 2] + "_results_dist.csv"
