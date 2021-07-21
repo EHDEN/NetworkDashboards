@@ -6,7 +6,7 @@ from django.db import router, transaction
 from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
 
-from .file_handler.checks import extract_data_from_uploaded_file
+from .file_handler import checks, files_extractor
 from .file_handler.updates import update_achilles_results_data
 from .models import AchillesResults, PendingUpload, UploadHistory
 
@@ -34,9 +34,14 @@ def upload_results_file(pending_upload_id: int):
             data_source.id,
             pending_upload_id,
         )
-        file_metadata, data = extract_data_from_uploaded_file(
-            pending_upload.uploaded_file
-        )
+
+        files = []
+        metadata = None
+        for file, results_file_type in files_extractor.extract_files(pending_upload.uploaded_file):
+            file_metadata, metadata = checks.extract_data_from_uploaded_file(file, results_file_type, metadata)
+            files.append((file, file_metadata))
+
+        metadata = checks.check_metadata(metadata)
 
         try:
             cache.incr("celery_workers_updating", ignore_key_check=True)
@@ -57,8 +62,8 @@ def upload_results_file(pending_upload_id: int):
                     pending_upload_id,
                 )
 
-                pending_upload.uploaded_file.seek(0)
-                update_achilles_results_data(logger, pending_upload, file_metadata)
+                for file, file_metadata in files:
+                    update_achilles_results_data(logger, data_source.id, pending_upload_id, file, file_metadata)
 
                 logger.info(
                     "Creating an upload history record [datasource %d, pending upload %d]",
@@ -66,17 +71,17 @@ def upload_results_file(pending_upload_id: int):
                     pending_upload_id,
                 )
 
-                data_source.release_date = data["source_release_date"]
+                data_source.release_date = metadata["source_release_date"]
                 data_source.save()
 
                 pending_upload.uploaded_file.seek(0)
                 UploadHistory.objects.create(
                     data_source=data_source,
-                    r_package_version=data["r_package_version"],
-                    generation_date=data["generation_date"],
-                    cdm_release_date=data["cdm_release_date"],
-                    cdm_version=data["cdm_version"],
-                    vocabulary_version=data["vocabulary_version"],
+                    r_package_version=metadata["r_package_version"],
+                    generation_date=metadata["generation_date"],
+                    cdm_release_date=metadata["cdm_release_date"],
+                    cdm_version=metadata["cdm_version"],
+                    vocabulary_version=metadata["vocabulary_version"],
                     uploaded_file=pending_upload.uploaded_file.file,
                     pending_upload_id=pending_upload.id,
                 )

@@ -4,25 +4,8 @@ import io
 import numpy
 import pandas
 
-
-class FileChecksException(Exception):
-    pass
-
-
-class InvalidFileFormat(FileChecksException):
-    pass
-
-
-class InvalidFieldValue(FileChecksException):
-    pass
-
-
-class DuplicatedMetadataRow(FileChecksException):
-    pass
-
-
-class MissingFieldValue(FileChecksException):
-    pass
+from uploader.file_handler.errors import DuplicatedMetadataRow, InvalidFieldValue, InvalidFileFormat, MissingFieldValue
+from uploader.file_handler.files_extractor import ResultsFileType
 
 
 def _check_correct(names, values, check, transform=None):
@@ -61,41 +44,67 @@ def _check_correct(names, values, check, transform=None):
     return transformed_elements
 
 
-def extract_data_from_uploaded_file(uploaded_file):
-    columns = [
-        "analysis_id",
-        "stratum_1",
-        "stratum_2",
-        "stratum_3",
-        "stratum_4",
-        "stratum_5",
-        "count_value",
-    ]
+def extract_data_from_uploaded_file(uploaded_file, results_file_type, metadata=None):
+    if results_file_type == ResultsFileType.UNKNOWN:
+        columns = [
+            "analysis_id",
+            "stratum_1",
+            "stratum_2",
+            "stratum_3",
+            "stratum_4",
+            "stratum_5",
+            "count_value",
+        ]
 
-    wrapper = io.TextIOWrapper(uploaded_file)
-    csv_reader = csv.reader(wrapper)
+        wrapper = io.TextIOWrapper(uploaded_file)
+        csv_reader = csv.reader(wrapper)
 
-    first_row = next(csv_reader)
-    wrapper.detach()
+        first_row = next(csv_reader)
+        wrapper.detach()
 
-    if len(first_row) == 16:
-        columns.extend(
-            (
-                "min_value",
-                "max_value",
-                "avg_value",
-                "stdev_value",
-                "median_value",
-                "p10_value",
-                "p25_value",
-                "p75_value",
-                "p90_value",
+        if len(first_row) == 16:
+            columns.extend(
+                (
+                    "min_value",
+                    "max_value",
+                    "avg_value",
+                    "stdev_value",
+                    "median_value",
+                    "p10_value",
+                    "p25_value",
+                    "p75_value",
+                    "p90_value",
+                )
             )
-        )
-    elif len(first_row) != 7:
-        raise InvalidFileFormat("The provided file has an invalid number of columns.")
+        elif len(first_row) != 7:
+            raise InvalidFileFormat("The provided file has an invalid number of columns.")
 
-    uploaded_file.seek(0)
+        uploaded_file.seek(0)
+    else:
+        columns = [
+            "analysis_id",
+            "stratum_1",
+            "stratum_2",
+            "stratum_3",
+            "stratum_4",
+            "stratum_5",
+            "count_value",
+        ]
+
+        if results_file_type == ResultsFileType.DIST:
+            columns.extend(
+                (
+                    "min_value",
+                    "max_value",
+                    "avg_value",
+                    "stdev_value",
+                    "median_value",
+                    "p10_value",
+                    "p25_value",
+                    "p75_value",
+                    "p90_value",
+                )
+            )
 
     file_reader = pandas.read_csv(
         uploaded_file,
@@ -130,8 +139,6 @@ def extract_data_from_uploaded_file(uploaded_file):
                 "p90_value": float,
             },
         )
-
-    metadata = None
 
     while True:
         try:
@@ -182,6 +189,10 @@ def extract_data_from_uploaded_file(uploaded_file):
                 " on your database."
             )
 
+    return {"columns": columns, "types": types}, metadata
+
+
+def check_metadata(metadata):
     analysis_0 = metadata[metadata.analysis_id == 0]
     if analysis_0.empty:
         raise MissingFieldValue(
@@ -193,7 +204,7 @@ def extract_data_from_uploaded_file(uploaded_file):
     analysis_0 = analysis_0.reset_index()
     analysis_5000 = metadata[metadata.analysis_id == 5000].reset_index()
 
-    return {"columns": columns, "types": types}, {
+    return {
         "generation_date": _get_upload_attr(analysis_0, "stratum_3"),
         "source_release_date": _get_upload_attr(analysis_5000, "stratum_2"),
         "cdm_release_date": _get_upload_attr(analysis_5000, "stratum_3"),

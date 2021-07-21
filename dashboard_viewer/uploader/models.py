@@ -156,7 +156,7 @@ class PendingUpload(models.Model):
             )
 
         result = json.loads(task.result)
-        if result["exc_module"] == "uploader.file_handler.checks":
+        if result["exc_module"] == "uploader.file_handler.errors":
             return result["exc_message"][0]
         return (
             "An unexpected error occurred while processing your file. Please contact the "

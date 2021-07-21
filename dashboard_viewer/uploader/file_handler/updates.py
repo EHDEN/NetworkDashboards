@@ -11,13 +11,11 @@ from uploader.models import (
 )
 
 
-def update_achilles_results_data(logger, pending_upload: PendingUpload, file_metadata):
-    data_source_id = pending_upload.data_source.id
-
+def update_achilles_results_data(logger, data_source_id, pending_upload_id, file, file_metadata):
     logger.info(
         "Moving old records to the AchillesResultsArchive table [datasource %d, pending upload %d]",
         data_source_id,
-        pending_upload.id,
+        pending_upload_id,
     )
     with connections["achilles"].cursor() as cursor:
         move_achilles_results_records(
@@ -28,7 +26,7 @@ def update_achilles_results_data(logger, pending_upload: PendingUpload, file_met
         )
 
     reader = pandas.read_csv(
-        pending_upload.uploaded_file,
+        file,
         header=0,
         dtype=file_metadata["types"],
         skip_blank_lines=False,
@@ -40,7 +38,7 @@ def update_achilles_results_data(logger, pending_upload: PendingUpload, file_met
     logger.info(
         "Inserting new results records [datasource %d, pending upload %d]",
         data_source_id,
-        pending_upload.id,
+        pending_upload_id,
     )
 
     engine = None
