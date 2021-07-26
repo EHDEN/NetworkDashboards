@@ -81,7 +81,7 @@ The uploaded file must:
 
 - contain the columns in the same order as presented in the table above
 
-While parsing the uploaded file, some data is extracted to then present on the Upload history and to update data source information. This data is extracted from the record with analysis id 0,** which is required to be present on the file**, and 5000, which is optional. Next is presented the data extracted and their description:
+While parsing the uploaded file, some data is extracted to then present on the Upload history and to update data source information. This data is extracted from the record with analysis id 0, **which is required to be present on the file**, and 5000, which is optional. Next is presented the data extracted and their description:
 
 - R Package Version: the version of CatalogueExport R package used
 
