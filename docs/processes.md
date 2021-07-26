@@ -1,6 +1,6 @@
 # Data Sources
 
-Target: platform user
+**Target: platform user**
 
 Before uploading any data to this platform, a data source owner has to create a data source instance to then associated the upload data with.
 
@@ -42,7 +42,7 @@ Since the creation URL does not have csrf cookie protection, you can perform a P
 
 # Catalogue Results Files
 
-Target: platform user
+**Target: platform user**
 
 Once a data source is created you can access its upload page by accessing the `[BASE_URL]/uploader/[HASH]/`. If no data source has the provided hash you will be redirected back to the data source creation form.
 
@@ -81,7 +81,7 @@ The uploaded file must:
 
 - contain the columns in the same order as presented in the table above
 
-While parsing the uploaded file, some data is extracted to then present on the Upload history and to update data source information. This data is extracted from the record with analysis id 0, which is required to be present on the file, and 5000, which is optional. Next is presented the data extracted and their description:
+While parsing the uploaded file, some data is extracted to then present on the Upload history and to update data source information. This data is extracted from the record with analysis id 0,** which is required to be present on the file**, and 5000, which is optional. Next is presented the data extracted and their description:
 
 - R Package Version: the version of CatalogueExport R package used
 
@@ -103,7 +103,7 @@ The next table is presented where the previous data is stored on the rows with a
 | 5000        |           | Source Release Date | CDM Release Date | CDM Version | Vocabulary Version |
 
 # Materialized Views
-Target: admin user
+**Target: admin user**
 
 For each chart, Superset has an underlying SQL query which in our case is run every time a chart is rendered. If one of these queries takes too long to execute the charts will also take too long until they are rendered and eventually users might get timeout messages given a bad user experience.
 
@@ -127,4 +127,4 @@ After all this, the final step is to add the materialized view as a Dataset. Log
 
 # Tabs View [Deprecated]
 
-Target: admin user
+**Target: admin user**
