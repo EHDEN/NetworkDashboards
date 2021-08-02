@@ -4,11 +4,11 @@ output: html_document
 
 
 
-# Data Domains
+## Data Domains
 
 <!-- Discuss the goal of this dashboard... TO DO -->
 
-## CSS
+### CSS {-}
 
 To hide the dashboard header insert the following css code to the `CSS` field on the edit page:
 
@@ -21,7 +21,7 @@ To hide the dashboard header insert the following css code to the `CSS` field on
 With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the "Edit Dashboard" button can show again.
 
-## Data Source Filter
+### Data Source Filter {-}
 
 <div class="figure">
 <img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
@@ -30,11 +30,11 @@ or remove it so the "Edit Dashboard" button can show again.
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
-### SQL query
+#### SQL query {-}
 
 No SQL query, use the sql table `data_source` of the `achilles` database.
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -47,14 +47,14 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
     - Date Filter: off
     - Instant Filtering: on
 
-## Average Number of Records per Person {#avgRecordsPerPerson}
+### Average Number of Records per Person {#avgRecordsPerPerson} {-}
 
 <div class="figure">
 <img src="images/10-data_domain/02-avg_records_per_person.png" alt="Settings for creating the Data Source filter chart" width="100%" />
 <p class="caption">(\#fig:unnamed-chunk-1)Settings for creating the Data Source filter chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT 
@@ -82,7 +82,7 @@ GROUP BY analysis_id, source.name, source.acronym
 HAVING analysis_id IN (201, 401, 501, 601, 701, 801, 1801, 2101, 2201)
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type

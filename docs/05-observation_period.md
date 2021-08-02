@@ -4,11 +4,11 @@ output: html_document
 
 
 
-# Observation Period
+## Observation Period
 
 <!-- Discuss the goal of this dashboard... TO DO -->
 
-## CSS
+### CSS {-}
 
 To hide the dashboard header insert the following css code to the `CSS` field on the edit page:
 
@@ -21,7 +21,7 @@ To hide the dashboard header insert the following css code to the `CSS` field on
 With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the "Edit Dashboard" button can show again.
 
-## Data Source Filter
+### Data Source Filter {-}
 
 <div class="figure">
 <img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
@@ -30,11 +30,11 @@ or remove it so the "Edit Dashboard" button can show again.
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
-### SQL query
+#### SQL query {-}
 
 No SQL query, use the sql table `data_source` of the `achilles` database.
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -47,7 +47,7 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
     - Date Filter: off
     - Instant Filtering: on
 
-## Number of Patients in Observation Period {#numInObservationPeriod}
+### Number of Patients in Observation Period {#numInObservationPeriod} {-}
 
 The Number of Patients in Observation Period plot shows the number of patients that contribute at least one day in a specific month.
 
@@ -56,7 +56,7 @@ The Number of Patients in Observation Period plot shows the number of patients t
 <p class="caption">(\#fig:numPatientsInObserPeriod)Settings for creating the Number of Patients in Observation Period chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT source.name,
@@ -68,7 +68,7 @@ INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
 WHERE analysis_id = 110
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -88,14 +88,14 @@ WHERE analysis_id = 110
     - X Axis Label: Dates
     - Reduce X ticks: on
 
-## Observation Period Start Dates
+### Observation Period Start Dates {-}
 
 <div class="figure">
 <img src="images/05-observation_period/03-observation_period_start_dates.png" alt="Settings for creating the Observation Period Start Dates chart" width="100%" />
 <p class="caption">(\#fig:observationPeriodStartDates)Settings for creating the Observation Period Start Dates chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT source.name,
@@ -107,7 +107,7 @@ INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
 WHERE analysis_id = 111
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -127,14 +127,14 @@ WHERE analysis_id = 111
     - X Axis Label: Year
     - Reduce X ticks: on
 
-## Observation Period End Dates
+### Observation Period End Dates {-}
 
 <div class="figure">
 <img src="images/05-observation_period/04-observation_period_end_dates.png" alt="Settings for creating the Observation Period End Dates chart" width="100%" />
 <p class="caption">(\#fig:observationPeriodEndDates)Settings for creating the Observation Period End Dates chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT source.name,
@@ -146,7 +146,7 @@ INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
 WHERE analysis_id = 112
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type

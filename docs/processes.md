@@ -1,4 +1,6 @@
-# Data Sources
+# Processes
+
+### Data Sources {-}
 
 **Target: platform user**
 
@@ -24,7 +26,7 @@ There are several ways to create a data source:
 
 By accessing the `[BASE_URL]/uploader/` URL, you will get a form where you can field the fields, where the country field is a dropdown and the coordinates field is set through a map widget.
 
-![](images/processes_data_source_creation.png)
+![](images/processes/processes_data_source_creation.png)
 
 2. Automatically create when performing a GET to the `[BASE_URL]/uploader/` URL
 
@@ -40,7 +42,7 @@ Since the creation URL does not have csrf cookie protection, you can perform a P
 -. Since the coordinates field is composed of two fields (latitude, longitude), it should be submitted as `coordinates_0=[latitude]` and `coordinates_1=[longitude]`
 -. The country field should match one of the available on the dropdown of the webform.
 
-# Catalogue Results Files
+### Catalogue Results Files {-}
 
 **Target: platform user**
 
@@ -102,7 +104,7 @@ The next table is presented where the previous data is stored on the rows with a
 | 0           |           | R Package Version   | Generation Date  |             |                    |
 | 5000        |           | Source Release Date | CDM Release Date | CDM Version | Vocabulary Version |
 
-# Materialized Views
+### Materialized Views {-}
 **Target: admin user**
 
 For each chart, Superset has an underlying SQL query which in our case is run every time a chart is rendered. If one of these queries takes too long to execute the charts will also take too long until they are rendered and eventually users might get timeout messages given a bad user experience.
@@ -111,20 +113,20 @@ To avoid this problem, instead of executing the raw SQL query we create a [postg
 
 So whenever I create a chart I have to access the Postgres console? No, we created an unmanaged Materialized Queries model that maps to the materialized views on Postgres. With it you can create new materialized views through the Django admin app, by accessing the `[BASE_URL]/admin/` URL.
 
-![](images/processes_materialized_view_creation.png)
+![](images/processes/processes_materialized_view_creation.png)
 
 You have to provide the materialized view name and its query, which will then be used to execute the query `CREATE MATERIALIZED VIEW [name] AS [query]`, which will be executed on a background task so the browser doesn't hang and times out, in case of complicated queries. Taking this into account, the record associated will not appear on the Django admin app until the `CREATE MATERIALIZED VIEW` query finishes.
 
 To give feedback on the background task we use [celery/django-celery-results](https://github.com/celery/django-celery-results), so you can check the status of a task on the Task Results model of the Celery Results app
 
-![](images/processes_task_results.png)
+![](images/processes/processes_task_results.png)
 
 After the creation of a Materialized Query, the will be a message telling the id of the task which is executing the `CREATE MATERIALIZED VIEW` query. You can then check for the record associated with the task, click on the id to get more details. If something went wrong check the error message either on Result Data or Traceback fields under the Result section
 
-![](images/processes_task_result_info.png)
+![](images/processes/processes_task_result_info.png)
 
 After all this, the final step is to add the materialized view as a Dataset. Login into Superset, then go to Data -> Datasets and create a new one. Select the `Achilles` database, the `public` schema, then the created materialized view and click "ADD". After this, the materialized view can be used as a data source for a new chart.
 
-# Tabs View [Deprecated]
+### Tabs View [Deprecated] {-}
 
 **Target: admin user**

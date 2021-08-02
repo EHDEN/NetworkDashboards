@@ -4,9 +4,9 @@ output: html_document
 
 
 
-# Person
+## Person
 
-## Label Colors 
+### Label Colors  {-}
 
 In order to obtain the colors blue and rose in the chart representing the gender distribution,
 add the following JSON entry to the JSON object of the `JSON Metadata` field on the edit dashboard page:
@@ -18,7 +18,7 @@ add the following JSON entry to the JSON object of the `JSON Metadata` field on 
 }
 ```
 
-## CSS
+### CSS {-}
 
 To hide the dashboard header insert the following css code to the `CSS` field on the edit page:
 
@@ -31,7 +31,7 @@ To hide the dashboard header insert the following css code to the `CSS` field on
 With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the "Edit Dashboard" button can show again.
 
-## Data Source Filter
+### Data Source Filter {-}
 
 <div class="figure">
 <img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
@@ -40,11 +40,11 @@ or remove it so the "Edit Dashboard" button can show again.
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
-### SQL query
+#### SQL query {-}
 
 No SQL query, use the sql table `data_source` of the `achilles` database.
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -57,14 +57,14 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
     - Date Filter: off
     - Instant Filtering: on
 
-## Age at first observation - Table {#age1ObservationTable}
+### Age at first observation - Table {#age1ObservationTable} {-}
 
 <div class="figure">
 <img src="images/04-person/02-age_at_first_observation_table.png" alt="Settings for creating the Age at First Observation Table chart" width="100%" />
 <p class="caption">(\#fig:ageFirstObservationTable)Settings for creating the Age at First Observation Table chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT source.name,
@@ -86,7 +86,7 @@ WHERE analysis_id = 102
 GROUP BY name, acronym
 ```
 
-### Chart settings
+#### Chart settings {-}
   
 - Data Tab
   - Datasource & Chart Type
@@ -100,14 +100,14 @@ GROUP BY name, acronym
   - Options
     - Show Cell Bars: off
 
-## Age at first observation - Bars {#age1ObservationBars}
+### Age at first observation - Bars {#age1ObservationBars} {-}
 
 <div class="figure">
 <img src="images/04-person/03-age_at_first_observation_bar.png" alt="Settings for creating the Age at First Observation Bar chart" width="100%" />
 <p class="caption">(\#fig:ageFirstObservationBar)Settings for creating the Age at First Observation Bar chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT source.name,
@@ -119,7 +119,7 @@ INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
 WHERE analysis_id = 101
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -139,14 +139,14 @@ WHERE analysis_id = 101
     - X Axis Label: Age
     - Reduce X ticks: on
 
-## Year of Birth {#yearOfBirth}
+### Year of Birth {#yearOfBirth} {-}
 
 <div class="figure">
 <img src="images/04-person/04-year_of_birth.png" alt="Settings for creating the Year of Birth chart" width="100%" />
 <p class="caption">(\#fig:yearOfBirth)Settings for creating the Year of Birth chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT source.name,
@@ -158,7 +158,7 @@ INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
 WHERE analysis_id = 3
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -180,14 +180,14 @@ WHERE analysis_id = 3
     - Reduce X ticks: on
 
 
-## Gender
+### Gender {-}
 
 <div class="figure">
 <img src="images/04-person/05-gender.png" alt="Settings for creating the Gender chart" width="100%" />
 <p class="caption">(\#fig:gender)Settings for creating the Gender chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT source.name,
@@ -204,7 +204,7 @@ JOIN (
 WHERE analysis_id = 2
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type

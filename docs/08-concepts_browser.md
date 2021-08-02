@@ -4,11 +4,11 @@ output: html_document
 
 
 
-# Concepts Browser
+## Concepts Browser
 
 The concepts browser allows you to search for concepts by name or concept_id in all the data sources you select. No exact number of patients or occurrences are provided but the magnitude of both.
 
-## CSS
+### CSS {-}
 
 To hide the dashboard header insert the following css code to the `CSS` field on the edit page:
 
@@ -21,7 +21,7 @@ To hide the dashboard header insert the following css code to the `CSS` field on
 With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the "Edit Dashboard" button can show again.
 
-## Data Source and Domain Filters
+### Data Source and Domain Filters {-}
 
 <div class="figure">
 <img src="images/08-concepts_browser/01-filters.png" alt="Settings for creating the Data Source and Domain filter charts" width="100%" />
@@ -30,7 +30,7 @@ or remove it so the "Edit Dashboard" button can show again.
 
 **For the filters to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
-### SQL query
+#### SQL query {-}
            
 ```sql
 SELECT concept_name,
@@ -43,7 +43,7 @@ INNER JOIN public.data_source AS source ON data_source_id=source.id
 WHERE analysis_id in (201, 401, 601, 701, 801, 901, 1001, 1801, 200, 400, 600, 700, 800, 1800)
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -57,18 +57,18 @@ WHERE analysis_id in (201, 401, 601, 701, 801, 901, 1001, 1801, 200, 400, 600, 7
     - Instant Filtering: on
 
 
-## Number of Concepts
+### Number of Concepts {-}
 
 <div class="figure">
 <img src="images/08-concepts_browser/02-number_of_concepts.png" alt="Settings for creating the Number of Concepts chart" width="100%" />
 <p class="caption">(\#fig:numOfConcepts)Settings for creating the Number of Concepts chart</p>
 </div>
 
-### SQL Query
+#### SQL Query {-}
 
 Same as [Data Source and Domain filters](#Data Source and Domain Filters) query
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -81,7 +81,7 @@ Same as [Data Source and Domain filters](#Data Source and Domain Filters) query
   - Big Number Font Size: Small
   - Subheader Font Size: Tiny
 
-## Concept Browser Table {#conceptBrowserTable}
+### Concept Browser Table {#conceptBrowserTable} {-}
 
 <div class="figure">
 <img src="images/08-concepts_browser/03-concepts_table.png" alt="Settings for creating the Concepts Table chart" width="100%" />
@@ -140,7 +140,7 @@ GROUP BY q1.concept_id,q1.concept_name,q1.domain_id,source.name, acronym
 ORDER BY "Person_count" desc
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type

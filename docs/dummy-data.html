@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Dummy data | 09-data-domains.Rmd</title>
+  <title>2.5 Dummy data | Data Network Dashboards</title>
   <meta name="description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Dummy data | 09-data-domains.Rmd" />
+  <meta property="og:title" content="2.5 Dummy data | Data Network Dashboards" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Dummy data | 09-data-domains.Rmd" />
+  <meta name="twitter:title" content="2.5 Dummy data | Data Network Dashboards" />
   
   <meta name="twitter:description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
   
@@ -24,16 +24,16 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2020-10-28" />
+<meta name="date" content="2021-08-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="installation.html"/>
+<link rel="prev" href="superset-setup.html"/>
 <link rel="next" href="general.html"/>
-<script src="libs/header-attrs-2.5/header-attrs.js"></script>
+<script src="libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -52,8 +52,8 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -120,6 +120,7 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -138,138 +139,280 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
 <ul>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#contributors"><i class="fa fa-check"></i>Contributors</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#considerations"><i class="fa fa-check"></i>Considerations</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledges"><i class="fa fa-check"></i>Acknowledges</a></li>
+<li class="chapter" data-level="" data-path="contributors.html"><a href="contributors.html"><i class="fa fa-check"></i>Contributors</a></li>
+<li class="chapter" data-level="" data-path="considerations.html"><a href="considerations.html"><i class="fa fa-check"></i>Considerations</a></li>
+<li class="chapter" data-level="" data-path="license.html"><a href="license.html"><i class="fa fa-check"></i>License</a></li>
+<li class="chapter" data-level="" data-path="acknowledges.html"><a href="acknowledges.html"><i class="fa fa-check"></i>Acknowledges</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#data-network-dashboard"><i class="fa fa-check"></i><b>1.1</b> Data Network Dashboard</a></li>
+<li class="chapter" data-level="1.1" data-path="data-network-dashboard.html"><a href="data-network-dashboard.html"><i class="fa fa-check"></i><b>1.1</b> Data Network Dashboard</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="installation.html"><a href="installation.html"><i class="fa fa-check"></i><b>2</b> Installation</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="installation.html"><a href="installation.html#first-steps"><i class="fa fa-check"></i><b>2.1</b> First Steps</a></li>
-<li class="chapter" data-level="2.2" data-path="installation.html"><a href="installation.html#dashboard-viewer-setup"><i class="fa fa-check"></i><b>2.2</b> Dashboard Viewer setup</a></li>
-<li class="chapter" data-level="2.3" data-path="installation.html"><a href="installation.html#insert-concepts"><i class="fa fa-check"></i><b>2.3</b> Insert Concepts</a></li>
-<li class="chapter" data-level="2.4" data-path="installation.html"><a href="installation.html#superset-setup"><i class="fa fa-check"></i><b>2.4</b> Superset setup</a></li>
+<li class="chapter" data-level="2.1" data-path="first-steps.html"><a href="first-steps.html"><i class="fa fa-check"></i><b>2.1</b> First Steps</a></li>
+<li class="chapter" data-level="2.2" data-path="dashboard-viewer-setup.html"><a href="dashboard-viewer-setup.html"><i class="fa fa-check"></i><b>2.2</b> Dashboard Viewer setup</a></li>
+<li class="chapter" data-level="2.3" data-path="insert-concepts.html"><a href="insert-concepts.html"><i class="fa fa-check"></i><b>2.3</b> Insert Concepts</a></li>
+<li class="chapter" data-level="2.4" data-path="superset-setup.html"><a href="superset-setup.html"><i class="fa fa-check"></i><b>2.4</b> Superset setup</a></li>
+<li class="chapter" data-level="2.5" data-path="dummy-data.html"><a href="dummy-data.html"><i class="fa fa-check"></i><b>2.5</b> Dummy data</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="dummy-data.html"><a href="dummy-data.html"><i class="fa fa-check"></i><b>3</b> Dummy data</a></li>
-<li class="chapter" data-level="4" data-path="general.html"><a href="general.html"><i class="fa fa-check"></i><b>4</b> General</a>
+<li class="chapter" data-level="3" data-path="general.html"><a href="general.html"><i class="fa fa-check"></i><b>3</b> General</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="general.html"><a href="general.html#database-type-and-country-filter"><i class="fa fa-check"></i><b>4.1</b> Database Type and Country Filter</a>
+<li class="chapter" data-level="3.1" data-path="css.html"><a href="css.html"><i class="fa fa-check"></i><b>3.1</b> CSS</a></li>
+<li class="chapter" data-level="3.2" data-path="database-type-and-country-filter.html"><a href="database-type-and-country-filter.html"><i class="fa fa-check"></i><b>3.2</b> Database Type and Country Filter</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="general.html"><a href="general.html#sql-query"><i class="fa fa-check"></i><b>4.1.1</b> SQL query</a></li>
-<li class="chapter" data-level="4.1.2" data-path="general.html"><a href="general.html#chart-settings"><i class="fa fa-check"></i><b>4.1.2</b> Chart settings</a></li>
+<li class="chapter" data-level="3.2.1" data-path="database-type-and-country-filter.html"><a href="database-type-and-country-filter.html#sql-query"><i class="fa fa-check"></i><b>3.2.1</b> SQL query</a></li>
+<li class="chapter" data-level="3.2.2" data-path="database-type-and-country-filter.html"><a href="database-type-and-country-filter.html#chart-settings"><i class="fa fa-check"></i><b>3.2.2</b> Chart settings</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="general.html"><a href="general.html#total-number-of-patients"><i class="fa fa-check"></i><b>4.2</b> Total Number of Patients</a>
+<li class="chapter" data-level="3.3" data-path="total-number-of-patients.html"><a href="total-number-of-patients.html"><i class="fa fa-check"></i><b>3.3</b> Total Number of Patients</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="general.html"><a href="general.html#sql-query-1"><i class="fa fa-check"></i><b>4.2.1</b> SQL query</a></li>
-<li class="chapter" data-level="4.2.2" data-path="general.html"><a href="general.html#chart-settings-1"><i class="fa fa-check"></i><b>4.2.2</b> Chart settings</a></li>
+<li class="chapter" data-level="3.3.1" data-path="total-number-of-patients.html"><a href="total-number-of-patients.html#sql-query-1"><i class="fa fa-check"></i><b>3.3.1</b> SQL query</a></li>
+<li class="chapter" data-level="3.3.2" data-path="total-number-of-patients.html"><a href="total-number-of-patients.html#chart-settings-1"><i class="fa fa-check"></i><b>3.3.2</b> Chart settings</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="general.html"><a href="general.html#network-growth-by-date"><i class="fa fa-check"></i><b>4.3</b> Network Growth by Date</a>
+<li class="chapter" data-level="3.4" data-path="network-growth-by-date.html"><a href="network-growth-by-date.html"><i class="fa fa-check"></i><b>3.4</b> Network Growth by Date</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="general.html"><a href="general.html#sql-query-2"><i class="fa fa-check"></i><b>4.3.1</b> SQL query</a></li>
-<li class="chapter" data-level="4.3.2" data-path="general.html"><a href="general.html#chart-settings-2"><i class="fa fa-check"></i><b>4.3.2</b> Chart settings</a></li>
+<li class="chapter" data-level="3.4.1" data-path="network-growth-by-date.html"><a href="network-growth-by-date.html#sql-query-2"><i class="fa fa-check"></i><b>3.4.1</b> SQL query</a></li>
+<li class="chapter" data-level="3.4.2" data-path="network-growth-by-date.html"><a href="network-growth-by-date.html#chart-settings-2"><i class="fa fa-check"></i><b>3.4.2</b> Chart settings</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="general.html"><a href="general.html#patients-per-country"><i class="fa fa-check"></i><b>4.4</b> Patients per Country</a>
+<li class="chapter" data-level="3.5" data-path="patients-per-country.html"><a href="patients-per-country.html"><i class="fa fa-check"></i><b>3.5</b> Patients per Country</a>
 <ul>
-<li class="chapter" data-level="4.4.1" data-path="general.html"><a href="general.html#sql-query-3"><i class="fa fa-check"></i><b>4.4.1</b> SQL query</a></li>
-<li class="chapter" data-level="4.4.2" data-path="general.html"><a href="general.html#chart-settings-3"><i class="fa fa-check"></i><b>4.4.2</b> Chart settings</a></li>
+<li class="chapter" data-level="3.5.1" data-path="patients-per-country.html"><a href="patients-per-country.html#patientsPerCountryQuery"><i class="fa fa-check"></i><b>3.5.1</b> SQL query</a></li>
+<li class="chapter" data-level="3.5.2" data-path="patients-per-country.html"><a href="patients-per-country.html#chart-settings-3"><i class="fa fa-check"></i><b>3.5.2</b> Chart settings</a></li>
 </ul></li>
-<li class="chapter" data-level="4.5" data-path="general.html"><a href="general.html#database-types-per-country"><i class="fa fa-check"></i><b>4.5</b> Database Types per Country</a>
+<li class="chapter" data-level="3.6" data-path="database-types-per-country.html"><a href="database-types-per-country.html"><i class="fa fa-check"></i><b>3.6</b> Database Types per Country</a>
 <ul>
-<li class="chapter" data-level="4.5.1" data-path="general.html"><a href="general.html#sql-query-4"><i class="fa fa-check"></i><b>4.5.1</b> SQL query</a></li>
-<li class="chapter" data-level="4.5.2" data-path="general.html"><a href="general.html#chart-settings-4"><i class="fa fa-check"></i><b>4.5.2</b> Chart settings</a></li>
+<li class="chapter" data-level="3.6.1" data-path="database-types-per-country.html"><a href="database-types-per-country.html#sql-query-3"><i class="fa fa-check"></i><b>3.6.1</b> SQL query</a></li>
+<li class="chapter" data-level="3.6.2" data-path="database-types-per-country.html"><a href="database-types-per-country.html#chart-settings-4"><i class="fa fa-check"></i><b>3.6.2</b> Chart settings</a></li>
 </ul></li>
-<li class="chapter" data-level="4.6" data-path="general.html"><a href="general.html#world-map"><i class="fa fa-check"></i><b>4.6</b> World Map</a>
+<li class="chapter" data-level="3.7" data-path="world-map.html"><a href="world-map.html"><i class="fa fa-check"></i><b>3.7</b> World Map</a>
 <ul>
-<li class="chapter" data-level="4.6.1" data-path="general.html"><a href="general.html#sql-query-5"><i class="fa fa-check"></i><b>4.6.1</b> SQL query</a></li>
-<li class="chapter" data-level="4.6.2" data-path="general.html"><a href="general.html#chart-settings-5"><i class="fa fa-check"></i><b>4.6.2</b> Chart settings</a></li>
+<li class="chapter" data-level="3.7.1" data-path="world-map.html"><a href="world-map.html#sql-query-4"><i class="fa fa-check"></i><b>3.7.1</b> SQL query</a></li>
+<li class="chapter" data-level="3.7.2" data-path="world-map.html"><a href="world-map.html#chart-settings-5"><i class="fa fa-check"></i><b>3.7.2</b> Chart settings</a></li>
 </ul></li>
-<li class="chapter" data-level="4.7" data-path="general.html"><a href="general.html#meta-data"><i class="fa fa-check"></i><b>4.7</b> Meta Data</a>
+<li class="chapter" data-level="3.8" data-path="metaDataTable.html"><a href="metaDataTable.html"><i class="fa fa-check"></i><b>3.8</b> Meta Data</a>
 <ul>
-<li class="chapter" data-level="4.7.1" data-path="general.html"><a href="general.html#sql-query-6"><i class="fa fa-check"></i><b>4.7.1</b> SQL query</a></li>
-<li class="chapter" data-level="4.7.2" data-path="general.html"><a href="general.html#chart-settings-6"><i class="fa fa-check"></i><b>4.7.2</b> Chart settings</a></li>
-</ul></li>
-<li class="chapter" data-level="4.8" data-path="general.html"><a href="general.html#css"><i class="fa fa-check"></i><b>4.8</b> CSS</a></li>
-</ul></li>
-<li class="chapter" data-level="5" data-path="person.html"><a href="person.html"><i class="fa fa-check"></i><b>5</b> Person</a>
-<ul>
-<li class="chapter" data-level="5.1" data-path="person.html"><a href="person.html#person---patients-by-age"><i class="fa fa-check"></i><b>5.1</b> Person - Patients by age</a>
-<ul>
-<li class="chapter" data-level="5.1.1" data-path="person.html"><a href="person.html#sql-query-7"><i class="fa fa-check"></i><b>5.1.1</b> SQL query</a></li>
-<li class="chapter" data-level="5.1.2" data-path="person.html"><a href="person.html#chart-settings-7"><i class="fa fa-check"></i><b>5.1.2</b> Chart settings</a></li>
-</ul></li>
-<li class="chapter" data-level="5.2" data-path="person.html"><a href="person.html#person---births-by-year"><i class="fa fa-check"></i><b>5.2</b> Person - Births by Year</a>
-<ul>
-<li class="chapter" data-level="5.2.1" data-path="person.html"><a href="person.html#sql-query-8"><i class="fa fa-check"></i><b>5.2.1</b> SQL query</a></li>
-<li class="chapter" data-level="5.2.2" data-path="person.html"><a href="person.html#chart-settings-8"><i class="fa fa-check"></i><b>5.2.2</b> Chart settings</a></li>
-</ul></li>
-<li class="chapter" data-level="5.3" data-path="person.html"><a href="person.html#person---gender-distribution"><i class="fa fa-check"></i><b>5.3</b> Person - Gender Distribution</a>
-<ul>
-<li class="chapter" data-level="5.3.1" data-path="person.html"><a href="person.html#sql-query-9"><i class="fa fa-check"></i><b>5.3.1</b> SQL query</a></li>
-<li class="chapter" data-level="5.3.2" data-path="person.html"><a href="person.html#chart-settings-9"><i class="fa fa-check"></i><b>5.3.2</b> Chart settings</a></li>
+<li class="chapter" data-level="3.8.1" data-path="metaDataTable.html"><a href="metaDataTable.html#sql-query-5"><i class="fa fa-check"></i><b>3.8.1</b> SQL query</a></li>
+<li class="chapter" data-level="3.8.2" data-path="metaDataTable.html"><a href="metaDataTable.html#chart-settings-6"><i class="fa fa-check"></i><b>3.8.2</b> Chart settings</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="population-characteristics.html"><a href="population-characteristics.html"><i class="fa fa-check"></i><b>6</b> Population Characteristics</a>
+<li class="chapter" data-level="4" data-path="person.html"><a href="person.html"><i class="fa fa-check"></i><b>4</b> Person</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="population-characteristics.html"><a href="population-characteristics.html#population-characteristics---patients-in-observation-period-per-month"><i class="fa fa-check"></i><b>6.1</b> Population characteristics - Patients in Observation Period per Month</a>
+<li class="chapter" data-level="4.1" data-path="label-colors.html"><a href="label-colors.html"><i class="fa fa-check"></i><b>4.1</b> Label Colors</a></li>
+<li class="chapter" data-level="4.2" data-path="css-1.html"><a href="css-1.html"><i class="fa fa-check"></i><b>4.2</b> CSS</a></li>
+<li class="chapter" data-level="4.3" data-path="data-source-filter.html"><a href="data-source-filter.html"><i class="fa fa-check"></i><b>4.3</b> Data Source Filter</a>
 <ul>
-<li class="chapter" data-level="6.1.1" data-path="population-characteristics.html"><a href="population-characteristics.html#sql-query-10"><i class="fa fa-check"></i><b>6.1.1</b> SQL query</a></li>
-<li class="chapter" data-level="6.1.2" data-path="population-characteristics.html"><a href="population-characteristics.html#chart-settings-10"><i class="fa fa-check"></i><b>6.1.2</b> Chart settings</a></li>
+<li class="chapter" data-level="4.3.1" data-path="data-source-filter.html"><a href="data-source-filter.html#sql-query-6"><i class="fa fa-check"></i><b>4.3.1</b> SQL query</a></li>
+<li class="chapter" data-level="4.3.2" data-path="data-source-filter.html"><a href="data-source-filter.html#chart-settings-7"><i class="fa fa-check"></i><b>4.3.2</b> Chart settings</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="population-characteristics.html"><a href="population-characteristics.html#population-characteristics---observation-period-end-dates"><i class="fa fa-check"></i><b>6.2</b> Population characteristics - Observation Period End Dates</a>
+<li class="chapter" data-level="4.4" data-path="age1ObservationTable.html"><a href="age1ObservationTable.html"><i class="fa fa-check"></i><b>4.4</b> Age at first observation - Table</a>
 <ul>
-<li class="chapter" data-level="6.2.1" data-path="population-characteristics.html"><a href="population-characteristics.html#sql-query-11"><i class="fa fa-check"></i><b>6.2.1</b> SQL query</a></li>
-<li class="chapter" data-level="6.2.2" data-path="population-characteristics.html"><a href="population-characteristics.html#chart-settings-11"><i class="fa fa-check"></i><b>6.2.2</b> Chart settings</a></li>
+<li class="chapter" data-level="4.4.1" data-path="age1ObservationTable.html"><a href="age1ObservationTable.html#sql-query-7"><i class="fa fa-check"></i><b>4.4.1</b> SQL query</a></li>
+<li class="chapter" data-level="4.4.2" data-path="age1ObservationTable.html"><a href="age1ObservationTable.html#chart-settings-8"><i class="fa fa-check"></i><b>4.4.2</b> Chart settings</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="population-characteristics.html"><a href="population-characteristics.html#population-characteristics---observation-period-start-dates"><i class="fa fa-check"></i><b>6.3</b> Population characteristics - Observation Period Start Dates</a>
+<li class="chapter" data-level="4.5" data-path="age1ObservationBars.html"><a href="age1ObservationBars.html"><i class="fa fa-check"></i><b>4.5</b> Age at first observation - Bars</a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="population-characteristics.html"><a href="population-characteristics.html#sql-query-12"><i class="fa fa-check"></i><b>6.3.1</b> SQL query</a></li>
-<li class="chapter" data-level="6.3.2" data-path="population-characteristics.html"><a href="population-characteristics.html#chart-settings-12"><i class="fa fa-check"></i><b>6.3.2</b> Chart settings</a></li>
+<li class="chapter" data-level="4.5.1" data-path="age1ObservationBars.html"><a href="age1ObservationBars.html#sql-query-8"><i class="fa fa-check"></i><b>4.5.1</b> SQL query</a></li>
+<li class="chapter" data-level="4.5.2" data-path="age1ObservationBars.html"><a href="age1ObservationBars.html#chart-settings-9"><i class="fa fa-check"></i><b>4.5.2</b> Chart settings</a></li>
 </ul></li>
+<li class="chapter" data-level="4.6" data-path="yearOfBirth.html"><a href="yearOfBirth.html"><i class="fa fa-check"></i><b>4.6</b> Year of Birth</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="yearOfBirth.html"><a href="yearOfBirth.html#sql-query-9"><i class="fa fa-check"></i><b>4.6.1</b> SQL query</a></li>
+<li class="chapter" data-level="4.6.2" data-path="yearOfBirth.html"><a href="yearOfBirth.html#chart-settings-10"><i class="fa fa-check"></i><b>4.6.2</b> Chart settings</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="visit.html"><a href="visit.html"><i class="fa fa-check"></i><b>7</b> Visit</a>
+<li class="chapter" data-level="4.7" data-path="gender.html"><a href="gender.html"><i class="fa fa-check"></i><b>4.7</b> Gender</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="visit.html"><a href="visit.html#visit---types"><i class="fa fa-check"></i><b>7.1</b> Visit - Types</a>
-<ul>
-<li class="chapter" data-level="7.1.1" data-path="visit.html"><a href="visit.html#sql-query-13"><i class="fa fa-check"></i><b>7.1.1</b> SQL query</a></li>
-<li class="chapter" data-level="7.1.2" data-path="visit.html"><a href="visit.html#chart-settings-13"><i class="fa fa-check"></i><b>7.1.2</b> Chart settings</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="8" data-path="death.html"><a href="death.html"><i class="fa fa-check"></i><b>8</b> Death</a>
-<ul>
-<li class="chapter" data-level="8.1" data-path="death.html"><a href="death.html#death---by-month-per-thousand-people"><i class="fa fa-check"></i><b>8.1</b> Death - By Month per Thousand People</a>
-<ul>
-<li class="chapter" data-level="8.1.1" data-path="death.html"><a href="death.html#sql-query-14"><i class="fa fa-check"></i><b>8.1.1</b> SQL query</a></li>
-<li class="chapter" data-level="8.1.2" data-path="death.html"><a href="death.html#chart-settings-14"><i class="fa fa-check"></i><b>8.1.2</b> Chart settings</a></li>
-</ul></li>
-<li class="chapter" data-level="8.2" data-path="death.html"><a href="death.html#death---number-of-records"><i class="fa fa-check"></i><b>8.2</b> Death - Number of Records</a>
-<ul>
-<li class="chapter" data-level="8.2.1" data-path="death.html"><a href="death.html#sql-query-15"><i class="fa fa-check"></i><b>8.2.1</b> SQL query</a></li>
-<li class="chapter" data-level="8.2.2" data-path="death.html"><a href="death.html#chart-settings-15"><i class="fa fa-check"></i><b>8.2.2</b> Chart settings</a></li>
+<li class="chapter" data-level="4.7.1" data-path="gender.html"><a href="gender.html#sql-query-10"><i class="fa fa-check"></i><b>4.7.1</b> SQL query</a></li>
+<li class="chapter" data-level="4.7.2" data-path="gender.html"><a href="gender.html#chart-settings-11"><i class="fa fa-check"></i><b>4.7.2</b> Chart settings</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="concepts.html"><a href="concepts.html"><i class="fa fa-check"></i><b>9</b> Concepts</a>
+<li class="chapter" data-level="5" data-path="observation-period.html"><a href="observation-period.html"><i class="fa fa-check"></i><b>5</b> Observation Period</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="concepts.html"><a href="concepts.html#concepts-general-tab"><i class="fa fa-check"></i><b>9.1</b> Concepts General Tab</a>
+<li class="chapter" data-level="5.1" data-path="css-2.html"><a href="css-2.html"><i class="fa fa-check"></i><b>5.1</b> CSS</a></li>
+<li class="chapter" data-level="5.2" data-path="data-source-filter-1.html"><a href="data-source-filter-1.html"><i class="fa fa-check"></i><b>5.2</b> Data Source Filter</a>
 <ul>
-<li class="chapter" data-level="9.1.1" data-path="concepts.html"><a href="concepts.html#sql-query-16"><i class="fa fa-check"></i><b>9.1.1</b> SQL query</a></li>
-<li class="chapter" data-level="9.1.2" data-path="concepts.html"><a href="concepts.html#charts"><i class="fa fa-check"></i><b>9.1.2</b> Charts</a></li>
+<li class="chapter" data-level="5.2.1" data-path="data-source-filter-1.html"><a href="data-source-filter-1.html#sql-query-11"><i class="fa fa-check"></i><b>5.2.1</b> SQL query</a></li>
+<li class="chapter" data-level="5.2.2" data-path="data-source-filter-1.html"><a href="data-source-filter-1.html#chart-settings-12"><i class="fa fa-check"></i><b>5.2.2</b> Chart settings</a></li>
 </ul></li>
-<li class="chapter" data-level="9.2" data-path="concepts.html"><a href="concepts.html#concepts-domains-tab"><i class="fa fa-check"></i><b>9.2</b> Concepts Domains Tab</a>
+<li class="chapter" data-level="5.3" data-path="numInObservationPeriod.html"><a href="numInObservationPeriod.html"><i class="fa fa-check"></i><b>5.3</b> Number of Patients in Observation Period</a>
 <ul>
-<li class="chapter" data-level="9.2.1" data-path="concepts.html"><a href="concepts.html#sql-query-17"><i class="fa fa-check"></i><b>9.2.1</b> SQL query</a></li>
-<li class="chapter" data-level="9.2.2" data-path="concepts.html"><a href="concepts.html#chart-settings-16"><i class="fa fa-check"></i><b>9.2.2</b> Chart settings</a></li>
+<li class="chapter" data-level="5.3.1" data-path="numInObservationPeriod.html"><a href="numInObservationPeriod.html#sql-query-12"><i class="fa fa-check"></i><b>5.3.1</b> SQL query</a></li>
+<li class="chapter" data-level="5.3.2" data-path="numInObservationPeriod.html"><a href="numInObservationPeriod.html#chart-settings-13"><i class="fa fa-check"></i><b>5.3.2</b> Chart settings</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="observation-period-start-dates.html"><a href="observation-period-start-dates.html"><i class="fa fa-check"></i><b>5.4</b> Observation Period Start Dates</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="observation-period-start-dates.html"><a href="observation-period-start-dates.html#sql-query-13"><i class="fa fa-check"></i><b>5.4.1</b> SQL query</a></li>
+<li class="chapter" data-level="5.4.2" data-path="observation-period-start-dates.html"><a href="observation-period-start-dates.html#chart-settings-14"><i class="fa fa-check"></i><b>5.4.2</b> Chart settings</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="observation-period-end-dates.html"><a href="observation-period-end-dates.html"><i class="fa fa-check"></i><b>5.5</b> Observation Period End Dates</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="observation-period-end-dates.html"><a href="observation-period-end-dates.html#sql-query-14"><i class="fa fa-check"></i><b>5.5.1</b> SQL query</a></li>
+<li class="chapter" data-level="5.5.2" data-path="observation-period-end-dates.html"><a href="observation-period-end-dates.html#chart-settings-15"><i class="fa fa-check"></i><b>5.5.2</b> Chart settings</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="visit.html"><a href="visit.html"><i class="fa fa-check"></i><b>6</b> Visit</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="css-3.html"><a href="css-3.html"><i class="fa fa-check"></i><b>6.1</b> CSS</a></li>
+<li class="chapter" data-level="6.2" data-path="data-source-filter-2.html"><a href="data-source-filter-2.html"><i class="fa fa-check"></i><b>6.2</b> Data Source Filter</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="data-source-filter-2.html"><a href="data-source-filter-2.html#sql-query-15"><i class="fa fa-check"></i><b>6.2.1</b> SQL query</a></li>
+<li class="chapter" data-level="6.2.2" data-path="data-source-filter-2.html"><a href="data-source-filter-2.html#chart-settings-16"><i class="fa fa-check"></i><b>6.2.2</b> Chart settings</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="visitTypeTable.html"><a href="visitTypeTable.html"><i class="fa fa-check"></i><b>6.3</b> Visit Type Table</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="visitTypeTable.html"><a href="visitTypeTable.html#sql-query-16"><i class="fa fa-check"></i><b>6.3.1</b> SQL query</a></li>
+<li class="chapter" data-level="6.3.2" data-path="visitTypeTable.html"><a href="visitTypeTable.html#chart-settings-17"><i class="fa fa-check"></i><b>6.3.2</b> Chart settings</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="visit-types-bars.html"><a href="visit-types-bars.html"><i class="fa fa-check"></i><b>6.4</b> Visit Types Bars</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="visit-types-bars.html"><a href="visit-types-bars.html#sql-query-17"><i class="fa fa-check"></i><b>6.4.1</b> SQL query</a></li>
+<li class="chapter" data-level="6.4.2" data-path="visit-types-bars.html"><a href="visit-types-bars.html#chart-settings-18"><i class="fa fa-check"></i><b>6.4.2</b> Chart settings</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="death.html"><a href="death.html"><i class="fa fa-check"></i><b>7</b> Death</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="css-4.html"><a href="css-4.html"><i class="fa fa-check"></i><b>7.1</b> CSS</a></li>
+<li class="chapter" data-level="7.2" data-path="data-source-filter-3.html"><a href="data-source-filter-3.html"><i class="fa fa-check"></i><b>7.2</b> Data Source Filter</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="data-source-filter-3.html"><a href="data-source-filter-3.html#sql-query-18"><i class="fa fa-check"></i><b>7.2.1</b> SQL query</a></li>
+<li class="chapter" data-level="7.2.2" data-path="data-source-filter-3.html"><a href="data-source-filter-3.html#chart-settings-19"><i class="fa fa-check"></i><b>7.2.2</b> Chart settings</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="number-of-records.html"><a href="number-of-records.html"><i class="fa fa-check"></i><b>7.3</b> Number of Records</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="number-of-records.html"><a href="number-of-records.html#sql-query-19"><i class="fa fa-check"></i><b>7.3.1</b> SQL query</a></li>
+<li class="chapter" data-level="7.3.2" data-path="number-of-records.html"><a href="number-of-records.html#chart-settings-20"><i class="fa fa-check"></i><b>7.3.2</b> Chart settings</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="death-by-year-per-thousand-people.html"><a href="death-by-year-per-thousand-people.html"><i class="fa fa-check"></i><b>7.4</b> Death By Year per Thousand People</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="death-by-year-per-thousand-people.html"><a href="death-by-year-per-thousand-people.html#sql-query-20"><i class="fa fa-check"></i><b>7.4.1</b> SQL query</a></li>
+<li class="chapter" data-level="7.4.2" data-path="death-by-year-per-thousand-people.html"><a href="death-by-year-per-thousand-people.html#chart-settings-21"><i class="fa fa-check"></i><b>7.4.2</b> Chart settings</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="concepts-browser.html"><a href="concepts-browser.html"><i class="fa fa-check"></i><b>8</b> Concepts Browser</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="css-5.html"><a href="css-5.html"><i class="fa fa-check"></i><b>8.1</b> CSS</a></li>
+<li class="chapter" data-level="8.2" data-path="data-source-and-domain-filters.html"><a href="data-source-and-domain-filters.html"><i class="fa fa-check"></i><b>8.2</b> Data Source and Domain Filters</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="data-source-and-domain-filters.html"><a href="data-source-and-domain-filters.html#sql-query-21"><i class="fa fa-check"></i><b>8.2.1</b> SQL query</a></li>
+<li class="chapter" data-level="8.2.2" data-path="data-source-and-domain-filters.html"><a href="data-source-and-domain-filters.html#chart-settings-22"><i class="fa fa-check"></i><b>8.2.2</b> Chart settings</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="number-of-concepts.html"><a href="number-of-concepts.html"><i class="fa fa-check"></i><b>8.3</b> Number of Concepts</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="number-of-concepts.html"><a href="number-of-concepts.html#sql-query-22"><i class="fa fa-check"></i><b>8.3.1</b> SQL Query</a></li>
+<li class="chapter" data-level="8.3.2" data-path="number-of-concepts.html"><a href="number-of-concepts.html#chart-settings-23"><i class="fa fa-check"></i><b>8.3.2</b> Chart settings</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="conceptBrowserTable.html"><a href="conceptBrowserTable.html"><i class="fa fa-check"></i><b>8.4</b> Concept Browser Table</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="conceptBrowserTable.html"><a href="conceptBrowserTable.html#chart-settings-24"><i class="fa fa-check"></i><b>8.4.1</b> Chart settings</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="provenance.html"><a href="provenance.html"><i class="fa fa-check"></i><b>9</b> Provenance</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="css-6.html"><a href="css-6.html"><i class="fa fa-check"></i><b>9.1</b> CSS</a></li>
+<li class="chapter" data-level="9.2" data-path="data-source-filter-4.html"><a href="data-source-filter-4.html"><i class="fa fa-check"></i><b>9.2</b> Data Source Filter</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="data-source-filter-4.html"><a href="data-source-filter-4.html#sql-query-23"><i class="fa fa-check"></i><b>9.2.1</b> SQL query</a></li>
+<li class="chapter" data-level="9.2.2" data-path="data-source-filter-4.html"><a href="data-source-filter-4.html#chart-settings-25"><i class="fa fa-check"></i><b>9.2.2</b> Chart settings</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="dataProvenanceCharts.html"><a href="dataProvenanceCharts.html"><i class="fa fa-check"></i><b>9.3</b> Condition &amp; Drug &amp; Procedure &amp; Device &amp; Measurement &amp; Observation Types</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="dataProvenanceCharts.html"><a href="dataProvenanceCharts.html#sql-query-24"><i class="fa fa-check"></i><b>9.3.1</b> SQL query</a></li>
+<li class="chapter" data-level="9.3.2" data-path="dataProvenanceCharts.html"><a href="dataProvenanceCharts.html#chart-settings-26"><i class="fa fa-check"></i><b>9.3.2</b> Chart settings</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="data-domains.html"><a href="data-domains.html"><i class="fa fa-check"></i><b>10</b> Data Domains</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="data-domains.html"><a href="data-domains.html#data-domains---number-of-records-per-peson"><i class="fa fa-check"></i><b>10.1</b> Data Domains - Number of Records per Peson</a>
+<li class="chapter" data-level="10.1" data-path="css-7.html"><a href="css-7.html"><i class="fa fa-check"></i><b>10.1</b> CSS</a></li>
+<li class="chapter" data-level="10.2" data-path="data-source-filter-5.html"><a href="data-source-filter-5.html"><i class="fa fa-check"></i><b>10.2</b> Data Source Filter</a>
 <ul>
-<li class="chapter" data-level="10.1.1" data-path="data-domains.html"><a href="data-domains.html#sql-query-18"><i class="fa fa-check"></i><b>10.1.1</b> SQL query</a></li>
-<li class="chapter" data-level="10.1.2" data-path="data-domains.html"><a href="data-domains.html#chart-settings-17"><i class="fa fa-check"></i><b>10.1.2</b> Chart settings</a></li>
+<li class="chapter" data-level="10.2.1" data-path="data-source-filter-5.html"><a href="data-source-filter-5.html#sql-query-25"><i class="fa fa-check"></i><b>10.2.1</b> SQL query</a></li>
+<li class="chapter" data-level="10.2.2" data-path="data-source-filter-5.html"><a href="data-source-filter-5.html#chart-settings-27"><i class="fa fa-check"></i><b>10.2.2</b> Chart settings</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="avgRecordsPerPerson.html"><a href="avgRecordsPerPerson.html"><i class="fa fa-check"></i><b>10.3</b> Average Number of Records per Person</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="avgRecordsPerPerson.html"><a href="avgRecordsPerPerson.html#sql-query-26"><i class="fa fa-check"></i><b>10.3.1</b> SQL query</a></li>
+<li class="chapter" data-level="10.3.2" data-path="avgRecordsPerPerson.html"><a href="avgRecordsPerPerson.html#chart-settings-28"><i class="fa fa-check"></i><b>10.3.2</b> Chart settings</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html"><i class="fa fa-check"></i><b>11</b> Per Database</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="label-colors-1.html"><a href="label-colors-1.html"><i class="fa fa-check"></i><b>11.1</b> Label Colors</a></li>
+<li class="chapter" data-level="11.2" data-path="css-8.html"><a href="css-8.html"><i class="fa fa-check"></i><b>11.2</b> CSS</a></li>
+<li class="chapter" data-level="11.3" data-path="data-source-filter-6.html"><a href="data-source-filter-6.html"><i class="fa fa-check"></i><b>11.3</b> Data Source Filter</a>
+<ul>
+<li class="chapter" data-level="11.3.1" data-path="data-source-filter-6.html"><a href="data-source-filter-6.html#sql-query-27"><i class="fa fa-check"></i><b>11.3.1</b> SQL query</a></li>
+<li class="chapter" data-level="11.3.2" data-path="data-source-filter-6.html"><a href="data-source-filter-6.html#chart-settings-29"><i class="fa fa-check"></i><b>11.3.2</b> Chart settings</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="demographics-tab.html"><a href="demographics-tab.html"><i class="fa fa-check"></i><b>11.4</b> Demographics Tab</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="demographics-tab.html"><a href="demographics-tab.html#number-of-patients"><i class="fa fa-check"></i><b>11.4.1</b> Number of Patients</a></li>
+<li class="chapter" data-level="11.4.2" data-path="demographics-tab.html"><a href="demographics-tab.html#gender-table"><i class="fa fa-check"></i><b>11.4.2</b> Gender Table</a></li>
+<li class="chapter" data-level="11.4.3" data-path="demographics-tab.html"><a href="demographics-tab.html#gender-pie"><i class="fa fa-check"></i><b>11.4.3</b> Gender Pie</a></li>
+<li class="chapter" data-level="11.4.4" data-path="demographics-tab.html"><a href="demographics-tab.html#age-at-first-observation---table"><i class="fa fa-check"></i><b>11.4.4</b> Age at first observation - Table</a></li>
+<li class="chapter" data-level="11.4.5" data-path="demographics-tab.html"><a href="demographics-tab.html#age-at-first-observation---bars"><i class="fa fa-check"></i><b>11.4.5</b> Age at first observation - Bars</a></li>
+<li class="chapter" data-level="11.4.6" data-path="demographics-tab.html"><a href="demographics-tab.html#year-of-birth"><i class="fa fa-check"></i><b>11.4.6</b> Year of Birth</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5" data-path="data-domains-tab.html"><a href="data-domains-tab.html"><i class="fa fa-check"></i><b>11.5</b> Data Domains Tab</a>
+<ul>
+<li class="chapter" data-level="11.5.1" data-path="data-domains-tab.html"><a href="data-domains-tab.html#average-number-of-records-per-person"><i class="fa fa-check"></i><b>11.5.1</b> Average Number of Records per Person</a></li>
+<li class="chapter" data-level="11.5.2" data-path="data-domains-tab.html"><a href="data-domains-tab.html#total-number-of-records"><i class="fa fa-check"></i><b>11.5.2</b> Total Number of Records</a></li>
+</ul></li>
+<li class="chapter" data-level="11.6" data-path="data-provenance-tab.html"><a href="data-provenance-tab.html"><i class="fa fa-check"></i><b>11.6</b> Data Provenance Tab</a></li>
+<li class="chapter" data-level="11.7" data-path="observation-period-tab.html"><a href="observation-period-tab.html"><i class="fa fa-check"></i><b>11.7</b> Observation Period Tab</a>
+<ul>
+<li class="chapter" data-level="11.7.1" data-path="observation-period-tab.html"><a href="observation-period-tab.html#number-of-patitents-in-observation-period"><i class="fa fa-check"></i><b>11.7.1</b> Number of Patitents in Observation Period</a></li>
+<li class="chapter" data-level="11.7.2" data-path="observation-period-tab.html"><a href="observation-period-tab.html#cumulative-observation-period"><i class="fa fa-check"></i><b>11.7.2</b> Cumulative Observation Period</a></li>
+</ul></li>
+<li class="chapter" data-level="11.8" data-path="visit-tab.html"><a href="visit-tab.html"><i class="fa fa-check"></i><b>11.8</b> Visit Tab</a>
+<ul>
+<li class="chapter" data-level="11.8.1" data-path="visit-tab.html"><a href="visit-tab.html#visit-type-graph"><i class="fa fa-check"></i><b>11.8.1</b> Visit Type Graph</a></li>
+<li class="chapter" data-level="11.8.2" data-path="visit-tab.html"><a href="visit-tab.html#visit-type-table"><i class="fa fa-check"></i><b>11.8.2</b> Visit Type Table</a></li>
+</ul></li>
+<li class="chapter" data-level="11.9" data-path="concept-browser-tab.html"><a href="concept-browser-tab.html"><i class="fa fa-check"></i><b>11.9</b> Concept Browser Tab</a>
+<ul>
+<li class="chapter" data-level="11.9.1" data-path="concept-browser-tab.html"><a href="concept-browser-tab.html#concept-browser-table"><i class="fa fa-check"></i><b>11.9.1</b> Concept Browser Table</a></li>
+</ul></li>
+<li class="chapter" data-level="11.10" data-path="meta-data-tab.html"><a href="meta-data-tab.html"><i class="fa fa-check"></i><b>11.10</b> Meta Data Tab</a>
+<ul>
+<li class="chapter" data-level="11.10.1" data-path="meta-data-tab.html"><a href="meta-data-tab.html#meta-data-table"><i class="fa fa-check"></i><b>11.10.1</b> Meta Data Table</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html"><i class="fa fa-check"></i><b>12</b> Database Level Dashboard</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="label-colors-2.html"><a href="label-colors-2.html"><i class="fa fa-check"></i><b>12.1</b> Label Colors</a></li>
+<li class="chapter" data-level="12.2" data-path="css-9.html"><a href="css-9.html"><i class="fa fa-check"></i><b>12.2</b> CSS</a></li>
+<li class="chapter" data-level="12.3" data-path="data-source-filter-hidden.html"><a href="data-source-filter-hidden.html"><i class="fa fa-check"></i><b>12.3</b> Data Source Filter - hidden</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="data-source-filter-hidden.html"><a href="data-source-filter-hidden.html#sql-query-34"><i class="fa fa-check"></i><b>12.3.1</b> SQL query</a></li>
+<li class="chapter" data-level="12.3.2" data-path="data-source-filter-hidden.html"><a href="data-source-filter-hidden.html#chart-settings-37"><i class="fa fa-check"></i><b>12.3.2</b> Chart settings</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="demographics-tab-1.html"><a href="demographics-tab-1.html"><i class="fa fa-check"></i><b>12.4</b> Demographics Tab</a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="demographics-tab-1.html"><a href="demographics-tab-1.html#number-of-patients-1"><i class="fa fa-check"></i><b>12.4.1</b> Number of Patients</a></li>
+<li class="chapter" data-level="12.4.2" data-path="demographics-tab-1.html"><a href="demographics-tab-1.html#gender-table-1"><i class="fa fa-check"></i><b>12.4.2</b> Gender Table</a></li>
+<li class="chapter" data-level="12.4.3" data-path="demographics-tab-1.html"><a href="demographics-tab-1.html#gender-pie-1"><i class="fa fa-check"></i><b>12.4.3</b> Gender Pie</a></li>
+<li class="chapter" data-level="12.4.4" data-path="demographics-tab-1.html"><a href="demographics-tab-1.html#age-at-first-observation---table-1"><i class="fa fa-check"></i><b>12.4.4</b> Age at first observation - Table</a></li>
+<li class="chapter" data-level="12.4.5" data-path="demographics-tab-1.html"><a href="demographics-tab-1.html#age-at-first-observation---bars-1"><i class="fa fa-check"></i><b>12.4.5</b> Age at first observation - Bars</a></li>
+<li class="chapter" data-level="12.4.6" data-path="demographics-tab-1.html"><a href="demographics-tab-1.html#year-of-birth-1"><i class="fa fa-check"></i><b>12.4.6</b> Year of Birth</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="data-domains-tab-1.html"><a href="data-domains-tab-1.html"><i class="fa fa-check"></i><b>12.5</b> Data Domains Tab</a></li>
+<li class="chapter" data-level="12.6" data-path="data-provenance-tab-1.html"><a href="data-provenance-tab-1.html"><i class="fa fa-check"></i><b>12.6</b> Data Provenance Tab</a></li>
+<li class="chapter" data-level="12.7" data-path="observation-period-tab-1.html"><a href="observation-period-tab-1.html"><i class="fa fa-check"></i><b>12.7</b> Observation Period Tab</a>
+<ul>
+<li class="chapter" data-level="12.7.1" data-path="observation-period-tab-1.html"><a href="observation-period-tab-1.html#number-of-patitents-in-observation-period-1"><i class="fa fa-check"></i><b>12.7.1</b> Number of Patitents in Observation Period</a></li>
+<li class="chapter" data-level="12.7.2" data-path="observation-period-tab-1.html"><a href="observation-period-tab-1.html#cumulative-observation-period-1"><i class="fa fa-check"></i><b>12.7.2</b> Cumulative Observation Period</a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="visit-tab-1.html"><a href="visit-tab-1.html"><i class="fa fa-check"></i><b>12.8</b> Visit Tab</a>
+<ul>
+<li class="chapter" data-level="12.8.1" data-path="visit-tab-1.html"><a href="visit-tab-1.html#visit-type-graph-1"><i class="fa fa-check"></i><b>12.8.1</b> Visit Type Graph</a></li>
+<li class="chapter" data-level="12.8.2" data-path="visit-tab-1.html"><a href="visit-tab-1.html#visit-type-table-1"><i class="fa fa-check"></i><b>12.8.2</b> Visit Type Table</a></li>
+</ul></li>
+<li class="chapter" data-level="12.9" data-path="concept-browser-tab-1.html"><a href="concept-browser-tab-1.html"><i class="fa fa-check"></i><b>12.9</b> Concept Browser Tab</a>
+<ul>
+<li class="chapter" data-level="12.9.1" data-path="concept-browser-tab-1.html"><a href="concept-browser-tab-1.html#concept-browser-table-1"><i class="fa fa-check"></i><b>12.9.1</b> Concept Browser Table</a></li>
+</ul></li>
+<li class="chapter" data-level="12.10" data-path="meta-data-tab-1.html"><a href="meta-data-tab-1.html"><i class="fa fa-check"></i><b>12.10</b> Meta Data Tab</a>
+<ul>
+<li class="chapter" data-level="12.10.1" data-path="meta-data-tab-1.html"><a href="meta-data-tab-1.html#meta-data-table-1"><i class="fa fa-check"></i><b>12.10.1</b> Meta Data Table</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -281,7 +424,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">09-data-domains.Rmd</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data Network Dashboards</a>
           </h1>
         </div>
 
@@ -289,17 +432,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="dummy-data" class="section level1" number="3">
-<h1><span class="header-section-number">Chapter 3</span> Dummy data</h1>
+<div id="dummy-data" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Dummy data</h2>
 <p>On a fresh installation, there are no achilles_results data so Superset’s dashboards will display “No results”. On the root of this repository, you can find the <code>demo</code> directory where we have an ACHILLES results file with synthetic data that you can upload to a data source on the uploader app of the dashboard viewer (localhost/uploader). If you wish to compare multiple data sources, on the <code>demo</code> directory the is also a python script that allows you to generate new ACHILLES results files, where it generates random count values based on the ranges of values for each set of analysis_id and stratums present on a base ACHILLES results file. So, from the one ACHILLES results fill we provided, you can have multiple data sources with different data.</p>
 
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="installation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="superset-setup.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="general.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
@@ -323,6 +467,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
@@ -331,7 +476,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/02-installation.Rmd",
+"link": "https://github.com/EHDEN/NetworkDashboards/edit/master/02-installation.Rmd",
 "text": "Edit"
 },
 "history": {

@@ -4,11 +4,13 @@ output: html_document
 
 
 
-# General
+# Dashboards
+
+## General
 
 <!-- Discuss the goal of this dashboard... TO DO -->
 
-## CSS
+### CSS {-}
 
 To hide the dashboard header insert the following css code to the `CSS` field on the edit page:
 
@@ -21,7 +23,7 @@ To hide the dashboard header insert the following css code to the `CSS` field on
 With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the "Edit Dashboard" button can show again.
 
-## Database Type and Country Filter
+### Database Type and Country Filter {-}
 
 <div class="figure">
 <img src="images/03-general/01-filters.png" alt="Settings for creating filters charts" width="100%" />
@@ -32,7 +34,7 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 
 **For the filters to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT source.name,
@@ -43,7 +45,7 @@ FROM public.data_source AS source
 INNER JOIN public.country AS country ON source.country_id=country.id
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -56,14 +58,14 @@ INNER JOIN public.country AS country ON source.country_id=country.id
     - Date Filter: off
     - Instant Filtering: on
 
-## Total Number of Patients
+### Total Number of Patients {-}
 
 <div class="figure">
 <img src="images/03-general/02-total_number_of_patients.png" alt="Settings for creating the Total Number of Patients chart" width="100%" />
 <p class="caption">(\#fig:totalNumberOfPatients)Settings for creating the Total Number of Patients chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT
@@ -77,7 +79,7 @@ JOIN country ON data_source.country_id = country.id
 WHERE analysis_id = 1
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -93,14 +95,14 @@ WHERE analysis_id = 1
     - Big Number Font Size: Small
     - Subheader Font Size: Tiny
 
-## Network Growth by Date
+### Network Growth by Date {-}
 
 <div class="figure">
 <img src="images/03-general/03-network_growth_by_date.png" alt="Settings for creating the Network Growth by Date chart" width="100%" />
 <p class="caption">(\#fig:networkGrowthByDate)Settings for creating the Network Growth by Date chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT  source.name AS source,
@@ -121,7 +123,7 @@ WHERE analysis_id = 2
 
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -140,14 +142,14 @@ WHERE analysis_id = 2
   - X Axis
     - Reduce X ticks: on
 
-## Patients per Country
+### Patients per Country {-}
 
 <div class="figure">
 <img src="images/03-general/04-patients_per_country.png" alt="Settings for creating the Patients per Country chart" width="100%" />
 <p class="caption">(\#fig:patientsPerCountry)Settings for creating the Patients per Country chart</p>
 </div>
 
-### SQL query {#patientsPerCountryQuery}
+#### SQL query {#patientsPerCountryQuery} {-}
 
 ```sql
 SELECT country.country,
@@ -159,7 +161,7 @@ INNER JOIN public.country AS country ON source.country_id=country.id
 WHERE analysis_id = 1
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -176,18 +178,18 @@ WHERE analysis_id = 1
   - X Axis
     - X Axis Label: Country
 
-## Database Types per Country
+### Database Types per Country {-}
 
 <div class="figure">
 <img src="images/03-general/05-database_types_per_country.png" alt="Settings for creating the Database Type per Country chart" width="100%" />
 <p class="caption">(\#fig:dbsTypesPerCountry)Settings for creating the Database Type per Country chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 Same as [Patients per Country](#patientsPerCountryQuery) query
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -202,7 +204,7 @@ Same as [Patients per Country](#patientsPerCountryQuery) query
     - Left Margin: 75
     - Show Percentage: off
 
-## World Map
+### World Map {-}
 
 <div class="figure">
 <img src="images/03-general/06-world_map.png" alt="Settings for creating the World Map chart" width="100%" />
@@ -211,7 +213,7 @@ Same as [Patients per Country](#patientsPerCountryQuery) query
 
 <!-- Discuss what is important to see in this chart... TO DO -->
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT  name,
@@ -224,7 +226,7 @@ FROM public.data_source AS source
 INNER JOIN public.country AS country ON source.country_id=country.id
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -237,14 +239,14 @@ INNER JOIN public.country AS country ON source.country_id=country.id
   - Visual Tweaks
     - Map Style: Streets or Light or Outdoors
 
-## Meta Data {#metaDataTable}
+### Meta Data {-#metaDataTable}
 
 <div class="figure">
 <img src="images/03-general/07-meta_data.png" alt="Settings for creating the Meta Data chart" width="100%" />
 <p class="caption">(\#fig:metaData)Settings for creating the Meta Data chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT
@@ -262,7 +264,7 @@ JOIN country ON data_source.country_id = country.id
 WHERE analysis_id=5000
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type

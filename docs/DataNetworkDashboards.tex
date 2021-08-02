@@ -120,7 +120,7 @@
 
 \title{Data Network Dashboards}
 \author{This document is currently under construction}
-\date{2020-11-07}
+\date{2021-08-02}
 
 \begin{document}
 \maketitle
@@ -130,14 +130,13 @@
 \tableofcontents
 }
 \hypertarget{preface}{%
-\chapter*{Preface}\label{preface}}
-\addcontentsline{toc}{chapter}{Preface}
+\chapter{Preface}\label{preface}}
 
 Automated Characterization of Health Information at Large-scale Longitudinal Evidence Systems (ACHILLES) is a profiling tool developed by the OHDSI community to provide descriptive statistics of databases standardized to the OMOP Common Data Model. These characteristics are presented graphically in the ATLAS tool. However, this solution does not allow for database comparison across the data network. The Data Network Dashboards aggregates ACHILLES results files from databases in the network and displays the descriptive statistics through graphical dashboards. This tool is helpful to gain insight in the growth of the data network and is useful for the selection of databases for specific research questions. In the software demonstration we show a first version of this tool that will be further developed in EHDEN in close collaboration with all our stakeholders, including OHDSI.
 
 \hypertarget{contributors}{%
-\section*{Contributors}\label{contributors}}
-\addcontentsline{toc}{section}{Contributors}
+\subsection*{Contributors}\label{contributors}}
+\addcontentsline{toc}{subsection}{Contributors}
 
 To develop this tool, EHDEN organized a hack-a-thon (Aveiro, December 2-3, 2019), where we defined and implemented a series of charts and dashboards containing the most relevant information about the OMOP CDM databases. The team involved in this task were composed by the following members:
 
@@ -174,8 +173,8 @@ To develop this tool, EHDEN organized a hack-a-thon (Aveiro, December 2-3, 2019)
 4 - The Hyve, Utrecht, Netherlands
 
 \hypertarget{considerations}{%
-\section*{Considerations}\label{considerations}}
-\addcontentsline{toc}{section}{Considerations}
+\subsection*{Considerations}\label{considerations}}
+\addcontentsline{toc}{subsection}{Considerations}
 
 This manual was written to be a guide for a clean installation of this system with all the dashboards that we defined during the project. The first chapter describes the goal of the system and the second how to install the system. The remaining chapters are dedicated to the dashboards, in which chapters describes one dashboard and all its charts. To simplify the representation of the dashboard's layout, we used similar schemas as it is presented in Figure \ref{fig:dashboardsLayout}. The white box is the dashboard and the inside boxes are charts. The colour changes in relation to the type of chart.
 
@@ -184,15 +183,15 @@ This manual was written to be a guide for a clean installation of this system wi
 \end{figure}
 
 \hypertarget{license}{%
-\section*{License}\label{license}}
-\addcontentsline{toc}{section}{License}
+\subsection*{License}\label{license}}
+\addcontentsline{toc}{subsection}{License}
 
 The system is open-source
 and this manual was written in \href{https://rmarkdown.rstudio.com}{RMarkdown} using the \href{https://bookdown.org}{bookdown} package.
 
 \hypertarget{acknowledges}{%
-\section*{Acknowledges}\label{acknowledges}}
-\addcontentsline{toc}{section}{Acknowledges}
+\subsection*{Acknowledges}\label{acknowledges}}
+\addcontentsline{toc}{subsection}{Acknowledges}
 
 This work has been conducted in the context of EHDEN, a project that receives funding from the European Union's Horizon 2020 and EFPIA through IMI2 Joint Undertaking initiative, under grant agreement No 806968.
 
@@ -203,8 +202,7 @@ The OHDSI research network has been growing steadily which results in an increas
 
 ACHILLES was designed to extract the metadata from a single database, which by itself does not allow the comparison with the remaining databases in the network. However, we believe there is even more value in sharing this information with others to enable network research in a Data Network Dashboard.
 
-\hypertarget{data-network-dashboard}{%
-\section{Data Network Dashboard}\label{data-network-dashboard}}
+Data Network Dashboard
 
 The European Health Data and Evidence Network (EHDEN) project therefore designed a Data Network Dashboard tool, a web application to aggregate information from distributed OMOP CDM databases. It uses the ACHILLES results files to construct graphical dashboards and enables database comparison (Figure \ref{fig:intro}). The tool is built on Apache Superset, which is an open-source enterprise-ready business intelligence web application that can provide powerful and fully customizable graphical representations of data. Achilles results can be uploaded through the EHDEN Database Catalogue using the dashboards plugin but can also be directly uploaded in the tool. Figure 1. Example of a dashboards tool presenting age and gender distributions (simulated data).
 
@@ -238,7 +236,8 @@ In this tools, we defined and implemented a series of charts and dashboards cont
 Currently, we use docker to deploy our environment
 
 \hypertarget{first-steps}{%
-\section{First Steps}\label{first-steps}}
+\subsection*{First Steps}\label{first-steps}}
+\addcontentsline{toc}{subsection}{First Steps}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -249,7 +248,8 @@ Currently, we use docker to deploy our environment
 \end{enumerate}
 
 \hypertarget{dashboard-viewer-setup}{%
-\section{Dashboard Viewer setup}\label{dashboard-viewer-setup}}
+\subsection*{Dashboard Viewer setup}\label{dashboard-viewer-setup}}
+\addcontentsline{toc}{subsection}{Dashboard Viewer setup}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -262,7 +262,8 @@ Currently, we use docker to deploy our environment
 \end{enumerate}
 
 \hypertarget{insert-concepts}{%
-\section{Insert Concepts}\label{insert-concepts}}
+\subsection*{Insert Concepts}\label{insert-concepts}}
+\addcontentsline{toc}{subsection}{Insert Concepts}
 
 The concepts table is not in the repository due to its dimension, therefore we use directly the Postgres console to insert this table in the installation.
 
@@ -344,7 +345,8 @@ ALTER TABLE concept OWNER TO achiller
 \end{enumerate}
 
 \hypertarget{superset-setup}{%
-\section{Superset setup}\label{superset-setup}}
+\subsection*{Superset setup}\label{superset-setup}}
+\addcontentsline{toc}{subsection}{Superset setup}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -383,15 +385,214 @@ ALTER TABLE concept OWNER TO achiller
 \end{enumerate}
 
 \hypertarget{dummy-data}{%
-\section{Dummy data}\label{dummy-data}}
+\subsection*{Dummy data}\label{dummy-data}}
+\addcontentsline{toc}{subsection}{Dummy data}
 
 On a fresh installation, there are no achilles\_results data so Superset's dashboards will display ``No results''. On the root of this repository, you can find the \texttt{demo} directory where we have an ACHILLES results file with synthetic data that you can upload to a data source on the uploader app of the dashboard viewer (localhost/uploader). If you wish to compare multiple data sources, on the \texttt{demo} directory the is also a python script that allows you to generate new ACHILLES results files, where it generates random count values based on the ranges of values for each set of analysis\_id and stratums present on a base ACHILLES results file. So, from the one ACHILLES results fill we provided, you can have multiple data sources with different data.
 
+\hypertarget{processes}{%
+\chapter{Processes}\label{processes}}
+
+\hypertarget{data-sources}{%
+\subsection*{Data Sources}\label{data-sources}}
+\addcontentsline{toc}{subsection}{Data Sources}
+
+\textbf{Target: platform user}
+
+Before uploading any data to this platform, a data source owner has to create a data source instance to then associated the upload data with.
+
+The creation of data source is done through the \texttt{{[}BASE\_URL{]}/uploader/} URL, where 7 fields are expected:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  name: an extensive name
+\item
+  acronym: a short name
+\item
+  country: where is the data source localized
+\item
+  link (Optional): web page of the data source
+\item
+  database type: type of OMOP database
+\item
+  coordinates: a more accurate representation of the data source's localization
+\item
+  hash (Optional): the internal unique identifier of a data source
+\end{enumerate}
+
+If you access \texttt{{[}BASE\_URL{]}/uploader/} the 7th field (hash) is set automatically for something random, however, if you want to set it use the \texttt{{[}BASE\_URL{]}/uploader/{[}HASH{]}/} URL.
+
+To avoid duplication on the database type field, this field is transformed (use title case and trimmed) and then is checked there is already a record (Database Type) with the same value.
+
+There are several ways to create a data source:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Create through a web form
+\end{enumerate}
+
+By accessing the \texttt{{[}BASE\_URL{]}/uploader/} URL, you will get a form where you can field the fields, where the country field is a dropdown and the coordinates field is set through a map widget.
+
+\includegraphics{images/processes/processes_data_source_creation.png}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Automatically create when performing a GET to the \texttt{{[}BASE\_URL{]}/uploader/} URL
+\end{enumerate}
+
+If the Network Dashboards platform is being used as a third-party application and the main application has all the data for the required fields, the data source can be automatically created and the user is redirected directly to the upload files page.
+
+To perform this, each field should be provided as a URL parameter when accessing the \texttt{{[}BASE\_URL{]}/uploader/} URL. If all required fields are provided and are valid the data source is created and the user is redirected to the upload files page. If a required field is missing or is not valid the webform is presented to the user so it can manually fill those fields.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Automatically create by performing a POST to the \texttt{{[}BASE\_URL{]}/uploader/} URL
+\end{enumerate}
+
+Since the creation URL does not have csrf cookie protection, you can perform a POST request as you were submitting a form.
+
+\textbf{Notes For the automatic options}:
+-. Since the coordinates field is composed of two fields (latitude, longitude), it should be submitted as \texttt{coordinates\_0={[}latitude{]}} and \texttt{coordinates\_1={[}longitude{]}}
+-. The country field should match one of the available on the dropdown of the webform.
+
+\hypertarget{catalogue-results-files}{%
+\subsection*{Catalogue Results Files}\label{catalogue-results-files}}
+\addcontentsline{toc}{subsection}{Catalogue Results Files}
+
+\textbf{Target: platform user}
+
+Once a data source is created you can access its upload page by accessing the \texttt{{[}BASE\_URL{]}/uploader/{[}HASH{]}/}. If no data source has the provided hash you will be redirected back to the data source creation form.
+
+On the upload page you can:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Go to the edit page of your data source
+\item
+  Upload a catalogue results file
+\item
+  Check the upload history
+\end{enumerate}
+
+A catalogue results file is a CSV file, the result obtained after running the \href{https://github.com/EHDEN/CatalogueExport}{EHDEN/CatalogueExport} R package on an OMOP database. It is a variant of the \href{https://github.com/OHDSI/Achilles}{OHDSI/Achilles} where it only extracts a subset of analyses of the ACHILLES' original set.
+
+The upload form expects a CSV file with the following columns:
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+Name & Type & Required/Non-Nullable/Non-Empty\tabularnewline
+\midrule
+\endhead
+analysis\_id & int & Yes\tabularnewline
+stratum\_1 & string & No\tabularnewline
+stratum\_2 & string & No\tabularnewline
+stratum\_3 & string & No\tabularnewline
+stratum\_4 & string & No\tabularnewline
+stratum\_5 & string & No\tabularnewline
+count\_value & int & Yes\tabularnewline
+min\_value & double & No\tabularnewline
+max\_value & double & No\tabularnewline
+avg\_value & double & No\tabularnewline
+stdev\_value & double & No\tabularnewline
+median\_value & double & No\tabularnewline
+p10\_value & double & No\tabularnewline
+p25\_value & double & No\tabularnewline
+p75\_value & double & No\tabularnewline
+p90\_value & double & No\tabularnewline
+\bottomrule
+\end{longtable}
+
+The uploaded file must:
+
+\begin{itemize}
+\item
+  either contain the first 7 columns OR all 16 columns
+\item
+  contain the columns in the same order as presented in the table above
+\end{itemize}
+
+While parsing the uploaded file, some data is extracted to then present on the Upload history and to update data source information. This data is extracted from the record with analysis id 0, \textbf{which is required to be present on the file}, and 5000, which is optional. Next is presented the data extracted and their description:
+
+\begin{itemize}
+\item
+  R Package Version: the version of CatalogueExport R package used
+\item
+  Generation Date: date at which the CatalogueExport was executed on the OMOP database
+\item
+  Source Release Date: date at which the OMOP database was released
+\item
+  CDM Release Date: date at which the used CDM version was released
+\item
+  CDM Version: version of the CDM used
+\item
+  Vocabulary Version: version of the vocabulary used
+\end{itemize}
+
+The next table is presented where the previous data is stored on the rows with analysis id 0 and 5000:
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule
+Analysis Id & Stratum 1 & Stratum 2 & Stratum 3 & Stratum 4 & Stratum 5\tabularnewline
+\midrule
+\endhead
+0 & & R Package Version & Generation Date & &\tabularnewline
+5000 & & Source Release Date & CDM Release Date & CDM Version & Vocabulary Version\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{materialized-views}{%
+\subsection*{Materialized Views}\label{materialized-views}}
+\addcontentsline{toc}{subsection}{Materialized Views}
+
+\textbf{Target: admin user}
+
+For each chart, Superset has an underlying SQL query which in our case is run every time a chart is rendered. If one of these queries takes too long to execute the charts will also take too long until they are rendered and eventually users might get timeout messages given a bad user experience.
+
+To avoid this problem, instead of executing the raw SQL query we create a \href{https://www.postgresql.org/docs/10/rules-materializedviews.html}{postgres materialized view} of the query, which is then used to feed the data to the chart. So only a simple \texttt{SELECT\ x\ FROM\ x} query is executed when a chart is rendered.
+
+So whenever I create a chart I have to access the Postgres console? No, we created an unmanaged Materialized Queries model that maps to the materialized views on Postgres. With it you can create new materialized views through the Django admin app, by accessing the \texttt{{[}BASE\_URL{]}/admin/} URL.
+
+\includegraphics{images/processes/processes_materialized_view_creation.png}
+
+You have to provide the materialized view name and its query, which will then be used to execute the query \texttt{CREATE\ MATERIALIZED\ VIEW\ {[}name{]}\ AS\ {[}query{]}}, which will be executed on a background task so the browser doesn't hang and times out, in case of complicated queries. Taking this into account, the record associated will not appear on the Django admin app until the \texttt{CREATE\ MATERIALIZED\ VIEW} query finishes.
+
+To give feedback on the background task we use \href{https://github.com/celery/django-celery-results}{celery/django-celery-results}, so you can check the status of a task on the Task Results model of the Celery Results app
+
+\includegraphics{images/processes/processes_task_results.png}
+
+After the creation of a Materialized Query, the will be a message telling the id of the task which is executing the \texttt{CREATE\ MATERIALIZED\ VIEW} query. You can then check for the record associated with the task, click on the id to get more details. If something went wrong check the error message either on Result Data or Traceback fields under the Result section
+
+\includegraphics{images/processes/processes_task_result_info.png}
+
+After all this, the final step is to add the materialized view as a Dataset. Login into Superset, then go to Data -\textgreater{} Datasets and create a new one. Select the \texttt{Achilles} database, the \texttt{public} schema, then the created materialized view and click ``ADD''. After this, the materialized view can be used as a data source for a new chart.
+
+\hypertarget{tabs-view-deprecated}{%
+\subsection*{Tabs View {[}Deprecated{]}}\label{tabs-view-deprecated}}
+\addcontentsline{toc}{subsection}{Tabs View {[}Deprecated{]}}
+
+\textbf{Target: admin user}
+
+\hypertarget{dashboards}{%
+\chapter{Dashboards}\label{dashboards}}
+
 \hypertarget{general}{%
-\chapter{General}\label{general}}
+\section{General}\label{general}}
 
 \hypertarget{css}{%
-\section{CSS}\label{css}}
+\subsection*{CSS}\label{css}}
+\addcontentsline{toc}{subsection}{CSS}
 
 To hide the dashboard header insert the following css code to the \texttt{CSS} field on the edit page:
 
@@ -407,7 +608,8 @@ With this every time you want to edit the dashboard layout you have to either co
 or remove it so the ``Edit Dashboard'' button can show again.
 
 \hypertarget{database-type-and-country-filter}{%
-\section{Database Type and Country Filter}\label{database-type-and-country-filter}}
+\subsection*{Database Type and Country Filter}\label{database-type-and-country-filter}}
+\addcontentsline{toc}{subsection}{Database Type and Country Filter}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/03-general/01-filters} \caption{Settings for creating filters charts}\label{fig:filters}
@@ -418,7 +620,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \textbf{For the filters to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
 \hypertarget{sql-query}{%
-\subsection{SQL query}\label{sql-query}}
+\subsubsection*{SQL query}\label{sql-query}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -432,7 +635,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \end{Shaded}
 
 \hypertarget{chart-settings}{%
-\subsection{Chart settings}\label{chart-settings}}
+\subsubsection*{Chart settings}\label{chart-settings}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -479,14 +683,16 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \end{itemize}
 
 \hypertarget{total-number-of-patients}{%
-\section{Total Number of Patients}\label{total-number-of-patients}}
+\subsection*{Total Number of Patients}\label{total-number-of-patients}}
+\addcontentsline{toc}{subsection}{Total Number of Patients}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/03-general/02-total_number_of_patients} \caption{Settings for creating the Total Number of Patients chart}\label{fig:totalNumberOfPatients}
 \end{figure}
 
 \hypertarget{sql-query-1}{%
-\subsection{SQL query}\label{sql-query-1}}
+\subsubsection*{SQL query}\label{sql-query-1}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -503,7 +709,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \end{Shaded}
 
 \hypertarget{chart-settings-1}{%
-\subsection{Chart settings}\label{chart-settings-1}}
+\subsubsection*{Chart settings}\label{chart-settings-1}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -560,14 +767,16 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \end{itemize}
 
 \hypertarget{network-growth-by-date}{%
-\section{Network Growth by Date}\label{network-growth-by-date}}
+\subsection*{Network Growth by Date}\label{network-growth-by-date}}
+\addcontentsline{toc}{subsection}{Network Growth by Date}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/03-general/03-network_growth_by_date} \caption{Settings for creating the Network Growth by Date chart}\label{fig:networkGrowthByDate}
 \end{figure}
 
 \hypertarget{sql-query-2}{%
-\subsection{SQL query}\label{sql-query-2}}
+\subsubsection*{SQL query}\label{sql-query-2}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -590,7 +799,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \end{Shaded}
 
 \hypertarget{chart-settings-2}{%
-\subsection{Chart settings}\label{chart-settings-2}}
+\subsubsection*{Chart settings}\label{chart-settings-2}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -657,14 +867,16 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \end{itemize}
 
 \hypertarget{patients-per-country}{%
-\section{Patients per Country}\label{patients-per-country}}
+\subsection*{Patients per Country}\label{patients-per-country}}
+\addcontentsline{toc}{subsection}{Patients per Country}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/03-general/04-patients_per_country} \caption{Settings for creating the Patients per Country chart}\label{fig:patientsPerCountry}
 \end{figure}
 
-\hypertarget{patientsPerCountryQuery}{%
-\subsection{SQL query}\label{patientsPerCountryQuery}}
+\hypertarget{sql-query-patientspercountryquery}{%
+\subsubsection*{SQL query \{\#patientsPerCountryQuery\}}\label{sql-query-patientspercountryquery}}
+\addcontentsline{toc}{subsubsection}{SQL query \{\#patientsPerCountryQuery\}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -679,7 +891,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \end{Shaded}
 
 \hypertarget{chart-settings-3}{%
-\subsection{Chart settings}\label{chart-settings-3}}
+\subsubsection*{Chart settings}\label{chart-settings-3}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -742,19 +955,22 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \end{itemize}
 
 \hypertarget{database-types-per-country}{%
-\section{Database Types per Country}\label{database-types-per-country}}
+\subsection*{Database Types per Country}\label{database-types-per-country}}
+\addcontentsline{toc}{subsection}{Database Types per Country}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/03-general/05-database_types_per_country} \caption{Settings for creating the Database Type per Country chart}\label{fig:dbsTypesPerCountry}
 \end{figure}
 
 \hypertarget{sql-query-3}{%
-\subsection{SQL query}\label{sql-query-3}}
+\subsubsection*{SQL query}\label{sql-query-3}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 
 \hypertarget{chart-settings-4}{%
-\subsection{Chart settings}\label{chart-settings-4}}
+\subsubsection*{Chart settings}\label{chart-settings-4}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -805,14 +1021,16 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \end{itemize}
 
 \hypertarget{world-map}{%
-\section{World Map}\label{world-map}}
+\subsection*{World Map}\label{world-map}}
+\addcontentsline{toc}{subsection}{World Map}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/03-general/06-world_map} \caption{Settings for creating the World Map chart}\label{fig:worldMap}
 \end{figure}
 
 \hypertarget{sql-query-4}{%
-\subsection{SQL query}\label{sql-query-4}}
+\subsubsection*{SQL query}\label{sql-query-4}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -828,7 +1046,8 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \end{Shaded}
 
 \hypertarget{chart-settings-5}{%
-\subsection{Chart settings}\label{chart-settings-5}}
+\subsubsection*{Chart settings}\label{chart-settings-5}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -875,14 +1094,16 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \end{itemize}
 
 \hypertarget{metaDataTable}{%
-\section{Meta Data}\label{metaDataTable}}
+\subsection*{Meta Data}\label{metaDataTable}}
+\addcontentsline{toc}{subsection}{Meta Data}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/03-general/07-meta_data} \caption{Settings for creating the Meta Data chart}\label{fig:metaData}
 \end{figure}
 
 \hypertarget{sql-query-5}{%
-\subsection{SQL query}\label{sql-query-5}}
+\subsubsection*{SQL query}\label{sql-query-5}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -903,7 +1124,8 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \end{Shaded}
 
 \hypertarget{chart-settings-6}{%
-\subsection{Chart settings}\label{chart-settings-6}}
+\subsubsection*{Chart settings}\label{chart-settings-6}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -942,10 +1164,11 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \end{itemize}
 
 \hypertarget{person}{%
-\chapter{Person}\label{person}}
+\section{Person}\label{person}}
 
 \hypertarget{label-colors}{%
-\section{Label Colors}\label{label-colors}}
+\subsection*{Label Colors}\label{label-colors}}
+\addcontentsline{toc}{subsection}{Label Colors}
 
 In order to obtain the colors blue and rose in the chart representing the gender distribution,
 add the following JSON entry to the JSON object of the \texttt{JSON\ Metadata} field on the edit dashboard page:
@@ -960,7 +1183,8 @@ add the following JSON entry to the JSON object of the \texttt{JSON\ Metadata} f
 \end{Shaded}
 
 \hypertarget{css-1}{%
-\section{CSS}\label{css-1}}
+\subsection*{CSS}\label{css-1}}
+\addcontentsline{toc}{subsection}{CSS}
 
 To hide the dashboard header insert the following css code to the \texttt{CSS} field on the edit page:
 
@@ -976,7 +1200,8 @@ With this every time you want to edit the dashboard layout you have to either co
 or remove it so the ``Edit Dashboard'' button can show again.
 
 \hypertarget{data-source-filter}{%
-\section{Data Source Filter}\label{data-source-filter}}
+\subsection*{Data Source Filter}\label{data-source-filter}}
+\addcontentsline{toc}{subsection}{Data Source Filter}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}\label{fig:dataSourceFilter}
@@ -985,12 +1210,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
 \hypertarget{sql-query-6}{%
-\subsection{SQL query}\label{sql-query-6}}
+\subsubsection*{SQL query}\label{sql-query-6}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
 \hypertarget{chart-settings-7}{%
-\subsection{Chart settings}\label{chart-settings-7}}
+\subsubsection*{Chart settings}\label{chart-settings-7}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -1036,15 +1263,17 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
   \end{itemize}
 \end{itemize}
 
-\hypertarget{age1ObservationTable}{%
-\section{Age at first observation - Table}\label{age1ObservationTable}}
+\hypertarget{age-at-first-observation---table-age1observationtable}{%
+\subsection*{Age at first observation - Table \{\#age1ObservationTable\}}\label{age-at-first-observation---table-age1observationtable}}
+\addcontentsline{toc}{subsection}{Age at first observation - Table \{\#age1ObservationTable\}}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/04-person/02-age_at_first_observation_table} \caption{Settings for creating the Age at First Observation Table chart}\label{fig:ageFirstObservationTable}
 \end{figure}
 
 \hypertarget{sql-query-7}{%
-\subsection{SQL query}\label{sql-query-7}}
+\subsubsection*{SQL query}\label{sql-query-7}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1069,7 +1298,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Shaded}
 
 \hypertarget{chart-settings-8}{%
-\subsection{Chart settings}\label{chart-settings-8}}
+\subsubsection*{Chart settings}\label{chart-settings-8}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -1121,15 +1351,17 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
   \end{itemize}
 \end{itemize}
 
-\hypertarget{age1ObservationBars}{%
-\section{Age at first observation - Bars}\label{age1ObservationBars}}
+\hypertarget{age-at-first-observation---bars-age1observationbars}{%
+\subsection*{Age at first observation - Bars \{\#age1ObservationBars\}}\label{age-at-first-observation---bars-age1observationbars}}
+\addcontentsline{toc}{subsection}{Age at first observation - Bars \{\#age1ObservationBars\}}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/04-person/03-age_at_first_observation_bar} \caption{Settings for creating the Age at First Observation Bar chart}\label{fig:ageFirstObservationBar}
 \end{figure}
 
 \hypertarget{sql-query-8}{%
-\subsection{SQL query}\label{sql-query-8}}
+\subsubsection*{SQL query}\label{sql-query-8}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1144,7 +1376,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Shaded}
 
 \hypertarget{chart-settings-9}{%
-\subsection{Chart settings}\label{chart-settings-9}}
+\subsubsection*{Chart settings}\label{chart-settings-9}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -1212,15 +1445,17 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
   \end{itemize}
 \end{itemize}
 
-\hypertarget{yearOfBirth}{%
-\section{Year of Birth}\label{yearOfBirth}}
+\hypertarget{year-of-birth-yearofbirth}{%
+\subsection*{Year of Birth \{\#yearOfBirth\}}\label{year-of-birth-yearofbirth}}
+\addcontentsline{toc}{subsection}{Year of Birth \{\#yearOfBirth\}}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/04-person/04-year_of_birth} \caption{Settings for creating the Year of Birth chart}\label{fig:yearOfBirth}
 \end{figure}
 
 \hypertarget{sql-query-9}{%
-\subsection{SQL query}\label{sql-query-9}}
+\subsubsection*{SQL query}\label{sql-query-9}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1235,7 +1470,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Shaded}
 
 \hypertarget{chart-settings-10}{%
-\subsection{Chart settings}\label{chart-settings-10}}
+\subsubsection*{Chart settings}\label{chart-settings-10}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -1306,14 +1542,16 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{itemize}
 
 \hypertarget{gender}{%
-\section{Gender}\label{gender}}
+\subsection*{Gender}\label{gender}}
+\addcontentsline{toc}{subsection}{Gender}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/04-person/05-gender} \caption{Settings for creating the Gender chart}\label{fig:gender}
 \end{figure}
 
 \hypertarget{sql-query-10}{%
-\subsection{SQL query}\label{sql-query-10}}
+\subsubsection*{SQL query}\label{sql-query-10}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1333,7 +1571,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Shaded}
 
 \hypertarget{chart-settings-11}{%
-\subsection{Chart settings}\label{chart-settings-11}}
+\subsubsection*{Chart settings}\label{chart-settings-11}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -1402,10 +1641,11 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{itemize}
 
 \hypertarget{observation-period}{%
-\chapter{Observation Period}\label{observation-period}}
+\section{Observation Period}\label{observation-period}}
 
 \hypertarget{css-2}{%
-\section{CSS}\label{css-2}}
+\subsection*{CSS}\label{css-2}}
+\addcontentsline{toc}{subsection}{CSS}
 
 To hide the dashboard header insert the following css code to the \texttt{CSS} field on the edit page:
 
@@ -1421,7 +1661,8 @@ With this every time you want to edit the dashboard layout you have to either co
 or remove it so the ``Edit Dashboard'' button can show again.
 
 \hypertarget{data-source-filter-1}{%
-\section{Data Source Filter}\label{data-source-filter-1}}
+\subsection*{Data Source Filter}\label{data-source-filter-1}}
+\addcontentsline{toc}{subsection}{Data Source Filter}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}\label{fig:dataSourceFilter}
@@ -1430,12 +1671,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
 \hypertarget{sql-query-11}{%
-\subsection{SQL query}\label{sql-query-11}}
+\subsubsection*{SQL query}\label{sql-query-11}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
 \hypertarget{chart-settings-12}{%
-\subsection{Chart settings}\label{chart-settings-12}}
+\subsubsection*{Chart settings}\label{chart-settings-12}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -1481,8 +1724,9 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
   \end{itemize}
 \end{itemize}
 
-\hypertarget{numInObservationPeriod}{%
-\section{Number of Patients in Observation Period}\label{numInObservationPeriod}}
+\hypertarget{number-of-patients-in-observation-period-numinobservationperiod}{%
+\subsection*{Number of Patients in Observation Period \{\#numInObservationPeriod\}}\label{number-of-patients-in-observation-period-numinobservationperiod}}
+\addcontentsline{toc}{subsection}{Number of Patients in Observation Period \{\#numInObservationPeriod\}}
 
 The Number of Patients in Observation Period plot shows the number of patients that contribute at least one day in a specific month.
 
@@ -1491,7 +1735,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \end{figure}
 
 \hypertarget{sql-query-12}{%
-\subsection{SQL query}\label{sql-query-12}}
+\subsubsection*{SQL query}\label{sql-query-12}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1506,7 +1751,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \end{Shaded}
 
 \hypertarget{chart-settings-13}{%
-\subsection{Chart settings}\label{chart-settings-13}}
+\subsubsection*{Chart settings}\label{chart-settings-13}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -1575,14 +1821,16 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \end{itemize}
 
 \hypertarget{observation-period-start-dates}{%
-\section{Observation Period Start Dates}\label{observation-period-start-dates}}
+\subsection*{Observation Period Start Dates}\label{observation-period-start-dates}}
+\addcontentsline{toc}{subsection}{Observation Period Start Dates}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/05-observation_period/03-observation_period_start_dates} \caption{Settings for creating the Observation Period Start Dates chart}\label{fig:observationPeriodStartDates}
 \end{figure}
 
 \hypertarget{sql-query-13}{%
-\subsection{SQL query}\label{sql-query-13}}
+\subsubsection*{SQL query}\label{sql-query-13}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1597,7 +1845,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \end{Shaded}
 
 \hypertarget{chart-settings-14}{%
-\subsection{Chart settings}\label{chart-settings-14}}
+\subsubsection*{Chart settings}\label{chart-settings-14}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -1666,14 +1915,16 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \end{itemize}
 
 \hypertarget{observation-period-end-dates}{%
-\section{Observation Period End Dates}\label{observation-period-end-dates}}
+\subsection*{Observation Period End Dates}\label{observation-period-end-dates}}
+\addcontentsline{toc}{subsection}{Observation Period End Dates}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/05-observation_period/04-observation_period_end_dates} \caption{Settings for creating the Observation Period End Dates chart}\label{fig:observationPeriodEndDates}
 \end{figure}
 
 \hypertarget{sql-query-14}{%
-\subsection{SQL query}\label{sql-query-14}}
+\subsubsection*{SQL query}\label{sql-query-14}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1688,7 +1939,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \end{Shaded}
 
 \hypertarget{chart-settings-15}{%
-\subsection{Chart settings}\label{chart-settings-15}}
+\subsubsection*{Chart settings}\label{chart-settings-15}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -1757,12 +2009,13 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \end{itemize}
 
 \hypertarget{visit}{%
-\chapter{Visit}\label{visit}}
+\section{Visit}\label{visit}}
 
 This dashboard shows the different types of visits per data source (see \href{https://ohdsi.github.io/CommonDataModel/cdm531.html\#visit_occurrence}{Visit Occurence Table})
 
 \hypertarget{css-3}{%
-\section{CSS}\label{css-3}}
+\subsection*{CSS}\label{css-3}}
+\addcontentsline{toc}{subsection}{CSS}
 
 To hide the dashboard header insert the following css code to the \texttt{CSS} field on the edit page:
 
@@ -1778,7 +2031,8 @@ With this every time you want to edit the dashboard layout you have to either co
 or remove it so the ``Edit Dashboard'' button can show again.
 
 \hypertarget{data-source-filter-2}{%
-\section{Data Source Filter}\label{data-source-filter-2}}
+\subsection*{Data Source Filter}\label{data-source-filter-2}}
+\addcontentsline{toc}{subsection}{Data Source Filter}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}\label{fig:dataSourceFilter}
@@ -1787,12 +2041,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
 \hypertarget{sql-query-15}{%
-\subsection{SQL query}\label{sql-query-15}}
+\subsubsection*{SQL query}\label{sql-query-15}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
 \hypertarget{chart-settings-16}{%
-\subsection{Chart settings}\label{chart-settings-16}}
+\subsubsection*{Chart settings}\label{chart-settings-16}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -1838,15 +2094,17 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
   \end{itemize}
 \end{itemize}
 
-\hypertarget{visitTypeTable}{%
-\section{Visit Type Table}\label{visitTypeTable}}
+\hypertarget{visit-type-table-visittypetable}{%
+\subsection*{Visit Type Table \{\#visitTypeTable\}}\label{visit-type-table-visittypetable}}
+\addcontentsline{toc}{subsection}{Visit Type Table \{\#visitTypeTable\}}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/06-visit/02-visit_types_table} \caption{Settings for creating the Visit Type Table chart}\label{fig:visitTypeTable}
 \end{figure}
 
 \hypertarget{sql-query-16}{%
-\subsection{SQL query}\label{sql-query-16}}
+\subsubsection*{SQL query}\label{sql-query-16}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1864,7 +2122,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Shaded}
 
 \hypertarget{chart-settings-17}{%
-\subsection{Chart settings}\label{chart-settings-17}}
+\subsubsection*{Chart settings}\label{chart-settings-17}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -1903,14 +2162,16 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{itemize}
 
 \hypertarget{visit-types-bars}{%
-\section{Visit Types Bars}\label{visit-types-bars}}
+\subsection*{Visit Types Bars}\label{visit-types-bars}}
+\addcontentsline{toc}{subsection}{Visit Types Bars}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/06-visit/03-visit_types_bars} \caption{Settings for creating the Visit Types bar chart}\label{fig:visitTypeBars}
 \end{figure}
 
 \hypertarget{sql-query-17}{%
-\subsection{SQL query}\label{sql-query-17}}
+\subsubsection*{SQL query}\label{sql-query-17}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1926,7 +2187,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Shaded}
 
 \hypertarget{chart-settings-18}{%
-\subsection{Chart settings}\label{chart-settings-18}}
+\subsubsection*{Chart settings}\label{chart-settings-18}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -1995,10 +2257,11 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{itemize}
 
 \hypertarget{death}{%
-\chapter{Death}\label{death}}
+\section{Death}\label{death}}
 
 \hypertarget{css-4}{%
-\section{CSS}\label{css-4}}
+\subsection*{CSS}\label{css-4}}
+\addcontentsline{toc}{subsection}{CSS}
 
 To hide the dashboard header insert the following css code to the \texttt{CSS} field on the edit page:
 
@@ -2014,7 +2277,8 @@ With this every time you want to edit the dashboard layout you have to either co
 or remove it so the ``Edit Dashboard'' button can show again.
 
 \hypertarget{data-source-filter-3}{%
-\section{Data Source Filter}\label{data-source-filter-3}}
+\subsection*{Data Source Filter}\label{data-source-filter-3}}
+\addcontentsline{toc}{subsection}{Data Source Filter}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}\label{fig:dataSourceFilter}
@@ -2023,12 +2287,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
 \hypertarget{sql-query-18}{%
-\subsection{SQL query}\label{sql-query-18}}
+\subsubsection*{SQL query}\label{sql-query-18}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
 \hypertarget{chart-settings-19}{%
-\subsection{Chart settings}\label{chart-settings-19}}
+\subsubsection*{Chart settings}\label{chart-settings-19}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -2075,14 +2341,16 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{itemize}
 
 \hypertarget{number-of-records}{%
-\section{Number of Records}\label{number-of-records}}
+\subsection*{Number of Records}\label{number-of-records}}
+\addcontentsline{toc}{subsection}{Number of Records}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/07-death/02-number_of_records} \caption{Settings for creating the Number of Records chart}\label{fig:numberOfRecords}
 \end{figure}
 
 \hypertarget{sql-query-19}{%
-\subsection{SQL query}\label{sql-query-19}}
+\subsubsection*{SQL query}\label{sql-query-19}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2096,7 +2364,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Shaded}
 
 \hypertarget{chart-settings-20}{%
-\subsection{Chart settings}\label{chart-settings-20}}
+\subsubsection*{Chart settings}\label{chart-settings-20}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -2159,14 +2428,16 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{itemize}
 
 \hypertarget{death-by-year-per-thousand-people}{%
-\section{Death By Year per Thousand People}\label{death-by-year-per-thousand-people}}
+\subsection*{Death By Year per Thousand People}\label{death-by-year-per-thousand-people}}
+\addcontentsline{toc}{subsection}{Death By Year per Thousand People}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/07-death/03-deaths_by_year_per_thousand_people} \caption{Settings for creating the Death by Year per Thousand People chart}\label{fig:deathByYearPerThousandPeople}
 \end{figure}
 
 \hypertarget{sql-query-20}{%
-\subsection{SQL query}\label{sql-query-20}}
+\subsubsection*{SQL query}\label{sql-query-20}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2181,7 +2452,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Shaded}
 
 \hypertarget{chart-settings-21}{%
-\subsection{Chart settings}\label{chart-settings-21}}
+\subsubsection*{Chart settings}\label{chart-settings-21}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -2250,12 +2522,13 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{itemize}
 
 \hypertarget{concepts-browser}{%
-\chapter{Concepts Browser}\label{concepts-browser}}
+\section{Concepts Browser}\label{concepts-browser}}
 
 The concepts browser allows you to search for concepts by name or concept\_id in all the data sources you select. No exact number of patients or occurrences are provided but the magnitude of both.
 
 \hypertarget{css-5}{%
-\section{CSS}\label{css-5}}
+\subsection*{CSS}\label{css-5}}
+\addcontentsline{toc}{subsection}{CSS}
 
 To hide the dashboard header insert the following css code to the \texttt{CSS} field on the edit page:
 
@@ -2271,7 +2544,8 @@ With this every time you want to edit the dashboard layout you have to either co
 or remove it so the ``Edit Dashboard'' button can show again.
 
 \hypertarget{data-source-and-domain-filters}{%
-\section{Data Source and Domain Filters}\label{data-source-and-domain-filters}}
+\subsection*{Data Source and Domain Filters}\label{data-source-and-domain-filters}}
+\addcontentsline{toc}{subsection}{Data Source and Domain Filters}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/08-concepts_browser/01-filters} \caption{Settings for creating the Data Source and Domain filter charts}\label{fig:filters}
@@ -2280,7 +2554,8 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \textbf{For the filters to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
 \hypertarget{sql-query-21}{%
-\subsection{SQL query}\label{sql-query-21}}
+\subsubsection*{SQL query}\label{sql-query-21}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2296,7 +2571,8 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \end{Shaded}
 
 \hypertarget{chart-settings-22}{%
-\subsection{Chart settings}\label{chart-settings-22}}
+\subsubsection*{Chart settings}\label{chart-settings-22}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -2343,19 +2619,22 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \end{itemize}
 
 \hypertarget{number-of-concepts}{%
-\section{Number of Concepts}\label{number-of-concepts}}
+\subsection*{Number of Concepts}\label{number-of-concepts}}
+\addcontentsline{toc}{subsection}{Number of Concepts}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/08-concepts_browser/02-number_of_concepts} \caption{Settings for creating the Number of Concepts chart}\label{fig:numOfConcepts}
 \end{figure}
 
 \hypertarget{sql-query-22}{%
-\subsection{SQL Query}\label{sql-query-22}}
+\subsubsection*{SQL Query}\label{sql-query-22}}
+\addcontentsline{toc}{subsubsection}{SQL Query}
 
 Same as \protect\hyperlink{Dataux5cux2520Sourceux5cux2520andux5cux2520Domainux5cux2520Filters}{Data Source and Domain filters} query
 
 \hypertarget{chart-settings-23}{%
-\subsection{Chart settings}\label{chart-settings-23}}
+\subsubsection*{Chart settings}\label{chart-settings-23}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -2396,8 +2675,9 @@ Same as \protect\hyperlink{Dataux5cux2520Sourceux5cux2520andux5cux2520Domainux5c
   \end{itemize}
 \end{itemize}
 
-\hypertarget{conceptBrowserTable}{%
-\section{Concept Browser Table}\label{conceptBrowserTable}}
+\hypertarget{concept-browser-table-conceptbrowsertable}{%
+\subsection*{Concept Browser Table \{\#conceptBrowserTable\}}\label{concept-browser-table-conceptbrowsertable}}
+\addcontentsline{toc}{subsection}{Concept Browser Table \{\#conceptBrowserTable\}}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/08-concepts_browser/03-concepts_table} \caption{Settings for creating the Concepts Table chart}\label{fig:conceptsTable}
@@ -2458,7 +2738,8 @@ Same as \protect\hyperlink{Dataux5cux2520Sourceux5cux2520andux5cux2520Domainux5c
 \end{Shaded}
 
 \hypertarget{chart-settings-24}{%
-\subsection{Chart settings}\label{chart-settings-24}}
+\subsubsection*{Chart settings}\label{chart-settings-24}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -2517,12 +2798,13 @@ Same as \protect\hyperlink{Dataux5cux2520Sourceux5cux2520andux5cux2520Domainux5c
 \end{itemize}
 
 \hypertarget{provenance}{%
-\chapter{Provenance}\label{provenance}}
+\section{Provenance}\label{provenance}}
 
 This Dashboard shows the provenance of the data in the different data domains.
 
 \hypertarget{css-6}{%
-\section{CSS}\label{css-6}}
+\subsection*{CSS}\label{css-6}}
+\addcontentsline{toc}{subsection}{CSS}
 
 To hide the dashboard header insert the following css code to the \texttt{CSS} field on the edit page:
 
@@ -2538,7 +2820,8 @@ With this every time you want to edit the dashboard layout you have to either co
 or remove it so the ``Edit Dashboard'' button can show again.
 
 \hypertarget{data-source-filter-4}{%
-\section{Data Source Filter}\label{data-source-filter-4}}
+\subsection*{Data Source Filter}\label{data-source-filter-4}}
+\addcontentsline{toc}{subsection}{Data Source Filter}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}\label{fig:dataSourceFilter}
@@ -2547,12 +2830,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
 \hypertarget{sql-query-23}{%
-\subsection{SQL query}\label{sql-query-23}}
+\subsubsection*{SQL query}\label{sql-query-23}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
 \hypertarget{chart-settings-25}{%
-\subsection{Chart settings}\label{chart-settings-25}}
+\subsubsection*{Chart settings}\label{chart-settings-25}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -2598,15 +2883,17 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
   \end{itemize}
 \end{itemize}
 
-\hypertarget{dataProvenanceCharts}{%
-\section{Condition \& Drug \& Procedure \& Device \& Measurement \& Observation Types}\label{dataProvenanceCharts}}
+\hypertarget{condition-drug-procedure-device-measurement-observation-types-dataprovenancecharts}{%
+\subsection*{Condition \& Drug \& Procedure \& Device \& Measurement \& Observation Types \{\#dataProvenanceCharts\}}\label{condition-drug-procedure-device-measurement-observation-types-dataprovenancecharts}}
+\addcontentsline{toc}{subsection}{Condition \& Drug \& Procedure \& Device \& Measurement \& Observation Types \{\#dataProvenanceCharts\}}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/09-provenance/02-condition_drug_procedure_device_measurement_observation_types} \caption{Settings for creating the Condition, Drug, Procedure, Device, Measurement and Observation charts}\label{fig:conditionDrugProcedureDeviceMeasurementObservationTypes}
 \end{figure}
 
 \hypertarget{sql-query-24}{%
-\subsection{SQL query}\label{sql-query-24}}
+\subsubsection*{SQL query}\label{sql-query-24}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 All 6 charts use the same sql query.
 
@@ -2639,7 +2926,8 @@ All 6 charts use the same sql query.
 \end{Shaded}
 
 \hypertarget{chart-settings-26}{%
-\subsection{Chart settings}\label{chart-settings-26}}
+\subsubsection*{Chart settings}\label{chart-settings-26}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -2698,10 +2986,11 @@ All 6 charts use the same sql query.
 \end{itemize}
 
 \hypertarget{data-domains}{%
-\chapter{Data Domains}\label{data-domains}}
+\section{Data Domains}\label{data-domains}}
 
 \hypertarget{css-7}{%
-\section{CSS}\label{css-7}}
+\subsection*{CSS}\label{css-7}}
+\addcontentsline{toc}{subsection}{CSS}
 
 To hide the dashboard header insert the following css code to the \texttt{CSS} field on the edit page:
 
@@ -2717,7 +3006,8 @@ With this every time you want to edit the dashboard layout you have to either co
 or remove it so the ``Edit Dashboard'' button can show again.
 
 \hypertarget{data-source-filter-5}{%
-\section{Data Source Filter}\label{data-source-filter-5}}
+\subsection*{Data Source Filter}\label{data-source-filter-5}}
+\addcontentsline{toc}{subsection}{Data Source Filter}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}\label{fig:dataSourceFilter}
@@ -2726,12 +3016,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
 \hypertarget{sql-query-25}{%
-\subsection{SQL query}\label{sql-query-25}}
+\subsubsection*{SQL query}\label{sql-query-25}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
 \hypertarget{chart-settings-27}{%
-\subsection{Chart settings}\label{chart-settings-27}}
+\subsubsection*{Chart settings}\label{chart-settings-27}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -2777,15 +3069,17 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
   \end{itemize}
 \end{itemize}
 
-\hypertarget{avgRecordsPerPerson}{%
-\section{Average Number of Records per Person}\label{avgRecordsPerPerson}}
+\hypertarget{average-number-of-records-per-person-avgrecordsperperson}{%
+\subsection*{Average Number of Records per Person \{\#avgRecordsPerPerson\}}\label{average-number-of-records-per-person-avgrecordsperperson}}
+\addcontentsline{toc}{subsection}{Average Number of Records per Person \{\#avgRecordsPerPerson\}}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/10-data_domain/02-avg_records_per_person} \caption{Settings for creating the Data Source filter chart}\label{fig:unnamed-chunk-1}
 \end{figure}
 
 \hypertarget{sql-query-26}{%
-\subsection{SQL query}\label{sql-query-26}}
+\subsubsection*{SQL query}\label{sql-query-26}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2816,7 +3110,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Shaded}
 
 \hypertarget{chart-settings-28}{%
-\subsection{Chart settings}\label{chart-settings-28}}
+\subsubsection*{Chart settings}\label{chart-settings-28}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -2869,10 +3164,11 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{itemize}
 
 \hypertarget{PerDatabaseDashboard}{%
-\chapter{Per Database}\label{PerDatabaseDashboard}}
+\section{Per Database}\label{PerDatabaseDashboard}}
 
 \hypertarget{label-colors-1}{%
-\section{Label Colors}\label{label-colors-1}}
+\subsection*{Label Colors}\label{label-colors-1}}
+\addcontentsline{toc}{subsection}{Label Colors}
 
 In order to obtain the colors blue and rose in the chart representing the gender distribution,
 add the following JSON entry to the JSON object of the \texttt{JSON\ Metadata} field on the edit dashboard page:
@@ -2887,7 +3183,8 @@ add the following JSON entry to the JSON object of the \texttt{JSON\ Metadata} f
 \end{Shaded}
 
 \hypertarget{css-8}{%
-\section{CSS}\label{css-8}}
+\subsection*{CSS}\label{css-8}}
+\addcontentsline{toc}{subsection}{CSS}
 
 To hide the dashboard header insert the following css code to the \texttt{CSS} field on the edit page:
 
@@ -2903,7 +3200,8 @@ With this every time you want to edit the dashboard layout you have to either co
 or remove it so the ``Edit Dashboard'' button can show again.
 
 \hypertarget{data-source-filter-6}{%
-\section{Data Source Filter}\label{data-source-filter-6}}
+\subsection*{Data Source Filter}\label{data-source-filter-6}}
+\addcontentsline{toc}{subsection}{Data Source Filter}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}\label{fig:dataSourceFilter}
@@ -2912,12 +3210,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
 \hypertarget{sql-query-27}{%
-\subsection{SQL query}\label{sql-query-27}}
+\subsubsection*{SQL query}\label{sql-query-27}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
 \hypertarget{chart-settings-29}{%
-\subsection{Chart settings}\label{chart-settings-29}}
+\subsubsection*{Chart settings}\label{chart-settings-29}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -2964,17 +3264,20 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{itemize}
 
 \hypertarget{demographics-tab}{%
-\section{Demographics Tab}\label{demographics-tab}}
+\subsection*{Demographics Tab}\label{demographics-tab}}
+\addcontentsline{toc}{subsection}{Demographics Tab}
 
 \hypertarget{number-of-patients}{%
-\subsection{Number of Patients}\label{number-of-patients}}
+\subsubsection*{Number of Patients}\label{number-of-patients}}
+\addcontentsline{toc}{subsubsection}{Number of Patients}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/11-per_database/01-demographics/01-num_patients} \caption{Settings for creating the Number of Patients chart}\label{fig:numPatients}
 \end{figure}
 
 \hypertarget{sql-query-28}{%
-\subsubsection{SQL query}\label{sql-query-28}}
+\paragraph*{SQL query}\label{sql-query-28}}
+\addcontentsline{toc}{paragraph}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2989,7 +3292,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Shaded}
 
 \hypertarget{chart-settings-30}{%
-\subsubsection{Chart settings}\label{chart-settings-30}}
+\paragraph*{Chart settings}\label{chart-settings-30}}
+\addcontentsline{toc}{paragraph}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -3031,14 +3335,16 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{itemize}
 
 \hypertarget{gender-table}{%
-\subsection{Gender Table}\label{gender-table}}
+\subsubsection*{Gender Table}\label{gender-table}}
+\addcontentsline{toc}{subsubsection}{Gender Table}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/11-per_database/01-demographics/02-gender_table} \caption{Settings for creating the Gender Table chart}\label{fig:genderTable}
 \end{figure}
 
-\hypertarget{genderTableQuery}{%
-\subsubsection{SQL Query}\label{genderTableQuery}}
+\hypertarget{sql-query-gendertablequery}{%
+\paragraph*{SQL Query \{\#genderTableQuery\}}\label{sql-query-gendertablequery}}
+\addcontentsline{toc}{paragraph}{SQL Query \{\#genderTableQuery\}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3054,7 +3360,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Shaded}
 
 \hypertarget{chart-settings-31}{%
-\subsubsection{Chart settings}\label{chart-settings-31}}
+\paragraph*{Chart settings}\label{chart-settings-31}}
+\addcontentsline{toc}{paragraph}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -3111,19 +3418,22 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{itemize}
 
 \hypertarget{gender-pie}{%
-\subsection{Gender Pie}\label{gender-pie}}
+\subsubsection*{Gender Pie}\label{gender-pie}}
+\addcontentsline{toc}{subsubsection}{Gender Pie}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/11-per_database/01-demographics/03-gender_pie} \caption{Settings for creating the Gender Pie chart}\label{fig:genderPie}
 \end{figure}
 
 \hypertarget{sql-query-29}{%
-\subsubsection{SQL query}\label{sql-query-29}}
+\paragraph*{SQL query}\label{sql-query-29}}
+\addcontentsline{toc}{paragraph}{SQL query}
 
 Same as \protect\hyperlink{genderTableQuery}{Gender Table} query
 
 \hypertarget{chart-settings-32}{%
-\subsubsection{Chart settings}\label{chart-settings-32}}
+\paragraph*{Chart settings}\label{chart-settings-32}}
+\addcontentsline{toc}{paragraph}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -3178,37 +3488,44 @@ Same as \protect\hyperlink{genderTableQuery}{Gender Table} query
 \end{itemize}
 
 \hypertarget{age-at-first-observation---table}{%
-\subsection{Age at first observation - Table}\label{age-at-first-observation---table}}
+\subsubsection*{Age at first observation - Table}\label{age-at-first-observation---table}}
+\addcontentsline{toc}{subsubsection}{Age at first observation - Table}
 
 Same chart as the one used on the \protect\hyperlink{age1ObservationTable}{Person} dashboard.
 
 \hypertarget{age-at-first-observation---bars}{%
-\subsection{Age at first observation - Bars}\label{age-at-first-observation---bars}}
+\subsubsection*{Age at first observation - Bars}\label{age-at-first-observation---bars}}
+\addcontentsline{toc}{subsubsection}{Age at first observation - Bars}
 
 Same chart as the one used on the \protect\hyperlink{age1ObservationBars}{Person} dashboard.
 
 \hypertarget{year-of-birth}{%
-\subsection{Year of Birth}\label{year-of-birth}}
+\subsubsection*{Year of Birth}\label{year-of-birth}}
+\addcontentsline{toc}{subsubsection}{Year of Birth}
 
 Same chart as the one used on the \protect\hyperlink{yearOfBirth}{Person} dashboard.
 
 \hypertarget{data-domains-tab}{%
-\section{Data Domains Tab}\label{data-domains-tab}}
+\subsection*{Data Domains Tab}\label{data-domains-tab}}
+\addcontentsline{toc}{subsection}{Data Domains Tab}
 
 \hypertarget{average-number-of-records-per-person}{%
-\subsection{Average Number of Records per Person}\label{average-number-of-records-per-person}}
+\subsubsection*{Average Number of Records per Person}\label{average-number-of-records-per-person}}
+\addcontentsline{toc}{subsubsection}{Average Number of Records per Person}
 
 Same chart as the one used on the \protect\hyperlink{avgRecordsPerPerson}{Data Domains} dashboard.
 
 \hypertarget{total-number-of-records}{%
-\subsection{Total Number of Records}\label{total-number-of-records}}
+\subsubsection*{Total Number of Records}\label{total-number-of-records}}
+\addcontentsline{toc}{subsubsection}{Total Number of Records}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/11-per_database/02-data_domains/02-total_num_records} \caption{Settings for creating the Total Number of Records chart}\label{fig:totalNumRecords}
 \end{figure}
 
 \hypertarget{sql-query-30}{%
-\subsubsection{SQL query}\label{sql-query-30}}
+\paragraph*{SQL query}\label{sql-query-30}}
+\addcontentsline{toc}{paragraph}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3235,7 +3552,8 @@ Same chart as the one used on the \protect\hyperlink{avgRecordsPerPerson}{Data D
 \end{Shaded}
 
 \hypertarget{chart-settings-33}{%
-\subsubsection{Chart settings}\label{chart-settings-33}}
+\paragraph*{Chart settings}\label{chart-settings-33}}
+\addcontentsline{toc}{paragraph}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -3276,20 +3594,24 @@ Same chart as the one used on the \protect\hyperlink{avgRecordsPerPerson}{Data D
 \end{itemize}
 
 \hypertarget{data-provenance-tab}{%
-\section{Data Provenance Tab}\label{data-provenance-tab}}
+\subsection*{Data Provenance Tab}\label{data-provenance-tab}}
+\addcontentsline{toc}{subsection}{Data Provenance Tab}
 
 Same six charts used on the \protect\hyperlink{dataProvenanceCharts}{Provenance} dashboard.
 
 \hypertarget{observation-period-tab}{%
-\section{Observation Period Tab}\label{observation-period-tab}}
+\subsection*{Observation Period Tab}\label{observation-period-tab}}
+\addcontentsline{toc}{subsection}{Observation Period Tab}
 
 \hypertarget{number-of-patitents-in-observation-period}{%
-\subsection{Number of Patitents in Observation Period}\label{number-of-patitents-in-observation-period}}
+\subsubsection*{Number of Patitents in Observation Period}\label{number-of-patitents-in-observation-period}}
+\addcontentsline{toc}{subsubsection}{Number of Patitents in Observation Period}
 
 Same chart used on the \protect\hyperlink{numInObservationPeriod}{Observation Period} dashboard.
 
 \hypertarget{cumulative-observation-period}{%
-\subsection{Cumulative Observation Period}\label{cumulative-observation-period}}
+\subsubsection*{Cumulative Observation Period}\label{cumulative-observation-period}}
+\addcontentsline{toc}{subsubsection}{Cumulative Observation Period}
 
 The cumulative observation time plot shows the percentage of patients that have more that X days of observation time.
 
@@ -3298,7 +3620,8 @@ The cumulative observation time plot shows the percentage of patients that have 
 \end{figure}
 
 \hypertarget{sql-query-31}{%
-\subsubsection{SQL Query}\label{sql-query-31}}
+\paragraph*{SQL Query}\label{sql-query-31}}
+\addcontentsline{toc}{paragraph}{SQL Query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3324,7 +3647,8 @@ The cumulative observation time plot shows the percentage of patients that have 
 \end{Shaded}
 
 \hypertarget{chart-settings-34}{%
-\subsubsection{Chart settings}\label{chart-settings-34}}
+\paragraph*{Chart settings}\label{chart-settings-34}}
+\addcontentsline{toc}{paragraph}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -3395,17 +3719,20 @@ The cumulative observation time plot shows the percentage of patients that have 
 \end{itemize}
 
 \hypertarget{visit-tab}{%
-\section{Visit Tab}\label{visit-tab}}
+\subsection*{Visit Tab}\label{visit-tab}}
+\addcontentsline{toc}{subsection}{Visit Tab}
 
 \hypertarget{visit-type-graph}{%
-\subsection{Visit Type Graph}\label{visit-type-graph}}
+\subsubsection*{Visit Type Graph}\label{visit-type-graph}}
+\addcontentsline{toc}{subsubsection}{Visit Type Graph}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/11-per_database/05-visit/01-visit_type_graph} \caption{Settings for creating the Visit Type Graph chart}\label{fig:visitTypeGraph}
 \end{figure}
 
 \hypertarget{sql-query-32}{%
-\subsubsection{SQL Query}\label{sql-query-32}}
+\paragraph*{SQL Query}\label{sql-query-32}}
+\addcontentsline{toc}{paragraph}{SQL Query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3421,7 +3748,8 @@ The cumulative observation time plot shows the percentage of patients that have 
 \end{Shaded}
 
 \hypertarget{chart-settings-35}{%
-\subsubsection{Chart settings}\label{chart-settings-35}}
+\paragraph*{Chart settings}\label{chart-settings-35}}
+\addcontentsline{toc}{paragraph}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -3464,14 +3792,16 @@ The cumulative observation time plot shows the percentage of patients that have 
 \end{itemize}
 
 \hypertarget{visit-type-table}{%
-\subsection{Visit Type Table}\label{visit-type-table}}
+\subsubsection*{Visit Type Table}\label{visit-type-table}}
+\addcontentsline{toc}{subsubsection}{Visit Type Table}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/11-per_database/05-visit/02-visit_type_table} \caption{Settings for creating the Visit Type Table chart}\label{fig:visitTypeTable}
 \end{figure}
 
 \hypertarget{sql-query-33}{%
-\subsubsection{SQL Query}\label{sql-query-33}}
+\paragraph*{SQL Query}\label{sql-query-33}}
+\addcontentsline{toc}{paragraph}{SQL Query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3500,7 +3830,8 @@ The cumulative observation time plot shows the percentage of patients that have 
 \end{Shaded}
 
 \hypertarget{chart-settings-36}{%
-\subsubsection{Chart Settings}\label{chart-settings-36}}
+\paragraph*{Chart Settings}\label{chart-settings-36}}
+\addcontentsline{toc}{paragraph}{Chart Settings}
 
 \begin{itemize}
 \tightlist
@@ -3555,30 +3886,35 @@ The cumulative observation time plot shows the percentage of patients that have 
 \end{itemize}
 
 \hypertarget{concept-browser-tab}{%
-\section{Concept Browser Tab}\label{concept-browser-tab}}
+\subsection*{Concept Browser Tab}\label{concept-browser-tab}}
+\addcontentsline{toc}{subsection}{Concept Browser Tab}
 
 \hypertarget{concept-browser-table}{%
-\subsection{Concept Browser Table}\label{concept-browser-table}}
+\subsubsection*{Concept Browser Table}\label{concept-browser-table}}
+\addcontentsline{toc}{subsubsection}{Concept Browser Table}
 
 Same chart used on the \protect\hyperlink{conceptBrowserTable}{Concept Browser} dashboard.
 
 \hypertarget{meta-data-tab}{%
-\section{Meta Data Tab}\label{meta-data-tab}}
+\subsection*{Meta Data Tab}\label{meta-data-tab}}
+\addcontentsline{toc}{subsection}{Meta Data Tab}
 
 \hypertarget{meta-data-table}{%
-\subsection{Meta Data Table}\label{meta-data-table}}
+\subsubsection*{Meta Data Table}\label{meta-data-table}}
+\addcontentsline{toc}{subsubsection}{Meta Data Table}
 
 Same chart used on the \protect\hyperlink{metaDataTable}{General} dashboard.
 
 \hypertarget{database-level-dashboard}{%
-\chapter{Database Level Dashboard}\label{database-level-dashboard}}
+\section{Database Level Dashboard}\label{database-level-dashboard}}
 
 This dashboard is an exact copy of the \protect\hyperlink{PerDatabaseDashboard}{Per Database} dashboard but several legends and fields
 displayed on the original are hidden either through CSS or by changing some chart settings.
 On the following sections we will only present the things to change on the original charts.
 
 \hypertarget{label-colors-2}{%
-\section{Label Colors}\label{label-colors-2}}
+\subsection*{Label Colors}\label{label-colors-2}}
+\addcontentsline{toc}{subsection}{Label Colors}
 
 In order to obtain the colors blue and rose in the chart representing the gender distribution,
 add the following JSON entry to the JSON object of the \texttt{JSON\ Metadata} field on the edit dashboard page:
@@ -3593,7 +3929,8 @@ add the following JSON entry to the JSON object of the \texttt{JSON\ Metadata} f
 \end{Shaded}
 
 \hypertarget{css-9}{%
-\section{CSS}\label{css-9}}
+\subsection*{CSS}\label{css-9}}
+\addcontentsline{toc}{subsection}{CSS}
 
 To hide the dashboard header insert the following css code to the \texttt{CSS} field on the edit page:
 
@@ -3628,7 +3965,8 @@ With this every time you want to edit the dashboard layout you have to either co
 or remove it so the ``Edit Dashboard'' button can show again.
 
 \hypertarget{data-source-filter---hidden}{%
-\section{Data Source Filter - hidden}\label{data-source-filter---hidden}}
+\subsection*{Data Source Filter - hidden}\label{data-source-filter---hidden}}
+\addcontentsline{toc}{subsection}{Data Source Filter - hidden}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/12-acronym_filter} \caption{Settings for creating the Data Source filter chart}\label{fig:dataSourceFilter}
@@ -3637,12 +3975,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
 \hypertarget{sql-query-34}{%
-\subsection{SQL query}\label{sql-query-34}}
+\subsubsection*{SQL query}\label{sql-query-34}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
 \hypertarget{chart-settings-37}{%
-\subsection{Chart settings}\label{chart-settings-37}}
+\subsubsection*{Chart settings}\label{chart-settings-37}}
+\addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
 \tightlist
@@ -3689,25 +4029,30 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{itemize}
 
 \hypertarget{demographics-tab-1}{%
-\section{Demographics Tab}\label{demographics-tab-1}}
+\subsection*{Demographics Tab}\label{demographics-tab-1}}
+\addcontentsline{toc}{subsection}{Demographics Tab}
 
 \hypertarget{number-of-patients-1}{%
-\subsection{Number of Patients}\label{number-of-patients-1}}
+\subsubsection*{Number of Patients}\label{number-of-patients-1}}
+\addcontentsline{toc}{subsubsection}{Number of Patients}
 
 No changes
 
 \hypertarget{gender-table-1}{%
-\subsection{Gender Table}\label{gender-table-1}}
+\subsubsection*{Gender Table}\label{gender-table-1}}
+\addcontentsline{toc}{subsubsection}{Gender Table}
 
 No changes
 
 \hypertarget{gender-pie-1}{%
-\subsection{Gender Pie}\label{gender-pie-1}}
+\subsubsection*{Gender Pie}\label{gender-pie-1}}
+\addcontentsline{toc}{subsubsection}{Gender Pie}
 
 No changes
 
 \hypertarget{age-at-first-observation---table-1}{%
-\subsection{Age at first observation - Table}\label{age-at-first-observation---table-1}}
+\subsubsection*{Age at first observation - Table}\label{age-at-first-observation---table-1}}
+\addcontentsline{toc}{subsubsection}{Age at first observation - Table}
 
 Remove the \texttt{name} field from the columns to display.
 
@@ -3730,7 +4075,8 @@ Remove the \texttt{name} field from the columns to display.
 \end{itemize}
 
 \hypertarget{age-at-first-observation---bars-1}{%
-\subsection{Age at first observation - Bars}\label{age-at-first-observation---bars-1}}
+\subsubsection*{Age at first observation - Bars}\label{age-at-first-observation---bars-1}}
+\addcontentsline{toc}{subsubsection}{Age at first observation - Bars}
 
 Remove legend.
 
@@ -3753,7 +4099,8 @@ Remove legend.
 \end{itemize}
 
 \hypertarget{year-of-birth-1}{%
-\subsection{Year of Birth}\label{year-of-birth-1}}
+\subsubsection*{Year of Birth}\label{year-of-birth-1}}
+\addcontentsline{toc}{subsubsection}{Year of Birth}
 
 Remove legend.
 
@@ -3776,20 +4123,24 @@ Remove legend.
 \end{itemize}
 
 \hypertarget{data-domains-tab-1}{%
-\section{Data Domains Tab}\label{data-domains-tab-1}}
+\subsection*{Data Domains Tab}\label{data-domains-tab-1}}
+\addcontentsline{toc}{subsection}{Data Domains Tab}
 
 No changes
 
 \hypertarget{data-provenance-tab-1}{%
-\section{Data Provenance Tab}\label{data-provenance-tab-1}}
+\subsection*{Data Provenance Tab}\label{data-provenance-tab-1}}
+\addcontentsline{toc}{subsection}{Data Provenance Tab}
 
 No changes
 
 \hypertarget{observation-period-tab-1}{%
-\section{Observation Period Tab}\label{observation-period-tab-1}}
+\subsection*{Observation Period Tab}\label{observation-period-tab-1}}
+\addcontentsline{toc}{subsection}{Observation Period Tab}
 
 \hypertarget{number-of-patitents-in-observation-period-1}{%
-\subsection{Number of Patitents in Observation Period}\label{number-of-patitents-in-observation-period-1}}
+\subsubsection*{Number of Patitents in Observation Period}\label{number-of-patitents-in-observation-period-1}}
+\addcontentsline{toc}{subsubsection}{Number of Patitents in Observation Period}
 
 Remove legend.
 
@@ -3812,7 +4163,8 @@ Remove legend.
 \end{itemize}
 
 \hypertarget{cumulative-observation-period-1}{%
-\subsection{Cumulative Observation Period}\label{cumulative-observation-period-1}}
+\subsubsection*{Cumulative Observation Period}\label{cumulative-observation-period-1}}
+\addcontentsline{toc}{subsubsection}{Cumulative Observation Period}
 
 Remove legend.
 
@@ -3835,10 +4187,12 @@ Remove legend.
 \end{itemize}
 
 \hypertarget{visit-tab-1}{%
-\section{Visit Tab}\label{visit-tab-1}}
+\subsection*{Visit Tab}\label{visit-tab-1}}
+\addcontentsline{toc}{subsection}{Visit Tab}
 
 \hypertarget{visit-type-graph-1}{%
-\subsection{Visit Type Graph}\label{visit-type-graph-1}}
+\subsubsection*{Visit Type Graph}\label{visit-type-graph-1}}
+\addcontentsline{toc}{subsubsection}{Visit Type Graph}
 
 Remove legend.
 
@@ -3861,7 +4215,8 @@ Remove legend.
 \end{itemize}
 
 \hypertarget{visit-type-table-1}{%
-\subsection{Visit Type Table}\label{visit-type-table-1}}
+\subsubsection*{Visit Type Table}\label{visit-type-table-1}}
+\addcontentsline{toc}{subsubsection}{Visit Type Table}
 
 Remove the \texttt{name} field from the columns to display.
 
@@ -3884,10 +4239,12 @@ Remove the \texttt{name} field from the columns to display.
 \end{itemize}
 
 \hypertarget{concept-browser-tab-1}{%
-\section{Concept Browser Tab}\label{concept-browser-tab-1}}
+\subsection*{Concept Browser Tab}\label{concept-browser-tab-1}}
+\addcontentsline{toc}{subsection}{Concept Browser Tab}
 
 \hypertarget{concept-browser-table-1}{%
-\subsection{Concept Browser Table}\label{concept-browser-table-1}}
+\subsubsection*{Concept Browser Table}\label{concept-browser-table-1}}
+\addcontentsline{toc}{subsubsection}{Concept Browser Table}
 
 Remove the \texttt{source\_name} field from the columns to display.
 
@@ -3910,10 +4267,12 @@ Remove the \texttt{source\_name} field from the columns to display.
 \end{itemize}
 
 \hypertarget{meta-data-tab-1}{%
-\section{Meta Data Tab}\label{meta-data-tab-1}}
+\subsection*{Meta Data Tab}\label{meta-data-tab-1}}
+\addcontentsline{toc}{subsection}{Meta Data Tab}
 
 \hypertarget{meta-data-table-1}{%
-\subsection{Meta Data Table}\label{meta-data-table-1}}
+\subsubsection*{Meta Data Table}\label{meta-data-table-1}}
+\addcontentsline{toc}{subsubsection}{Meta Data Table}
 
 Remove the \texttt{name} field from the columns to display.
 

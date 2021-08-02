@@ -4,8 +4,9 @@ bookdown::gitbook:
     toc:
       before: |
         <li><a href="./">Data Network Dashboards</a></li>
-    edit: https://github.com/rstudio/bookdown-demo/edit/master/%s
+    edit: https://github.com/EHDEN/NetworkDashboards/edit/master/%s
     download: ["pdf", "epub"]
+  split_by: section
 bookdown::pdf_book:
   includes:
     in_header: preamble.tex

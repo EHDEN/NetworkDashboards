@@ -4,7 +4,7 @@ output: html_document
 
 
 
-# Database Level Dashboard
+## Database Level Dashboard
 
 <!-- Discuss the goal of this dashboard... TO DO -->
 
@@ -12,7 +12,7 @@ This dashboard is an exact copy of the [Per Database](#PerDatabaseDashboard) das
 displayed on the original are hidden either through CSS or by changing some chart settings.
 On the following sections we will only present the things to change on the original charts.
 
-## Label Colors 
+### Label Colors  {-}
 
 In order to obtain the colors blue and rose in the chart representing the gender distribution,
 add the following JSON entry to the JSON object of the `JSON Metadata` field on the edit dashboard page:
@@ -24,7 +24,7 @@ add the following JSON entry to the JSON object of the `JSON Metadata` field on 
 }
 ```
 
-## CSS
+### CSS {-}
 
 To hide the dashboard header insert the following css code to the `CSS` field on the edit page:
 
@@ -56,7 +56,7 @@ Hides the X Axis Labels of the bar charts on the Data Provenance tab
 With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the "Edit Dashboard" button can show again.
 
-## Data Source Filter - hidden
+### Data Source Filter - hidden {-}
 
 <div class="figure">
 <img src="images/12-acronym_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
@@ -65,11 +65,11 @@ or remove it so the "Edit Dashboard" button can show again.
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
-### SQL query
+#### SQL query {-}
 
 No SQL query, use the sql table `data_source` of the `achilles` database.
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -82,21 +82,21 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
     - Date Filter: off
     - Instant Filtering: on
 
-## Demographics Tab
+### Demographics Tab {-}
 
-### Number of Patients
-
-No changes
-
-### Gender Table
+#### Number of Patients {-}
 
 No changes
 
-### Gender Pie
+#### Gender Table {-}
 
 No changes
 
-### Age at first observation - Table
+#### Gender Pie {-}
+
+No changes
+
+#### Age at first observation - Table {-}
 
 Remove the `name` field from the columns to display.
   
@@ -104,7 +104,7 @@ Remove the `name` field from the columns to display.
   - Query
     - Columns: 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90+
 
-### Age at first observation - Bars
+#### Age at first observation - Bars {-}
 
 Remove legend.
 
@@ -112,7 +112,7 @@ Remove legend.
   - Chart Options
     - Legend: off
 
-### Year of Birth
+#### Year of Birth {-}
 
 Remove legend.
 
@@ -120,25 +120,17 @@ Remove legend.
   - Chart Options
     - Legend: off
 
-## Data Domains Tab
+### Data Domains Tab {-}
 
 No changes
 
-## Data Provenance Tab
+### Data Provenance Tab {-}
 
 No changes
 
-## Observation Period Tab
+### Observation Period Tab {-}
 
-### Number of Patitents in Observation Period
-
-Remove legend.
-
-- Customize Tab
-  - Chart Options
-    - Legend: off
-
-### Cumulative Observation Period
+#### Number of Patitents in Observation Period {-}
 
 Remove legend.
 
@@ -146,9 +138,7 @@ Remove legend.
   - Chart Options
     - Legend: off
 
-## Visit Tab
-
-### Visit Type Graph
+#### Cumulative Observation Period {-}
 
 Remove legend.
 
@@ -156,7 +146,17 @@ Remove legend.
   - Chart Options
     - Legend: off
 
-### Visit Type Table
+### Visit Tab {-}
+
+#### Visit Type Graph {-}
+
+Remove legend.
+
+- Customize Tab
+  - Chart Options
+    - Legend: off
+
+#### Visit Type Table {-}
 
 Remove the `name` field from the columns to display.
 
@@ -164,9 +164,9 @@ Remove the `name` field from the columns to display.
   - Query
     - Columns: visit_type, num_persons, percent_persons with label persons (%), records_per_person
 
-## Concept Browser Tab
+### Concept Browser Tab {-}
 
-### Concept Browser Table
+#### Concept Browser Table {-}
 
 Remove the `source_name` field from the columns to display.
 
@@ -174,9 +174,9 @@ Remove the `source_name` field from the columns to display.
   - Query
     - Columns: concept_id, concept_name, domain_id, magnitude_persons, magnitude_occurrences
 
-## Meta Data Tab
+### Meta Data Tab {-}
 
-### Meta Data Table
+#### Meta Data Table {-}
 
 Remove the `name` field from the columns to display.
 

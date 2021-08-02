@@ -4,11 +4,11 @@ output: html_document
 
 
 
-# Per Database {#PerDatabaseDashboard}
+## Per Database {#PerDatabaseDashboard}
 
 <!-- Discuss the goal of this dashboard... TO DO -->
 
-## Label Colors 
+### Label Colors  {-}
 
 In order to obtain the colors blue and rose in the chart representing the gender distribution,
 add the following JSON entry to the JSON object of the `JSON Metadata` field on the edit dashboard page:
@@ -20,7 +20,7 @@ add the following JSON entry to the JSON object of the `JSON Metadata` field on 
 }
 ```
 
-## CSS
+### CSS {-}
 
 To hide the dashboard header insert the following css code to the `CSS` field on the edit page:
 
@@ -33,7 +33,7 @@ To hide the dashboard header insert the following css code to the `CSS` field on
 With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the "Edit Dashboard" button can show again.
 
-## Data Source Filter
+### Data Source Filter {-}
 
 <div class="figure">
 <img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
@@ -42,11 +42,11 @@ or remove it so the "Edit Dashboard" button can show again.
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
-### SQL query
+#### SQL query {-}
 
 No SQL query, use the sql table `data_source` of the `achilles` database.
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -59,16 +59,16 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
     - Date Filter: off
     - Instant Filtering: on
 
-## Demographics Tab
+### Demographics Tab {-}
 
-### Number of Patients
+#### Number of Patients {-}
 
 <div class="figure">
 <img src="images/11-per_database/01-demographics/01-num_patients.png" alt="Settings for creating the Number of Patients chart" width="100%" />
 <p class="caption">(\#fig:numPatients)Settings for creating the Number of Patients chart</p>
 </div>
 
-#### SQL query
+##### SQL query {-}
 
 ```sql
 SELECT
@@ -80,7 +80,7 @@ JOIN data_source ON achilles_results.data_source_id=data_source.id
 WHERE analysis_id = 1
 ```
 
-#### Chart settings
+##### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -93,14 +93,14 @@ WHERE analysis_id = 1
   - Big Number Font Size: Small
   - Subheader Font Size: Tiny
 
-### Gender Table
+#### Gender Table {-}
 
 <div class="figure">
 <img src="images/11-per_database/01-demographics/02-gender_table.png" alt="Settings for creating the Gender Table chart" width="100%" />
 <p class="caption">(\#fig:genderTable)Settings for creating the Gender Table chart</p>
 </div>
 
-#### SQL Query {#genderTableQuery}
+##### SQL Query {#genderTableQuery} {-}
 
 ```sql
 SELECT source.name as name,
@@ -113,7 +113,7 @@ INNER JOIN public.concept ON CAST(stratum_1 AS BIGINT) = concept_id
 WHERE analysis_id = 2
 ```
 
-#### Chart settings
+##### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -129,18 +129,18 @@ WHERE analysis_id = 2
   - Options
     - Show Cells Bars: off
 
-### Gender Pie
+#### Gender Pie {-}
 
 <div class="figure">
 <img src="images/11-per_database/01-demographics/03-gender_pie.png" alt="Settings for creating the Gender Pie chart" width="100%" />
 <p class="caption">(\#fig:genderPie)Settings for creating the Gender Pie chart</p>
 </div>
 
-#### SQL query
+##### SQL query {-}
 
 Same as [Gender Table](#genderTableQuery) query
 
-#### Chart settings
+##### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -156,32 +156,32 @@ Same as [Gender Table](#genderTableQuery) query
     - Legend: off
 
 
-### Age at first observation - Table
+#### Age at first observation - Table {-}
 
 Same chart as the one used on the [Person](#age1ObservationTable) dashboard.
 
-### Age at first observation - Bars
+#### Age at first observation - Bars {-}
 
 Same chart as the one used on the [Person](#age1ObservationBars) dashboard.
 
-### Year of Birth
+#### Year of Birth {-}
 
 Same chart as the one used on the [Person](#yearOfBirth) dashboard.
 
-## Data Domains Tab
+### Data Domains Tab {-}
 
-### Average Number of Records per Person
+#### Average Number of Records per Person {-}
 
 Same chart as the one used on the [Data Domains](#avgRecordsPerPerson) dashboard.
 
-### Total Number of Records
+#### Total Number of Records {-}
 
 <div class="figure">
 <img src="images/11-per_database/02-data_domains/02-total_num_records.png" alt="Settings for creating the Total Number of Records chart" width="100%" />
 <p class="caption">(\#fig:totalNumRecords)Settings for creating the Total Number of Records chart</p>
 </div>
 
-#### SQL query
+##### SQL query {-}
 
 ```sql
 SELECT
@@ -205,7 +205,7 @@ GROUP BY name, acronym, analysis_id
 HAVING analysis_id IN (201, 401, 501, 601, 701, 801, 1801, 2101, 2201)
 ```
 
-#### Chart settings
+##### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -217,17 +217,17 @@ HAVING analysis_id IN (201, 401, 501, 601, 701, 801, 1801, 2101, 2201)
     - Group by: data_domain
     - Row limit: None
 
-## Data Provenance Tab
+### Data Provenance Tab {-}
 
 Same six charts used on the [Provenance](#dataProvenanceCharts) dashboard.
 
-## Observation Period Tab
+### Observation Period Tab {-}
 
-### Number of Patitents in Observation Period
+#### Number of Patitents in Observation Period {-}
 
 Same chart used on the [Observation Period](#numInObservationPeriod) dashboard.
 
-### Cumulative Observation Period
+#### Cumulative Observation Period {-}
 
 The cumulative observation time plot shows the percentage of patients that have more that X days of observation time.
 
@@ -236,7 +236,7 @@ The cumulative observation time plot shows the percentage of patients that have 
 <p class="caption">(\#fig:cumObservationTime)Settings for creating the Total Number of Records chart</p>
 </div>
 
-#### SQL Query
+##### SQL Query {-}
 
 ```sql
 SELECT
@@ -259,7 +259,7 @@ JOIN data_source ON cumulative_sums.data_source_id = data_source.id
 ORDER BY name, xLengthOfObservation
 ```
 
-#### Chart settings
+##### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -280,16 +280,16 @@ ORDER BY name, xLengthOfObservation
     - X Axis Label: Days
     - Reduce X ticks: on
 
-## Visit Tab
+### Visit Tab {-}
 
-### Visit Type Graph
+#### Visit Type Graph {-}
 
 <div class="figure">
 <img src="images/11-per_database/05-visit/01-visit_type_graph.png" alt="Settings for creating the Visit Type Graph chart" width="100%" />
 <p class="caption">(\#fig:visitTypeGraph)Settings for creating the Visit Type Graph chart</p>
 </div>
 
-#### SQL Query
+##### SQL Query {-}
 
 ```sql
 SELECT
@@ -302,7 +302,7 @@ JOIN data_source ON achilles_results.data_source_id = data_source.id
 JOIN concept ON CAST(achilles_results.stratum_1 AS BIGINT) = concept.concept_id
 ```
 
-#### Chart settings
+##### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -315,14 +315,14 @@ JOIN concept ON CAST(achilles_results.stratum_1 AS BIGINT) = concept.concept_id
     - Breakdowns: name
     - Row limit: None
 
-### Visit Type Table
+#### Visit Type Table {-}
 
 <div class="figure">
 <img src="images/11-per_database/05-visit/02-visit_type_table.png" alt="Settings for creating the Visit Type Table chart" width="100%" />
 <p class="caption">(\#fig:visitTypeTable)Settings for creating the Visit Type Table chart</p>
 </div>
 
-#### SQL Query
+##### SQL Query {-}
 
 ```sql
 SELECT
@@ -348,7 +348,7 @@ FROM (
 ORDER BY ar1.data_source_id, ar1.count_value DESC
 ```
 
-#### Chart Settings
+##### Chart Settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -363,14 +363,14 @@ ORDER BY ar1.data_source_id, ar1.count_value DESC
   - Options
     - Show Cell Bars: off
 
-## Concept Browser Tab
+### Concept Browser Tab {-}
 
-### Concept Browser Table
+#### Concept Browser Table {-}
 
 Same chart used on the [Concept Browser](#conceptBrowserTable) dashboard.
 
-## Meta Data Tab
+### Meta Data Tab {-}
 
-### Meta Data Table
+#### Meta Data Table {-}
 
 Same chart used on the [General](#metaDataTable) dashboard.

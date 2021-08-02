@@ -8,13 +8,13 @@ output: html_document
 
 Currently, we use docker to deploy our environment
 
-## First Steps
+### First Steps {-}
 
 1. Clone the repository with the command `git clone --recurse-submodules https://github.com/EHDEN/NetworkDashboards`. If you already cloned the repository without the `--recurse-submodules` option, run `git submodule update --init` to fetch the superset submodule.
 
 2. Create a `.env` file on the `docker` directory, using `.env-example` as a reference, setting all necessary environment variables (`SUPERSET\_MAPBOX\_API\_KEY` and `DASHBOARD\_VIEWER\_SECRET\_KEY`).
 
-## Dashboard Viewer setup
+### Dashboard Viewer setup {-}
 
 1. If you wish to expose the dashboard viewer app through a specific domain(s) you must add it/them to the `ALLOWED_HOSTS` list on file `dashboard_viewer/dashboard_viewer/settings.py` and remove the `'*'` entry.
 
@@ -22,7 +22,7 @@ Currently, we use docker to deploy our environment
 
 3. Set up the database and create an admin account for the dashboard viewer app: `docker-compose run --rm dashboard ./docker-init.sh`.
 
-## Insert Concepts
+### Insert Concepts {-}
 
 The concepts table is not in the repository due to its dimension, therefore we use directly the Postgres console to insert this table in the installation.
 
@@ -89,7 +89,7 @@ The concepts table is not in the repository due to its dimension, therefore we u
 
 10. Run the command `docker-compose run --rm dashboard python manage.py generate_materialized_views` to create the materialized views on Postgres.
 
-## Superset setup
+### Superset setup {-}
 
 1. Make sure that the container `superset-init` has finished before continuing. It is creating the necessary tables on the database and creating permissions and roles.
 
@@ -110,6 +110,6 @@ The concepts table is not in the repository due to its dimension, therefore we u
    - can csrf token on Superset
    - can list on CssTemplateAsyncModelView
 
-## Dummy data
+### Dummy data {-}
 
 On a fresh installation, there are no achilles_results data so Superset's dashboards will display "No results". On the root of this repository, you can find the `demo` directory where we have an ACHILLES results file with synthetic data that you can upload to a data source on the uploader app of the dashboard viewer (localhost/uploader). If you wish to compare multiple data sources, on the `demo` directory the is also a python script that allows you to generate new ACHILLES results files, where it generates random count values based on the ranges of values for each set of analysis_id and stratums present on a base ACHILLES results file. So, from the one ACHILLES results fill we provided, you can have multiple data sources with different data.

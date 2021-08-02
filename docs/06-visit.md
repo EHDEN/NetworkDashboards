@@ -4,13 +4,13 @@ output: html_document
 
 
 
-# Visit
+## Visit
 
 <!-- Discuss the goal of this dashboard... TO DO -->
 
 This dashboard shows the different types of visits per data source (see [Visit Occurence Table](https://ohdsi.github.io/CommonDataModel/cdm531.html#visit_occurrence))
 
-## CSS
+### CSS {-}
 
 To hide the dashboard header insert the following css code to the `CSS` field on the edit page:
 
@@ -23,7 +23,7 @@ To hide the dashboard header insert the following css code to the `CSS` field on
 With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the "Edit Dashboard" button can show again.
 
-## Data Source Filter
+### Data Source Filter {-}
 
 <div class="figure">
 <img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
@@ -32,11 +32,11 @@ or remove it so the "Edit Dashboard" button can show again.
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
-### SQL query
+#### SQL query {-}
 
 No SQL query, use the sql table `data_source` of the `achilles` database.
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -49,14 +49,14 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
     - Date Filter: off
     - Instant Filtering: on
 
-## Visit Type Table {#visitTypeTable}
+### Visit Type Table {#visitTypeTable} {-}
 
 <div class="figure">
 <img src="images/06-visit/02-visit_types_table.png" alt="Settings for creating the Visit Type Table chart" width="100%" />
 <p class="caption">(\#fig:visitTypeTable)Settings for creating the Visit Type Table chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT source.name,
@@ -71,7 +71,7 @@ GROUP BY name, acronym, "Type"
 ORDER BY "Count" DESC
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -82,14 +82,14 @@ ORDER BY "Count" DESC
     - Query Mode: Raw Records
     - Columns: name with label "Data Source", Type, Count
 
-## Visit Types Bars
+### Visit Types Bars {-}
 
 <div class="figure">
 <img src="images/06-visit/03-visit_types_bars.png" alt="Settings for creating the Visit Types bar chart" width="100%" />
 <p class="caption">(\#fig:visitTypeBars)Settings for creating the Visit Types bar chart</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 ```sql
 SELECT source.name, 
@@ -102,7 +102,7 @@ INNER JOIN public.concept ON CAST(stratum_1 AS BIGINT) = concept_id
 WHERE analysis_id = 201
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type

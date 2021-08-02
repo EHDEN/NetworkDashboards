@@ -4,11 +4,11 @@ output: html_document
 
 
 
-# Provenance
+## Provenance
 
 This Dashboard shows the provenance of the data in the different data domains.
 
-## CSS
+### CSS {-}
 
 To hide the dashboard header insert the following css code to the `CSS` field on the edit page:
 
@@ -21,7 +21,7 @@ To hide the dashboard header insert the following css code to the `CSS` field on
 With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the "Edit Dashboard" button can show again.
 
-## Data Source Filter
+### Data Source Filter {-}
 
 <div class="figure">
 <img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
@@ -30,11 +30,11 @@ or remove it so the "Edit Dashboard" button can show again.
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
-### SQL query
+#### SQL query {-}
 
 No SQL query, use the sql table `data_source` of the `achilles` database.
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
@@ -47,14 +47,14 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
     - Date Filter: off
     - Instant Filtering: on
 
-## Condition & Drug & Procedure & Device & Measurement & Observation Types {#dataProvenanceCharts}
+### Condition & Drug & Procedure & Device & Measurement & Observation Types {#dataProvenanceCharts} {-}
 
 <div class="figure">
 <img src="images/09-provenance/02-condition_drug_procedure_device_measurement_observation_types.png" alt="Settings for creating the Condition, Drug, Procedure, Device, Measurement and Observation charts" width="100%" />
 <p class="caption">(\#fig:conditionDrugProcedureDeviceMeasurementObservationTypes)Settings for creating the Condition, Drug, Procedure, Device, Measurement and Observation charts</p>
 </div>
 
-### SQL query
+#### SQL query {-}
 
 All 6 charts use the same sql query.
            
@@ -84,7 +84,7 @@ GROUP BY source.name, source.acronym, concept_name,
     ELSE 'Other' END
 ```
 
-### Chart settings
+#### Chart settings {-}
 
 - Data Tab
   - Datasource & Chart Type
