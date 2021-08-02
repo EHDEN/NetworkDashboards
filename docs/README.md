@@ -1,28 +1,9 @@
-Network Dashboards is a Django application that allows to upload and manage data of the OMOP CDM databases so that this data can then be presented in charts and dashboards, allowing to analyze and compare databases. To create these charts and dashboards we make use of [Apache Superset](https://superset.apache.org/), a modern data exploration and visualization platform.
+## CDM-BI Documentation
 
-Instead of having a long document with all the documentation, below you have the index to the contents of all the documents present on this directory
+This branch contains the GitHub pages and the source code to generate those pages. The manual was written in [RMarkdown](https://rmarkdown.rstudio.com) using the [bookdown](https://bookdown.org) package. All the code is stored in the ''src'' directory as well as the script to build all the documentation.
 
-# Index
+**Do not change** the files in the root, because those files will be removed during the build and replaced by the new ones. Therefore, to update this documentation, change the files in directory ''src''.
 
-1. [Processes](processes.md): a description of the main processes an admin and/or a platform user can perform
+To build the documentation, you need to have R installed and if you are using UNIX-based systems, you only need to run `sh _build.sh`  in the directory ''src''.
 
-   1.1. [Data Sources](processes.md#data-sources)
-  
-   1.2. [Catalogue Results Files](processes.md#catalogue-results-files)
-  
-   1.3. [Materialized views](processes.md#materialized-views)
-  
-   1.4. [Tabs View [Deprecated]](processes.md#tabs-view-deprecated)
-  
-
-2. Other Features
-2.1
-
-3. Customizations
-3.1 Logo
-3.2 Texts
-
-4. Repository Description
-
-
-3. Development
+To edit the images containing the dashboards layout, please use the [Draw.io](https://draw.io) tool and the file ''Dashboards-layout.xml''.
