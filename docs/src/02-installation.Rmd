@@ -104,14 +104,15 @@ The concepts table is not in the repository due to its dimension, therefore we u
    - Go to `http://localhost` to access the dashboard viewer app.
    - Go to `http://localhost:8088` to access superset.
 
-5. On release 0.37 of Superset, there is a bug related to the public role and because of that, we had to set `PUBLIC_ROLE_LIKE_GAMMA = True` on Superset settings. This leads the public role with permissions that he shouldn't have. To solve this, so any anonymous user can view dashboards, you should remove all its permissions and then add the following:
+5. To any anonymous user view dashboards, add the following:
 
-   - can explore JSON on Superset
-   - can dashboard on Superset
    - all datasource access on all_datasource_access
    - can csrf token on Superset
-   - can list on CssTemplateAsyncModelView
+   - can dashboard on Superset
+   - can explore json on Superset
+   - can read on Chart
+   - can read on CssTemplate
 
 ### Dummy data {-}
 
-On a fresh installation, there are no achilles_results data so Superset's dashboards will display "No results". On the root of this repository, you can find the `demo` directory where we have an ACHILLES results file with synthetic data that you can upload to a data source on the uploader app of the dashboard viewer (localhost/uploader). If you wish to compare multiple data sources, on the `demo` directory the is also a python script that allows you to generate new ACHILLES results files, where it generates random count values based on the ranges of values for each set of analysis_id and stratums present on a base ACHILLES results file. So, from the one ACHILLES results fill we provided, you can have multiple data sources with different data.
+On a fresh installation, there are no achilles_results data so Superset's dashboards will display "No results". On the root of this repository, you can find the `demo` directory where we have an ACHILLES results file with synthetic data that you can upload to a data source on the uploader app of the dashboard viewer (http://localhost/uploader). If you wish to compare multiple data sources, on the `demo` directory there is also a python script that allows you to generate new ACHILLES results files, where it generates random count values based on the ranges of values for each set of analysis_id and stratums present on a base ACHILLES results file. So, from the one ACHILLES results fill we provided, you can have multiple data sources with different data.

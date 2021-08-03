@@ -33,10 +33,9 @@ or remove it so the "Edit Dashboard" button can show again.
 
 ### Data Source Filter {-}
 
-<div class="figure">
-<img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
-<p class="caption">(\#fig:dataSourceFilter)Settings for creating the Data Source filter chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}(\#fig:dataSourceFilter)
+\end{figure}
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
@@ -59,10 +58,9 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
 
 ### Age at first observation - Table {#age1ObservationTable} {-}
 
-<div class="figure">
-<img src="images/04-person/02-age_at_first_observation_table.png" alt="Settings for creating the Age at First Observation Table chart" width="100%" />
-<p class="caption">(\#fig:ageFirstObservationTable)Settings for creating the Age at First Observation Table chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/04-person/02-age_at_first_observation_table} \caption{Settings for creating the Age at First Observation Table chart}(\#fig:ageFirstObservationTable)
+\end{figure}
 
 #### SQL query {-}
 
@@ -102,10 +100,9 @@ GROUP BY name, acronym
 
 ### Age at first observation - Bars {#age1ObservationBars} {-}
 
-<div class="figure">
-<img src="images/04-person/03-age_at_first_observation_bar.png" alt="Settings for creating the Age at First Observation Bar chart" width="100%" />
-<p class="caption">(\#fig:ageFirstObservationBar)Settings for creating the Age at First Observation Bar chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/04-person/03-age_at_first_observation_bar} \caption{Settings for creating the Age at First Observation Bar chart}(\#fig:ageFirstObservationBar)
+\end{figure}
 
 #### SQL query {-}
 
@@ -141,10 +138,9 @@ WHERE analysis_id = 101
 
 ### Year of Birth {#yearOfBirth} {-}
 
-<div class="figure">
-<img src="images/04-person/04-year_of_birth.png" alt="Settings for creating the Year of Birth chart" width="100%" />
-<p class="caption">(\#fig:yearOfBirth)Settings for creating the Year of Birth chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/04-person/04-year_of_birth} \caption{Settings for creating the Year of Birth chart}(\#fig:yearOfBirth)
+\end{figure}
 
 #### SQL query {-}
 
@@ -182,10 +178,9 @@ WHERE analysis_id = 3
 
 ### Gender {-}
 
-<div class="figure">
-<img src="images/04-person/05-gender.png" alt="Settings for creating the Gender chart" width="100%" />
-<p class="caption">(\#fig:gender)Settings for creating the Gender chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/04-person/05-gender} \caption{Settings for creating the Gender chart}(\#fig:gender)
+\end{figure}
 
 #### SQL query {-}
 

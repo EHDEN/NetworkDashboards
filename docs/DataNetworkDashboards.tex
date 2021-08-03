@@ -120,7 +120,7 @@
 
 \title{Data Network Dashboards}
 \author{This document is currently under construction}
-\date{2021-08-02}
+\date{2021-08-03}
 
 \begin{document}
 \maketitle
@@ -367,20 +367,22 @@ ALTER TABLE concept OWNER TO achiller
     Go to \texttt{http://localhost:8088} to access superset.
   \end{itemize}
 \item
-  On release 0.37 of Superset, there is a bug related to the public role and because of that, we had to set \texttt{PUBLIC\_ROLE\_LIKE\_GAMMA\ =\ True} on Superset settings. This leads the public role with permissions that he shouldn't have. To solve this, so any anonymous user can view dashboards, you should remove all its permissions and then add the following:
+  To any anonymous user view dashboards, add the following:
 
   \begin{itemize}
   \tightlist
-  \item
-    can explore JSON on Superset
-  \item
-    can dashboard on Superset
   \item
     all datasource access on all\_datasource\_access
   \item
     can csrf token on Superset
   \item
-    can list on CssTemplateAsyncModelView
+    can dashboard on Superset
+  \item
+    can explore json on Superset
+  \item
+    can read on Chart
+  \item
+    can read on CssTemplate
   \end{itemize}
 \end{enumerate}
 
@@ -388,7 +390,7 @@ ALTER TABLE concept OWNER TO achiller
 \subsection*{Dummy data}\label{dummy-data}}
 \addcontentsline{toc}{subsection}{Dummy data}
 
-On a fresh installation, there are no achilles\_results data so Superset's dashboards will display ``No results''. On the root of this repository, you can find the \texttt{demo} directory where we have an ACHILLES results file with synthetic data that you can upload to a data source on the uploader app of the dashboard viewer (localhost/uploader). If you wish to compare multiple data sources, on the \texttt{demo} directory the is also a python script that allows you to generate new ACHILLES results files, where it generates random count values based on the ranges of values for each set of analysis\_id and stratums present on a base ACHILLES results file. So, from the one ACHILLES results fill we provided, you can have multiple data sources with different data.
+On a fresh installation, there are no achilles\_results data so Superset's dashboards will display ``No results''. On the root of this repository, you can find the \texttt{demo} directory where we have an ACHILLES results file with synthetic data that you can upload to a data source on the uploader app of the dashboard viewer (\url{http://localhost/uploader}). If you wish to compare multiple data sources, on the \texttt{demo} directory there is also a python script that allows you to generate new ACHILLES results files, where it generates random count values based on the ranges of values for each set of analysis\_id and stratums present on a base ACHILLES results file. So, from the one ACHILLES results fill we provided, you can have multiple data sources with different data.
 
 \hypertarget{processes}{%
 \chapter{Processes}\label{processes}}

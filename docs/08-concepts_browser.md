@@ -23,10 +23,9 @@ or remove it so the "Edit Dashboard" button can show again.
 
 ### Data Source and Domain Filters {-}
 
-<div class="figure">
-<img src="images/08-concepts_browser/01-filters.png" alt="Settings for creating the Data Source and Domain filter charts" width="100%" />
-<p class="caption">(\#fig:filters)Settings for creating the Data Source and Domain filter charts</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/08-concepts_browser/01-filters} \caption{Settings for creating the Data Source and Domain filter charts}(\#fig:filters)
+\end{figure}
 
 **For the filters to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
@@ -59,10 +58,9 @@ WHERE analysis_id in (201, 401, 601, 701, 801, 901, 1001, 1801, 200, 400, 600, 7
 
 ### Number of Concepts {-}
 
-<div class="figure">
-<img src="images/08-concepts_browser/02-number_of_concepts.png" alt="Settings for creating the Number of Concepts chart" width="100%" />
-<p class="caption">(\#fig:numOfConcepts)Settings for creating the Number of Concepts chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/08-concepts_browser/02-number_of_concepts} \caption{Settings for creating the Number of Concepts chart}(\#fig:numOfConcepts)
+\end{figure}
 
 #### SQL Query {-}
 
@@ -83,10 +81,9 @@ Same as [Data Source and Domain filters](#Data Source and Domain Filters) query
 
 ### Concept Browser Table {#conceptBrowserTable} {-}
 
-<div class="figure">
-<img src="images/08-concepts_browser/03-concepts_table.png" alt="Settings for creating the Concepts Table chart" width="100%" />
-<p class="caption">(\#fig:conceptsTable)Settings for creating the Concepts Table chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/08-concepts_browser/03-concepts_table} \caption{Settings for creating the Concepts Table chart}(\#fig:conceptsTable)
+\end{figure}
 
 ```sql
 SELECT

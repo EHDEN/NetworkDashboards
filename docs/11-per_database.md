@@ -35,10 +35,9 @@ or remove it so the "Edit Dashboard" button can show again.
 
 ### Data Source Filter {-}
 
-<div class="figure">
-<img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
-<p class="caption">(\#fig:dataSourceFilter)Settings for creating the Data Source filter chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}(\#fig:dataSourceFilter)
+\end{figure}
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
@@ -63,10 +62,9 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
 
 #### Number of Patients {-}
 
-<div class="figure">
-<img src="images/11-per_database/01-demographics/01-num_patients.png" alt="Settings for creating the Number of Patients chart" width="100%" />
-<p class="caption">(\#fig:numPatients)Settings for creating the Number of Patients chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/11-per_database/01-demographics/01-num_patients} \caption{Settings for creating the Number of Patients chart}(\#fig:numPatients)
+\end{figure}
 
 ##### SQL query {-}
 
@@ -95,10 +93,9 @@ WHERE analysis_id = 1
 
 #### Gender Table {-}
 
-<div class="figure">
-<img src="images/11-per_database/01-demographics/02-gender_table.png" alt="Settings for creating the Gender Table chart" width="100%" />
-<p class="caption">(\#fig:genderTable)Settings for creating the Gender Table chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/11-per_database/01-demographics/02-gender_table} \caption{Settings for creating the Gender Table chart}(\#fig:genderTable)
+\end{figure}
 
 ##### SQL Query {#genderTableQuery} {-}
 
@@ -131,10 +128,9 @@ WHERE analysis_id = 2
 
 #### Gender Pie {-}
 
-<div class="figure">
-<img src="images/11-per_database/01-demographics/03-gender_pie.png" alt="Settings for creating the Gender Pie chart" width="100%" />
-<p class="caption">(\#fig:genderPie)Settings for creating the Gender Pie chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/11-per_database/01-demographics/03-gender_pie} \caption{Settings for creating the Gender Pie chart}(\#fig:genderPie)
+\end{figure}
 
 ##### SQL query {-}
 
@@ -176,10 +172,9 @@ Same chart as the one used on the [Data Domains](#avgRecordsPerPerson) dashboard
 
 #### Total Number of Records {-}
 
-<div class="figure">
-<img src="images/11-per_database/02-data_domains/02-total_num_records.png" alt="Settings for creating the Total Number of Records chart" width="100%" />
-<p class="caption">(\#fig:totalNumRecords)Settings for creating the Total Number of Records chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/11-per_database/02-data_domains/02-total_num_records} \caption{Settings for creating the Total Number of Records chart}(\#fig:totalNumRecords)
+\end{figure}
 
 ##### SQL query {-}
 
@@ -231,10 +226,9 @@ Same chart used on the [Observation Period](#numInObservationPeriod) dashboard.
 
 The cumulative observation time plot shows the percentage of patients that have more that X days of observation time.
 
-<div class="figure">
-<img src="images/11-per_database/04-observation_period/02-cum_observation_period.png" alt="Settings for creating the Total Number of Records chart" width="100%" />
-<p class="caption">(\#fig:cumObservationTime)Settings for creating the Total Number of Records chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/11-per_database/04-observation_period/02-cum_observation_period} \caption{Settings for creating the Total Number of Records chart}(\#fig:cumObservationTime)
+\end{figure}
 
 ##### SQL Query {-}
 
@@ -284,10 +278,9 @@ ORDER BY name, xLengthOfObservation
 
 #### Visit Type Graph {-}
 
-<div class="figure">
-<img src="images/11-per_database/05-visit/01-visit_type_graph.png" alt="Settings for creating the Visit Type Graph chart" width="100%" />
-<p class="caption">(\#fig:visitTypeGraph)Settings for creating the Visit Type Graph chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/11-per_database/05-visit/01-visit_type_graph} \caption{Settings for creating the Visit Type Graph chart}(\#fig:visitTypeGraph)
+\end{figure}
 
 ##### SQL Query {-}
 
@@ -317,10 +310,9 @@ JOIN concept ON CAST(achilles_results.stratum_1 AS BIGINT) = concept.concept_id
 
 #### Visit Type Table {-}
 
-<div class="figure">
-<img src="images/11-per_database/05-visit/02-visit_type_table.png" alt="Settings for creating the Visit Type Table chart" width="100%" />
-<p class="caption">(\#fig:visitTypeTable)Settings for creating the Visit Type Table chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/11-per_database/05-visit/02-visit_type_table} \caption{Settings for creating the Visit Type Table chart}(\#fig:visitTypeTable)
+\end{figure}
 
 ##### SQL Query {-}
 

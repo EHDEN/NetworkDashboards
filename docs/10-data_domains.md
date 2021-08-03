@@ -23,10 +23,9 @@ or remove it so the "Edit Dashboard" button can show again.
 
 ### Data Source Filter {-}
 
-<div class="figure">
-<img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
-<p class="caption">(\#fig:dataSourceFilter)Settings for creating the Data Source filter chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}(\#fig:dataSourceFilter)
+\end{figure}
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
@@ -49,10 +48,9 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
 
 ### Average Number of Records per Person {#avgRecordsPerPerson} {-}
 
-<div class="figure">
-<img src="images/10-data_domain/02-avg_records_per_person.png" alt="Settings for creating the Data Source filter chart" width="100%" />
-<p class="caption">(\#fig:unnamed-chunk-1)Settings for creating the Data Source filter chart</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/10-data_domain/02-avg_records_per_person} \caption{Settings for creating the Data Source filter chart}(\#fig:unnamed-chunk-1)
+\end{figure}
 
 #### SQL query {-}
 

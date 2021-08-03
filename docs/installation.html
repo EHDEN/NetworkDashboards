@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2021-08-02" />
+<meta name="date" content="2021-08-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -334,19 +334,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Go to <code>http://localhost</code> to access the dashboard viewer app.</li>
 <li>Go to <code>http://localhost:8088</code> to access superset.</li>
 </ul></li>
-<li><p>On release 0.37 of Superset, there is a bug related to the public role and because of that, we had to set <code>PUBLIC_ROLE_LIKE_GAMMA = True</code> on Superset settings. This leads the public role with permissions that he shouldn’t have. To solve this, so any anonymous user can view dashboards, you should remove all its permissions and then add the following:</p>
+<li><p>To any anonymous user view dashboards, add the following:</p>
 <ul>
-<li>can explore JSON on Superset</li>
-<li>can dashboard on Superset</li>
 <li>all datasource access on all_datasource_access</li>
 <li>can csrf token on Superset</li>
-<li>can list on CssTemplateAsyncModelView</li>
+<li>can dashboard on Superset</li>
+<li>can explore json on Superset</li>
+<li>can read on Chart</li>
+<li>can read on CssTemplate</li>
 </ul></li>
 </ol>
 </div>
 <div id="dummy-data" class="section level3 unnumbered" number="">
 <h3>Dummy data</h3>
-<p>On a fresh installation, there are no achilles_results data so Superset’s dashboards will display “No results”. On the root of this repository, you can find the <code>demo</code> directory where we have an ACHILLES results file with synthetic data that you can upload to a data source on the uploader app of the dashboard viewer (localhost/uploader). If you wish to compare multiple data sources, on the <code>demo</code> directory the is also a python script that allows you to generate new ACHILLES results files, where it generates random count values based on the ranges of values for each set of analysis_id and stratums present on a base ACHILLES results file. So, from the one ACHILLES results fill we provided, you can have multiple data sources with different data.</p>
+<p>On a fresh installation, there are no achilles_results data so Superset’s dashboards will display “No results”. On the root of this repository, you can find the <code>demo</code> directory where we have an ACHILLES results file with synthetic data that you can upload to a data source on the uploader app of the dashboard viewer (<a href="http://localhost/uploader" class="uri">http://localhost/uploader</a>). If you wish to compare multiple data sources, on the <code>demo</code> directory there is also a python script that allows you to generate new ACHILLES results files, where it generates random count values based on the ranges of values for each set of analysis_id and stratums present on a base ACHILLES results file. So, from the one ACHILLES results fill we provided, you can have multiple data sources with different data.</p>
 
 </div>
 </div>
