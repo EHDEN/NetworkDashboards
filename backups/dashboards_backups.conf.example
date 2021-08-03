@@ -1,0 +1,6 @@
+RUN=1
+CONSTANCE_REDIS_DB=2
+APP_NAME=dashboards_backups
+SERVER=dropbox
+BACKUP_CHAIN_CONFIG="week:%H%M%S%f:4:2;month:%9M%S%f:4:2;:%H%M%S%f"
+CREDENTIALS_FILE_PATH=$HOME/NetworkDashboards/backups/.credentials
