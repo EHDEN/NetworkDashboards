@@ -173,9 +173,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7" data-path="development-instructions.html"><a href="development-instructions.html"><i class="fa fa-check"></i><b>7</b> Development Instructions</a>
 <ul>
-<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#repository-description"><i class="fa fa-check"></i>Repository Description</a></li>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#repository-structure-description"><i class="fa fa-check"></i>Repository Structure Description</a></li>
 <li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#superset"><i class="fa fa-check"></i>Superset</a></li>
-<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#github-checks"><i class="fa fa-check"></i>Github Checks</a></li>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#github-actions"><i class="fa fa-check"></i>Github Actions</a></li>
 <li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#tests"><i class="fa fa-check"></i>Tests</a></li>
 <li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#python-requirements"><i class="fa fa-check"></i>Python Requirements</a></li>
 <li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#documentation"><i class="fa fa-check"></i>Documentation</a></li>
@@ -291,20 +291,63 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="development-instructions" class="section level1" number="7">
 <h1><span class="header-section-number">Chapter 7</span> Development Instructions</h1>
-<div id="repository-description" class="section level3 unnumbered" number="">
-<h3>Repository Description</h3>
+<div id="repository-structure-description" class="section level3 unnumbered" number="">
+<h3>Repository Structure Description</h3>
+<ul>
+<li><p>backups: Scripts and configuration files to perform backups of all the data involved in the Network Dashboards applications (Dashboard viewer + Superset)</p></li>
+<li><p>dashboard_viewer: The Dashboard Viewer Django application to manage and upload catalogue results data. More detail can be found in the <a href="code-documentation.html">Code Documentation</a> chapter.</p></li>
+<li><p>demo: Files that can be used to test some processes of the platform (Upload catalogue results data and import a simple dashboard)</p></li>
+<li><p>docker: Docker-compose stack-related directories.</p>
+<ul>
+<li>Environment file</li>
+<li>Configuration directories (Nginx and Postgres)</li>
+<li>Custom Superest Dockerfile <!-- TODO link to the subsection on the Superset section --></li>
+</ul>
+<p>For more information about docker deployment consult the <a href="installation.html">Installation</a> chapter.</p></li>
+<li><p>docs: Where the files of this gitbook are hosted. Other output formats can also be obtained here. Consult the <a href="development-instructions.html#documentation">Documentation</a> section of this chapter for more details.</p></li>
+<li><p>superset: contains a submodule to the latest supported version of Superset’s repository and our custom chart plugins</p></li>
+<li><p>tests: contains files to launch a docker-compose stack specific to run tests.</p></li>
+<li><p>requirements-dev: python requirements files to the several tools to either perform code style checks or to run Django tests</p></li>
+<li><p>.pre-commit-config.yaml: configuration for the <a href="https://pre-commit.com/">pre-commit</a> tool. This is not mandatory to use but is a good tool to automatically fix problems related to code style on staged files</p></li>
+<li><p>setup.cfg: configurations for the several code style tools</p></li>
+<li><p>tox.ini: configuration for the <a href="https://tox.readthedocs.io/">tox</a> tool. It helps automate the process to check if the code style is correct and if the Django tests are passing</p>
+<p>It’s extremely useful in this context since different code style check tools that we use have some conflicts with python dependencies. It creates a virtual environment for each tox environment, in our case, for each code style check tool plus Django tests</p></li>
+</ul>
 </div>
 <div id="superset" class="section level3 unnumbered" number="">
 <h3>Superset</h3>
 </div>
-<div id="github-checks" class="section level3 unnumbered" number="">
-<h3>Github Checks</h3>
+<div id="github-actions" class="section level3 unnumbered" number="">
+<h3>Github Actions</h3>
 </div>
 <div id="tests" class="section level3 unnumbered" number="">
 <h3>Tests</h3>
 </div>
 <div id="python-requirements" class="section level3 unnumbered" number="">
 <h3>Python Requirements</h3>
+<p>The python requirements for the Dashboard Viewer Django app are present on the <code>requirements.txt</code> file of the <code>dashboard_viewer</code> directory.
+The file is divided into two sections.
+First are the direct dependencies.
+Dependencies that are directly used or imported by the Dashboard Viewer Django app.
+For better maintainability, every direct dependency has a small description in front of it, so any developer knows why it is being mentioned in the requirements file.
+The second part of the file contains the indirect dependencies.
+Basically dependencies of our direct dependencies.</p>
+<p>After any update is made to the direct dependencies the following procedure should be followed:</p>
+<ol style="list-style-type: decimal">
+<li>Create a new virtual environment just for the dependencies of this file</li>
+<li>Delete the indirect dependencies section of the file</li>
+<li>Install all the direct dependencies <code>pip install -r requirements.txt</code></li>
+<li>Append the result of pip’s freeze to the requirements file <code>pip freeze &gt;&gt; requirements.txt</code></li>
+<li>Remove from the second section of the file, duplicated entries of the first section of the file, in other words, remove from the indirect dependencies section the direct dependencies.</li>
+</ol>
+<p>With <a href="https://github.com/EHDEN/NetworkDashboards/pull/185">#185</a> we intend to start using the <a href="https://github.com/jazzband/pip-tools">pip-compile</a> tool.
+With it, we can have a file with the direct dependencies (requirements.in), and then pip-compile reads that file and automatically creates a requirements.txt file with all the dependencies and which package requires that specific dependency.
+The update process of dependencies will then just be</p>
+<ol style="list-style-type: decimal">
+<li>Install the pip-compile tool <code>pip install pip-tools</code></li>
+<li>Make the change to the direct dependencies on the requirements.in file (No need for a virtual environment)</li>
+<li>Call the pip-compile tool on the requirement.in file <code>pip-compile requirements.in</code></li>
+</ol>
 </div>
 <div id="documentation" class="section level3 unnumbered" number="">
 <h3>Documentation</h3>

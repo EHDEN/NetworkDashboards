@@ -3,7 +3,7 @@
 This platform is currently being used within the scope of the European Health Data & Evidence Network ([EHDEN](https://www.ehden.eu/)) project.
 To allow the dashboard viewer Django application to be easily used by another project or company, several components support customization in runtime, removing the need to change such things directly on the source code.
 
-To achieve this we make use of [Contance](https://github.com/jazzband/django-constance) that allows configuring several fields which then can be changed through the Django admin app.
+To achieve this we make use of [Constance](https://github.com/jazzband/django-constance) that allows configuring several fields which then can be changed through the Django admin app.
 
 ### Platform Logo {-}
 

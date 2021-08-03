@@ -817,7 +817,7 @@ sudo chown -R 999:999 docker/volumes/redis
 This platform is currently being used within the scope of the European Health Data \& Evidence Network (\href{https://www.ehden.eu/}{EHDEN}) project.
 To allow the dashboard viewer Django application to be easily used by another project or company, several components support customization in runtime, removing the need to change such things directly on the source code.
 
-To achieve this we make use of \href{https://github.com/jazzband/django-constance}{Contance} that allows configuring several fields which then can be changed through the Django admin app.
+To achieve this we make use of \href{https://github.com/jazzband/django-constance}{Constance} that allows configuring several fields which then can be changed through the Django admin app.
 
 \hypertarget{platform-logo}{%
 \subsection*{Platform Logo}\label{platform-logo}}
@@ -880,17 +880,56 @@ Them an additional draft field will be available on the edit data source form.
 \hypertarget{development-instructions}{%
 \chapter{Development Instructions}\label{development-instructions}}
 
-\hypertarget{repository-description}{%
-\subsection*{Repository Description}\label{repository-description}}
-\addcontentsline{toc}{subsection}{Repository Description}
+\hypertarget{repository-structure-description}{%
+\subsection*{Repository Structure Description}\label{repository-structure-description}}
+\addcontentsline{toc}{subsection}{Repository Structure Description}
+
+\begin{itemize}
+\item
+  backups: Scripts and configuration files to perform backups of all the data involved in the Network Dashboards applications (Dashboard viewer + Superset)
+\item
+  dashboard\_viewer: The Dashboard Viewer Django application to manage and upload catalogue results data. More detail can be found in the \href{code-documentation.html}{Code Documentation} chapter.
+\item
+  demo: Files that can be used to test some processes of the platform (Upload catalogue results data and import a simple dashboard)
+\item
+  docker: Docker-compose stack-related directories.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Environment file
+  \item
+    Configuration directories (Nginx and Postgres)
+  \item
+    Custom Superest Dockerfile
+  \end{itemize}
+
+  For more information about docker deployment consult the \href{installation.html}{Installation} chapter.
+\item
+  docs: Where the files of this gitbook are hosted. Other output formats can also be obtained here. Consult the \href{development-instructions.html\#documentation}{Documentation} section of this chapter for more details.
+\item
+  superset: contains a submodule to the latest supported version of Superset's repository and our custom chart plugins
+\item
+  tests: contains files to launch a docker-compose stack specific to run tests.
+\item
+  requirements-dev: python requirements files to the several tools to either perform code style checks or to run Django tests
+\item
+  .pre-commit-config.yaml: configuration for the \href{https://pre-commit.com/}{pre-commit} tool. This is not mandatory to use but is a good tool to automatically fix problems related to code style on staged files
+\item
+  setup.cfg: configurations for the several code style tools
+\item
+  tox.ini: configuration for the \href{https://tox.readthedocs.io/}{tox} tool. It helps automate the process to check if the code style is correct and if the Django tests are passing
+
+  It's extremely useful in this context since different code style check tools that we use have some conflicts with python dependencies. It creates a virtual environment for each tox environment, in our case, for each code style check tool plus Django tests
+\end{itemize}
 
 \hypertarget{superset}{%
 \subsection*{Superset}\label{superset}}
 \addcontentsline{toc}{subsection}{Superset}
 
-\hypertarget{github-checks}{%
-\subsection*{Github Checks}\label{github-checks}}
-\addcontentsline{toc}{subsection}{Github Checks}
+\hypertarget{github-actions}{%
+\subsection*{Github Actions}\label{github-actions}}
+\addcontentsline{toc}{subsection}{Github Actions}
 
 \hypertarget{tests}{%
 \subsection*{Tests}\label{tests}}
@@ -899,6 +938,46 @@ Them an additional draft field will be available on the edit data source form.
 \hypertarget{python-requirements}{%
 \subsection*{Python Requirements}\label{python-requirements}}
 \addcontentsline{toc}{subsection}{Python Requirements}
+
+The python requirements for the Dashboard Viewer Django app are present on the \texttt{requirements.txt} file of the \texttt{dashboard\_viewer} directory.
+The file is divided into two sections.
+First are the direct dependencies.
+Dependencies that are directly used or imported by the Dashboard Viewer Django app.
+For better maintainability, every direct dependency has a small description in front of it, so any developer knows why it is being mentioned in the requirements file.
+The second part of the file contains the indirect dependencies.
+Basically dependencies of our direct dependencies.
+
+After any update is made to the direct dependencies the following procedure should be followed:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Create a new virtual environment just for the dependencies of this file
+\item
+  Delete the indirect dependencies section of the file
+\item
+  Install all the direct dependencies \texttt{pip\ install\ -r\ requirements.txt}
+\item
+  Append the result of pip's freeze to the requirements file \texttt{pip\ freeze\ \textgreater{}\textgreater{}\ requirements.txt}
+\item
+  Remove from the second section of the file, duplicated entries of the first section of the file, in other words, remove from the indirect dependencies section the direct dependencies.
+\end{enumerate}
+
+With \href{https://github.com/EHDEN/NetworkDashboards/pull/185}{\#185} we intend to start using the \href{https://github.com/jazzband/pip-tools}{pip-compile} tool.
+With it, we can have a file with the direct dependencies (requirements.in), and then pip-compile reads that file and automatically creates a requirements.txt file with all the dependencies and which package requires that specific dependency.
+The update process of dependencies will then just be
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Install the pip-compile tool \texttt{pip\ install\ pip-tools}
+\item
+  Make the change to the direct dependencies on the requirements.in file (No need for a virtual environment)
+\item
+  Call the pip-compile tool on the requirement.in file \texttt{pip-compile\ requirements.in}
+\end{enumerate}
 
 \hypertarget{documentation}{%
 \subsection*{Documentation}\label{documentation}}
