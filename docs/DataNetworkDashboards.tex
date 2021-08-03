@@ -740,6 +740,16 @@ sudo chown -R 999:999 docker/volumes/redis
 \subsection*{Uploader Page Texts}\label{uploader-page-texts}}
 \addcontentsline{toc}{subsection}{Uploader Page Texts}
 
+\hypertarget{development-instructions}{%
+\chapter{Development Instructions}\label{development-instructions}}
+
+\hypertarget{repository-description}{%
+\subsection*{Repository Description}\label{repository-description}}
+\addcontentsline{toc}{subsection}{Repository Description}
+
+\hypertarget{code-documentation}{%
+\chapter{Code Documentation}\label{code-documentation}}
+
 \hypertarget{dashboards}{%
 \chapter{Dashboards}\label{dashboards}}
 
@@ -1898,7 +1908,9 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \subsection*{Database Type and Country Filter}\label{database-type-and-country-filter}}
 \addcontentsline{toc}{subsection}{Database Type and Country Filter}
 
-\label{fig:filters}Settings for creating filters charts
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/03-general/01-filters} \caption{Settings for creating filters charts}\label{fig:filters}
+\end{figure}
 
 Theses filter were designed to be used in the dashboard aiming the filtering of the data based on the field `'database\_type'' and ``country'' from the table `'data\_source''.
 
@@ -1971,7 +1983,9 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \subsection*{Total Number of Patients}\label{total-number-of-patients}}
 \addcontentsline{toc}{subsection}{Total Number of Patients}
 
-\label{fig:totalNumberOfPatients}Settings for creating the Total Number of Patients chart
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/03-general/02-total_number_of_patients} \caption{Settings for creating the Total Number of Patients chart}\label{fig:totalNumberOfPatients}
+\end{figure}
 
 \hypertarget{sql-query-9}{%
 \subsubsection*{SQL query}\label{sql-query-9}}
@@ -2053,7 +2067,9 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \subsection*{Network Growth by Date}\label{network-growth-by-date}}
 \addcontentsline{toc}{subsection}{Network Growth by Date}
 
-\label{fig:networkGrowthByDate}Settings for creating the Network Growth by Date chart
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/03-general/03-network_growth_by_date} \caption{Settings for creating the Network Growth by Date chart}\label{fig:networkGrowthByDate}
+\end{figure}
 
 \hypertarget{sql-query-10}{%
 \subsubsection*{SQL query}\label{sql-query-10}}
@@ -2151,7 +2167,9 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \subsection*{Patients per Country}\label{patients-per-country}}
 \addcontentsline{toc}{subsection}{Patients per Country}
 
-\label{fig:patientsPerCountry}Settings for creating the Patients per Country chart
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/03-general/04-patients_per_country} \caption{Settings for creating the Patients per Country chart}\label{fig:patientsPerCountry}
+\end{figure}
 
 \hypertarget{sql-query-patientspercountryquery}{%
 \subsubsection*{SQL query \{\#patientsPerCountryQuery\}}\label{sql-query-patientspercountryquery}}
@@ -2237,7 +2255,9 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \subsection*{Database Types per Country}\label{database-types-per-country}}
 \addcontentsline{toc}{subsection}{Database Types per Country}
 
-\label{fig:dbsTypesPerCountry}Settings for creating the Database Type per Country chart
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/03-general/05-database_types_per_country} \caption{Settings for creating the Database Type per Country chart}\label{fig:dbsTypesPerCountry}
+\end{figure}
 
 \hypertarget{sql-query-11}{%
 \subsubsection*{SQL query}\label{sql-query-11}}
@@ -2301,7 +2321,9 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \subsection*{World Map}\label{world-map}}
 \addcontentsline{toc}{subsection}{World Map}
 
-\label{fig:worldMap}Settings for creating the World Map chart
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/03-general/06-world_map} \caption{Settings for creating the World Map chart}\label{fig:worldMap}
+\end{figure}
 
 \hypertarget{sql-query-12}{%
 \subsubsection*{SQL query}\label{sql-query-12}}
@@ -2372,7 +2394,9 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \subsection*{Meta Data}\label{metaDataTable}}
 \addcontentsline{toc}{subsection}{Meta Data}
 
-\label{fig:metaData}Settings for creating the Meta Data chart
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/03-general/07-meta_data} \caption{Settings for creating the Meta Data chart}\label{fig:metaData}
+\end{figure}
 
 \hypertarget{sql-query-13}{%
 \subsubsection*{SQL query}\label{sql-query-13}}
@@ -4435,16 +4459,6 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
     \end{itemize}
   \end{itemize}
 \end{itemize}
-
-\hypertarget{development-instructions}{%
-\chapter{Development Instructions}\label{development-instructions}}
-
-\hypertarget{repository-description}{%
-\subsection*{Repository Description}\label{repository-description}}
-\addcontentsline{toc}{subsection}{Repository Description}
-
-\hypertarget{code-documentation}{%
-\chapter{Code Documentation}\label{code-documentation}}
 
   \bibliography{refs.bib}
 

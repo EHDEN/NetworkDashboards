@@ -30,6 +30,8 @@ rmd_files: [
   "processes.Rmd",
   "backups.Rmd",
   "customizations.Rmd",
+  "development.Rmd",
+  "code-documentation.Rmd",
   "11-per_database.Rmd",
   "12-database_level_dashboard.Rmd",
   "03-general.Rmd",
@@ -39,7 +41,5 @@ rmd_files: [
   "07-death.Rmd",
   "08-concepts_browser.Rmd",
   "09-provenance.Rmd",
-  "10-data_domains.Rmd",
-  "development.Rmd",
-  "code-documentation.Rmd"
+  "10-data_domains.Rmd"
 ]

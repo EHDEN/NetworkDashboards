@@ -1,10 +1,6 @@
-fig:filters
-fig:totalNumberOfPatients
-fig:networkGrowthByDate
-fig:patientsPerCountry
-fig:dbsTypesPerCountry
-fig:worldMap
-fig:metaData
+fig:dataSourceFilter
+fig:conditionDrugProcedureDeviceMeasurementObservationTypes
+fig:unnamed-chunk-1
 preface
 introduction
 installation
@@ -12,6 +8,8 @@ processes
 backups
 restore
 customizations
+development-instructions
+code-documentation
 dashboards
 PerDatabaseDashboard
 database-level-dashboard
@@ -23,5 +21,3 @@ death-deprecated
 concepts-browser-deprecated
 provenance-deprecated
 data-domains-deprecated
-development-instructions
-code-documentation

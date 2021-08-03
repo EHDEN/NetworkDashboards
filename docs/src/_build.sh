@@ -15,10 +15,10 @@ for pid in $pids ; do
     fi
 done
 
-if [ ! -z $errors ] ; then
+if ! [ -z "$errors" ] ; then
     echo "\n\nlaunched processes:"
     echo "$outputs with pids $pids"
-    echo "$errors failed"
+    echo "$errors failed\n\n"
 
     for output in $outputs ; do
         echo "output $output"
