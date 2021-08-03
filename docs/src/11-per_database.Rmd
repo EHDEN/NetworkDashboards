@@ -6,6 +6,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Dashboards
+
 ## Per Database {#PerDatabaseDashboard}
 
 <!-- Discuss the goal of this dashboard... TO DO -->

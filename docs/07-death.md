@@ -4,7 +4,7 @@ output: html_document
 
 
 
-## Death
+## Death [Deprecated]
 
 <!-- Discuss the goal of this dashboard... TO DO -->
 

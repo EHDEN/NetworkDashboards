@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Installation | Data Network Dashboards</title>
+  <title>7.8 Concepts Browser [Deprecated] | Data Network Dashboards</title>
   <meta name="description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Installation | Data Network Dashboards" />
+  <meta property="og:title" content="7.8 Concepts Browser [Deprecated] | Data Network Dashboards" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Installation | Data Network Dashboards" />
+  <meta name="twitter:title" content="7.8 Concepts Browser [Deprecated] | Data Network Dashboards" />
   
   <meta name="twitter:description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="introduction.html"/>
-<link rel="next" href="processes.html"/>
+<link rel="prev" href="death-deprecated.html"/>
+<link rel="next" href="provenance-deprecated.html"/>
 <script src="libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -282,87 +282,171 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="installation" class="section level1" number="3">
-<h1><span class="header-section-number">Chapter 3</span> Installation</h1>
-<p>Currently, we use docker to deploy our environment</p>
-<div id="first-steps" class="section level3 unnumbered" number="">
-<h3>First Steps</h3>
-<ol style="list-style-type: decimal">
-<li><p>Clone the repository with the command <code>git clone --recurse-submodules https://github.com/EHDEN/NetworkDashboards</code>. If you already cloned the repository without the <code>--recurse-submodules</code> option, run <code>git submodule update --init</code> to fetch the superset submodule.</p></li>
-<li><p>Create a <code>.env</code> file on the <code>docker</code> directory, using <code>.env-example</code> as a reference, setting all necessary environment variables (<code>SUPERSET\_MAPBOX\_API\_KEY</code> and <code>DASHBOARD\_VIEWER\_SECRET\_KEY</code>).</p></li>
-</ol>
+<div id="concepts-browser-deprecated" class="section level2" number="7.8">
+<h2><span class="header-section-number">7.8</span> Concepts Browser [Deprecated]</h2>
+<p>The concepts browser allows you to search for concepts by name or concept_id in all the data sources you select. No exact number of patients or occurrences are provided but the magnitude of both.</p>
+<div id="css-7" class="section level3 unnumbered" number="">
+<h3>CSS</h3>
+<p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb43-1"><a href="concepts-browser-deprecated.html#cb43-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
+<span id="cb43-2"><a href="concepts-browser-deprecated.html#cb43-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb43-3"><a href="concepts-browser-deprecated.html#cb43-3" aria-hidden="true"></a>}</span></code></pre></div>
+<p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
+or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
-<div id="dashboard-viewer-setup" class="section level3 unnumbered" number="">
-<h3>Dashboard Viewer setup</h3>
-<ol style="list-style-type: decimal">
-<li><p>If you wish to expose the dashboard viewer app through a specific domain(s) you must add it/them to the <code>ALLOWED_HOSTS</code> list on file <code>dashboard_viewer/dashboard_viewer/settings.py</code> and remove the <code>'*'</code> entry.</p></li>
-<li><p>Build containers’ images: <code>docker-compose build</code>. This might take several minutes.</p></li>
-<li><p>Set up the database and create an admin account for the dashboard viewer app: <code>docker-compose run --rm dashboard ./docker-init.sh</code>.</p></li>
-</ol>
+<div id="data-source-and-domain-filters" class="section level3 unnumbered" number="">
+<h3>Data Source and Domain Filters</h3>
+<p><strong>For the filters to work the name of the fields to filter should match in all tables used on the charts of this dashboard.</strong></p>
+<div id="sql-query-29" class="section level4 unnumbered" number="">
+<h4>SQL query</h4>
+<div class="sourceCode" id="cb44"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb44-1"><a href="concepts-browser-deprecated.html#cb44-1" aria-hidden="true"></a><span class="kw">SELECT</span> concept_name,</span>
+<span id="cb44-2"><a href="concepts-browser-deprecated.html#cb44-2" aria-hidden="true"></a>     domain_id,</span>
+<span id="cb44-3"><a href="concepts-browser-deprecated.html#cb44-3" aria-hidden="true"></a>     <span class="kw">source</span>.name <span class="kw">AS</span> source_name,</span>
+<span id="cb44-4"><a href="concepts-browser-deprecated.html#cb44-4" aria-hidden="true"></a>     <span class="kw">source</span>.acronym</span>
+<span id="cb44-5"><a href="concepts-browser-deprecated.html#cb44-5" aria-hidden="true"></a><span class="kw">FROM</span> achilles_results</span>
+<span id="cb44-6"><a href="concepts-browser-deprecated.html#cb44-6" aria-hidden="true"></a><span class="kw">JOIN</span> concept <span class="kw">ON</span> <span class="fu">cast</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
+<span id="cb44-7"><a href="concepts-browser-deprecated.html#cb44-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb44-8"><a href="concepts-browser-deprecated.html#cb44-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="kw">in</span> (<span class="dv">201</span>, <span class="dv">401</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">901</span>, <span class="dv">1001</span>, <span class="dv">1801</span>, <span class="dv">200</span>, <span class="dv">400</span>, <span class="dv">600</span>, <span class="dv">700</span>, <span class="dv">800</span>, <span class="dv">1800</span>)</span></code></pre></div>
 </div>
-<div id="insert-concepts" class="section level3 unnumbered" number="">
-<h3>Insert Concepts</h3>
-<p>The concepts table is not in the repository due to its dimension, therefore we use directly the Postgres console to insert this table in the installation.</p>
-<ol style="list-style-type: decimal">
-<li><p>Get your concept csv file from <a href="https://athena.ohdsi.org/">Athena</a></p></li>
-<li><p>Copy the file into postgres container</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="installation.html#cb1-1" aria-hidden="true"></a><span class="ex">docker</span> cp concept.csv dashboard_viewer_postgres_1:/tmp/</span></code></pre></div></li>
-<li><p>Enter in the postgres container:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="installation.html#cb2-1" aria-hidden="true"></a><span class="ex">docker</span> exec -it dashboard_viewer_postgres_1 bash</span></code></pre></div></li>
-<li><p>Enter in the <code>achilles</code> database (value of the variable <code>POSTGRES_ACHILLES_DB</code> on the .env file) with the <code>root</code> user (value of the variable <code>POSTGRES_ROOT_USER</code> on the .env file):</p>
-<pre><code>psql achilles root</code></pre></li>
-<li><p>Create the <code>concept</code> table</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="installation.html#cb4-1" aria-hidden="true"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> concept (</span>
-<span id="cb4-2"><a href="installation.html#cb4-2" aria-hidden="true"></a>  concept_id         <span class="dt">INTEGER</span>        <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-3"><a href="installation.html#cb4-3" aria-hidden="true"></a>  concept_name       <span class="dt">VARCHAR</span>(<span class="dv">255</span>)   <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-4"><a href="installation.html#cb4-4" aria-hidden="true"></a>  domain_id          <span class="dt">VARCHAR</span>(<span class="dv">20</span>)    <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-5"><a href="installation.html#cb4-5" aria-hidden="true"></a>  vocabulary_id      <span class="dt">VARCHAR</span>(<span class="dv">20</span>)    <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-6"><a href="installation.html#cb4-6" aria-hidden="true"></a>  concept_class_id   <span class="dt">VARCHAR</span>(<span class="dv">20</span>)    <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-7"><a href="installation.html#cb4-7" aria-hidden="true"></a>  standard_concept   <span class="dt">VARCHAR</span>(<span class="dv">1</span>)     <span class="kw">NULL</span>,</span>
-<span id="cb4-8"><a href="installation.html#cb4-8" aria-hidden="true"></a>  concept_code       <span class="dt">VARCHAR</span>(<span class="dv">50</span>)    <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-9"><a href="installation.html#cb4-9" aria-hidden="true"></a>  valid_start_date   <span class="dt">DATE</span>           <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-10"><a href="installation.html#cb4-10" aria-hidden="true"></a>  valid_end_date     <span class="dt">DATE</span>           <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-11"><a href="installation.html#cb4-11" aria-hidden="true"></a>  invalid_reason     <span class="dt">VARCHAR</span>(<span class="dv">1</span>)     <span class="kw">NULL</span></span>
-<span id="cb4-12"><a href="installation.html#cb4-12" aria-hidden="true"></a>);</span></code></pre></div></li>
-<li><p>Copy the CSV file content to the table (this could take a while)</p>
-<p>To get both <code>'</code> (single quotes) and <code>"</code> (double quotes) on the <code>concept_name</code> column we use a workaround by setting the quote character to one that should never be in the text. Here we used <code>\b</code> (backslash).</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="installation.html#cb5-1" aria-hidden="true"></a><span class="kw">COPY</span> <span class="kw">public</span>.concept <span class="kw">FROM</span> <span class="st">&#39;/tmp/concept.csv&#39;</span> <span class="kw">WITH</span> CSV <span class="kw">HEADER</span></span>
-<span id="cb5-2"><a href="installation.html#cb5-2" aria-hidden="true"></a>  DELIMITER E<span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span> QUOTE E<span class="st">&#39;</span><span class="ch">\b</span><span class="st">&#39;</span>;</span></code></pre></div></li>
-<li><p>Create index in table (this could take a while):</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="installation.html#cb6-1" aria-hidden="true"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> concept_concept_id_index <span class="kw">ON</span> concept (concept_id);</span>
-<span id="cb6-2"><a href="installation.html#cb6-2" aria-hidden="true"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> concept_concept_name_index <span class="kw">ON</span> concept (concept_name);</span></code></pre></div></li>
-<li><p>Set the owner of the <code>concept</code> table to the <code>achilles</code> user (value of the variable <code>POSTGRES_ACHILLES_USER</code> on the .env file):</p>
-<pre><code>ALTER TABLE concept OWNER TO achiller</code></pre></li>
-<li><p>Bring up the containers: <code>docker-compose up -d</code>.</p></li>
-<li><p>Run the command <code>docker-compose run --rm dashboard python manage.py generate_materialized_views</code> to create the materialized views on Postgres.</p></li>
-</ol>
-</div>
-<div id="superset-setup" class="section level3 unnumbered" number="">
-<h3>Superset setup</h3>
-<ol style="list-style-type: decimal">
-<li><p>Make sure that the container <code>superset-init</code> has finished before continuing. It is creating the necessary tables on the database and creating permissions and roles.</p></li>
-<li><p>Execute the script <code>./superset/one_time_run_scripts/superset-init.sh</code>. This will create an admin account and associate the <code>achilles</code> database to Superset. <strong>Attention:</strong> You must be in the docker directory to execute this script.</p></li>
-<li><p>We have already built some dashboards so if you want to import them run the script <code>./superset/one_time_run_scripts/load_dashboards.sh</code>. <strong>Attention:</strong> You must be in the docker directory to execute this script.</p></li>
-<li><p>If you used the default ports:</p>
+<div id="chart-settings-31" class="section level4 unnumbered" number="">
+<h4>Chart settings</h4>
 <ul>
-<li>Go to <code>http://localhost</code> to access the dashboard viewer app.</li>
-<li>Go to <code>http://localhost:8088</code> to access superset.</li>
-</ul></li>
-<li><p>To any anonymous user view dashboards, add the following:</p>
+<li>Data Tab
 <ul>
-<li>all datasource access on all_datasource_access</li>
-<li>can csrf token on Superset</li>
-<li>can dashboard on Superset</li>
-<li>can explore json on Superset</li>
-<li>can read on Chart</li>
-<li>can read on CssTemplate</li>
+<li>Datasource &amp; Chart Type
+<ul>
+<li>Visualization Type: Filter Box</li>
 </ul></li>
-</ol>
+<li>Time
+<ul>
+<li>Time range: No filter</li>
+</ul></li>
+<li>Filters Configuration
+<ul>
+<li>Filters:
+<ul>
+<li>source_name or domain_id</li>
+</ul></li>
+<li>Date Filter: off</li>
+<li>Instant Filtering: on</li>
+</ul></li>
+</ul></li>
+</ul>
 </div>
-<div id="dummy-data" class="section level3 unnumbered" number="">
-<h3>Dummy data</h3>
-<p>On a fresh installation, there are no achilles_results data so Superset’s dashboards will display “No results”. On the root of this repository, you can find the <code>demo</code> directory where we have an ACHILLES results file with synthetic data that you can upload to a data source on the uploader app of the dashboard viewer (<a href="http://localhost/uploader" class="uri">http://localhost/uploader</a>). If you wish to compare multiple data sources, on the <code>demo</code> directory there is also a python script that allows you to generate new ACHILLES results files, where it generates random count values based on the ranges of values for each set of analysis_id and stratums present on a base ACHILLES results file. So, from the one ACHILLES results fill we provided, you can have multiple data sources with different data.</p>
+</div>
+<div id="number-of-concepts" class="section level3 unnumbered" number="">
+<h3>Number of Concepts</h3>
+<div id="sql-query-30" class="section level4 unnumbered" number="">
+<h4>SQL Query</h4>
+<p>Same as <a href="#Data%20Source%20and%20Domain%20Filters">Data Source and Domain filters</a> query</p>
+</div>
+<div id="chart-settings-32" class="section level4 unnumbered" number="">
+<h4>Chart settings</h4>
+<ul>
+<li>Data Tab
+<ul>
+<li>Datasource &amp; Chart Type
+<ul>
+<li>Visualization Type: Big Number</li>
+</ul></li>
+<li>Time
+Time range: No filter</li>
+<li>Query
+<ul>
+<li>Metric: COUNT_DISTINCT(concept_name) with label Concepts</li>
+</ul></li>
+</ul></li>
+<li>Customize Tab
+<ul>
+<li>Big Number Font Size: Small</li>
+<li>Subheader Font Size: Tiny</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="concept-browser-table-conceptbrowsertable" class="section level3 unnumbered" number="">
+<h3>Concept Browser Table {#conceptBrowserTable}</h3>
+<div class="sourceCode" id="cb45"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb45-1"><a href="concepts-browser-deprecated.html#cb45-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
+<span id="cb45-2"><a href="concepts-browser-deprecated.html#cb45-2" aria-hidden="true"></a>    q1.concept_id <span class="kw">AS</span> concept_id,</span>
+<span id="cb45-3"><a href="concepts-browser-deprecated.html#cb45-3" aria-hidden="true"></a>    q1.concept_name <span class="kw">AS</span> concept_name,</span>
+<span id="cb45-4"><a href="concepts-browser-deprecated.html#cb45-4" aria-hidden="true"></a>    q1.domain_id,</span>
+<span id="cb45-5"><a href="concepts-browser-deprecated.html#cb45-5" aria-hidden="true"></a>    <span class="kw">source</span>.name <span class="kw">AS</span> source_name,</span>
+<span id="cb45-6"><a href="concepts-browser-deprecated.html#cb45-6" aria-hidden="true"></a>    <span class="kw">source</span>.acronym,</span>
+<span id="cb45-7"><a href="concepts-browser-deprecated.html#cb45-7" aria-hidden="true"></a>    <span class="fu">sum</span>(q1.count_value) <span class="kw">as</span> <span class="ot">&quot;Occurrence_count&quot;</span>,</span>
+<span id="cb45-8"><a href="concepts-browser-deprecated.html#cb45-8" aria-hidden="true"></a>    <span class="fu">sum</span>(q1.count_person) <span class="kw">as</span> <span class="ot">&quot;Person_count&quot;</span>,</span>
+<span id="cb45-9"><a href="concepts-browser-deprecated.html#cb45-9" aria-hidden="true"></a>    <span class="cf">CASE</span> </span>
+<span id="cb45-10"><a href="concepts-browser-deprecated.html#cb45-10" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">10</span> <span class="cf">THEN</span> <span class="st">&#39;&lt;=10&#39;</span></span>
+<span id="cb45-11"><a href="concepts-browser-deprecated.html#cb45-11" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">100</span> <span class="cf">THEN</span> <span class="st">&#39;11-10ˆ2&#39;</span></span>
+<span id="cb45-12"><a href="concepts-browser-deprecated.html#cb45-12" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">1000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ2-10ˆ3&#39;</span></span>
+<span id="cb45-13"><a href="concepts-browser-deprecated.html#cb45-13" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">10000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ3-10ˆ4&#39;</span></span>
+<span id="cb45-14"><a href="concepts-browser-deprecated.html#cb45-14" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">100000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ4-10ˆ5&#39;</span></span>
+<span id="cb45-15"><a href="concepts-browser-deprecated.html#cb45-15" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">1000000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ5-10ˆ6&#39;</span></span>
+<span id="cb45-16"><a href="concepts-browser-deprecated.html#cb45-16" aria-hidden="true"></a>        <span class="cf">ELSE</span> <span class="st">&#39;&gt;10ˆ6&#39;</span></span>
+<span id="cb45-17"><a href="concepts-browser-deprecated.html#cb45-17" aria-hidden="true"></a>    <span class="cf">END</span> <span class="kw">as</span> <span class="ot">&quot;magnitude_occurrences&quot;</span>,</span>
+<span id="cb45-18"><a href="concepts-browser-deprecated.html#cb45-18" aria-hidden="true"></a>    <span class="cf">CASE</span> </span>
+<span id="cb45-19"><a href="concepts-browser-deprecated.html#cb45-19" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">10</span> <span class="cf">THEN</span> <span class="st">&#39;&lt;=10&#39;</span></span>
+<span id="cb45-20"><a href="concepts-browser-deprecated.html#cb45-20" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">100</span> <span class="cf">THEN</span> <span class="st">&#39;11-10ˆ2&#39;</span></span>
+<span id="cb45-21"><a href="concepts-browser-deprecated.html#cb45-21" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">1000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ2-10ˆ3&#39;</span></span>
+<span id="cb45-22"><a href="concepts-browser-deprecated.html#cb45-22" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">10000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ3-10ˆ4&#39;</span></span>
+<span id="cb45-23"><a href="concepts-browser-deprecated.html#cb45-23" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">100000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ4-10ˆ5&#39;</span></span>
+<span id="cb45-24"><a href="concepts-browser-deprecated.html#cb45-24" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">1000000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ5-10ˆ6&#39;</span></span>
+<span id="cb45-25"><a href="concepts-browser-deprecated.html#cb45-25" aria-hidden="true"></a>        <span class="cf">ELSE</span> <span class="st">&#39;&gt;10ˆ6&#39;</span></span>
+<span id="cb45-26"><a href="concepts-browser-deprecated.html#cb45-26" aria-hidden="true"></a>    <span class="cf">END</span> <span class="kw">AS</span> <span class="ot">&quot;magnitude_persons&quot;</span></span>
+<span id="cb45-27"><a href="concepts-browser-deprecated.html#cb45-27" aria-hidden="true"></a><span class="kw">FROM</span> (<span class="kw">SELECT</span> analysis_id,</span>
+<span id="cb45-28"><a href="concepts-browser-deprecated.html#cb45-28" aria-hidden="true"></a>             stratum_1 concept_id,</span>
+<span id="cb45-29"><a href="concepts-browser-deprecated.html#cb45-29" aria-hidden="true"></a>             data_source_id,</span>
+<span id="cb45-30"><a href="concepts-browser-deprecated.html#cb45-30" aria-hidden="true"></a>             concept_name,</span>
+<span id="cb45-31"><a href="concepts-browser-deprecated.html#cb45-31" aria-hidden="true"></a>             domain_id,</span>
+<span id="cb45-32"><a href="concepts-browser-deprecated.html#cb45-32" aria-hidden="true"></a>             count_value, <span class="dv">0</span> <span class="kw">as</span> count_person</span>
+<span id="cb45-33"><a href="concepts-browser-deprecated.html#cb45-33" aria-hidden="true"></a>    <span class="kw">FROM</span> achilles_results</span>
+<span id="cb45-34"><a href="concepts-browser-deprecated.html#cb45-34" aria-hidden="true"></a>    <span class="kw">JOIN</span> concept <span class="kw">ON</span> <span class="fu">cast</span>(stratum_1 <span class="kw">AS</span> BIGINT)<span class="op">=</span>concept_id</span>
+<span id="cb45-35"><a href="concepts-browser-deprecated.html#cb45-35" aria-hidden="true"></a>    <span class="kw">WHERE</span> analysis_id <span class="kw">in</span> (<span class="dv">201</span>, <span class="dv">301</span>, <span class="dv">401</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">901</span>, <span class="dv">1001</span>, <span class="dv">1801</span>)</span>
+<span id="cb45-36"><a href="concepts-browser-deprecated.html#cb45-36" aria-hidden="true"></a>    <span class="kw">UNION</span> (<span class="kw">SELECT</span>  analysis_id,</span>
+<span id="cb45-37"><a href="concepts-browser-deprecated.html#cb45-37" aria-hidden="true"></a>                   stratum_1 concept_id,</span>
+<span id="cb45-38"><a href="concepts-browser-deprecated.html#cb45-38" aria-hidden="true"></a>                   data_source_id,</span>
+<span id="cb45-39"><a href="concepts-browser-deprecated.html#cb45-39" aria-hidden="true"></a>                   concept_name,</span>
+<span id="cb45-40"><a href="concepts-browser-deprecated.html#cb45-40" aria-hidden="true"></a>                   domain_id,</span>
+<span id="cb45-41"><a href="concepts-browser-deprecated.html#cb45-41" aria-hidden="true"></a>                   <span class="dv">0</span> <span class="kw">as</span> count_value,</span>
+<span id="cb45-42"><a href="concepts-browser-deprecated.html#cb45-42" aria-hidden="true"></a>                   <span class="fu">sum</span>(count_value) <span class="kw">as</span> count_person</span>
+<span id="cb45-43"><a href="concepts-browser-deprecated.html#cb45-43" aria-hidden="true"></a>            <span class="kw">FROM</span>  achilles_results</span>
+<span id="cb45-44"><a href="concepts-browser-deprecated.html#cb45-44" aria-hidden="true"></a>            <span class="kw">JOIN</span> concept <span class="kw">on</span> <span class="fu">cast</span>(stratum_1 <span class="kw">as</span> BIGINT)<span class="op">=</span>concept_id</span>
+<span id="cb45-45"><a href="concepts-browser-deprecated.html#cb45-45" aria-hidden="true"></a>            <span class="kw">WHERE</span> analysis_id <span class="kw">in</span> (<span class="dv">202</span>, <span class="dv">401</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">901</span>, <span class="dv">1001</span>, <span class="dv">1801</span>)</span>
+<span id="cb45-46"><a href="concepts-browser-deprecated.html#cb45-46" aria-hidden="true"></a>            <span class="kw">GROUP</span> <span class="kw">BY</span> analysis_id,stratum_1,data_source_id,concept_name,domain_id) ) <span class="kw">as</span> q1</span>
+<span id="cb45-47"><a href="concepts-browser-deprecated.html#cb45-47" aria-hidden="true"></a>    <span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> q1.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb45-48"><a href="concepts-browser-deprecated.html#cb45-48" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> q1.concept_id,q1.concept_name,q1.domain_id,<span class="kw">source</span>.name, acronym</span>
+<span id="cb45-49"><a href="concepts-browser-deprecated.html#cb45-49" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="ot">&quot;Person_count&quot;</span> <span class="kw">desc</span></span></code></pre></div>
+<div id="chart-settings-33" class="section level4 unnumbered" number="">
+<h4>Chart settings</h4>
+<ul>
+<li>Data Tab
+<ul>
+<li>Datasource &amp; Chart Type
+<ul>
+<li>Visualization Type: Table</li>
+</ul></li>
+<li>Time
+<ul>
+<li>Time range: No filter</li>
+</ul></li>
+<li>Query
+<ul>
+<li>Query Mode: Raw Records</li>
+<li>Columns: source_name, concept_id, concept_name, domain_id, magnitude_persons, magnitude_occurrences</li>
+</ul></li>
+</ul></li>
+<li>Customize Tab
+<ul>
+<li>Options
+<ul>
+<li>Table Timestamps Format: %Y-%m-%d %H:%M:%S | 2019-01-14 01:32:10</li>
+<li>Page Length: 50</li>
+<li>Search Box: on</li>
+<li>Emit Filter Events: on</li>
+</ul></li>
+</ul></li>
+</ul>
 
+</div>
 </div>
 </div>
             </section>
@@ -370,8 +454,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="introduction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="processes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="death-deprecated.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="provenance-deprecated.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -403,7 +487,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/EHDEN/NetworkDashboards/edit/master/02-installation.Rmd",
+"link": "https://github.com/EHDEN/NetworkDashboards/edit/master/08-concepts_browser.Rmd",
 "text": "Edit"
 },
 "history": {

@@ -4,7 +4,7 @@ output: html_document
 
 
 
-## Person
+## Person [Deprecated]
 
 ### Label Colors  {-}
 

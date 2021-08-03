@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Installation | Data Network Dashboards</title>
+  <title>7.6 Visit [Deprecated] | Data Network Dashboards</title>
   <meta name="description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Installation | Data Network Dashboards" />
+  <meta property="og:title" content="7.6 Visit [Deprecated] | Data Network Dashboards" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Installation | Data Network Dashboards" />
+  <meta name="twitter:title" content="7.6 Visit [Deprecated] | Data Network Dashboards" />
   
   <meta name="twitter:description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="introduction.html"/>
-<link rel="next" href="processes.html"/>
+<link rel="prev" href="observation-period-deprecated.html"/>
+<link rel="next" href="death-deprecated.html"/>
 <script src="libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -282,87 +282,139 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="installation" class="section level1" number="3">
-<h1><span class="header-section-number">Chapter 3</span> Installation</h1>
-<p>Currently, we use docker to deploy our environment</p>
-<div id="first-steps" class="section level3 unnumbered" number="">
-<h3>First Steps</h3>
-<ol style="list-style-type: decimal">
-<li><p>Clone the repository with the command <code>git clone --recurse-submodules https://github.com/EHDEN/NetworkDashboards</code>. If you already cloned the repository without the <code>--recurse-submodules</code> option, run <code>git submodule update --init</code> to fetch the superset submodule.</p></li>
-<li><p>Create a <code>.env</code> file on the <code>docker</code> directory, using <code>.env-example</code> as a reference, setting all necessary environment variables (<code>SUPERSET\_MAPBOX\_API\_KEY</code> and <code>DASHBOARD\_VIEWER\_SECRET\_KEY</code>).</p></li>
-</ol>
+<div id="visit-deprecated" class="section level2" number="7.6">
+<h2><span class="header-section-number">7.6</span> Visit [Deprecated]</h2>
+<!-- Discuss the goal of this dashboard... TO DO -->
+<p>This dashboard shows the different types of visits per data source (see <a href="https://ohdsi.github.io/CommonDataModel/cdm531.html#visit_occurrence">Visit Occurence Table</a>)</p>
+<div id="css-5" class="section level3 unnumbered" number="">
+<h3>CSS</h3>
+<p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb37-1"><a href="visit-deprecated.html#cb37-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
+<span id="cb37-2"><a href="visit-deprecated.html#cb37-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb37-3"><a href="visit-deprecated.html#cb37-3" aria-hidden="true"></a>}</span></code></pre></div>
+<p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
+or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
-<div id="dashboard-viewer-setup" class="section level3 unnumbered" number="">
-<h3>Dashboard Viewer setup</h3>
-<ol style="list-style-type: decimal">
-<li><p>If you wish to expose the dashboard viewer app through a specific domain(s) you must add it/them to the <code>ALLOWED_HOSTS</code> list on file <code>dashboard_viewer/dashboard_viewer/settings.py</code> and remove the <code>'*'</code> entry.</p></li>
-<li><p>Build containers’ images: <code>docker-compose build</code>. This might take several minutes.</p></li>
-<li><p>Set up the database and create an admin account for the dashboard viewer app: <code>docker-compose run --rm dashboard ./docker-init.sh</code>.</p></li>
-</ol>
+<div id="data-source-filter-3" class="section level3 unnumbered" number="">
+<h3>Data Source Filter</h3>
+<p><strong>For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.</strong></p>
+<div id="sql-query-23" class="section level4 unnumbered" number="">
+<h4>SQL query</h4>
+<p>No SQL query, use the sql table <code>data_source</code> of the <code>achilles</code> database.</p>
 </div>
-<div id="insert-concepts" class="section level3 unnumbered" number="">
-<h3>Insert Concepts</h3>
-<p>The concepts table is not in the repository due to its dimension, therefore we use directly the Postgres console to insert this table in the installation.</p>
-<ol style="list-style-type: decimal">
-<li><p>Get your concept csv file from <a href="https://athena.ohdsi.org/">Athena</a></p></li>
-<li><p>Copy the file into postgres container</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="installation.html#cb1-1" aria-hidden="true"></a><span class="ex">docker</span> cp concept.csv dashboard_viewer_postgres_1:/tmp/</span></code></pre></div></li>
-<li><p>Enter in the postgres container:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="installation.html#cb2-1" aria-hidden="true"></a><span class="ex">docker</span> exec -it dashboard_viewer_postgres_1 bash</span></code></pre></div></li>
-<li><p>Enter in the <code>achilles</code> database (value of the variable <code>POSTGRES_ACHILLES_DB</code> on the .env file) with the <code>root</code> user (value of the variable <code>POSTGRES_ROOT_USER</code> on the .env file):</p>
-<pre><code>psql achilles root</code></pre></li>
-<li><p>Create the <code>concept</code> table</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="installation.html#cb4-1" aria-hidden="true"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> concept (</span>
-<span id="cb4-2"><a href="installation.html#cb4-2" aria-hidden="true"></a>  concept_id         <span class="dt">INTEGER</span>        <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-3"><a href="installation.html#cb4-3" aria-hidden="true"></a>  concept_name       <span class="dt">VARCHAR</span>(<span class="dv">255</span>)   <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-4"><a href="installation.html#cb4-4" aria-hidden="true"></a>  domain_id          <span class="dt">VARCHAR</span>(<span class="dv">20</span>)    <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-5"><a href="installation.html#cb4-5" aria-hidden="true"></a>  vocabulary_id      <span class="dt">VARCHAR</span>(<span class="dv">20</span>)    <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-6"><a href="installation.html#cb4-6" aria-hidden="true"></a>  concept_class_id   <span class="dt">VARCHAR</span>(<span class="dv">20</span>)    <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-7"><a href="installation.html#cb4-7" aria-hidden="true"></a>  standard_concept   <span class="dt">VARCHAR</span>(<span class="dv">1</span>)     <span class="kw">NULL</span>,</span>
-<span id="cb4-8"><a href="installation.html#cb4-8" aria-hidden="true"></a>  concept_code       <span class="dt">VARCHAR</span>(<span class="dv">50</span>)    <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-9"><a href="installation.html#cb4-9" aria-hidden="true"></a>  valid_start_date   <span class="dt">DATE</span>           <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-10"><a href="installation.html#cb4-10" aria-hidden="true"></a>  valid_end_date     <span class="dt">DATE</span>           <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb4-11"><a href="installation.html#cb4-11" aria-hidden="true"></a>  invalid_reason     <span class="dt">VARCHAR</span>(<span class="dv">1</span>)     <span class="kw">NULL</span></span>
-<span id="cb4-12"><a href="installation.html#cb4-12" aria-hidden="true"></a>);</span></code></pre></div></li>
-<li><p>Copy the CSV file content to the table (this could take a while)</p>
-<p>To get both <code>'</code> (single quotes) and <code>"</code> (double quotes) on the <code>concept_name</code> column we use a workaround by setting the quote character to one that should never be in the text. Here we used <code>\b</code> (backslash).</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="installation.html#cb5-1" aria-hidden="true"></a><span class="kw">COPY</span> <span class="kw">public</span>.concept <span class="kw">FROM</span> <span class="st">&#39;/tmp/concept.csv&#39;</span> <span class="kw">WITH</span> CSV <span class="kw">HEADER</span></span>
-<span id="cb5-2"><a href="installation.html#cb5-2" aria-hidden="true"></a>  DELIMITER E<span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span> QUOTE E<span class="st">&#39;</span><span class="ch">\b</span><span class="st">&#39;</span>;</span></code></pre></div></li>
-<li><p>Create index in table (this could take a while):</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="installation.html#cb6-1" aria-hidden="true"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> concept_concept_id_index <span class="kw">ON</span> concept (concept_id);</span>
-<span id="cb6-2"><a href="installation.html#cb6-2" aria-hidden="true"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> concept_concept_name_index <span class="kw">ON</span> concept (concept_name);</span></code></pre></div></li>
-<li><p>Set the owner of the <code>concept</code> table to the <code>achilles</code> user (value of the variable <code>POSTGRES_ACHILLES_USER</code> on the .env file):</p>
-<pre><code>ALTER TABLE concept OWNER TO achiller</code></pre></li>
-<li><p>Bring up the containers: <code>docker-compose up -d</code>.</p></li>
-<li><p>Run the command <code>docker-compose run --rm dashboard python manage.py generate_materialized_views</code> to create the materialized views on Postgres.</p></li>
-</ol>
-</div>
-<div id="superset-setup" class="section level3 unnumbered" number="">
-<h3>Superset setup</h3>
-<ol style="list-style-type: decimal">
-<li><p>Make sure that the container <code>superset-init</code> has finished before continuing. It is creating the necessary tables on the database and creating permissions and roles.</p></li>
-<li><p>Execute the script <code>./superset/one_time_run_scripts/superset-init.sh</code>. This will create an admin account and associate the <code>achilles</code> database to Superset. <strong>Attention:</strong> You must be in the docker directory to execute this script.</p></li>
-<li><p>We have already built some dashboards so if you want to import them run the script <code>./superset/one_time_run_scripts/load_dashboards.sh</code>. <strong>Attention:</strong> You must be in the docker directory to execute this script.</p></li>
-<li><p>If you used the default ports:</p>
+<div id="chart-settings-25" class="section level4 unnumbered" number="">
+<h4>Chart settings</h4>
 <ul>
-<li>Go to <code>http://localhost</code> to access the dashboard viewer app.</li>
-<li>Go to <code>http://localhost:8088</code> to access superset.</li>
-</ul></li>
-<li><p>To any anonymous user view dashboards, add the following:</p>
+<li>Data Tab
 <ul>
-<li>all datasource access on all_datasource_access</li>
-<li>can csrf token on Superset</li>
-<li>can dashboard on Superset</li>
-<li>can explore json on Superset</li>
-<li>can read on Chart</li>
-<li>can read on CssTemplate</li>
+<li>Datasource &amp; Chart Type
+<ul>
+<li>Visualization Type: Filter Box</li>
 </ul></li>
-</ol>
+<li>Time
+<ul>
+<li>Time range: No filter</li>
+</ul></li>
+<li>Filters Configuration
+<ul>
+<li>Filters:
+<ul>
+<li>name</li>
+</ul></li>
+<li>Date Filter: off</li>
+<li>Instant Filtering: on</li>
+</ul></li>
+</ul></li>
+</ul>
 </div>
-<div id="dummy-data" class="section level3 unnumbered" number="">
-<h3>Dummy data</h3>
-<p>On a fresh installation, there are no achilles_results data so Superset’s dashboards will display “No results”. On the root of this repository, you can find the <code>demo</code> directory where we have an ACHILLES results file with synthetic data that you can upload to a data source on the uploader app of the dashboard viewer (<a href="http://localhost/uploader" class="uri">http://localhost/uploader</a>). If you wish to compare multiple data sources, on the <code>demo</code> directory there is also a python script that allows you to generate new ACHILLES results files, where it generates random count values based on the ranges of values for each set of analysis_id and stratums present on a base ACHILLES results file. So, from the one ACHILLES results fill we provided, you can have multiple data sources with different data.</p>
+</div>
+<div id="visit-type-table-visittypetable" class="section level3 unnumbered" number="">
+<h3>Visit Type Table {#visitTypeTable}</h3>
+<div id="sql-query-24" class="section level4 unnumbered" number="">
+<h4>SQL query</h4>
+<div class="sourceCode" id="cb38"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb38-1"><a href="visit-deprecated.html#cb38-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb38-2"><a href="visit-deprecated.html#cb38-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
+<span id="cb38-3"><a href="visit-deprecated.html#cb38-3" aria-hidden="true"></a>       concept_name <span class="kw">AS</span> <span class="ot">&quot;Type&quot;</span>,</span>
+<span id="cb38-4"><a href="visit-deprecated.html#cb38-4" aria-hidden="true"></a>       <span class="fu">MAX</span>(count_value) <span class="kw">AS</span> <span class="ot">&quot;Count&quot;</span></span>
+<span id="cb38-5"><a href="visit-deprecated.html#cb38-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb38-6"><a href="visit-deprecated.html#cb38-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb38-7"><a href="visit-deprecated.html#cb38-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
+<span id="cb38-8"><a href="visit-deprecated.html#cb38-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span>
+<span id="cb38-9"><a href="visit-deprecated.html#cb38-9" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> name, acronym, <span class="ot">&quot;Type&quot;</span></span>
+<span id="cb38-10"><a href="visit-deprecated.html#cb38-10" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="ot">&quot;Count&quot;</span> <span class="kw">DESC</span></span></code></pre></div>
+</div>
+<div id="chart-settings-26" class="section level4 unnumbered" number="">
+<h4>Chart settings</h4>
+<ul>
+<li>Data Tab
+<ul>
+<li>Datasource &amp; Chart Type
+<ul>
+<li>Visualization Type: Table</li>
+</ul></li>
+<li>Time
+<ul>
+<li>Time range: No filter</li>
+</ul></li>
+<li>Query
+<ul>
+<li>Query Mode: Raw Records</li>
+<li>Columns: name with label “Data Source”, Type, Count</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="visit-types-bars" class="section level3 unnumbered" number="">
+<h3>Visit Types Bars</h3>
+<div id="sql-query-25" class="section level4 unnumbered" number="">
+<h4>SQL query</h4>
+<div class="sourceCode" id="cb39"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb39-1"><a href="visit-deprecated.html#cb39-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name, </span>
+<span id="cb39-2"><a href="visit-deprecated.html#cb39-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
+<span id="cb39-3"><a href="visit-deprecated.html#cb39-3" aria-hidden="true"></a>       concept_name <span class="kw">AS</span> <span class="ot">&quot;Observation&quot;</span>, </span>
+<span id="cb39-4"><a href="visit-deprecated.html#cb39-4" aria-hidden="true"></a>       count_value</span>
+<span id="cb39-5"><a href="visit-deprecated.html#cb39-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles </span>
+<span id="cb39-6"><a href="visit-deprecated.html#cb39-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb39-7"><a href="visit-deprecated.html#cb39-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
+<span id="cb39-8"><a href="visit-deprecated.html#cb39-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span></code></pre></div>
+</div>
+<div id="chart-settings-27" class="section level4 unnumbered" number="">
+<h4>Chart settings</h4>
+<ul>
+<li>Data Tab
+<ul>
+<li>Datasource &amp; Chart Type
+<ul>
+<li>Visualization Type: Bar Chart</li>
+</ul></li>
+<li>Time
+<ul>
+<li>Time range: No filter</li>
+</ul></li>
+<li>Query
+<ul>
+<li>Metrics: MAX(count_value) with label Observations</li>
+<li>Series: name</li>
+<li>Breakdowns: Observation</li>
+</ul></li>
+</ul></li>
+<li>Customize Tab
+<ul>
+<li>Chart Options
+<ul>
+<li>Stacked Bars: on</li>
+<li>Sort Bars: on</li>
+<li>Extra Controls: on</li>
+</ul></li>
+<li>X Axis
+<ul>
+<li>X Axis Label: Databases</li>
+<li>Reduce X ticks: on</li>
+</ul></li>
+</ul></li>
+</ul>
 
+</div>
 </div>
 </div>
             </section>
@@ -370,8 +422,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="introduction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="processes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="observation-period-deprecated.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="death-deprecated.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -403,7 +455,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/EHDEN/NetworkDashboards/edit/master/02-installation.Rmd",
+"link": "https://github.com/EHDEN/NetworkDashboards/edit/master/06-visit.Rmd",
 "text": "Edit"
 },
 "history": {

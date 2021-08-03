@@ -6,7 +6,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Observation Period
+## Observation Period [Deprecated]
 
 <!-- Discuss the goal of this dashboard... TO DO -->
 

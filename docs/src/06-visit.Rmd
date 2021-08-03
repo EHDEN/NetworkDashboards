@@ -6,7 +6,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Visit
+## Visit [Deprecated]
 
 <!-- Discuss the goal of this dashboard... TO DO -->
 

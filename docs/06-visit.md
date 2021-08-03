@@ -4,7 +4,7 @@ output: html_document
 
 
 
-## Visit
+## Visit [Deprecated]
 
 <!-- Discuss the goal of this dashboard... TO DO -->
 

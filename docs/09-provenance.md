@@ -4,7 +4,7 @@ output: html_document
 
 
 
-## Provenance
+## Provenance [Deprecated]
 
 This Dashboard shows the provenance of the data in the different data domains.
 

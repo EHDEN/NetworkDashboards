@@ -6,7 +6,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Provenance
+## Provenance [Deprecated]
 
 This Dashboard shows the provenance of the data in the different data domains.
 

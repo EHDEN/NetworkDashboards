@@ -4,6 +4,8 @@ output: html_document
 
 
 
+# Dashboards
+
 ## Per Database {#PerDatabaseDashboard}
 
 <!-- Discuss the goal of this dashboard... TO DO -->

@@ -4,7 +4,7 @@ output: html_document
 
 
 
-## Concepts Browser
+## Concepts Browser [Deprecated]
 
 The concepts browser allows you to search for concepts by name or concept_id in all the data sources you select. No exact number of patients or occurrences are provided but the magnitude of both.
 
