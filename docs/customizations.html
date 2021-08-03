@@ -166,12 +166,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="customizations.html"><a href="customizations.html"><i class="fa fa-check"></i><b>6</b> Customizations</a>
 <ul>
-<li class="chapter" data-level="" data-path="customizations.html"><a href="customizations.html#logo"><i class="fa fa-check"></i>Logo</a></li>
+<li class="chapter" data-level="" data-path="customizations.html"><a href="customizations.html#platform-logo"><i class="fa fa-check"></i>Platform Logo</a></li>
+<li class="chapter" data-level="" data-path="customizations.html"><a href="customizations.html#platform-title"><i class="fa fa-check"></i>Platform Title</a></li>
 <li class="chapter" data-level="" data-path="customizations.html"><a href="customizations.html#uploader-page-texts"><i class="fa fa-check"></i>Uploader Page Texts</a></li>
+<li class="chapter" data-level="" data-path="customizations.html"><a href="customizations.html#allow-draft-status-updates"><i class="fa fa-check"></i>Allow Draft Status Updates</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="development-instructions.html"><a href="development-instructions.html"><i class="fa fa-check"></i><b>7</b> Development Instructions</a>
 <ul>
 <li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#repository-description"><i class="fa fa-check"></i>Repository Description</a></li>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#superset"><i class="fa fa-check"></i>Superset</a></li>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#github-checks"><i class="fa fa-check"></i>Github Checks</a></li>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#tests"><i class="fa fa-check"></i>Tests</a></li>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#python-requirements"><i class="fa fa-check"></i>Python Requirements</a></li>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#documentation"><i class="fa fa-check"></i>Documentation</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="code-documentation.html"><a href="code-documentation.html"><i class="fa fa-check"></i><b>8</b> Code Documentation</a></li>
 <li class="chapter" data-level="9" data-path="dashboards.html"><a href="dashboards.html"><i class="fa fa-check"></i><b>9</b> Dashboards</a>
@@ -284,11 +291,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="customizations" class="section level1" number="6">
 <h1><span class="header-section-number">Chapter 6</span> Customizations</h1>
-<div id="logo" class="section level3 unnumbered" number="">
-<h3>Logo</h3>
+<p>This platform is currently being used within the scope of the European Health Data &amp; Evidence Network (<a href="https://www.ehden.eu/">EHDEN</a>) project.
+To allow the dashboard viewer Django application to be easily used by another project or company, several components support customization in runtime, removing the need to change such things directly on the source code.</p>
+<p>To achieve this we make use of <a href="https://github.com/jazzband/django-constance">Contance</a> that allows configuring several fields which then can be changed through the Django admin app.</p>
+<div id="platform-logo" class="section level3 unnumbered" number="">
+<h3>Platform Logo</h3>
+<p>It is visible both in the Tabs Manager and the Catalogue Results Uploader URLs.</p>
+<p><img src="images/customizations/logo.png" /></p>
+<p>The platform allows two possible ways to choose a logo: upload a file or provide an URL to an image.</p>
+<p><img src="images/customizations/constance-logo.png" /></p>
+<p>If both fields are provided, the URL one will be used.</p>
+<p>On the tabs manager app, we also allow customization of the CSS associated both with the image itself and its container.</p>
+<p><img src="images/customizations/constance-logo-css.png" /></p>
+</div>
+<div id="platform-title" class="section level3 unnumbered" number="">
+<h3>Platform Title</h3>
+<p>All pages of the uploader app use the same base HTML file which contains a header with the platform logo, page title, and platform title.</p>
+<p><img src="images/customizations/title.png" /></p>
+<p>The first was already mentioned before, the second can’t be changed.
+The last can be altered using a Constance field.</p>
+<p><img src="images/customizations/constance-title.png" /></p>
 </div>
 <div id="uploader-page-texts" class="section level3 unnumbered" number="">
 <h3>Uploader Page Texts</h3>
+<p>The data source creation page has three columns with some text providing some instructions for the creation of a data source and the upload of catalogue results.</p>
+<p><img src="images/customizations/texts.png" /></p>
+<p>The text of these three columns is customizable, where <a href="https://www.markdownguide.org/">markdown</a> can be used, which is then transformed into HTML before rending the page.</p>
+<p><img src="images/customizations/constance-texts.png" /></p>
+</div>
+<div id="allow-draft-status-updates" class="section level3 unnumbered" number="">
+<h3>Allow Draft Status Updates</h3>
+<p>In the section <a href="processes.html#draft-status">Draft Status</a> of the Processes chapter, it was already explained the concept around draft data sources.</p>
+<p>By default, a user can NOT change the data source status on the edit page of a data source, only being allowed to do it through a PATCH request.
+Changes through the web edit form can be allowed by changing a Constance field.</p>
+<p><img src="images/customizations/constance-draft.png" /></p>
+<p>Them an additional draft field will be available on the edit data source form.</p>
+<p><img src="images/customizations/draft.png" /></p>
 
 </div>
 </div>

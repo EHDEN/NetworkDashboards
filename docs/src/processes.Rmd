@@ -44,6 +44,10 @@ Since the creation URL does not have csrf cookie protection, you can perform a P
 
 - The country field should match one of the available on the dropdown of the webform.
 
+#### Draft Status {-}
+
+asdf
+
 ### Catalogue Results Files {-}
 
 **Target: platform user**
@@ -131,6 +135,8 @@ After all this, the final step is to add the materialized view as a Dataset. Log
 
 ### Tabs View [Deprecated] {-}
 
+Note: This app is no longer maintaned and the associated urls were unlinked.
+
 **Target: admin user**
 
 Once there are data sources on the platform, data was uploaded to them and there are dashboards created on Superset, researchers can now browse through the dashboards and analyze and compare the data of the different data sources.
@@ -163,3 +169,6 @@ The value of the `standalone` arguments depends on the expected result:
 
 - 1: menu bar is hidden. the bar where the dashboard title, publish status, and three dots option menu are present will still appear
 - 2: both the menu bar and the dashboard title bar are hidden.
+
+By default, the dashboard of the first tab is displayed on the page, however, if one wants a specific tab to be displayed when the page is opened, its title should be present in the hash part of the URL.
+For example, if there is a tab called People, to make that tab selected at the start the following URL should be used `[BASE_URL]/tabs/#People`. 

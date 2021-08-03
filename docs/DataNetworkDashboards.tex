@@ -178,7 +178,9 @@ To develop this tool, EHDEN organized a hack-a-thon (Aveiro, December 2-3, 2019)
 
 This manual was written to be a guide for a clean installation of this system with all the dashboards that we defined during the project. The first chapter describes the goal of the system and the second how to install the system. The remaining chapters are dedicated to the dashboards, in which chapters describes one dashboard and all its charts. To simplify the representation of the dashboard's layout, we used similar schemas as it is presented in Figure \ref{fig:dashboardsLayout}. The white box is the dashboard and the inside boxes are charts. The colour changes in relation to the type of chart.
 
-\label{fig:dashboardsLayout}Example of a dashboards tool presenting the databases available in the network (simulated data)
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/dashboardsLayout} \caption{Example of a dashboards tool presenting the databases available in the network (simulated data)}\label{fig:dashboardsLayout}
+\end{figure}
 
 \hypertarget{license}{%
 \subsection*{License}\label{license}}
@@ -470,6 +472,12 @@ Since the creation URL does not have csrf cookie protection, you can perform a P
   The country field should match one of the available on the dropdown of the webform.
 \end{itemize}
 
+\hypertarget{draft-status}{%
+\subsubsection*{Draft Status}\label{draft-status}}
+\addcontentsline{toc}{subsubsection}{Draft Status}
+
+asdf
+
 \hypertarget{catalogue-results-files}{%
 \subsection*{Catalogue Results Files}\label{catalogue-results-files}}
 \addcontentsline{toc}{subsection}{Catalogue Results Files}
@@ -587,6 +595,8 @@ After all this, the final step is to add the materialized view as a Dataset. Log
 \subsection*{Tabs View {[}Deprecated{]}}\label{tabs-view-deprecated}}
 \addcontentsline{toc}{subsection}{Tabs View {[}Deprecated{]}}
 
+Note: This app is no longer maintaned and the associated urls were unlinked.
+
 \textbf{Target: admin user}
 
 Once there are data sources on the platform, data was uploaded to them and there are dashboards created on Superset, researchers can now browse through the dashboards and analyze and compare the data of the different data sources.
@@ -639,6 +649,9 @@ The value of the \texttt{standalone} arguments depends on the expected result:
 \item
   2: both the menu bar and the dashboard title bar are hidden.
 \end{itemize}
+
+By default, the dashboard of the first tab is displayed on the page, however, if one wants a specific tab to be displayed when the page is opened, its title should be present in the hash part of the URL.
+For example, if there is a tab called People, to make that tab selected at the start the following URL should be used \texttt{{[}BASE\_URL{]}/tabs/\#People}.
 
 \hypertarget{backups}{%
 \chapter{Backups}\label{backups}}
@@ -786,13 +799,68 @@ sudo chown -R 999:999 docker/volumes/redis
 \hypertarget{customizations}{%
 \chapter{Customizations}\label{customizations}}
 
-\hypertarget{logo}{%
-\subsection*{Logo}\label{logo}}
-\addcontentsline{toc}{subsection}{Logo}
+This platform is currently being used within the scope of the European Health Data \& Evidence Network (\href{https://www.ehden.eu/}{EHDEN}) project.
+To allow the dashboard viewer Django application to be easily used by another project or company, several components support customization in runtime, removing the need to change such things directly on the source code.
+
+To achieve this we make use of \href{https://github.com/jazzband/django-constance}{Contance} that allows configuring several fields which then can be changed through the Django admin app.
+
+\hypertarget{platform-logo}{%
+\subsection*{Platform Logo}\label{platform-logo}}
+\addcontentsline{toc}{subsection}{Platform Logo}
+
+It is visible both in the Tabs Manager and the Catalogue Results Uploader URLs.
+
+\includegraphics{images/customizations/logo.png}
+
+The platform allows two possible ways to choose a logo: upload a file or provide an URL to an image.
+
+\includegraphics{images/customizations/constance-logo.png}
+
+If both fields are provided, the URL one will be used.
+
+On the tabs manager app, we also allow customization of the CSS associated both with the image itself and its container.
+
+\includegraphics{images/customizations/constance-logo-css.png}
+
+\hypertarget{platform-title}{%
+\subsection*{Platform Title}\label{platform-title}}
+\addcontentsline{toc}{subsection}{Platform Title}
+
+All pages of the uploader app use the same base HTML file which contains a header with the platform logo, page title, and platform title.
+
+\includegraphics{images/customizations/title.png}
+
+The first was already mentioned before, the second can't be changed.
+The last can be altered using a Constance field.
+
+\includegraphics{images/customizations/constance-title.png}
 
 \hypertarget{uploader-page-texts}{%
 \subsection*{Uploader Page Texts}\label{uploader-page-texts}}
 \addcontentsline{toc}{subsection}{Uploader Page Texts}
+
+The data source creation page has three columns with some text providing some instructions for the creation of a data source and the upload of catalogue results.
+
+\includegraphics{images/customizations/texts.png}
+
+The text of these three columns is customizable, where \href{https://www.markdownguide.org/}{markdown} can be used, which is then transformed into HTML before rending the page.
+
+\includegraphics{images/customizations/constance-texts.png}
+
+\hypertarget{allow-draft-status-updates}{%
+\subsection*{Allow Draft Status Updates}\label{allow-draft-status-updates}}
+\addcontentsline{toc}{subsection}{Allow Draft Status Updates}
+
+In the section \href{processes.html\#draft-status}{Draft Status} of the Processes chapter, it was already explained the concept around draft data sources.
+
+By default, a user can NOT change the data source status on the edit page of a data source, only being allowed to do it through a PATCH request.
+Changes through the web edit form can be allowed by changing a Constance field.
+
+\includegraphics{images/customizations/constance-draft.png}
+
+Them an additional draft field will be available on the edit data source form.
+
+\includegraphics{images/customizations/draft.png}
 
 \hypertarget{development-instructions}{%
 \chapter{Development Instructions}\label{development-instructions}}
@@ -800,6 +868,26 @@ sudo chown -R 999:999 docker/volumes/redis
 \hypertarget{repository-description}{%
 \subsection*{Repository Description}\label{repository-description}}
 \addcontentsline{toc}{subsection}{Repository Description}
+
+\hypertarget{superset}{%
+\subsection*{Superset}\label{superset}}
+\addcontentsline{toc}{subsection}{Superset}
+
+\hypertarget{github-checks}{%
+\subsection*{Github Checks}\label{github-checks}}
+\addcontentsline{toc}{subsection}{Github Checks}
+
+\hypertarget{tests}{%
+\subsection*{Tests}\label{tests}}
+\addcontentsline{toc}{subsection}{Tests}
+
+\hypertarget{python-requirements}{%
+\subsection*{Python Requirements}\label{python-requirements}}
+\addcontentsline{toc}{subsection}{Python Requirements}
+
+\hypertarget{documentation}{%
+\subsection*{Documentation}\label{documentation}}
+\addcontentsline{toc}{subsection}{Documentation}
 
 \hypertarget{code-documentation}{%
 \chapter{Code Documentation}\label{code-documentation}}
