@@ -586,6 +586,149 @@ After all this, the final step is to add the materialized view as a Dataset. Log
 
 \textbf{Target: admin user}
 
+\hypertarget{backups}{%
+\chapter{Backups}\label{backups}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Create a credentials file (the structure of the file depends on the target cloud server)
+\item
+  Create a \texttt{.dashboards\_backups.conf} file under your home directory (variable \texttt{\$HOME}) using \texttt{dashboards\_backups.conf.example} as base, setting the appropriate value for the several variables.
+
+  For variables associated with files and directories always use \emph{absolute} paths.
+
+  Variables:
+
+  \begin{itemize}
+  \item
+    \texttt{RUN}: Set it to \texttt{0} if you don't want the next scheduled backup to run.
+
+    This variable allows you to cancel any backup runs while you are doing some maintenance on the application.
+  \item
+    \texttt{CONSTANCE\_REDIS\_DB}: Number of the Redis database where the django constance config is stored. The default value is 2. This value should be the same as the environment variable \texttt{REDIS\_CONSTANCE\_DB} of the dashboard container.
+  \item
+    The following variables are associated with the arguemtns of the \texttt{backup\_uploader} python package. Check its \href{https://github.com/aspedrosa/BackupUploader\#usage}{usage} for more details:
+
+    \begin{itemize}
+    \item
+      \texttt{APP\_NAME}: The backup process will generate some directories with this name in places that are shared with other applications.
+    \item
+      \texttt{SERVER}: The name of the target cloud server to where backups should be uploaded (dropbox or mega).
+    \item
+      \texttt{BACKUP\_CHAIN\_CONFIG}: Allows having different directories with backups of different ages.
+    \item
+      \texttt{CREDENTIALS\_FILE\_PATH}: File containing the credentials to access the server to upload the backup file.
+    \end{itemize}
+  \end{itemize}
+\item
+  Install the \texttt{backup\_uploader} python package by following its \href{https://github.com/aspedrosa/BackupUploader\#install}{install} instructions.
+\item
+  Schedule your backups
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ExtensionTok{*}\NormalTok{    *    *   *    *  Command\_to\_execute}
+\KeywordTok{|}    \KeywordTok{|}    \KeywordTok{|}    \KeywordTok{|}   \KeywordTok{|}       
+\KeywordTok{|}    \KeywordTok{|}    \KeywordTok{|}    \KeywordTok{|}    \ExtensionTok{Day}\NormalTok{ of the Week ( 0 {-} 6 ) }\KeywordTok{(} \ExtensionTok{Sunday}\NormalTok{ = 0 }\KeywordTok{)}
+\KeywordTok{|}    \KeywordTok{|}    \KeywordTok{|}    \KeywordTok{|}
+\KeywordTok{|}    \KeywordTok{|}    \KeywordTok{|}    \ExtensionTok{Month}\NormalTok{ ( 1 {-} 12 )}
+\KeywordTok{|}    \KeywordTok{|}    \KeywordTok{|}
+\KeywordTok{|}    \KeywordTok{|}    \ExtensionTok{Day}\NormalTok{ of Month ( 1 {-} 31 )}
+\KeywordTok{|}    \KeywordTok{|}
+\KeywordTok{|}    \ExtensionTok{Hour}\NormalTok{ ( 0 {-} 23 )}
+\KeywordTok{|}
+\ExtensionTok{Min}\NormalTok{ ( 0 {-} 59 ) }
+\end{Highlighting}
+\end{Shaded}
+
+  (Retrived from: \href{https://www.tutorialspoint.com/unix_commands/crontab.htm}{Tutorialspoint})
+
+  Ex: To run every day at 3:00 am
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \item
+    \texttt{crontab\ -e}
+  \item
+    Add entry \texttt{0\ 3\ *\ *\ *\ \$HOME/NetworkDashboards/backups/backup.sh} (The path to the backup script might be different)
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{restore}{%
+\section{Restore}\label{restore}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Select the compressed backup you want to restore and decompress it:
+
+  \texttt{tar\ -xJf\ BACKUP\_FILE.tar.xz}.
+\item
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \item
+    \textbf{Redis}
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \item
+      Make sure the redis docker container is down.
+    \item
+      (Re)place the file \texttt{dump.rdb} on the redis volume by the file \texttt{redis.rdb}. By default the redis volume is located where this repository was cloned on the directory \texttt{docker/volumes/redis}.
+    \item
+      Change its permissions, owner and group:
+
+\begin{verbatim}
+chmod 0644 docker/volumes/redis/dump.rdb
+sudo chown -R 999:999 docker/volumes/redis
+\end{verbatim}
+    \end{enumerate}
+  \item
+    \textbf{Postgres}
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \item
+      Make sure all containers that make changes on the database are stopped.
+    \item
+      Copy the file \texttt{postgres\_backup.sql} into the postgres container
+
+      \texttt{docker\ cp\ postgres.sql\ {[}CONTAINER\_ID{]}:/tmp}.
+    \item
+      Execute the backup script:
+
+      \texttt{docker\ exec\ -u\ root\ dashboard\_viewer\_postgres\_1\ psql\ -f\ /tmp/postgres\_backup.sql\ -U\ \textbackslash{}\$POSTGRES\_USER\ -d\ \textbackslash{}\$POSTGRES\_DB}.
+    \end{enumerate}
+  \item
+    \textbf{Media Files} If you have a volume pointing to where the media files are stored, replace all files with the ones present on the downloaded backup file. Else:
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \item
+      Bring the dashoard container up \texttt{docker-compose\ up\ -d\ dashboard}
+    \item
+      Enter in the container \texttt{docker\ exec\ -it\ {[}CONTAINER\_ID{]}\ bash}
+    \item
+      If you don't know where the media files are stored you can check the value of the MEDIA\_ROOT variable
+
+      \begin{enumerate}
+      \def\labelenumiv{\arabic{enumiv}.}
+      \item
+        \texttt{python\ manage.py\ shell}
+      \item
+        \texttt{from\ django.conf\ import\ settings}
+      \item
+        \texttt{print(settings.MEDIA\_ROOT)}
+      \end{enumerate}
+    \item
+      Remove the entire MEDIA\_ROOT directory and exit the container
+    \item
+      Copy the media directory present on the backup file to the catalogue container \texttt{docker\ cp\ -a\ collected-media\ {[}CONTAINER\_ID{]}:{[}MEDIA\_ROOT\_PARENT\_PATH{]}}
+    \end{enumerate}
+  \end{enumerate}
+\end{enumerate}
+
 \hypertarget{dashboards}{%
 \chapter{Dashboards}\label{dashboards}}
 

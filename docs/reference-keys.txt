@@ -10,6 +10,8 @@ preface
 introduction
 installation
 processes
+backups
+restore
 dashboards
 general
 person

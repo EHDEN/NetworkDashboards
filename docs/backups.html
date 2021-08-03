@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Backups | Data Network Dashboards</title>
+  <meta name="description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Backups | Data Network Dashboards" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Backups | Data Network Dashboards" />
+  
+  <meta name="twitter:description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
+  
+
+<meta name="author" content="This document is currently under construction" />
+
+
+<meta name="date" content="2021-08-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="processes.html"/>
+<link rel="next" href="restore.html"/>
+<script src="libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Data Network Dashboards</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#contributors"><i class="fa fa-check"></i>Contributors</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#considerations"><i class="fa fa-check"></i>Considerations</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledges"><i class="fa fa-check"></i>Acknowledges</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="installation.html"><a href="installation.html"><i class="fa fa-check"></i><b>3</b> Installation</a>
+<ul>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html#first-steps"><i class="fa fa-check"></i>First Steps</a></li>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html#dashboard-viewer-setup"><i class="fa fa-check"></i>Dashboard Viewer setup</a></li>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html#insert-concepts"><i class="fa fa-check"></i>Insert Concepts</a></li>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html#superset-setup"><i class="fa fa-check"></i>Superset setup</a></li>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html#dummy-data"><i class="fa fa-check"></i>Dummy data</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="processes.html"><a href="processes.html"><i class="fa fa-check"></i><b>4</b> Processes</a>
+<ul>
+<li class="chapter" data-level="" data-path="processes.html"><a href="processes.html#data-sources"><i class="fa fa-check"></i>Data Sources</a></li>
+<li class="chapter" data-level="" data-path="processes.html"><a href="processes.html#catalogue-results-files"><i class="fa fa-check"></i>Catalogue Results Files</a></li>
+<li class="chapter" data-level="" data-path="processes.html"><a href="processes.html#materialized-views"><i class="fa fa-check"></i>Materialized Views</a></li>
+<li class="chapter" data-level="" data-path="processes.html"><a href="processes.html#tabs-view-deprecated"><i class="fa fa-check"></i>Tabs View [Deprecated]</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="backups.html"><a href="backups.html"><i class="fa fa-check"></i><b>5</b> Backups</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="restore.html"><a href="restore.html"><i class="fa fa-check"></i><b>5.1</b> Restore</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dashboards.html"><a href="dashboards.html"><i class="fa fa-check"></i><b>6</b> Dashboards</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="general.html"><a href="general.html"><i class="fa fa-check"></i><b>6.1</b> General</a>
+<ul>
+<li class="chapter" data-level="" data-path="general.html"><a href="general.html#css"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="general.html"><a href="general.html#database-type-and-country-filter"><i class="fa fa-check"></i>Database Type and Country Filter</a></li>
+<li class="chapter" data-level="" data-path="general.html"><a href="general.html#total-number-of-patients"><i class="fa fa-check"></i>Total Number of Patients</a></li>
+<li class="chapter" data-level="" data-path="general.html"><a href="general.html#network-growth-by-date"><i class="fa fa-check"></i>Network Growth by Date</a></li>
+<li class="chapter" data-level="" data-path="general.html"><a href="general.html#patients-per-country"><i class="fa fa-check"></i>Patients per Country</a></li>
+<li class="chapter" data-level="" data-path="general.html"><a href="general.html#database-types-per-country"><i class="fa fa-check"></i>Database Types per Country</a></li>
+<li class="chapter" data-level="" data-path="general.html"><a href="general.html#world-map"><i class="fa fa-check"></i>World Map</a></li>
+<li class="chapter" data-level="" data-path="general.html"><a href="general.html#metaDataTable"><i class="fa fa-check"></i>Meta Data</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="person.html"><a href="person.html"><i class="fa fa-check"></i><b>6.2</b> Person</a>
+<ul>
+<li class="chapter" data-level="" data-path="person.html"><a href="person.html#label-colors"><i class="fa fa-check"></i>Label Colors</a></li>
+<li class="chapter" data-level="" data-path="person.html"><a href="person.html#css-1"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="person.html"><a href="person.html#data-source-filter"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="person.html"><a href="person.html#age-at-first-observation---table-age1observationtable"><i class="fa fa-check"></i>Age at first observation - Table {#age1ObservationTable}</a></li>
+<li class="chapter" data-level="" data-path="person.html"><a href="person.html#age-at-first-observation---bars-age1observationbars"><i class="fa fa-check"></i>Age at first observation - Bars {#age1ObservationBars}</a></li>
+<li class="chapter" data-level="" data-path="person.html"><a href="person.html#year-of-birth-yearofbirth"><i class="fa fa-check"></i>Year of Birth {#yearOfBirth}</a></li>
+<li class="chapter" data-level="" data-path="person.html"><a href="person.html#gender"><i class="fa fa-check"></i>Gender</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="observation-period.html"><a href="observation-period.html"><i class="fa fa-check"></i><b>6.3</b> Observation Period</a>
+<ul>
+<li class="chapter" data-level="" data-path="observation-period.html"><a href="observation-period.html#css-2"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="observation-period.html"><a href="observation-period.html#data-source-filter-1"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="observation-period.html"><a href="observation-period.html#number-of-patients-in-observation-period-numinobservationperiod"><i class="fa fa-check"></i>Number of Patients in Observation Period {#numInObservationPeriod}</a></li>
+<li class="chapter" data-level="" data-path="observation-period.html"><a href="observation-period.html#observation-period-start-dates"><i class="fa fa-check"></i>Observation Period Start Dates</a></li>
+<li class="chapter" data-level="" data-path="observation-period.html"><a href="observation-period.html#observation-period-end-dates"><i class="fa fa-check"></i>Observation Period End Dates</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="visit.html"><a href="visit.html"><i class="fa fa-check"></i><b>6.4</b> Visit</a>
+<ul>
+<li class="chapter" data-level="" data-path="visit.html"><a href="visit.html#css-3"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="visit.html"><a href="visit.html#data-source-filter-2"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="visit.html"><a href="visit.html#visit-type-table-visittypetable"><i class="fa fa-check"></i>Visit Type Table {#visitTypeTable}</a></li>
+<li class="chapter" data-level="" data-path="visit.html"><a href="visit.html#visit-types-bars"><i class="fa fa-check"></i>Visit Types Bars</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="death.html"><a href="death.html"><i class="fa fa-check"></i><b>6.5</b> Death</a>
+<ul>
+<li class="chapter" data-level="" data-path="death.html"><a href="death.html#css-4"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="death.html"><a href="death.html#data-source-filter-3"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="death.html"><a href="death.html#number-of-records"><i class="fa fa-check"></i>Number of Records</a></li>
+<li class="chapter" data-level="" data-path="death.html"><a href="death.html#death-by-year-per-thousand-people"><i class="fa fa-check"></i>Death By Year per Thousand People</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="concepts-browser.html"><a href="concepts-browser.html"><i class="fa fa-check"></i><b>6.6</b> Concepts Browser</a>
+<ul>
+<li class="chapter" data-level="" data-path="concepts-browser.html"><a href="concepts-browser.html#css-5"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="concepts-browser.html"><a href="concepts-browser.html#data-source-and-domain-filters"><i class="fa fa-check"></i>Data Source and Domain Filters</a></li>
+<li class="chapter" data-level="" data-path="concepts-browser.html"><a href="concepts-browser.html#number-of-concepts"><i class="fa fa-check"></i>Number of Concepts</a></li>
+<li class="chapter" data-level="" data-path="concepts-browser.html"><a href="concepts-browser.html#concept-browser-table-conceptbrowsertable"><i class="fa fa-check"></i>Concept Browser Table {#conceptBrowserTable}</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="provenance.html"><a href="provenance.html"><i class="fa fa-check"></i><b>6.7</b> Provenance</a>
+<ul>
+<li class="chapter" data-level="" data-path="provenance.html"><a href="provenance.html#css-6"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="provenance.html"><a href="provenance.html#data-source-filter-4"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="provenance.html"><a href="provenance.html#condition-drug-procedure-device-measurement-observation-types-dataprovenancecharts"><i class="fa fa-check"></i>Condition &amp; Drug &amp; Procedure &amp; Device &amp; Measurement &amp; Observation Types {#dataProvenanceCharts}</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="data-domains.html"><a href="data-domains.html"><i class="fa fa-check"></i><b>6.8</b> Data Domains</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-domains.html"><a href="data-domains.html#css-7"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="data-domains.html"><a href="data-domains.html#data-source-filter-5"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="data-domains.html"><a href="data-domains.html#average-number-of-records-per-person-avgrecordsperperson"><i class="fa fa-check"></i>Average Number of Records per Person {#avgRecordsPerPerson}</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html"><i class="fa fa-check"></i><b>6.9</b> Per Database</a>
+<ul>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#label-colors-1"><i class="fa fa-check"></i>Label Colors</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#css-8"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#data-source-filter-6"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#demographics-tab"><i class="fa fa-check"></i>Demographics Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#data-domains-tab"><i class="fa fa-check"></i>Data Domains Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#data-provenance-tab"><i class="fa fa-check"></i>Data Provenance Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#observation-period-tab"><i class="fa fa-check"></i>Observation Period Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#visit-tab"><i class="fa fa-check"></i>Visit Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#concept-browser-tab"><i class="fa fa-check"></i>Concept Browser Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#meta-data-tab"><i class="fa fa-check"></i>Meta Data Tab</a></li>
+</ul></li>
+<li class="chapter" data-level="6.10" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html"><i class="fa fa-check"></i><b>6.10</b> Database Level Dashboard</a>
+<ul>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#label-colors-2"><i class="fa fa-check"></i>Label Colors</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#css-9"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#data-source-filter---hidden"><i class="fa fa-check"></i>Data Source Filter - hidden</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#demographics-tab-1"><i class="fa fa-check"></i>Demographics Tab</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#data-domains-tab-1"><i class="fa fa-check"></i>Data Domains Tab</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#data-provenance-tab-1"><i class="fa fa-check"></i>Data Provenance Tab</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#observation-period-tab-1"><i class="fa fa-check"></i>Observation Period Tab</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#visit-tab-1"><i class="fa fa-check"></i>Visit Tab</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#concept-browser-tab-1"><i class="fa fa-check"></i>Concept Browser Tab</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#meta-data-tab-1"><i class="fa fa-check"></i>Meta Data Tab</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data Network Dashboards</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="backups" class="section level1" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Backups</h1>
+<ol style="list-style-type: decimal">
+<li><p>Create a credentials file (the structure of the file depends on the target cloud server)</p></li>
+<li><p>Create a <code>.dashboards_backups.conf</code> file under your home directory (variable <code>$HOME</code>) using <code>dashboards_backups.conf.example</code> as base, setting the appropriate value for the several variables.</p>
+<p>For variables associated with files and directories always use <em>absolute</em> paths.</p>
+<p>Variables:</p>
+<ul>
+<li><p><code>RUN</code>: Set it to <code>0</code> if you don’t want the next scheduled backup to run.</p>
+<p>This variable allows you to cancel any backup runs while you are doing some maintenance on the application.</p></li>
+<li><p><code>CONSTANCE_REDIS_DB</code>: Number of the Redis database where the django constance config is stored. The default value is 2. This value should be the same as the environment variable <code>REDIS_CONSTANCE_DB</code> of the dashboard container.</p></li>
+<li><p>The following variables are associated with the arguemtns of the <code>backup_uploader</code> python package. Check its <a href="https://github.com/aspedrosa/BackupUploader#usage">usage</a> for more details:</p>
+<ul>
+<li><p><code>APP_NAME</code>: The backup process will generate some directories with this name in places that are shared with other applications.</p></li>
+<li><p><code>SERVER</code>: The name of the target cloud server to where backups should be uploaded (dropbox or mega).</p></li>
+<li><p><code>BACKUP_CHAIN_CONFIG</code>: Allows having different directories with backups of different ages.</p></li>
+<li><p><code>CREDENTIALS_FILE_PATH</code>: File containing the credentials to access the server to upload the backup file.</p></li>
+</ul></li>
+</ul></li>
+<li><p>Install the <code>backup_uploader</code> python package by following its <a href="https://github.com/aspedrosa/BackupUploader#install">install</a> instructions.</p></li>
+<li><p>Schedule your backups</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="backups.html#cb8-1" aria-hidden="true"></a><span class="ex">*</span>    *    *   *    *  Command_to_execute</span>
+<span id="cb8-2"><a href="backups.html#cb8-2" aria-hidden="true"></a><span class="kw">|</span>    <span class="kw">|</span>    <span class="kw">|</span>    <span class="kw">|</span>   <span class="kw">|</span>       </span>
+<span id="cb8-3"><a href="backups.html#cb8-3" aria-hidden="true"></a><span class="kw">|</span>    <span class="kw">|</span>    <span class="kw">|</span>    <span class="kw">|</span>    <span class="ex">Day</span> of the Week ( 0 - 6 ) <span class="kw">(</span> <span class="ex">Sunday</span> = 0 <span class="kw">)</span></span>
+<span id="cb8-4"><a href="backups.html#cb8-4" aria-hidden="true"></a><span class="kw">|</span>    <span class="kw">|</span>    <span class="kw">|</span>    <span class="kw">|</span></span>
+<span id="cb8-5"><a href="backups.html#cb8-5" aria-hidden="true"></a><span class="kw">|</span>    <span class="kw">|</span>    <span class="kw">|</span>    <span class="ex">Month</span> ( 1 - 12 )</span>
+<span id="cb8-6"><a href="backups.html#cb8-6" aria-hidden="true"></a><span class="kw">|</span>    <span class="kw">|</span>    <span class="kw">|</span></span>
+<span id="cb8-7"><a href="backups.html#cb8-7" aria-hidden="true"></a><span class="kw">|</span>    <span class="kw">|</span>    <span class="ex">Day</span> of Month ( 1 - 31 )</span>
+<span id="cb8-8"><a href="backups.html#cb8-8" aria-hidden="true"></a><span class="kw">|</span>    <span class="kw">|</span></span>
+<span id="cb8-9"><a href="backups.html#cb8-9" aria-hidden="true"></a><span class="kw">|</span>    <span class="ex">Hour</span> ( 0 - 23 )</span>
+<span id="cb8-10"><a href="backups.html#cb8-10" aria-hidden="true"></a><span class="kw">|</span></span>
+<span id="cb8-11"><a href="backups.html#cb8-11" aria-hidden="true"></a><span class="ex">Min</span> ( 0 - 59 ) </span></code></pre></div>
+<p>(Retrived from: <a href="https://www.tutorialspoint.com/unix_commands/crontab.htm">Tutorialspoint</a>)</p>
+<p>Ex: To run every day at 3:00 am</p>
+<ol style="list-style-type: decimal">
+<li><p><code>crontab -e</code></p></li>
+<li><p>Add entry <code>0 3 * * * $HOME/NetworkDashboards/backups/backup.sh</code> (The path to the backup script might be different)</p></li>
+</ol></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="processes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="restore.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/EHDEN/NetworkDashboards/edit/master/backups.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["DataNetworkDashboards.pdf", "DataNetworkDashboards.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

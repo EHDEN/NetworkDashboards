@@ -28,6 +28,7 @@ rmd_files: [
   "01-intro.Rmd",
   "02-installation.Rmd",
   "processes.Rmd",
+  "backups.Rmd",
   "03-general.Rmd",
   "04-person.Rmd",
   "05-observation_period.Rmd",
