@@ -1,17 +1,10 @@
-fig:dataSourceFilter
-fig:numPatients
-fig:genderTable
-fig:genderPie
-fig:totalNumRecords
-fig:cumObservationTime
-fig:visitTypeGraph
-fig:visitTypeTable
 preface
 introduction
 installation
 processes
 backups
 restore
+customizations
 dashboards
 general
 person
@@ -23,3 +16,5 @@ provenance
 data-domains
 PerDatabaseDashboard
 database-level-dashboard
+development-instructions
+code-documentation

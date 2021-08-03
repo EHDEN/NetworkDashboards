@@ -3,7 +3,7 @@
 pids=""
 outputs="git pdf_ epub_"
 for output in $outputs ; do
-    Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::${output}book')" 2>&1 > /tmp/doc_log_$output &
+    Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::${output}book')" > /tmp/doc_log_$output 2>&1 &
     pids="$pids $!"
 done
 
@@ -22,7 +22,7 @@ if [ ! -z $errors ] ; then
 
     for output in $outputs ; do
         echo "output $output"
-        tail /tmp/doc_log_$ouput
+        tail /tmp/doc_log_$output
     done
 
     return 1

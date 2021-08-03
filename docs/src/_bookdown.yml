@@ -29,6 +29,7 @@ rmd_files: [
   "02-installation.Rmd",
   "processes.Rmd",
   "backups.Rmd",
+  "customizations.Rmd",
   "03-general.Rmd",
   "04-person.Rmd",
   "05-observation_period.Rmd",
@@ -38,5 +39,7 @@ rmd_files: [
   "09-provenance.Rmd",
   "10-data_domains.Rmd",
   "11-per_database.Rmd",
-  "12-database_level_dashboard.Rmd"
+  "12-database_level_dashboard.Rmd",
+  "development.Rmd",
+  "code-documentation.Rmd"
 ]
