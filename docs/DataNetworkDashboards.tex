@@ -476,7 +476,22 @@ Since the creation URL does not have csrf cookie protection, you can perform a P
 \subsubsection*{Draft Status}\label{draft-status}}
 \addcontentsline{toc}{subsubsection}{Draft Status}
 
-asdf
+After a data owner uploads data into his data source, he might not want to make it public right away.
+To achieve this a data source has a boolean field telling whether if the data source is in draft mode.
+This then also allows creating dashboards with data of non-draft data sources only.
+
+There are three ways to change the value of this draft status field:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Through the Django admin app (\texttt{{[}BASE\_URL{]}/admin/})
+\item
+  Accessing the respective edit page of the data source. This requires a feature to be enabled, which is more detailed on the \href{customizations.html\#allow-draft-status-updates}{Allow Draft Status Updates} section of the Customization chapter.
+\item
+  Perform a PATCH request to the \texttt{{[}BASE\_URL{]}/uploader/{[}HASH{]}/} URL. On this request, other fields, other than the draft status, can be changed. The body of the request must be a JSON object with the fields that will suffer changes and their new values.
+\end{enumerate}
 
 \hypertarget{catalogue-results-files}{%
 \subsection*{Catalogue Results Files}\label{catalogue-results-files}}

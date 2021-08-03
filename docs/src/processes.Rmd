@@ -46,7 +46,15 @@ Since the creation URL does not have csrf cookie protection, you can perform a P
 
 #### Draft Status {-}
 
-asdf
+After a data owner uploads data into his data source, he might not want to make it public right away.
+To achieve this a data source has a boolean field telling whether if the data source is in draft mode.
+This then also allows creating dashboards with data of non-draft data sources only.
+
+There are three ways to change the value of this draft status field:
+
+1. Through the Django admin app (`[BASE_URL]/admin/`)
+2. Accessing the respective edit page of the data source. This requires a feature to be enabled, which is more detailed on the [Allow Draft Status Updates](customizations.html#allow-draft-status-updates) section of the Customization chapter.
+3. Perform a PATCH request to the `[BASE_URL]/uploader/[HASH]/` URL. On this request, other fields, other than the draft status, can be changed. The body of the request must be a JSON object with the fields that will suffer changes and their new values.
 
 ### Catalogue Results Files {-}
 
