@@ -39,8 +39,10 @@ To perform this, each field should be provided as a URL parameter when accessing
 Since the creation URL does not have csrf cookie protection, you can perform a POST request as you were submitting a form.
 
 **Notes For the automatic options**:
--. Since the coordinates field is composed of two fields (latitude, longitude), it should be submitted as `coordinates_0=[latitude]` and `coordinates_1=[longitude]`
--. The country field should match one of the available on the dropdown of the webform.
+
+- Since the coordinates field is composed of two fields (latitude, longitude), it should be submitted as `coordinates_0=[latitude]` and `coordinates_1=[longitude]`
+
+- The country field should match one of the available on the dropdown of the webform.
 
 ### Catalogue Results Files {-}
 
@@ -130,3 +132,34 @@ After all this, the final step is to add the materialized view as a Dataset. Log
 ### Tabs View [Deprecated] {-}
 
 **Target: admin user**
+
+Once there are data sources on the platform, data was uploaded to them and there are dashboards created on Superset, researchers can now browse through the dashboards and analyze and compare the data of the different data sources.
+One way to allow this would be to let them browse through the dashboard list on Superset. However, if there was some dashboards not ready to show to the public users, they could still access them.
+
+For that, it was created a page, with a sidebar, where public users could browse through the available and ready dashboards.
+It can be accessed through the URL `[BASE_URL]/tabs/`
+
+![](images/processes/tabs.png)
+
+The sidebar entries can be configured through the Django admin app, accessing the Tabsmanager app section.
+Here two models are available to create:
+
+- Tab Groups: They allow to groups several sidebar entries within a collapsable group.
+
+![](images/processes/tabs-group.png)
+
+- Tabs: Will create a clickable entry on the sidebar that can be presented within a group. When a tab is clicked the associated dashboard will be displayed on the page.
+
+Each entry, tab, or group of them, expects:
+
+- Title/Name
+- Icon: Name of a font awesome version 5 icon
+- Position: Allows to order entries along the sidebar. If a Tab has a group, then this field will order the tabs within that group only.
+- Visible: If whether or not this tab or group should be visible. The goal of this field is to avoid having to delete the record from the database just because a certain tab is not ready and later on created it from scratch.
+
+Tabs additionally expect an URL, which will be used to display a Superset dashboard in an iframe.
+To hide Superset's menu bar, an additional `standalone` URL parameter should be appended to the provided URL of a tab.
+The value of the `standalone` arguments depends on the expected result:
+
+- 1: menu bar is hidden. the bar where the dashboard title, publish status, and three dots option menu are present will still appear
+- 2: both the menu bar and the dashboard title bar are hidden.

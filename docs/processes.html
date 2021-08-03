@@ -315,9 +315,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Automatically create by performing a POST to the <code>[BASE_URL]/uploader/</code> URL</li>
 </ol>
 <p>Since the creation URL does not have csrf cookie protection, you can perform a POST request as you were submitting a form.</p>
-<p><strong>Notes For the automatic options</strong>:
--. Since the coordinates field is composed of two fields (latitude, longitude), it should be submitted as <code>coordinates_0=[latitude]</code> and <code>coordinates_1=[longitude]</code>
--. The country field should match one of the available on the dropdown of the webform.</p>
+<p><strong>Notes For the automatic options</strong>:</p>
+<ul>
+<li><p>Since the coordinates field is composed of two fields (latitude, longitude), it should be submitted as <code>coordinates_0=[latitude]</code> and <code>coordinates_1=[longitude]</code></p></li>
+<li><p>The country field should match one of the available on the dropdown of the webform.</p></li>
+</ul>
 </div>
 <div id="catalogue-results-files" class="section level3 unnumbered" number="">
 <h3>Catalogue Results Files</h3>
@@ -485,6 +487,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tabs-view-deprecated" class="section level3 unnumbered" number="">
 <h3>Tabs View [Deprecated]</h3>
 <p><strong>Target: admin user</strong></p>
+<p>Once there are data sources on the platform, data was uploaded to them and there are dashboards created on Superset, researchers can now browse through the dashboards and analyze and compare the data of the different data sources.
+One way to allow this would be to let them browse through the dashboard list on Superset. However, if there was some dashboards not ready to show to the public users, they could still access them.</p>
+<p>For that, it was created a page, with a sidebar, where public users could browse through the available and ready dashboards.
+It can be accessed through the URL <code>[BASE_URL]/tabs/</code></p>
+<p><img src="images/processes/tabs.png" /></p>
+<p>The sidebar entries can be configured through the Django admin app, accessing the Tabsmanager app section.
+Here two models are available to create:</p>
+<ul>
+<li>Tab Groups: They allow to groups several sidebar entries within a collapsable group.</li>
+</ul>
+<p><img src="images/processes/tabs-group.png" /></p>
+<ul>
+<li>Tabs: Will create a clickable entry on the sidebar that can be presented within a group. When a tab is clicked the associated dashboard will be displayed on the page.</li>
+</ul>
+<p>Each entry, tab, or group of them, expects:</p>
+<ul>
+<li>Title/Name</li>
+<li>Icon: Name of a font awesome version 5 icon</li>
+<li>Position: Allows to order entries along the sidebar. If a Tab has a group, then this field will order the tabs within that group only.</li>
+<li>Visible: If whether or not this tab or group should be visible. The goal of this field is to avoid having to delete the record from the database just because a certain tab is not ready and later on created it from scratch.</li>
+</ul>
+<p>Tabs additionally expect an URL, which will be used to display a Superset dashboard in an iframe.
+To hide Superset’s menu bar, an additional <code>standalone</code> URL parameter should be appended to the provided URL of a tab.
+The value of the <code>standalone</code> arguments depends on the expected result:</p>
+<ul>
+<li>1: menu bar is hidden. the bar where the dashboard title, publish status, and three dots option menu are present will still appear</li>
+<li>2: both the menu bar and the dashboard title bar are hidden.</li>
+</ul>
 
 </div>
 </div>

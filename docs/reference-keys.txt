@@ -1,5 +1,5 @@
+fig:dashboardsLayout
 fig:dataSourceFilter
-fig:conditionDrugProcedureDeviceMeasurementObservationTypes
 fig:unnamed-chunk-1
 preface
 introduction
@@ -21,3 +21,4 @@ death-deprecated
 concepts-browser-deprecated
 provenance-deprecated
 data-domains-deprecated
+fig:conditionDrugProcedureDeviceMeasurementObservationTypes
