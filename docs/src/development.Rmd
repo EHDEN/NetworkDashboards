@@ -2,32 +2,32 @@
 
 ### Repository Structure Description {-}
 
-- backups: Scripts and configuration files to perform backups of all the data involved in the Network Dashboards applications (Dashboard viewer + Superset)
+- **backups**: Scripts and configuration files to perform backups of all the data involved in the Network Dashboards applications (Dashboard viewer + Superset)
 
-- dashboard_viewer: The Dashboard Viewer Django application to manage and upload catalogue results data. More detail can be found in the [Code Documentation](code-documentation.html) chapter.
+- **dashboard_viewer**: The Dashboard Viewer Django application to manage and upload catalogue results data. More detail can be found in the [Code Documentation](code-documentation.html) chapter.
 
-- demo: Files that can be used to test some processes of the platform (Upload catalogue results data and import a simple dashboard)
+- **demo**: Files that can be used to test some processes of the platform (Upload catalogue results data and import a simple dashboard)
 
-- docker: Docker-compose stack-related directories.
+- **docker**: Docker-compose stack-related directories.
   - Environment file
   - Configuration directories (Nginx and Postgres)
   - Custom Superest Dockerfile <!-- TODO link to the subsection on the Superset section -->
 
   For more information about docker deployment consult the [Installation](installation.html) chapter.
 
-- docs: Where the files of this gitbook are hosted. Other output formats can also be obtained here. Consult the [Documentation](development-instructions.html#documentation) section of this chapter for more details.
+- **docs**: Where the files of this gitbook are hosted. Other output formats can also be obtained here. Consult the [Documentation](development-instructions.html#documentation) section of this chapter for more details.
 
-- superset: contains a submodule to the latest supported version  of Superset's repository and our custom chart plugins
+- **superset**: contains a submodule to the latest supported version  of Superset's repository and our custom chart plugins
 
-- tests: contains files to launch a docker-compose stack specific to run tests.
+- **tests**: contains files to launch a docker-compose stack specific to run tests.
 
-- requirements-dev: python requirements files to the several tools to either perform code style checks or to run Django tests
+- **requirements-dev**: python requirements files to the several tools to either perform code style checks or to run Django tests
 
-- .pre-commit-config.yaml: configuration for the [pre-commit](https://pre-commit.com/) tool. This is not mandatory to use but is a good tool to automatically fix problems related to code style on staged files
+- **.pre-commit-config.yaml**: configuration for the [pre-commit](https://pre-commit.com/) tool. This is not mandatory to use but is a good tool to automatically fix problems related to code style on staged files
 
-- setup.cfg: configurations for the several code style tools
+- **setup.cfg**: configurations for the several code style tools
 
-- tox.ini: configuration for the [tox](https://tox.readthedocs.io/) tool. It helps automate the process to check if the code style is correct and if the Django tests are passing
+- **tox.ini**: configuration for the [tox](https://tox.readthedocs.io/) tool. It helps automate the process to check if the code style is correct and if the Django tests are passing
 
   It's extremely useful in this context since different code style check tools that we use have some conflicts with python dependencies. It creates a virtual environment for each tox environment, in our case, for each code style check tool plus Django tests
 
@@ -64,3 +64,20 @@ The update process of dependencies will then just be
 3. Call the pip-compile tool on the requirement.in file `pip-compile requirements.in`
 
 ### Documentation {-}
+
+The plan is to have all the documentation on this git book and any other places that might require some description/information should point to this GitBook so we maintain a commonplace for all the documentation.
+This way we can make sure that the code and the documentation are in the same place since on a pull request for a specific feature or a bug fix, associated documentation should also be changed with it.
+
+The manual was written in [RMarkdown](https://rmarkdown.rstudio.com) using the [bookdown](https://bookdown.org) package.
+All the code is stored in the `docs/src` directory as well as the script to build all the documentation.
+**Do not change** the files in the root of the `docs` directory, because those files will be removed during the build processed and replaced by the new ones.
+Therefore, to update this documentation, apply the changes to the files in the directory `docs/src`.
+To build the documentation, you need to have [R](https://www.r-project.org/) installed, and if you are using UNIX-based systems, you only need to run `sh _build.sh` in the `docs/src` directory.
+
+In this documentation, we also describe all the settings around the dashboards that are used on the EHDEN project.
+To avoid an extensive table of contents and also to avoid having a big chapter page for dashboards, we configured this GitBook to split different sections into different pages.
+A section on the GitBook is mapped to markdown headings elements of level 1 (H1 or #).
+This is, however, inconvenient for small chapters like the preface (index.Rmd).
+To make it render all the sections on the same page, instead of using headings of level 1 (#) you should use level 2 (##).
+Although this will make the section numeration start at 0, e.g 1.0.1, 1.0.2, ...
+To avoid this we appended `{-}` to the sections titles so that the numeration does not show.

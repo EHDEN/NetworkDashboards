@@ -1,7 +1,7 @@
 --- 
 title: "Data Network Dashboards"
 author: "This document is currently under construction"
-date: "2021-08-03"
+date: "2021-08-04"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
@@ -46,9 +46,10 @@ To develop this tool, EHDEN organized a hack-a-thon (Aveiro, December 2-3, 2019)
 
 This manual was written to be a guide for a clean installation of this system with all the dashboards that we defined during the project. The first chapter describes the goal of the system and the second how to install the system. The remaining chapters are dedicated to the dashboards, in which chapters describes one dashboard and all its charts. To simplify the representation of the dashboard's layout, we used similar schemas as it is presented in Figure \@ref(fig:dashboardsLayout). The white box is the dashboard and the inside boxes are charts. The colour changes in relation to the type of chart.
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/dashboardsLayout} \caption{Example of a dashboards tool presenting the databases available in the network (simulated data)}(\#fig:dashboardsLayout)
-\end{figure}
+<div class="figure">
+<img src="images/dashboardsLayout.png" alt="Example of a dashboards tool presenting the databases available in the network (simulated data)" width="100%" />
+<p class="caption">(\#fig:dashboardsLayout)Example of a dashboards tool presenting the databases available in the network (simulated data)</p>
+</div>
 
 ### License {-}
 

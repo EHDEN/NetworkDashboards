@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2021-08-03" />
+<meta name="date" content="2021-08-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -294,23 +294,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="repository-structure-description" class="section level3 unnumbered" number="">
 <h3>Repository Structure Description</h3>
 <ul>
-<li><p>backups: Scripts and configuration files to perform backups of all the data involved in the Network Dashboards applications (Dashboard viewer + Superset)</p></li>
-<li><p>dashboard_viewer: The Dashboard Viewer Django application to manage and upload catalogue results data. More detail can be found in the <a href="code-documentation.html">Code Documentation</a> chapter.</p></li>
-<li><p>demo: Files that can be used to test some processes of the platform (Upload catalogue results data and import a simple dashboard)</p></li>
-<li><p>docker: Docker-compose stack-related directories.</p>
+<li><p><strong>backups</strong>: Scripts and configuration files to perform backups of all the data involved in the Network Dashboards applications (Dashboard viewer + Superset)</p></li>
+<li><p><strong>dashboard_viewer</strong>: The Dashboard Viewer Django application to manage and upload catalogue results data. More detail can be found in the <a href="code-documentation.html">Code Documentation</a> chapter.</p></li>
+<li><p><strong>demo</strong>: Files that can be used to test some processes of the platform (Upload catalogue results data and import a simple dashboard)</p></li>
+<li><p><strong>docker</strong>: Docker-compose stack-related directories.</p>
 <ul>
 <li>Environment file</li>
 <li>Configuration directories (Nginx and Postgres)</li>
 <li>Custom Superest Dockerfile <!-- TODO link to the subsection on the Superset section --></li>
 </ul>
 <p>For more information about docker deployment consult the <a href="installation.html">Installation</a> chapter.</p></li>
-<li><p>docs: Where the files of this gitbook are hosted. Other output formats can also be obtained here. Consult the <a href="development-instructions.html#documentation">Documentation</a> section of this chapter for more details.</p></li>
-<li><p>superset: contains a submodule to the latest supported version of Superset’s repository and our custom chart plugins</p></li>
-<li><p>tests: contains files to launch a docker-compose stack specific to run tests.</p></li>
-<li><p>requirements-dev: python requirements files to the several tools to either perform code style checks or to run Django tests</p></li>
-<li><p>.pre-commit-config.yaml: configuration for the <a href="https://pre-commit.com/">pre-commit</a> tool. This is not mandatory to use but is a good tool to automatically fix problems related to code style on staged files</p></li>
-<li><p>setup.cfg: configurations for the several code style tools</p></li>
-<li><p>tox.ini: configuration for the <a href="https://tox.readthedocs.io/">tox</a> tool. It helps automate the process to check if the code style is correct and if the Django tests are passing</p>
+<li><p><strong>docs</strong>: Where the files of this gitbook are hosted. Other output formats can also be obtained here. Consult the <a href="development-instructions.html#documentation">Documentation</a> section of this chapter for more details.</p></li>
+<li><p><strong>superset</strong>: contains a submodule to the latest supported version of Superset’s repository and our custom chart plugins</p></li>
+<li><p><strong>tests</strong>: contains files to launch a docker-compose stack specific to run tests.</p></li>
+<li><p><strong>requirements-dev</strong>: python requirements files to the several tools to either perform code style checks or to run Django tests</p></li>
+<li><p><strong>.pre-commit-config.yaml</strong>: configuration for the <a href="https://pre-commit.com/">pre-commit</a> tool. This is not mandatory to use but is a good tool to automatically fix problems related to code style on staged files</p></li>
+<li><p><strong>setup.cfg</strong>: configurations for the several code style tools</p></li>
+<li><p><strong>tox.ini</strong>: configuration for the <a href="https://tox.readthedocs.io/">tox</a> tool. It helps automate the process to check if the code style is correct and if the Django tests are passing</p>
 <p>It’s extremely useful in this context since different code style check tools that we use have some conflicts with python dependencies. It creates a virtual environment for each tox environment, in our case, for each code style check tool plus Django tests</p></li>
 </ul>
 </div>
@@ -351,6 +351,20 @@ The update process of dependencies will then just be</p>
 </div>
 <div id="documentation" class="section level3 unnumbered" number="">
 <h3>Documentation</h3>
+<p>The plan is to have all the documentation on this git book and any other places that might require some description/information should point to this GitBook so we maintain a commonplace for all the documentation.
+This way we can make sure that the code and the documentation are in the same place since on a pull request for a specific feature or a bug fix, associated documentation should also be changed with it.</p>
+<p>The manual was written in <a href="https://rmarkdown.rstudio.com">RMarkdown</a> using the <a href="https://bookdown.org">bookdown</a> package.
+All the code is stored in the <code>docs/src</code> directory as well as the script to build all the documentation.
+<strong>Do not change</strong> the files in the root of the <code>docs</code> directory, because those files will be removed during the build processed and replaced by the new ones.
+Therefore, to update this documentation, apply the changes to the files in the directory <code>docs/src</code>.
+To build the documentation, you need to have <a href="https://www.r-project.org/">R</a> installed, and if you are using UNIX-based systems, you only need to run <code>sh _build.sh</code> in the <code>docs/src</code> directory.</p>
+<p>In this documentation, we also describe all the settings around the dashboards that are used on the EHDEN project.
+To avoid an extensive table of contents and also to avoid having a big chapter page for dashboards, we configured this GitBook to split different sections into different pages.
+A section on the GitBook is mapped to markdown headings elements of level 1 (H1 or #).
+This is, however, inconvenient for small chapters like the preface (index.Rmd).
+To make it render all the sections on the same page, instead of using headings of level 1 (#) you should use level 2 (##).
+Although this will make the section numeration start at 0, e.g 1.0.1, 1.0.2, …
+To avoid this we appended <code>{-}</code> to the sections titles so that the numeration does not show.</p>
 
 </div>
 </div>
