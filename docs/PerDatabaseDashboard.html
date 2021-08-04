@@ -296,17 +296,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>Label Colors</h3>
 <p>In order to obtain the colors blue and rose in the chart representing the gender distribution,
 add the following JSON entry to the JSON object of the <code>JSON Metadata</code> field on the edit dashboard page:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="PerDatabaseDashboard.html#cb10-1" aria-hidden="true"></a><span class="er">&quot;label_colors&quot;:</span> <span class="fu">{</span></span>
-<span id="cb10-2"><a href="PerDatabaseDashboard.html#cb10-2" aria-hidden="true"></a>    <span class="dt">&quot;Male&quot;</span><span class="fu">:</span> <span class="st">&quot;#3366FF&quot;</span><span class="fu">,</span> </span>
-<span id="cb10-3"><a href="PerDatabaseDashboard.html#cb10-3" aria-hidden="true"></a>    <span class="dt">&quot;Female&quot;</span><span class="fu">:</span> <span class="st">&quot;#FF3399&quot;</span></span>
-<span id="cb10-4"><a href="PerDatabaseDashboard.html#cb10-4" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="PerDatabaseDashboard.html#cb11-1" aria-hidden="true"></a><span class="er">&quot;label_colors&quot;:</span> <span class="fu">{</span></span>
+<span id="cb11-2"><a href="PerDatabaseDashboard.html#cb11-2" aria-hidden="true"></a>    <span class="dt">&quot;Male&quot;</span><span class="fu">:</span> <span class="st">&quot;#3366FF&quot;</span><span class="fu">,</span> </span>
+<span id="cb11-3"><a href="PerDatabaseDashboard.html#cb11-3" aria-hidden="true"></a>    <span class="dt">&quot;Female&quot;</span><span class="fu">:</span> <span class="st">&quot;#FF3399&quot;</span></span>
+<span id="cb11-4"><a href="PerDatabaseDashboard.html#cb11-4" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
 </div>
 <div id="css" class="section level3 unnumbered" number="">
 <h3>CSS</h3>
 <p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb11-1"><a href="PerDatabaseDashboard.html#cb11-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
-<span id="cb11-2"><a href="PerDatabaseDashboard.html#cb11-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb11-3"><a href="PerDatabaseDashboard.html#cb11-3" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb12-1"><a href="PerDatabaseDashboard.html#cb12-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
+<span id="cb12-2"><a href="PerDatabaseDashboard.html#cb12-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb12-3"><a href="PerDatabaseDashboard.html#cb12-3" aria-hidden="true"></a>}</span></code></pre></div>
 <p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
@@ -349,13 +349,13 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <h4>Number of Patients</h4>
 <div id="sql-query-1" class="section level5 unnumbered" number="">
 <h5>SQL query</h5>
-<div class="sourceCode" id="cb12"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb12-1"><a href="PerDatabaseDashboard.html#cb12-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
-<span id="cb12-2"><a href="PerDatabaseDashboard.html#cb12-2" aria-hidden="true"></a>  achilles_results.count_value,</span>
-<span id="cb12-3"><a href="PerDatabaseDashboard.html#cb12-3" aria-hidden="true"></a>  data_source.name,</span>
-<span id="cb12-4"><a href="PerDatabaseDashboard.html#cb12-4" aria-hidden="true"></a>  data_source.acronym</span>
-<span id="cb12-5"><a href="PerDatabaseDashboard.html#cb12-5" aria-hidden="true"></a><span class="kw">FROM</span> achilles_results</span>
-<span id="cb12-6"><a href="PerDatabaseDashboard.html#cb12-6" aria-hidden="true"></a><span class="kw">JOIN</span> data_source <span class="kw">ON</span> achilles_results.data_source_id<span class="op">=</span>data_source.<span class="kw">id</span></span>
-<span id="cb12-7"><a href="PerDatabaseDashboard.html#cb12-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb13-1"><a href="PerDatabaseDashboard.html#cb13-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
+<span id="cb13-2"><a href="PerDatabaseDashboard.html#cb13-2" aria-hidden="true"></a>  achilles_results.count_value,</span>
+<span id="cb13-3"><a href="PerDatabaseDashboard.html#cb13-3" aria-hidden="true"></a>  data_source.name,</span>
+<span id="cb13-4"><a href="PerDatabaseDashboard.html#cb13-4" aria-hidden="true"></a>  data_source.acronym</span>
+<span id="cb13-5"><a href="PerDatabaseDashboard.html#cb13-5" aria-hidden="true"></a><span class="kw">FROM</span> achilles_results</span>
+<span id="cb13-6"><a href="PerDatabaseDashboard.html#cb13-6" aria-hidden="true"></a><span class="kw">JOIN</span> data_source <span class="kw">ON</span> achilles_results.data_source_id<span class="op">=</span>data_source.<span class="kw">id</span></span>
+<span id="cb13-7"><a href="PerDatabaseDashboard.html#cb13-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">1</span></span></code></pre></div>
 </div>
 <div id="chart-settings-1" class="section level5 unnumbered" number="">
 <h5>Chart settings</h5>
@@ -385,14 +385,14 @@ Time range: No filter</li>
 <h4>Gender Table</h4>
 <div id="sql-query-gendertablequery" class="section level5 unnumbered" number="">
 <h5>SQL Query {#genderTableQuery}</h5>
-<div class="sourceCode" id="cb13"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb13-1"><a href="PerDatabaseDashboard.html#cb13-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name <span class="kw">as</span> name,</span>
-<span id="cb13-2"><a href="PerDatabaseDashboard.html#cb13-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
-<span id="cb13-3"><a href="PerDatabaseDashboard.html#cb13-3" aria-hidden="true"></a>       concept_name <span class="kw">as</span> gender,</span>
-<span id="cb13-4"><a href="PerDatabaseDashboard.html#cb13-4" aria-hidden="true"></a>       count_value</span>
-<span id="cb13-5"><a href="PerDatabaseDashboard.html#cb13-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb13-6"><a href="PerDatabaseDashboard.html#cb13-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb13-7"><a href="PerDatabaseDashboard.html#cb13-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
-<span id="cb13-8"><a href="PerDatabaseDashboard.html#cb13-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">2</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb14-1"><a href="PerDatabaseDashboard.html#cb14-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name <span class="kw">as</span> name,</span>
+<span id="cb14-2"><a href="PerDatabaseDashboard.html#cb14-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
+<span id="cb14-3"><a href="PerDatabaseDashboard.html#cb14-3" aria-hidden="true"></a>       concept_name <span class="kw">as</span> gender,</span>
+<span id="cb14-4"><a href="PerDatabaseDashboard.html#cb14-4" aria-hidden="true"></a>       count_value</span>
+<span id="cb14-5"><a href="PerDatabaseDashboard.html#cb14-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb14-6"><a href="PerDatabaseDashboard.html#cb14-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb14-7"><a href="PerDatabaseDashboard.html#cb14-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
+<span id="cb14-8"><a href="PerDatabaseDashboard.html#cb14-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">2</span></span></code></pre></div>
 </div>
 <div id="chart-settings-2" class="section level5 unnumbered" number="">
 <h5>Chart settings</h5>
@@ -484,25 +484,25 @@ Time range: No filter</li>
 <h4>Total Number of Records</h4>
 <div id="sql-query-3" class="section level5 unnumbered" number="">
 <h5>SQL query</h5>
-<div class="sourceCode" id="cb14"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb14-1"><a href="PerDatabaseDashboard.html#cb14-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
-<span id="cb14-2"><a href="PerDatabaseDashboard.html#cb14-2" aria-hidden="true"></a>data_source.name,</span>
-<span id="cb14-3"><a href="PerDatabaseDashboard.html#cb14-3" aria-hidden="true"></a>data_source.acronym,</span>
-<span id="cb14-4"><a href="PerDatabaseDashboard.html#cb14-4" aria-hidden="true"></a>    <span class="cf">CASE</span> </span>
-<span id="cb14-5"><a href="PerDatabaseDashboard.html#cb14-5" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">201</span> <span class="cf">THEN</span> <span class="st">&#39;Visit&#39;</span></span>
-<span id="cb14-6"><a href="PerDatabaseDashboard.html#cb14-6" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">401</span> <span class="cf">THEN</span> <span class="st">&#39;Condition&#39;</span></span>
-<span id="cb14-7"><a href="PerDatabaseDashboard.html#cb14-7" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">501</span> <span class="cf">THEN</span> <span class="st">&#39;Death&#39;</span></span>
-<span id="cb14-8"><a href="PerDatabaseDashboard.html#cb14-8" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">601</span> <span class="cf">THEN</span> <span class="st">&#39;Procedure&#39;</span></span>
-<span id="cb14-9"><a href="PerDatabaseDashboard.html#cb14-9" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">701</span> <span class="cf">THEN</span> <span class="st">&#39;Drug Exposure&#39;</span></span>
-<span id="cb14-10"><a href="PerDatabaseDashboard.html#cb14-10" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">801</span> <span class="cf">THEN</span> <span class="st">&#39;Observation&#39;</span></span>
-<span id="cb14-11"><a href="PerDatabaseDashboard.html#cb14-11" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">1801</span> <span class="cf">THEN</span> <span class="st">&#39;Measurement&#39;</span></span>
-<span id="cb14-12"><a href="PerDatabaseDashboard.html#cb14-12" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">2101</span> <span class="cf">THEN</span> <span class="st">&#39;Device&#39;</span></span>
-<span id="cb14-13"><a href="PerDatabaseDashboard.html#cb14-13" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">2201</span> <span class="cf">THEN</span> <span class="st">&#39;Note&#39;</span></span>
-<span id="cb14-14"><a href="PerDatabaseDashboard.html#cb14-14" aria-hidden="true"></a>    <span class="cf">END</span> <span class="kw">AS</span> Data_Domain,</span>
-<span id="cb14-15"><a href="PerDatabaseDashboard.html#cb14-15" aria-hidden="true"></a>    <span class="fu">SUM</span>(count_value) <span class="kw">AS</span> <span class="ot">&quot;count&quot;</span></span>
-<span id="cb14-16"><a href="PerDatabaseDashboard.html#cb14-16" aria-hidden="true"></a><span class="kw">FROM</span> achilles_results</span>
-<span id="cb14-17"><a href="PerDatabaseDashboard.html#cb14-17" aria-hidden="true"></a><span class="kw">JOIN</span> data_source <span class="kw">ON</span> achilles_results.data_source_id<span class="op">=</span>data_source.<span class="kw">id</span></span>
-<span id="cb14-18"><a href="PerDatabaseDashboard.html#cb14-18" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> name, acronym, analysis_id</span>
-<span id="cb14-19"><a href="PerDatabaseDashboard.html#cb14-19" aria-hidden="true"></a><span class="kw">HAVING</span> analysis_id <span class="kw">IN</span> (<span class="dv">201</span>, <span class="dv">401</span>, <span class="dv">501</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">1801</span>, <span class="dv">2101</span>, <span class="dv">2201</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb15-1"><a href="PerDatabaseDashboard.html#cb15-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
+<span id="cb15-2"><a href="PerDatabaseDashboard.html#cb15-2" aria-hidden="true"></a>data_source.name,</span>
+<span id="cb15-3"><a href="PerDatabaseDashboard.html#cb15-3" aria-hidden="true"></a>data_source.acronym,</span>
+<span id="cb15-4"><a href="PerDatabaseDashboard.html#cb15-4" aria-hidden="true"></a>    <span class="cf">CASE</span> </span>
+<span id="cb15-5"><a href="PerDatabaseDashboard.html#cb15-5" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">201</span> <span class="cf">THEN</span> <span class="st">&#39;Visit&#39;</span></span>
+<span id="cb15-6"><a href="PerDatabaseDashboard.html#cb15-6" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">401</span> <span class="cf">THEN</span> <span class="st">&#39;Condition&#39;</span></span>
+<span id="cb15-7"><a href="PerDatabaseDashboard.html#cb15-7" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">501</span> <span class="cf">THEN</span> <span class="st">&#39;Death&#39;</span></span>
+<span id="cb15-8"><a href="PerDatabaseDashboard.html#cb15-8" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">601</span> <span class="cf">THEN</span> <span class="st">&#39;Procedure&#39;</span></span>
+<span id="cb15-9"><a href="PerDatabaseDashboard.html#cb15-9" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">701</span> <span class="cf">THEN</span> <span class="st">&#39;Drug Exposure&#39;</span></span>
+<span id="cb15-10"><a href="PerDatabaseDashboard.html#cb15-10" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">801</span> <span class="cf">THEN</span> <span class="st">&#39;Observation&#39;</span></span>
+<span id="cb15-11"><a href="PerDatabaseDashboard.html#cb15-11" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">1801</span> <span class="cf">THEN</span> <span class="st">&#39;Measurement&#39;</span></span>
+<span id="cb15-12"><a href="PerDatabaseDashboard.html#cb15-12" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">2101</span> <span class="cf">THEN</span> <span class="st">&#39;Device&#39;</span></span>
+<span id="cb15-13"><a href="PerDatabaseDashboard.html#cb15-13" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">2201</span> <span class="cf">THEN</span> <span class="st">&#39;Note&#39;</span></span>
+<span id="cb15-14"><a href="PerDatabaseDashboard.html#cb15-14" aria-hidden="true"></a>    <span class="cf">END</span> <span class="kw">AS</span> Data_Domain,</span>
+<span id="cb15-15"><a href="PerDatabaseDashboard.html#cb15-15" aria-hidden="true"></a>    <span class="fu">SUM</span>(count_value) <span class="kw">AS</span> <span class="ot">&quot;count&quot;</span></span>
+<span id="cb15-16"><a href="PerDatabaseDashboard.html#cb15-16" aria-hidden="true"></a><span class="kw">FROM</span> achilles_results</span>
+<span id="cb15-17"><a href="PerDatabaseDashboard.html#cb15-17" aria-hidden="true"></a><span class="kw">JOIN</span> data_source <span class="kw">ON</span> achilles_results.data_source_id<span class="op">=</span>data_source.<span class="kw">id</span></span>
+<span id="cb15-18"><a href="PerDatabaseDashboard.html#cb15-18" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> name, acronym, analysis_id</span>
+<span id="cb15-19"><a href="PerDatabaseDashboard.html#cb15-19" aria-hidden="true"></a><span class="kw">HAVING</span> analysis_id <span class="kw">IN</span> (<span class="dv">201</span>, <span class="dv">401</span>, <span class="dv">501</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">1801</span>, <span class="dv">2101</span>, <span class="dv">2201</span>)</span></code></pre></div>
 </div>
 <div id="chart-settings-4" class="section level5 unnumbered" number="">
 <h5>Chart settings</h5>
@@ -543,24 +543,24 @@ Time range: No filter</li>
 <p>The cumulative observation time plot shows the percentage of patients that have more that X days of observation time.</p>
 <div id="sql-query-4" class="section level5 unnumbered" number="">
 <h5>SQL Query</h5>
-<div class="sourceCode" id="cb15"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb15-1"><a href="PerDatabaseDashboard.html#cb15-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
-<span id="cb15-2"><a href="PerDatabaseDashboard.html#cb15-2" aria-hidden="true"></a>  name,</span>
-<span id="cb15-3"><a href="PerDatabaseDashboard.html#cb15-3" aria-hidden="true"></a>  acronym,</span>
-<span id="cb15-4"><a href="PerDatabaseDashboard.html#cb15-4" aria-hidden="true"></a>  xLengthOfObservation,</span>
-<span id="cb15-5"><a href="PerDatabaseDashboard.html#cb15-5" aria-hidden="true"></a>  <span class="fu">round</span>(cumulative_sum <span class="op">/</span> total, <span class="dv">5</span>) <span class="kw">as</span> yPercentPersons</span>
-<span id="cb15-6"><a href="PerDatabaseDashboard.html#cb15-6" aria-hidden="true"></a><span class="kw">FROM</span> (</span>
-<span id="cb15-7"><a href="PerDatabaseDashboard.html#cb15-7" aria-hidden="true"></a>  <span class="kw">SELECT</span> data_source_id, <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">*</span> <span class="dv">30</span> <span class="kw">AS</span> xLengthOfObservation, <span class="fu">SUM</span>(count_value) <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> data_source_id <span class="kw">ORDER</span> <span class="kw">BY</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="kw">DESC</span>) <span class="kw">as</span> cumulative_sum</span>
-<span id="cb15-8"><a href="PerDatabaseDashboard.html#cb15-8" aria-hidden="true"></a>  <span class="kw">FROM</span> achilles_results</span>
-<span id="cb15-9"><a href="PerDatabaseDashboard.html#cb15-9" aria-hidden="true"></a>  <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">108</span></span>
-<span id="cb15-10"><a href="PerDatabaseDashboard.html#cb15-10" aria-hidden="true"></a>) <span class="kw">AS</span> cumulative_sums</span>
-<span id="cb15-11"><a href="PerDatabaseDashboard.html#cb15-11" aria-hidden="true"></a><span class="kw">JOIN</span> (</span>
-<span id="cb15-12"><a href="PerDatabaseDashboard.html#cb15-12" aria-hidden="true"></a>  <span class="kw">SELECT</span> data_source_id, count_value <span class="kw">as</span> total</span>
-<span id="cb15-13"><a href="PerDatabaseDashboard.html#cb15-13" aria-hidden="true"></a>  <span class="kw">FROM</span> achilles_results</span>
-<span id="cb15-14"><a href="PerDatabaseDashboard.html#cb15-14" aria-hidden="true"></a>  <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb15-15"><a href="PerDatabaseDashboard.html#cb15-15" aria-hidden="true"></a>) <span class="kw">AS</span> totals</span>
-<span id="cb15-16"><a href="PerDatabaseDashboard.html#cb15-16" aria-hidden="true"></a><span class="kw">ON</span> cumulative_sums.data_source_id <span class="op">=</span> totals.data_source_id</span>
-<span id="cb15-17"><a href="PerDatabaseDashboard.html#cb15-17" aria-hidden="true"></a><span class="kw">JOIN</span> data_source <span class="kw">ON</span> cumulative_sums.data_source_id <span class="op">=</span> data_source.<span class="kw">id</span></span>
-<span id="cb15-18"><a href="PerDatabaseDashboard.html#cb15-18" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> name, xLengthOfObservation</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb16-1"><a href="PerDatabaseDashboard.html#cb16-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
+<span id="cb16-2"><a href="PerDatabaseDashboard.html#cb16-2" aria-hidden="true"></a>  name,</span>
+<span id="cb16-3"><a href="PerDatabaseDashboard.html#cb16-3" aria-hidden="true"></a>  acronym,</span>
+<span id="cb16-4"><a href="PerDatabaseDashboard.html#cb16-4" aria-hidden="true"></a>  xLengthOfObservation,</span>
+<span id="cb16-5"><a href="PerDatabaseDashboard.html#cb16-5" aria-hidden="true"></a>  <span class="fu">round</span>(cumulative_sum <span class="op">/</span> total, <span class="dv">5</span>) <span class="kw">as</span> yPercentPersons</span>
+<span id="cb16-6"><a href="PerDatabaseDashboard.html#cb16-6" aria-hidden="true"></a><span class="kw">FROM</span> (</span>
+<span id="cb16-7"><a href="PerDatabaseDashboard.html#cb16-7" aria-hidden="true"></a>  <span class="kw">SELECT</span> data_source_id, <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">*</span> <span class="dv">30</span> <span class="kw">AS</span> xLengthOfObservation, <span class="fu">SUM</span>(count_value) <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> data_source_id <span class="kw">ORDER</span> <span class="kw">BY</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="kw">DESC</span>) <span class="kw">as</span> cumulative_sum</span>
+<span id="cb16-8"><a href="PerDatabaseDashboard.html#cb16-8" aria-hidden="true"></a>  <span class="kw">FROM</span> achilles_results</span>
+<span id="cb16-9"><a href="PerDatabaseDashboard.html#cb16-9" aria-hidden="true"></a>  <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">108</span></span>
+<span id="cb16-10"><a href="PerDatabaseDashboard.html#cb16-10" aria-hidden="true"></a>) <span class="kw">AS</span> cumulative_sums</span>
+<span id="cb16-11"><a href="PerDatabaseDashboard.html#cb16-11" aria-hidden="true"></a><span class="kw">JOIN</span> (</span>
+<span id="cb16-12"><a href="PerDatabaseDashboard.html#cb16-12" aria-hidden="true"></a>  <span class="kw">SELECT</span> data_source_id, count_value <span class="kw">as</span> total</span>
+<span id="cb16-13"><a href="PerDatabaseDashboard.html#cb16-13" aria-hidden="true"></a>  <span class="kw">FROM</span> achilles_results</span>
+<span id="cb16-14"><a href="PerDatabaseDashboard.html#cb16-14" aria-hidden="true"></a>  <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb16-15"><a href="PerDatabaseDashboard.html#cb16-15" aria-hidden="true"></a>) <span class="kw">AS</span> totals</span>
+<span id="cb16-16"><a href="PerDatabaseDashboard.html#cb16-16" aria-hidden="true"></a><span class="kw">ON</span> cumulative_sums.data_source_id <span class="op">=</span> totals.data_source_id</span>
+<span id="cb16-17"><a href="PerDatabaseDashboard.html#cb16-17" aria-hidden="true"></a><span class="kw">JOIN</span> data_source <span class="kw">ON</span> cumulative_sums.data_source_id <span class="op">=</span> data_source.<span class="kw">id</span></span>
+<span id="cb16-18"><a href="PerDatabaseDashboard.html#cb16-18" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> name, xLengthOfObservation</span></code></pre></div>
 </div>
 <div id="chart-settings-5" class="section level5 unnumbered" number="">
 <h5>Chart settings</h5>
@@ -607,14 +607,14 @@ Time range: No filter</li>
 <h4>Visit Type Graph</h4>
 <div id="sql-query-5" class="section level5 unnumbered" number="">
 <h5>SQL Query</h5>
-<div class="sourceCode" id="cb16"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb16-1"><a href="PerDatabaseDashboard.html#cb16-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
-<span id="cb16-2"><a href="PerDatabaseDashboard.html#cb16-2" aria-hidden="true"></a>  data_source.name,</span>
-<span id="cb16-3"><a href="PerDatabaseDashboard.html#cb16-3" aria-hidden="true"></a>  data_source.acronym,</span>
-<span id="cb16-4"><a href="PerDatabaseDashboard.html#cb16-4" aria-hidden="true"></a>  concept.concept_name,</span>
-<span id="cb16-5"><a href="PerDatabaseDashboard.html#cb16-5" aria-hidden="true"></a>  achilles_results.count_value <span class="kw">AS</span> num_persons</span>
-<span id="cb16-6"><a href="PerDatabaseDashboard.html#cb16-6" aria-hidden="true"></a><span class="kw">FROM</span> (<span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> achilles_results <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">200</span>) <span class="kw">AS</span> achilles_results</span>
-<span id="cb16-7"><a href="PerDatabaseDashboard.html#cb16-7" aria-hidden="true"></a><span class="kw">JOIN</span> data_source <span class="kw">ON</span> achilles_results.data_source_id <span class="op">=</span> data_source.<span class="kw">id</span></span>
-<span id="cb16-8"><a href="PerDatabaseDashboard.html#cb16-8" aria-hidden="true"></a><span class="kw">JOIN</span> concept <span class="kw">ON</span> <span class="fu">CAST</span>(achilles_results.stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept.concept_id</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb17-1"><a href="PerDatabaseDashboard.html#cb17-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
+<span id="cb17-2"><a href="PerDatabaseDashboard.html#cb17-2" aria-hidden="true"></a>  data_source.name,</span>
+<span id="cb17-3"><a href="PerDatabaseDashboard.html#cb17-3" aria-hidden="true"></a>  data_source.acronym,</span>
+<span id="cb17-4"><a href="PerDatabaseDashboard.html#cb17-4" aria-hidden="true"></a>  concept.concept_name,</span>
+<span id="cb17-5"><a href="PerDatabaseDashboard.html#cb17-5" aria-hidden="true"></a>  achilles_results.count_value <span class="kw">AS</span> num_persons</span>
+<span id="cb17-6"><a href="PerDatabaseDashboard.html#cb17-6" aria-hidden="true"></a><span class="kw">FROM</span> (<span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> achilles_results <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">200</span>) <span class="kw">AS</span> achilles_results</span>
+<span id="cb17-7"><a href="PerDatabaseDashboard.html#cb17-7" aria-hidden="true"></a><span class="kw">JOIN</span> data_source <span class="kw">ON</span> achilles_results.data_source_id <span class="op">=</span> data_source.<span class="kw">id</span></span>
+<span id="cb17-8"><a href="PerDatabaseDashboard.html#cb17-8" aria-hidden="true"></a><span class="kw">JOIN</span> concept <span class="kw">ON</span> <span class="fu">CAST</span>(achilles_results.stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept.concept_id</span></code></pre></div>
 </div>
 <div id="chart-settings-6" class="section level5 unnumbered" number="">
 <h5>Chart settings</h5>
@@ -644,27 +644,27 @@ Time range: No filter</li>
 <h4>Visit Type Table</h4>
 <div id="sql-query-6" class="section level5 unnumbered" number="">
 <h5>SQL Query</h5>
-<div class="sourceCode" id="cb17"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb17-1"><a href="PerDatabaseDashboard.html#cb17-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
-<span id="cb17-2"><a href="PerDatabaseDashboard.html#cb17-2" aria-hidden="true"></a>  name,</span>
-<span id="cb17-3"><a href="PerDatabaseDashboard.html#cb17-3" aria-hidden="true"></a>  acronym,</span>
-<span id="cb17-4"><a href="PerDatabaseDashboard.html#cb17-4" aria-hidden="true"></a>  concept.concept_name,</span>
-<span id="cb17-5"><a href="PerDatabaseDashboard.html#cb17-5" aria-hidden="true"></a>  ar1.count_value <span class="kw">AS</span> num_persons,</span>
-<span id="cb17-6"><a href="PerDatabaseDashboard.html#cb17-6" aria-hidden="true"></a>  <span class="fu">round</span>(<span class="fl">100.0</span> <span class="op">*</span> ar1.count_value <span class="op">/</span> denom.count_value, <span class="dv">2</span>) <span class="kw">AS</span> percent_persons,</span>
-<span id="cb17-7"><a href="PerDatabaseDashboard.html#cb17-7" aria-hidden="true"></a>  <span class="fu">round</span>(<span class="fl">1.0</span> <span class="op">*</span> ar2.count_value <span class="op">/</span> ar1.count_value, <span class="dv">2</span>) <span class="kw">AS</span> records_per_person</span>
-<span id="cb17-8"><a href="PerDatabaseDashboard.html#cb17-8" aria-hidden="true"></a><span class="kw">FROM</span> (</span>
-<span id="cb17-9"><a href="PerDatabaseDashboard.html#cb17-9" aria-hidden="true"></a>  <span class="kw">SELECT</span> <span class="op">*</span></span>
-<span id="cb17-10"><a href="PerDatabaseDashboard.html#cb17-10" aria-hidden="true"></a>  <span class="kw">FROM</span> achilles_results <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">200</span>) <span class="kw">AS</span> ar1</span>
-<span id="cb17-11"><a href="PerDatabaseDashboard.html#cb17-11" aria-hidden="true"></a>  <span class="kw">JOIN</span> (</span>
-<span id="cb17-12"><a href="PerDatabaseDashboard.html#cb17-12" aria-hidden="true"></a>    <span class="kw">SELECT</span> <span class="op">*</span></span>
-<span id="cb17-13"><a href="PerDatabaseDashboard.html#cb17-13" aria-hidden="true"></a>    <span class="kw">FROM</span> achilles_results <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span>) <span class="kw">AS</span> ar2</span>
-<span id="cb17-14"><a href="PerDatabaseDashboard.html#cb17-14" aria-hidden="true"></a>    <span class="kw">ON</span> ar1.stratum_1 <span class="op">=</span> ar2.stratum_1 <span class="kw">AND</span> ar1.data_source_id <span class="op">=</span> ar2.data_source_id</span>
-<span id="cb17-15"><a href="PerDatabaseDashboard.html#cb17-15" aria-hidden="true"></a>  <span class="kw">JOIN</span> (</span>
-<span id="cb17-16"><a href="PerDatabaseDashboard.html#cb17-16" aria-hidden="true"></a>    <span class="kw">SELECT</span> <span class="op">*</span></span>
-<span id="cb17-17"><a href="PerDatabaseDashboard.html#cb17-17" aria-hidden="true"></a>    <span class="kw">FROM</span> achilles_results <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">1</span>) <span class="kw">AS</span> denom</span>
-<span id="cb17-18"><a href="PerDatabaseDashboard.html#cb17-18" aria-hidden="true"></a>    <span class="kw">ON</span> ar1.data_source_id <span class="op">=</span> denom.data_source_id</span>
-<span id="cb17-19"><a href="PerDatabaseDashboard.html#cb17-19" aria-hidden="true"></a>  <span class="kw">JOIN</span> data_source <span class="kw">ON</span> data_source.<span class="kw">id</span> <span class="op">=</span> ar1.data_source_id</span>
-<span id="cb17-20"><a href="PerDatabaseDashboard.html#cb17-20" aria-hidden="true"></a>  <span class="kw">JOIN</span> concept <span class="kw">ON</span> <span class="fu">CAST</span>(ar1.stratum_1 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">=</span> concept_id</span>
-<span id="cb17-21"><a href="PerDatabaseDashboard.html#cb17-21" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> ar1.data_source_id, ar1.count_value <span class="kw">DESC</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb18-1"><a href="PerDatabaseDashboard.html#cb18-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
+<span id="cb18-2"><a href="PerDatabaseDashboard.html#cb18-2" aria-hidden="true"></a>  name,</span>
+<span id="cb18-3"><a href="PerDatabaseDashboard.html#cb18-3" aria-hidden="true"></a>  acronym,</span>
+<span id="cb18-4"><a href="PerDatabaseDashboard.html#cb18-4" aria-hidden="true"></a>  concept.concept_name,</span>
+<span id="cb18-5"><a href="PerDatabaseDashboard.html#cb18-5" aria-hidden="true"></a>  ar1.count_value <span class="kw">AS</span> num_persons,</span>
+<span id="cb18-6"><a href="PerDatabaseDashboard.html#cb18-6" aria-hidden="true"></a>  <span class="fu">round</span>(<span class="fl">100.0</span> <span class="op">*</span> ar1.count_value <span class="op">/</span> denom.count_value, <span class="dv">2</span>) <span class="kw">AS</span> percent_persons,</span>
+<span id="cb18-7"><a href="PerDatabaseDashboard.html#cb18-7" aria-hidden="true"></a>  <span class="fu">round</span>(<span class="fl">1.0</span> <span class="op">*</span> ar2.count_value <span class="op">/</span> ar1.count_value, <span class="dv">2</span>) <span class="kw">AS</span> records_per_person</span>
+<span id="cb18-8"><a href="PerDatabaseDashboard.html#cb18-8" aria-hidden="true"></a><span class="kw">FROM</span> (</span>
+<span id="cb18-9"><a href="PerDatabaseDashboard.html#cb18-9" aria-hidden="true"></a>  <span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb18-10"><a href="PerDatabaseDashboard.html#cb18-10" aria-hidden="true"></a>  <span class="kw">FROM</span> achilles_results <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">200</span>) <span class="kw">AS</span> ar1</span>
+<span id="cb18-11"><a href="PerDatabaseDashboard.html#cb18-11" aria-hidden="true"></a>  <span class="kw">JOIN</span> (</span>
+<span id="cb18-12"><a href="PerDatabaseDashboard.html#cb18-12" aria-hidden="true"></a>    <span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb18-13"><a href="PerDatabaseDashboard.html#cb18-13" aria-hidden="true"></a>    <span class="kw">FROM</span> achilles_results <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span>) <span class="kw">AS</span> ar2</span>
+<span id="cb18-14"><a href="PerDatabaseDashboard.html#cb18-14" aria-hidden="true"></a>    <span class="kw">ON</span> ar1.stratum_1 <span class="op">=</span> ar2.stratum_1 <span class="kw">AND</span> ar1.data_source_id <span class="op">=</span> ar2.data_source_id</span>
+<span id="cb18-15"><a href="PerDatabaseDashboard.html#cb18-15" aria-hidden="true"></a>  <span class="kw">JOIN</span> (</span>
+<span id="cb18-16"><a href="PerDatabaseDashboard.html#cb18-16" aria-hidden="true"></a>    <span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb18-17"><a href="PerDatabaseDashboard.html#cb18-17" aria-hidden="true"></a>    <span class="kw">FROM</span> achilles_results <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">1</span>) <span class="kw">AS</span> denom</span>
+<span id="cb18-18"><a href="PerDatabaseDashboard.html#cb18-18" aria-hidden="true"></a>    <span class="kw">ON</span> ar1.data_source_id <span class="op">=</span> denom.data_source_id</span>
+<span id="cb18-19"><a href="PerDatabaseDashboard.html#cb18-19" aria-hidden="true"></a>  <span class="kw">JOIN</span> data_source <span class="kw">ON</span> data_source.<span class="kw">id</span> <span class="op">=</span> ar1.data_source_id</span>
+<span id="cb18-20"><a href="PerDatabaseDashboard.html#cb18-20" aria-hidden="true"></a>  <span class="kw">JOIN</span> concept <span class="kw">ON</span> <span class="fu">CAST</span>(ar1.stratum_1 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">=</span> concept_id</span>
+<span id="cb18-21"><a href="PerDatabaseDashboard.html#cb18-21" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> ar1.data_source_id, ar1.count_value <span class="kw">DESC</span></span></code></pre></div>
 </div>
 <div id="chart-settings-7" class="section level5 unnumbered" number="">
 <h5>Chart Settings</h5>

@@ -295,9 +295,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="css-2" class="section level3 unnumbered" number="">
 <h3>CSS</h3>
 <p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb20-1"><a href="general-deprecated.html#cb20-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
-<span id="cb20-2"><a href="general-deprecated.html#cb20-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb20-3"><a href="general-deprecated.html#cb20-3" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb21-1"><a href="general-deprecated.html#cb21-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
+<span id="cb21-2"><a href="general-deprecated.html#cb21-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb21-3"><a href="general-deprecated.html#cb21-3" aria-hidden="true"></a>}</span></code></pre></div>
 <p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
@@ -307,12 +307,12 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <p><strong>For the filters to work the name of the fields to filter should match in all tables used on the charts of this dashboard.</strong></p>
 <div id="sql-query-8" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb21"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb21-1"><a href="general-deprecated.html#cb21-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
-<span id="cb21-2"><a href="general-deprecated.html#cb21-2" aria-hidden="true"></a>       country.country,</span>
-<span id="cb21-3"><a href="general-deprecated.html#cb21-3" aria-hidden="true"></a>       <span class="kw">source</span>.database_type,</span>
-<span id="cb21-4"><a href="general-deprecated.html#cb21-4" aria-hidden="true"></a>       <span class="kw">source</span>.acronym</span>
-<span id="cb21-5"><a href="general-deprecated.html#cb21-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
-<span id="cb21-6"><a href="general-deprecated.html#cb21-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.country <span class="kw">AS</span> country <span class="kw">ON</span> <span class="kw">source</span>.country_id<span class="op">=</span>country.<span class="kw">id</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb22-1"><a href="general-deprecated.html#cb22-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb22-2"><a href="general-deprecated.html#cb22-2" aria-hidden="true"></a>       country.country,</span>
+<span id="cb22-3"><a href="general-deprecated.html#cb22-3" aria-hidden="true"></a>       <span class="kw">source</span>.database_type,</span>
+<span id="cb22-4"><a href="general-deprecated.html#cb22-4" aria-hidden="true"></a>       <span class="kw">source</span>.acronym</span>
+<span id="cb22-5"><a href="general-deprecated.html#cb22-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb22-6"><a href="general-deprecated.html#cb22-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.country <span class="kw">AS</span> country <span class="kw">ON</span> <span class="kw">source</span>.country_id<span class="op">=</span>country.<span class="kw">id</span></span></code></pre></div>
 </div>
 <div id="chart-settings-9" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -344,15 +344,15 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <h3>Total Number of Patients</h3>
 <div id="sql-query-9" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb22"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb22-1"><a href="general-deprecated.html#cb22-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
-<span id="cb22-2"><a href="general-deprecated.html#cb22-2" aria-hidden="true"></a> country,</span>
-<span id="cb22-3"><a href="general-deprecated.html#cb22-3" aria-hidden="true"></a> database_type,</span>
-<span id="cb22-4"><a href="general-deprecated.html#cb22-4" aria-hidden="true"></a> release_date,</span>
-<span id="cb22-5"><a href="general-deprecated.html#cb22-5" aria-hidden="true"></a> <span class="fu">SUM</span>(count_value) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> release_date <span class="kw">ASC</span>)</span>
-<span id="cb22-6"><a href="general-deprecated.html#cb22-6" aria-hidden="true"></a><span class="kw">FROM</span> achilles_results</span>
-<span id="cb22-7"><a href="general-deprecated.html#cb22-7" aria-hidden="true"></a><span class="kw">JOIN</span> data_source <span class="kw">ON</span> data_source_id <span class="op">=</span> data_source.<span class="kw">id</span></span>
-<span id="cb22-8"><a href="general-deprecated.html#cb22-8" aria-hidden="true"></a><span class="kw">JOIN</span> country <span class="kw">ON</span> data_source.country_id <span class="op">=</span> country.<span class="kw">id</span></span>
-<span id="cb22-9"><a href="general-deprecated.html#cb22-9" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb23-1"><a href="general-deprecated.html#cb23-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
+<span id="cb23-2"><a href="general-deprecated.html#cb23-2" aria-hidden="true"></a> country,</span>
+<span id="cb23-3"><a href="general-deprecated.html#cb23-3" aria-hidden="true"></a> database_type,</span>
+<span id="cb23-4"><a href="general-deprecated.html#cb23-4" aria-hidden="true"></a> release_date,</span>
+<span id="cb23-5"><a href="general-deprecated.html#cb23-5" aria-hidden="true"></a> <span class="fu">SUM</span>(count_value) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> release_date <span class="kw">ASC</span>)</span>
+<span id="cb23-6"><a href="general-deprecated.html#cb23-6" aria-hidden="true"></a><span class="kw">FROM</span> achilles_results</span>
+<span id="cb23-7"><a href="general-deprecated.html#cb23-7" aria-hidden="true"></a><span class="kw">JOIN</span> data_source <span class="kw">ON</span> data_source_id <span class="op">=</span> data_source.<span class="kw">id</span></span>
+<span id="cb23-8"><a href="general-deprecated.html#cb23-8" aria-hidden="true"></a><span class="kw">JOIN</span> country <span class="kw">ON</span> data_source.country_id <span class="op">=</span> country.<span class="kw">id</span></span>
+<span id="cb23-9"><a href="general-deprecated.html#cb23-9" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">1</span></span></code></pre></div>
 </div>
 <div id="chart-settings-10" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -389,21 +389,21 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <h3>Network Growth by Date</h3>
 <div id="sql-query-10" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb23"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb23-1"><a href="general-deprecated.html#cb23-1" aria-hidden="true"></a><span class="kw">SELECT</span>  <span class="kw">source</span>.name <span class="kw">AS</span> <span class="kw">source</span>,</span>
-<span id="cb23-2"><a href="general-deprecated.html#cb23-2" aria-hidden="true"></a>        country.country,</span>
-<span id="cb23-3"><a href="general-deprecated.html#cb23-3" aria-hidden="true"></a>        <span class="kw">source</span>.database_type,</span>
-<span id="cb23-4"><a href="general-deprecated.html#cb23-4" aria-hidden="true"></a>        <span class="kw">source</span>.release_date,</span>
-<span id="cb23-5"><a href="general-deprecated.html#cb23-5" aria-hidden="true"></a>        concepts.concept_name <span class="kw">AS</span> gender,</span>
-<span id="cb23-6"><a href="general-deprecated.html#cb23-6" aria-hidden="true"></a>        achilles.count_value <span class="kw">as</span> <span class="fu">count</span></span>
-<span id="cb23-7"><a href="general-deprecated.html#cb23-7" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb23-8"><a href="general-deprecated.html#cb23-8" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb23-9"><a href="general-deprecated.html#cb23-9" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.country <span class="kw">AS</span> country <span class="kw">ON</span> <span class="kw">source</span>.country_id<span class="op">=</span>country.<span class="kw">id</span></span>
-<span id="cb23-10"><a href="general-deprecated.html#cb23-10" aria-hidden="true"></a><span class="kw">JOIN</span> (</span>
-<span id="cb23-11"><a href="general-deprecated.html#cb23-11" aria-hidden="true"></a>  <span class="kw">SELECT</span> <span class="st">&#39;8507&#39;</span> <span class="kw">AS</span> concept_id, <span class="st">&#39;Male&#39;</span> <span class="kw">AS</span> concept_name</span>
-<span id="cb23-12"><a href="general-deprecated.html#cb23-12" aria-hidden="true"></a>  <span class="kw">UNION</span></span>
-<span id="cb23-13"><a href="general-deprecated.html#cb23-13" aria-hidden="true"></a>  <span class="kw">SELECT</span> <span class="st">&#39;8532&#39;</span>, <span class="st">&#39;Female&#39;</span></span>
-<span id="cb23-14"><a href="general-deprecated.html#cb23-14" aria-hidden="true"></a>) <span class="kw">AS</span> concepts <span class="kw">ON</span> achilles.stratum_1 <span class="op">=</span> concept_id</span>
-<span id="cb23-15"><a href="general-deprecated.html#cb23-15" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">2</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb24-1"><a href="general-deprecated.html#cb24-1" aria-hidden="true"></a><span class="kw">SELECT</span>  <span class="kw">source</span>.name <span class="kw">AS</span> <span class="kw">source</span>,</span>
+<span id="cb24-2"><a href="general-deprecated.html#cb24-2" aria-hidden="true"></a>        country.country,</span>
+<span id="cb24-3"><a href="general-deprecated.html#cb24-3" aria-hidden="true"></a>        <span class="kw">source</span>.database_type,</span>
+<span id="cb24-4"><a href="general-deprecated.html#cb24-4" aria-hidden="true"></a>        <span class="kw">source</span>.release_date,</span>
+<span id="cb24-5"><a href="general-deprecated.html#cb24-5" aria-hidden="true"></a>        concepts.concept_name <span class="kw">AS</span> gender,</span>
+<span id="cb24-6"><a href="general-deprecated.html#cb24-6" aria-hidden="true"></a>        achilles.count_value <span class="kw">as</span> <span class="fu">count</span></span>
+<span id="cb24-7"><a href="general-deprecated.html#cb24-7" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb24-8"><a href="general-deprecated.html#cb24-8" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb24-9"><a href="general-deprecated.html#cb24-9" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.country <span class="kw">AS</span> country <span class="kw">ON</span> <span class="kw">source</span>.country_id<span class="op">=</span>country.<span class="kw">id</span></span>
+<span id="cb24-10"><a href="general-deprecated.html#cb24-10" aria-hidden="true"></a><span class="kw">JOIN</span> (</span>
+<span id="cb24-11"><a href="general-deprecated.html#cb24-11" aria-hidden="true"></a>  <span class="kw">SELECT</span> <span class="st">&#39;8507&#39;</span> <span class="kw">AS</span> concept_id, <span class="st">&#39;Male&#39;</span> <span class="kw">AS</span> concept_name</span>
+<span id="cb24-12"><a href="general-deprecated.html#cb24-12" aria-hidden="true"></a>  <span class="kw">UNION</span></span>
+<span id="cb24-13"><a href="general-deprecated.html#cb24-13" aria-hidden="true"></a>  <span class="kw">SELECT</span> <span class="st">&#39;8532&#39;</span>, <span class="st">&#39;Female&#39;</span></span>
+<span id="cb24-14"><a href="general-deprecated.html#cb24-14" aria-hidden="true"></a>) <span class="kw">AS</span> concepts <span class="kw">ON</span> achilles.stratum_1 <span class="op">=</span> concept_id</span>
+<span id="cb24-15"><a href="general-deprecated.html#cb24-15" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">2</span></span></code></pre></div>
 </div>
 <div id="chart-settings-11" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -445,13 +445,13 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <h3>Patients per Country</h3>
 <div id="sql-query-patientspercountryquery" class="section level4 unnumbered" number="">
 <h4>SQL query {#patientsPerCountryQuery}</h4>
-<div class="sourceCode" id="cb24"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb24-1"><a href="general-deprecated.html#cb24-1" aria-hidden="true"></a><span class="kw">SELECT</span> country.country,</span>
-<span id="cb24-2"><a href="general-deprecated.html#cb24-2" aria-hidden="true"></a>       <span class="kw">source</span>.database_type,</span>
-<span id="cb24-3"><a href="general-deprecated.html#cb24-3" aria-hidden="true"></a>       count_value</span>
-<span id="cb24-4"><a href="general-deprecated.html#cb24-4" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles </span>
-<span id="cb24-5"><a href="general-deprecated.html#cb24-5" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb24-6"><a href="general-deprecated.html#cb24-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.country <span class="kw">AS</span> country <span class="kw">ON</span> <span class="kw">source</span>.country_id<span class="op">=</span>country.<span class="kw">id</span></span>
-<span id="cb24-7"><a href="general-deprecated.html#cb24-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb25-1"><a href="general-deprecated.html#cb25-1" aria-hidden="true"></a><span class="kw">SELECT</span> country.country,</span>
+<span id="cb25-2"><a href="general-deprecated.html#cb25-2" aria-hidden="true"></a>       <span class="kw">source</span>.database_type,</span>
+<span id="cb25-3"><a href="general-deprecated.html#cb25-3" aria-hidden="true"></a>       count_value</span>
+<span id="cb25-4"><a href="general-deprecated.html#cb25-4" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles </span>
+<span id="cb25-5"><a href="general-deprecated.html#cb25-5" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb25-6"><a href="general-deprecated.html#cb25-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.country <span class="kw">AS</span> country <span class="kw">ON</span> <span class="kw">source</span>.country_id<span class="op">=</span>country.<span class="kw">id</span></span>
+<span id="cb25-7"><a href="general-deprecated.html#cb25-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">1</span></span></code></pre></div>
 </div>
 <div id="chart-settings-12" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -526,14 +526,14 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <!-- Discuss what is important to see in this chart... TO DO -->
 <div id="sql-query-12" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb25"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb25-1"><a href="general-deprecated.html#cb25-1" aria-hidden="true"></a><span class="kw">SELECT</span>  name,</span>
-<span id="cb25-2"><a href="general-deprecated.html#cb25-2" aria-hidden="true"></a>        acronym,</span>
-<span id="cb25-3"><a href="general-deprecated.html#cb25-3" aria-hidden="true"></a>        database_type,</span>
-<span id="cb25-4"><a href="general-deprecated.html#cb25-4" aria-hidden="true"></a>        latitude,</span>
-<span id="cb25-5"><a href="general-deprecated.html#cb25-5" aria-hidden="true"></a>        longitude,</span>
-<span id="cb25-6"><a href="general-deprecated.html#cb25-6" aria-hidden="true"></a>        country</span>
-<span id="cb25-7"><a href="general-deprecated.html#cb25-7" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
-<span id="cb25-8"><a href="general-deprecated.html#cb25-8" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.country <span class="kw">AS</span> country <span class="kw">ON</span> <span class="kw">source</span>.country_id<span class="op">=</span>country.<span class="kw">id</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb26-1"><a href="general-deprecated.html#cb26-1" aria-hidden="true"></a><span class="kw">SELECT</span>  name,</span>
+<span id="cb26-2"><a href="general-deprecated.html#cb26-2" aria-hidden="true"></a>        acronym,</span>
+<span id="cb26-3"><a href="general-deprecated.html#cb26-3" aria-hidden="true"></a>        database_type,</span>
+<span id="cb26-4"><a href="general-deprecated.html#cb26-4" aria-hidden="true"></a>        latitude,</span>
+<span id="cb26-5"><a href="general-deprecated.html#cb26-5" aria-hidden="true"></a>        longitude,</span>
+<span id="cb26-6"><a href="general-deprecated.html#cb26-6" aria-hidden="true"></a>        country</span>
+<span id="cb26-7"><a href="general-deprecated.html#cb26-7" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb26-8"><a href="general-deprecated.html#cb26-8" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.country <span class="kw">AS</span> country <span class="kw">ON</span> <span class="kw">source</span>.country_id<span class="op">=</span>country.<span class="kw">id</span></span></code></pre></div>
 </div>
 <div id="chart-settings-14" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -565,19 +565,19 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <h3>Meta Data</h3>
 <div id="sql-query-13" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb26"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb26-1"><a href="general-deprecated.html#cb26-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
-<span id="cb26-2"><a href="general-deprecated.html#cb26-2" aria-hidden="true"></a>  acronym,</span>
-<span id="cb26-3"><a href="general-deprecated.html#cb26-3" aria-hidden="true"></a>  stratum_1 <span class="kw">as</span> <span class="ot">&quot;name&quot;</span>,</span>
-<span id="cb26-4"><a href="general-deprecated.html#cb26-4" aria-hidden="true"></a>  database_type,</span>
-<span id="cb26-5"><a href="general-deprecated.html#cb26-5" aria-hidden="true"></a>  country,</span>
-<span id="cb26-6"><a href="general-deprecated.html#cb26-6" aria-hidden="true"></a>  stratum_2 <span class="kw">as</span> <span class="ot">&quot;source_release_date&quot;</span>,</span>
-<span id="cb26-7"><a href="general-deprecated.html#cb26-7" aria-hidden="true"></a>  stratum_3 <span class="kw">as</span> <span class="ot">&quot;cdm_release_date&quot;</span>,</span>
-<span id="cb26-8"><a href="general-deprecated.html#cb26-8" aria-hidden="true"></a>  stratum_4 <span class="kw">as</span> <span class="ot">&quot;cdm_version&quot;</span>,</span>
-<span id="cb26-9"><a href="general-deprecated.html#cb26-9" aria-hidden="true"></a>  stratum_5 <span class="kw">as</span> <span class="ot">&quot;vocabulary_version&quot;</span></span>
-<span id="cb26-10"><a href="general-deprecated.html#cb26-10" aria-hidden="true"></a><span class="kw">FROM</span> achilles_results</span>
-<span id="cb26-11"><a href="general-deprecated.html#cb26-11" aria-hidden="true"></a><span class="kw">JOIN</span> data_source <span class="kw">ON</span> achilles_results.data_source_id <span class="op">=</span> data_source.<span class="kw">id</span></span>
-<span id="cb26-12"><a href="general-deprecated.html#cb26-12" aria-hidden="true"></a><span class="kw">JOIN</span> country <span class="kw">ON</span> data_source.country_id <span class="op">=</span> country.<span class="kw">id</span></span>
-<span id="cb26-13"><a href="general-deprecated.html#cb26-13" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id<span class="op">=</span><span class="dv">5000</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb27-1"><a href="general-deprecated.html#cb27-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
+<span id="cb27-2"><a href="general-deprecated.html#cb27-2" aria-hidden="true"></a>  acronym,</span>
+<span id="cb27-3"><a href="general-deprecated.html#cb27-3" aria-hidden="true"></a>  stratum_1 <span class="kw">as</span> <span class="ot">&quot;name&quot;</span>,</span>
+<span id="cb27-4"><a href="general-deprecated.html#cb27-4" aria-hidden="true"></a>  database_type,</span>
+<span id="cb27-5"><a href="general-deprecated.html#cb27-5" aria-hidden="true"></a>  country,</span>
+<span id="cb27-6"><a href="general-deprecated.html#cb27-6" aria-hidden="true"></a>  stratum_2 <span class="kw">as</span> <span class="ot">&quot;source_release_date&quot;</span>,</span>
+<span id="cb27-7"><a href="general-deprecated.html#cb27-7" aria-hidden="true"></a>  stratum_3 <span class="kw">as</span> <span class="ot">&quot;cdm_release_date&quot;</span>,</span>
+<span id="cb27-8"><a href="general-deprecated.html#cb27-8" aria-hidden="true"></a>  stratum_4 <span class="kw">as</span> <span class="ot">&quot;cdm_version&quot;</span>,</span>
+<span id="cb27-9"><a href="general-deprecated.html#cb27-9" aria-hidden="true"></a>  stratum_5 <span class="kw">as</span> <span class="ot">&quot;vocabulary_version&quot;</span></span>
+<span id="cb27-10"><a href="general-deprecated.html#cb27-10" aria-hidden="true"></a><span class="kw">FROM</span> achilles_results</span>
+<span id="cb27-11"><a href="general-deprecated.html#cb27-11" aria-hidden="true"></a><span class="kw">JOIN</span> data_source <span class="kw">ON</span> achilles_results.data_source_id <span class="op">=</span> data_source.<span class="kw">id</span></span>
+<span id="cb27-12"><a href="general-deprecated.html#cb27-12" aria-hidden="true"></a><span class="kw">JOIN</span> country <span class="kw">ON</span> data_source.country_id <span class="op">=</span> country.<span class="kw">id</span></span>
+<span id="cb27-13"><a href="general-deprecated.html#cb27-13" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id<span class="op">=</span><span class="dv">5000</span></span></code></pre></div>
 </div>
 <div id="chart-settings-15" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>

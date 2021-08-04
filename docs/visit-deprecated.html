@@ -296,9 +296,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="css-5" class="section level3 unnumbered" number="">
 <h3>CSS</h3>
 <p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb37-1"><a href="visit-deprecated.html#cb37-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
-<span id="cb37-2"><a href="visit-deprecated.html#cb37-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb37-3"><a href="visit-deprecated.html#cb37-3" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb38-1"><a href="visit-deprecated.html#cb38-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
+<span id="cb38-2"><a href="visit-deprecated.html#cb38-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb38-3"><a href="visit-deprecated.html#cb38-3" aria-hidden="true"></a>}</span></code></pre></div>
 <p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
@@ -339,16 +339,16 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <h3>Visit Type Table {#visitTypeTable}</h3>
 <div id="sql-query-24" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb38"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb38-1"><a href="visit-deprecated.html#cb38-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
-<span id="cb38-2"><a href="visit-deprecated.html#cb38-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
-<span id="cb38-3"><a href="visit-deprecated.html#cb38-3" aria-hidden="true"></a>       concept_name <span class="kw">AS</span> <span class="ot">&quot;Type&quot;</span>,</span>
-<span id="cb38-4"><a href="visit-deprecated.html#cb38-4" aria-hidden="true"></a>       <span class="fu">MAX</span>(count_value) <span class="kw">AS</span> <span class="ot">&quot;Count&quot;</span></span>
-<span id="cb38-5"><a href="visit-deprecated.html#cb38-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb38-6"><a href="visit-deprecated.html#cb38-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb38-7"><a href="visit-deprecated.html#cb38-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
-<span id="cb38-8"><a href="visit-deprecated.html#cb38-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span>
-<span id="cb38-9"><a href="visit-deprecated.html#cb38-9" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> name, acronym, <span class="ot">&quot;Type&quot;</span></span>
-<span id="cb38-10"><a href="visit-deprecated.html#cb38-10" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="ot">&quot;Count&quot;</span> <span class="kw">DESC</span></span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb39-1"><a href="visit-deprecated.html#cb39-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb39-2"><a href="visit-deprecated.html#cb39-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
+<span id="cb39-3"><a href="visit-deprecated.html#cb39-3" aria-hidden="true"></a>       concept_name <span class="kw">AS</span> <span class="ot">&quot;Type&quot;</span>,</span>
+<span id="cb39-4"><a href="visit-deprecated.html#cb39-4" aria-hidden="true"></a>       <span class="fu">MAX</span>(count_value) <span class="kw">AS</span> <span class="ot">&quot;Count&quot;</span></span>
+<span id="cb39-5"><a href="visit-deprecated.html#cb39-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb39-6"><a href="visit-deprecated.html#cb39-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb39-7"><a href="visit-deprecated.html#cb39-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
+<span id="cb39-8"><a href="visit-deprecated.html#cb39-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span>
+<span id="cb39-9"><a href="visit-deprecated.html#cb39-9" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> name, acronym, <span class="ot">&quot;Type&quot;</span></span>
+<span id="cb39-10"><a href="visit-deprecated.html#cb39-10" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="ot">&quot;Count&quot;</span> <span class="kw">DESC</span></span></code></pre></div>
 </div>
 <div id="chart-settings-26" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -376,14 +376,14 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <h3>Visit Types Bars</h3>
 <div id="sql-query-25" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb39"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb39-1"><a href="visit-deprecated.html#cb39-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name, </span>
-<span id="cb39-2"><a href="visit-deprecated.html#cb39-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
-<span id="cb39-3"><a href="visit-deprecated.html#cb39-3" aria-hidden="true"></a>       concept_name <span class="kw">AS</span> <span class="ot">&quot;Observation&quot;</span>, </span>
-<span id="cb39-4"><a href="visit-deprecated.html#cb39-4" aria-hidden="true"></a>       count_value</span>
-<span id="cb39-5"><a href="visit-deprecated.html#cb39-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles </span>
-<span id="cb39-6"><a href="visit-deprecated.html#cb39-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb39-7"><a href="visit-deprecated.html#cb39-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
-<span id="cb39-8"><a href="visit-deprecated.html#cb39-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb40-1"><a href="visit-deprecated.html#cb40-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name, </span>
+<span id="cb40-2"><a href="visit-deprecated.html#cb40-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
+<span id="cb40-3"><a href="visit-deprecated.html#cb40-3" aria-hidden="true"></a>       concept_name <span class="kw">AS</span> <span class="ot">&quot;Observation&quot;</span>, </span>
+<span id="cb40-4"><a href="visit-deprecated.html#cb40-4" aria-hidden="true"></a>       count_value</span>
+<span id="cb40-5"><a href="visit-deprecated.html#cb40-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles </span>
+<span id="cb40-6"><a href="visit-deprecated.html#cb40-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb40-7"><a href="visit-deprecated.html#cb40-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
+<span id="cb40-8"><a href="visit-deprecated.html#cb40-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span></code></pre></div>
 </div>
 <div id="chart-settings-27" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>

@@ -295,9 +295,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="css-4" class="section level3 unnumbered" number="">
 <h3>CSS</h3>
 <p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb33-1"><a href="observation-period-deprecated.html#cb33-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
-<span id="cb33-2"><a href="observation-period-deprecated.html#cb33-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb33-3"><a href="observation-period-deprecated.html#cb33-3" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb34-1"><a href="observation-period-deprecated.html#cb34-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
+<span id="cb34-2"><a href="observation-period-deprecated.html#cb34-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb34-3"><a href="observation-period-deprecated.html#cb34-3" aria-hidden="true"></a>}</span></code></pre></div>
 <p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
@@ -339,13 +339,13 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <p>The Number of Patients in Observation Period plot shows the number of patients that contribute at least one day in a specific month.</p>
 <div id="sql-query-20" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb34"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb34-1"><a href="observation-period-deprecated.html#cb34-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
-<span id="cb34-2"><a href="observation-period-deprecated.html#cb34-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
-<span id="cb34-3"><a href="observation-period-deprecated.html#cb34-3" aria-hidden="true"></a>       <span class="fu">to_date</span>(stratum_1, <span class="st">&#39;YYYYMM&#39;</span>) <span class="kw">as</span> <span class="dt">Date</span>,</span>
-<span id="cb34-4"><a href="observation-period-deprecated.html#cb34-4" aria-hidden="true"></a>       count_value</span>
-<span id="cb34-5"><a href="observation-period-deprecated.html#cb34-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb34-6"><a href="observation-period-deprecated.html#cb34-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb34-7"><a href="observation-period-deprecated.html#cb34-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">110</span></span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb35-1"><a href="observation-period-deprecated.html#cb35-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb35-2"><a href="observation-period-deprecated.html#cb35-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
+<span id="cb35-3"><a href="observation-period-deprecated.html#cb35-3" aria-hidden="true"></a>       <span class="fu">to_date</span>(stratum_1, <span class="st">&#39;YYYYMM&#39;</span>) <span class="kw">as</span> <span class="dt">Date</span>,</span>
+<span id="cb35-4"><a href="observation-period-deprecated.html#cb35-4" aria-hidden="true"></a>       count_value</span>
+<span id="cb35-5"><a href="observation-period-deprecated.html#cb35-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb35-6"><a href="observation-period-deprecated.html#cb35-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb35-7"><a href="observation-period-deprecated.html#cb35-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">110</span></span></code></pre></div>
 </div>
 <div id="chart-settings-22" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -388,13 +388,13 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <h3>Observation Period Start Dates</h3>
 <div id="sql-query-21" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb35"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb35-1"><a href="observation-period-deprecated.html#cb35-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
-<span id="cb35-2"><a href="observation-period-deprecated.html#cb35-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
-<span id="cb35-3"><a href="observation-period-deprecated.html#cb35-3" aria-hidden="true"></a>       <span class="fu">to_date</span>(stratum_1, <span class="st">&#39;YYYYMM&#39;</span>) <span class="kw">AS</span> year_month,</span>
-<span id="cb35-4"><a href="observation-period-deprecated.html#cb35-4" aria-hidden="true"></a>       count_value</span>
-<span id="cb35-5"><a href="observation-period-deprecated.html#cb35-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb35-6"><a href="observation-period-deprecated.html#cb35-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb35-7"><a href="observation-period-deprecated.html#cb35-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">111</span></span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb36-1"><a href="observation-period-deprecated.html#cb36-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb36-2"><a href="observation-period-deprecated.html#cb36-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
+<span id="cb36-3"><a href="observation-period-deprecated.html#cb36-3" aria-hidden="true"></a>       <span class="fu">to_date</span>(stratum_1, <span class="st">&#39;YYYYMM&#39;</span>) <span class="kw">AS</span> year_month,</span>
+<span id="cb36-4"><a href="observation-period-deprecated.html#cb36-4" aria-hidden="true"></a>       count_value</span>
+<span id="cb36-5"><a href="observation-period-deprecated.html#cb36-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb36-6"><a href="observation-period-deprecated.html#cb36-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb36-7"><a href="observation-period-deprecated.html#cb36-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">111</span></span></code></pre></div>
 </div>
 <div id="chart-settings-23" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -437,13 +437,13 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <h3>Observation Period End Dates</h3>
 <div id="sql-query-22" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb36"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb36-1"><a href="observation-period-deprecated.html#cb36-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
-<span id="cb36-2"><a href="observation-period-deprecated.html#cb36-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
-<span id="cb36-3"><a href="observation-period-deprecated.html#cb36-3" aria-hidden="true"></a>       <span class="fu">to_date</span>(stratum_1, <span class="st">&#39;YYYYMM&#39;</span>) <span class="kw">AS</span> year_month,</span>
-<span id="cb36-4"><a href="observation-period-deprecated.html#cb36-4" aria-hidden="true"></a>       count_value</span>
-<span id="cb36-5"><a href="observation-period-deprecated.html#cb36-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb36-6"><a href="observation-period-deprecated.html#cb36-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb36-7"><a href="observation-period-deprecated.html#cb36-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">112</span></span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb37-1"><a href="observation-period-deprecated.html#cb37-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb37-2"><a href="observation-period-deprecated.html#cb37-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
+<span id="cb37-3"><a href="observation-period-deprecated.html#cb37-3" aria-hidden="true"></a>       <span class="fu">to_date</span>(stratum_1, <span class="st">&#39;YYYYMM&#39;</span>) <span class="kw">AS</span> year_month,</span>
+<span id="cb37-4"><a href="observation-period-deprecated.html#cb37-4" aria-hidden="true"></a>       count_value</span>
+<span id="cb37-5"><a href="observation-period-deprecated.html#cb37-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb37-6"><a href="observation-period-deprecated.html#cb37-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb37-7"><a href="observation-period-deprecated.html#cb37-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">112</span></span></code></pre></div>
 </div>
 <div id="chart-settings-24" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>

@@ -14,9 +14,10 @@ ACHILLES was designed to extract the metadata from a single database, which by i
 
 The European Health Data and Evidence Network (EHDEN) project therefore designed a Data Network Dashboard tool, a web application to aggregate information from distributed OMOP CDM databases. It uses the ACHILLES results files to construct graphical dashboards and enables database comparison (Figure \@ref(fig:intro)). The tool is built on Apache Superset, which is an open-source enterprise-ready business intelligence web application that can provide powerful and fully customizable graphical representations of data. Achilles results can be uploaded through the EHDEN Database Catalogue using the dashboards plugin but can also be directly uploaded in the tool. Figure 1. Example of a dashboards tool presenting age and gender distributions (simulated data).
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/01-intro} \caption{Example of a dashboards tool presenting the databases available in the network (simulated data)}(\#fig:intro)
-\end{figure}
+<div class="figure">
+<img src="images/01-intro.png" alt="Example of a dashboards tool presenting the databases available in the network (simulated data)" width="100%" />
+<p class="caption">(\#fig:intro)Example of a dashboards tool presenting the databases available in the network (simulated data)</p>
+</div>
 
 In this tools, we defined and implemented a series of charts and dashboards containing the most relevant information about the databases, such as:
 

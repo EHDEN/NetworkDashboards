@@ -35,6 +35,52 @@
 
 ### Github Actions {-}
 
+Github has a feature that allows performing automatic actions after a certain event happens on the repository.
+We use this feature to execute to check if everything is alright with new PR before merging them to dev.
+
+Github calls a job a set of steps that are executed after a certain event.
+Then several jobs can be groups in workflows.
+Events are defined at the workflow level, so all the jobs in a workflow will execute at the same time.
+
+We have two workflows:
+
+1. Code analysis checks
+2. Django tests
+
+The first has three jobs
+
+1. [black](https://github.com/psf/black): ensures that python's code format is consistent throughout the project
+2. [isort](https://github.com/PyCQA/isort): sorts and organizes import statements
+3. [prospector](https://github.com/PyCQA/prospector): executes a set of tools that perform some code analysis
+
+The second has just one job that executes the Django tests.
+
+Both workflows execute on commits of pull requests that will be merged into the dev branch.
+
+Regarding the code analysis workflow, the three tools used have requirements that conflict with each other, for that there is a requirements file for each tool on the `requirement-dev` directory of the repository.
+To avoid having three different virtual environments for each tool, you can use the [tox](https://tox.readthedocs.io/).
+You just need to install the development requirements (`pip install -r requirements-dev/requirements-dev.txt`) and then just run `tox`.
+It will manage the necessary virtual environments and install the requirements for each tool.
+If you, however, want to run a specific tool manually you can check the tox configuration file ([tox.ini](https://github.com/EHDEN/NetworkDashboards/blob/master/tox.ini)).
+For example for the prospector tool the tox configuration is the following:
+```
+[testenv:prospector]
+basepython = python3.8
+deps =
+    -r{toxinidir}/requirements-dev/requirements-prospector.txt
+    -r{toxinidir}/dashboard_viewer/requirements.txt
+commands =
+    prospector dashboard_viewer
+    prospector docker/superset
+```
+we can see that it installs the requirement for the prospector tool and also the requirements of the Dashboard Viewer Django app and then runs two commands.
+
+For both black and isort tools, when you run tox, it will show the necessary changes that are required to make the code good.
+You can apply the changes automatically by executing the tools manually without the `--check` and `--check-only` options respectively.
+
+Sometimes prospector can be a pain in the boot, complaining about too much stuff.
+You can make prospector ignore some bad stuff by adding the comment, ` # noqa`, to the end of the specific line where it is complaining.
+
 ### Tests {-}
 
 ### Python Requirements {-}
@@ -75,9 +121,11 @@ Therefore, to update this documentation, apply the changes to the files in the d
 To build the documentation, you need to have [R](https://www.r-project.org/) installed, and if you are using UNIX-based systems, you only need to run `sh _build.sh` in the `docs/src` directory.
 
 In this documentation, we also describe all the settings around the dashboards that are used on the EHDEN project.
-To avoid an extensive table of contents and also to avoid having a big chapter page for dashboards, we configured this GitBook to split different sections into different pages.
+To avoid an extensive table of contents and also to avoid having a big chapter page for dashboards, we [configured](https://github.com/EHDEN/NetworkDashboards/blob/master/docs/src/_output.yml#L9) this GitBook to split different sections into different pages.
 A section on the GitBook is mapped to markdown headings elements of level 1 (H1 or #).
 This is, however, inconvenient for small chapters like the preface (index.Rmd).
 To make it render all the sections on the same page, instead of using headings of level 1 (#) you should use level 2 (##).
 Although this will make the section numeration start at 0, e.g 1.0.1, 1.0.2, ...
 To avoid this we appended `{-}` to the sections titles so that the numeration does not show.
+
+If a new file is created with more documentation, its name should be placed, including extension, in the desired location in [this list](https://github.com/EHDEN/NetworkDashboards/blob/master/docs/src/_bookdown.yml#L26-L45) of the `docks/src/_bookdown.yml` file.
