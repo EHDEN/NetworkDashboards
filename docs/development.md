@@ -143,11 +143,13 @@ You can make prospector ignore some bad stuff by adding the comment, ` # noqa`, 
 
 ### Tests {-}
 
-docker-compose stack
+Our tests use Django's building testing features, which uses unittest under the hood.
+Not all featured have tests associated, however, there are already [some tests scenarios](https://github.com/EHDEN/NetworkDashboards/issues?q=is%3Aissue+is%3Aopen+label%3A%22Test+Use+Case%22) in mind written as issues on the repository, which have the tag **Test Use Case**.
 
-issues with todos
-
-no need to run celery
+To run the tests we set up a docker-compose stack, under the [test](https://github.com/EHDEN/NetworkDashboards/tree/master/tests) directory which has just the necessary data containers (Redis and Postgres) to avoid having to make changes on the development/production docker-compose stack.
+Once the stack is up it only necessary to run `SECRET_KEY=secret python manage.py test` to execute the tests.
+If you are developing any tests that involve [celery](https://github.com/celery/celery), there is no need to have a celery process running, since on Django's settings.py we [set the test runner](https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/dashboard_viewer/settings.py#L316) to the celery one.
+This way the `python manage.py test` is enough to test the whole application.
 
 ### Python Requirements {-}
 

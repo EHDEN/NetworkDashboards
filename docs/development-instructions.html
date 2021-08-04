@@ -421,9 +421,12 @@ You can make prospector ignore some bad stuff by adding the comment, <code># noq
 </div>
 <div id="tests" class="section level3 unnumbered" number="">
 <h3>Tests</h3>
-<p>docker-compose stack</p>
-<p>issues with todos</p>
-<p>no need to run celery</p>
+<p>Our tests use Django’s building testing features, which uses unittest under the hood.
+Not all featured have tests associated, however, there are already <a href="https://github.com/EHDEN/NetworkDashboards/issues?q=is%3Aissue+is%3Aopen+label%3A%22Test+Use+Case%22">some tests scenarios</a> in mind written as issues on the repository, which have the tag <strong>Test Use Case</strong>.</p>
+<p>To run the tests we set up a docker-compose stack, under the <a href="https://github.com/EHDEN/NetworkDashboards/tree/master/tests">test</a> directory which has just the necessary data containers (Redis and Postgres) to avoid having to make changes on the development/production docker-compose stack.
+Once the stack is up it only necessary to run <code>SECRET_KEY=secret python manage.py test</code> to execute the tests.
+If you are developing any tests that involve <a href="https://github.com/celery/celery">celery</a>, there is no need to have a celery process running, since on Django’s settings.py we <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/dashboard_viewer/settings.py#L316">set the test runner</a> to the celery one.
+This way the <code>python manage.py test</code> is enough to test the whole application.</p>
 </div>
 <div id="python-requirements" class="section level3 unnumbered" number="">
 <h3>Python Requirements</h3>
