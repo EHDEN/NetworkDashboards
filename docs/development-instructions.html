@@ -462,7 +462,9 @@ This way we can make sure that the code and the documentation are in the same pl
 All the code is stored in the <code>docs/src</code> directory as well as the script to build all the documentation.
 <strong>Do not change</strong> the files in the root of the <code>docs</code> directory, because those files will be removed during the build processed and replaced by the new ones.
 Therefore, to update this documentation, apply the changes to the files in the directory <code>docs/src</code>.
-To build the documentation, you need to have <a href="https://www.r-project.org/">R</a> installed, and if you are using UNIX-based systems, you only need to run <code>sh _build.sh</code> in the <code>docs/src</code> directory.</p>
+To build the documentation, you need to have <a href="https://www.r-project.org/">R</a> installed, and if you are using UNIX-based systems, you only need to run <code>sh _build.sh</code> in the <code>docs/src</code> directory.
+The <code>_build.sh</code> script executes three commands at the same time to generate different output formats which might conflict with eachother.
+If some error happends telling that a file was not found and you didn’t change nothing related to the specific file, rerun the <code>_build.sh</code> script.</p>
 <p>In this documentation, we also describe all the settings around the dashboards that are used on the EHDEN project.
 To avoid an extensive table of contents and also to avoid having a big chapter page for dashboards, we <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/docs/src/_output.yml#L9">configured</a> this GitBook to split different sections into different pages.
 A section on the GitBook is mapped to markdown headings elements of level 2 (H2 or ##).

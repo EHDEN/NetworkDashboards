@@ -178,9 +178,7 @@ To develop this tool, EHDEN organized a hack-a-thon (Aveiro, December 2-3, 2019)
 
 This manual was written to be a guide for a clean installation of this system with all the dashboards that we defined during the project. The first chapter describes the goal of the system and the second how to install the system. The remaining chapters are dedicated to the dashboards, in which chapters describes one dashboard and all its charts. To simplify the representation of the dashboard's layout, we used similar schemas as it is presented in Figure \ref{fig:dashboardsLayout}. The white box is the dashboard and the inside boxes are charts. The colour changes in relation to the type of chart.
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/dashboardsLayout} \caption{Example of a dashboards tool presenting the databases available in the network (simulated data)}\label{fig:dashboardsLayout}
-\end{figure}
+\label{fig:dashboardsLayout}Example of a dashboards tool presenting the databases available in the network (simulated data)
 
 \hypertarget{license}{%
 \subsection*{License}\label{license}}
@@ -1160,6 +1158,8 @@ All the code is stored in the \texttt{docs/src} directory as well as the script 
 \textbf{Do not change} the files in the root of the \texttt{docs} directory, because those files will be removed during the build processed and replaced by the new ones.
 Therefore, to update this documentation, apply the changes to the files in the directory \texttt{docs/src}.
 To build the documentation, you need to have \href{https://www.r-project.org/}{R} installed, and if you are using UNIX-based systems, you only need to run \texttt{sh\ \_build.sh} in the \texttt{docs/src} directory.
+The \texttt{\_build.sh} script executes three commands at the same time to generate different output formats which might conflict with eachother.
+If some error happends telling that a file was not found and you didn't change nothing related to the specific file, rerun the \texttt{\_build.sh} script.
 
 In this documentation, we also describe all the settings around the dashboards that are used on the EHDEN project.
 To avoid an extensive table of contents and also to avoid having a big chapter page for dashboards, we \href{https://github.com/EHDEN/NetworkDashboards/blob/master/docs/src/_output.yml\#L9}{configured} this GitBook to split different sections into different pages.
@@ -1180,13 +1180,44 @@ If a new file is created with more documentation, its name should be placed, inc
 
 Materialized Queries Manager
 
+admin changes
+
+Models
+
+managed model
+
 Tabs Manager
 
-models
+Currently, this app is not being used and the URL mapping was delete.
+To use it again uncomment the tabsManager \href{https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/dashboard_viewer/urls.py\#L29}{line} on the dashboard\_viewer/dashboard\_viewer/urls.py file.
+Then you can access the tabs page through the \texttt{{[}BASE\_RUL{]}/tabs/} URL.
+
+Views
+
+On this app, there is only one view.
+It is a simple page with just a sidebar to choose which dashboard to displays on an iframe.
+Besides the simplicity, all the animations around the sidebar buttons are handled by CSS with some JS that adds and removes classes to HTML elements, as events (hover and click) happen.
+To facilitate the development process of CSS, \href{https://sass-lang.com/}{SCSS} was used to build styling of the view.
+It prevents duplication with the addition of variables and adds the possibility to express parent classes by nesting their declaration.
+
+In cases where there are a lot of buttons on the sidebar, some buttons might get impossible to reach since they are out of the field of view.
+To avoid this we make use of \href{https://github.com/Grsmto/simplebar}{SimpleBar}, which makes the sidebar scrollable, displaying a scroll bar on the right side of the sidebar whenever there are elements outside of the field of view.
+
+API
+
+There is one endpoint, \texttt{{[}BASE\_URL{]}/api/}, where a JSON object of tabs and groups of tabs and their sub-tabs are returned.
+
+Models
+
+\includegraphics{images/code-documentation/tabs-models.png}
 
 Uploader
 
 all possible error messages for uploads
+
+Models
+
+\includegraphics{images/code-documentation/uploader-models.png}
 
 \hypertarget{external-node-packages}{%
 \subsection*{External Node Packages}\label{external-node-packages}}

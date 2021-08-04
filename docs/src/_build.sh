@@ -23,6 +23,7 @@ if ! [ -z "$errors" ] ; then
     for output in $outputs ; do
         echo "output $output"
         tail /tmp/doc_log_$output
+        echo "\n"
     done
 
     return 1

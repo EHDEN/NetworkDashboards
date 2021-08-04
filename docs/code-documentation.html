@@ -301,14 +301,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>
 Materialized Queries Manager
 </h3>
+<p>admin changes</p>
+<h4>
+Models
+</h4>
+<p>managed model</p>
 <h3>
 Tabs Manager
 </h3>
-<p>models</p>
+<p>Currently, this app is not being used and the URL mapping was delete.
+To use it again uncomment the tabsManager <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/dashboard_viewer/urls.py#L29">line</a> on the dashboard_viewer/dashboard_viewer/urls.py file.
+Then you can access the tabs page through the <code>[BASE_RUL]/tabs/</code> URL.</p>
+<h4>
+Views
+</h4>
+<p>On this app, there is only one view.
+It is a simple page with just a sidebar to choose which dashboard to displays on an iframe.
+Besides the simplicity, all the animations around the sidebar buttons are handled by CSS with some JS that adds and removes classes to HTML elements, as events (hover and click) happen.
+To facilitate the development process of CSS, <a href="https://sass-lang.com/">SCSS</a> was used to build styling of the view.
+It prevents duplication with the addition of variables and adds the possibility to express parent classes by nesting their declaration.</p>
+<p>In cases where there are a lot of buttons on the sidebar, some buttons might get impossible to reach since they are out of the field of view.
+To avoid this we make use of <a href="https://github.com/Grsmto/simplebar">SimpleBar</a>, which makes the sidebar scrollable, displaying a scroll bar on the right side of the sidebar whenever there are elements outside of the field of view.</p>
+<h4>
+API
+</h4>
+<p>There is one endpoint, <code>[BASE_URL]/api/</code>, where a JSON object of tabs and groups of tabs and their sub-tabs are returned.</p>
+<h4>
+Models
+</h4>
+<p><img src="images/code-documentation/tabs-models.png" /></p>
 <h3>
 Uploader
 </h3>
 <p>all possible error messages for uploads</p>
+<h4>
+Models
+</h4>
+<p><img src="images/code-documentation/uploader-models.png" /></p>
 </div>
 <div id="external-node-packages" class="section level3 unnumbered" number="">
 <h3>External Node Packages</h3>
