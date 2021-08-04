@@ -27,10 +27,8 @@ jobs:
           ${{ runner.os }}-pip-
     - name: Setup Data Containers
       run: |
-        export $(grep -v '^#' tests/.env | xargs -d '\n')
-        cp tests/docker-compose.yml docker
-        cp tests/init-dbs.sh docker/postgres-entrypoint
-        cd docker
+        cd tests
+        export $(grep -v '^#' .env | xargs -d '\n')
         docker-compose up -d
     - name: Install Dependencies
       run: |
