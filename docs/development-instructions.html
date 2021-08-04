@@ -180,7 +180,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#python-requirements"><i class="fa fa-check"></i>Python Requirements</a></li>
 <li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#documentation"><i class="fa fa-check"></i>Documentation</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="code-documentation.html"><a href="code-documentation.html"><i class="fa fa-check"></i><b>8</b> Code Documentation</a></li>
+<li class="chapter" data-level="8" data-path="code-documentation.html"><a href="code-documentation.html"><i class="fa fa-check"></i><b>8</b> Code Documentation</a>
+<ul>
+<li class="chapter" data-level="" data-path="code-documentation.html"><a href="code-documentation.html#apps"><i class="fa fa-check"></i>Apps</a></li>
+<li class="chapter" data-level="" data-path="code-documentation.html"><a href="code-documentation.html#external-node-packages"><i class="fa fa-check"></i>External Node Packages</a></li>
+<li class="chapter" data-level="" data-path="code-documentation.html"><a href="code-documentation.html#docker"><i class="fa fa-check"></i>Docker</a></li>
+</ul></li>
 <li class="chapter" data-level="9" data-path="dashboards.html"><a href="dashboards.html"><i class="fa fa-check"></i><b>9</b> Dashboards</a>
 <ul>
 <li class="chapter" data-level="9.1" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html"><i class="fa fa-check"></i><b>9.1</b> Per Database</a>
@@ -316,6 +321,63 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="superset" class="section level3 unnumbered" number="">
 <h3>Superset</h3>
+<p>Currently, we have a custom chart plugin on our superset installation which doesn’t allow us to use superset’s pre-built images available on their docker hub, since we have to call npm’s build procedures on the front-end code.
+To build our custom docker image we used superset’s <a href="https://github.com/apache/superset/blob/1.0.1/Dockerfile">Dockerfile</a> as a base, where we removed the Dev section and added some code to install our chart plugins before building the front-end code.
+Also, to make Superset import our custom chart plugins, some changes have to be made to the <a href="https://github.com/apache/superset/blob/1.0.1/superset-frontend/src/visualizations/presets/MainPreset.js">superset-frontend/src/visualizations/presets/MainPreset.js</a> file.</p>
+<p>The changes made to the Dockerfile to install the chart plugins are in <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L44-L63">this</a> area:</p>
+<ol style="list-style-type: decimal">
+<li>L44: First we copy the <code>superset/plugins</code> directory into the container, which contains all the extra and custom chart plugins.</li>
+<li>L48-51: Then we iterate over the chart plugins and execute <code>npm install ...</code> on each of them.
+This will make changes to both the package.json and package-lock.json files and for that, we copy them into a temporary directory <code>package_json_files</code>.</li>
+<li>L54: Then all superset’s front-end code is copied into the container, which will override the package*.json files.</li>
+<li>L56: After this, we copy our custom MainPresets.js file.</li>
+<li>L60-L63: Finally, we replace the package*.json files with the ones that we saved earlier and then run the npm build command.</li>
+</ol>
+<div id="update-superset" class="section level4 unnumbered" number="">
+<h4>Update Superset</h4>
+<ol style="list-style-type: decimal">
+<li><p>Update repository’s tags <code>git fetch --tags</code>.</p></li>
+<li><p><code>cd</code> into superset’s submodule directory and checkout to the new desired release tag.</p></li>
+<li><p>Check if there are any changes made to superset’s Dockerfile (on the root of the repository for the current latest release), adapt them, and insert them on our custom Dockerfile under the <code>docker/superset</code> directory.</p></li>
+<li><p>Check if there are any changes made to superset’s <code>superset-frontend/src/visualizations/presets/MainPreset.js</code> file.
+You can use the script <code>mainpreset_has_changes.py</code> under the <code>plugins</code> directory to check that.
+Apply the new changes, if any, and remember to keep our chart plugins imported and registered (Currently we only have the <em>Box plot</em> plugin).</p></li>
+<li><p>If the version of the frontend package <code>@superset-ui/plugin-chart-echarts</code> changed it’s necessary to update our box plot plugin.
+Follow the instructions present <a href="https://github.com/EHDEN/NetworkDashboards/tree/master/superset/plugins/plugins/plugin-chart-box-plot#how-to-update">here</a>, also take into account the instruction of the next section.</p></li>
+</ol>
+</div>
+<div id="chart-plugin-development" class="section level4 unnumbered" number="">
+<h4>Chart Plugin Development</h4>
+<p>Instructions on how you can set up your development environment to develop a custom superset chart plugin:</p>
+<ol style="list-style-type: decimal">
+<li><p>Clone the <a href="https://github.com/apache/superset">superset</a> repository.
+<strong>IMPORTANT NOTE</strong>: Since we build the superset’s docker image using the existing superset’s submodule, it’s better not to use it to develop the plugins.
+If you decide to use it anyways, remember <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L54">this</a> and <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L99">this</a> steps.
+They might override directories (<code>superset-frontend/node_modules</code> and <code>superset/static/assets</code>) that are generated during the build process, which can cause frontend compilation errors or the app can serve outdated static files.</p></li>
+<li><p>Clone the <a href="https://github.com/apache-superset/superset-ui">superset-ui</a> repository into the directory superset-frontend of the superset’s repository.</p></li>
+<li><p>Follow the instructions of <a href="https://superset.apache.org/docs/installation/building-custom-viz-plugins">this tutorial</a> to create the necessary base files of your plugin.</p></li>
+<li><p>Copy the file <code>MainPreset.js</code> present on this directory into the superset repository into the <code>superset-frontend/src/visualizations/presets/</code> directory.</p></li>
+<li><p>Add the line <code>npm install -f --no-optional --save ./superset-frontend/superset-ui/plugins/plugin-chart-[your-chart-name]</code> into the file <code>docker/docker-frontend.sh</code> of the superset repository before the existing <code>npm install ...</code> commands.</p></li>
+<li><p>When the development is finished, on the root of the superset-ui repository run <code>yarn install</code> and then <code>yarn build [your-chart-name]</code>.</p></li>
+<li><p>Copy the directory of your plugin (including its sub-directory <code>esm</code>), within the superset-ui repository within the directory <code>plugins</code>, into the sub-directory <code>plugins</code> this directory.
+Make sure to run the command <code>yarn build [your-chart-name]</code> before doing this step.</p></li>
+</ol>
+</div>
+<div id="important-features" class="section level4 unnumbered" number="">
+<h4>Important features</h4>
+<ol style="list-style-type: decimal">
+<li><p>Standalone Mode: by appending <code>?standalone=true</code> to the URL of a dashboard superset’s menu bar won’t show.
+New versions support <code>?standalone=1</code> or <code>?standalone=2</code> where the first does the same as <code>?standalone=true</code> and the second also hides the bar containing the name of the dashboard, leaving just the charts.</p></li>
+<li><p>Filters:</p></li>
+</ol>
+<ul>
+<li>check <a href="https://superset.apache.org/docs/frequently-asked-questions#how-to-add-dynamic-filters-to-a-dashboard">this</a> faq entry</li>
+<li>Append <code>?preselect_filters={"chartId":{"columnToFilterBy":["value1", "value2"]}}</code> to the dashboard URL to apply a filter once the dashboard is loaded. E.g. <code>?preselect_filters={"13":{"name":["Demo University of Aveiro"]}}</code></li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Custom label colors: check <a href="https://superset.apache.org/docs/frequently-asked-questions#is-there-a-way-to-force-the-use-specific-colors">this</a> faq entry</li>
+</ol>
+</div>
 </div>
 <div id="github-actions" class="section level3 unnumbered" number="">
 <h3>Github Actions</h3>
@@ -359,6 +421,9 @@ You can make prospector ignore some bad stuff by adding the comment, <code># noq
 </div>
 <div id="tests" class="section level3 unnumbered" number="">
 <h3>Tests</h3>
+<p>docker-compose stack</p>
+<p>issues with todos</p>
+<p>no need to run celery</p>
 </div>
 <div id="python-requirements" class="section level3 unnumbered" number="">
 <h3>Python Requirements</h3>
@@ -397,9 +462,9 @@ Therefore, to update this documentation, apply the changes to the files in the d
 To build the documentation, you need to have <a href="https://www.r-project.org/">R</a> installed, and if you are using UNIX-based systems, you only need to run <code>sh _build.sh</code> in the <code>docs/src</code> directory.</p>
 <p>In this documentation, we also describe all the settings around the dashboards that are used on the EHDEN project.
 To avoid an extensive table of contents and also to avoid having a big chapter page for dashboards, we <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/docs/src/_output.yml#L9">configured</a> this GitBook to split different sections into different pages.
-A section on the GitBook is mapped to markdown headings elements of level 1 (H1 or #).
+A section on the GitBook is mapped to markdown headings elements of level 2 (H2 or ##).
 This is, however, inconvenient for small chapters like the preface (index.Rmd).
-To make it render all the sections on the same page, instead of using headings of level 1 (#) you should use level 2 (##).
+To make it render all the sections on the same page, instead of using headings of level 2 (##) you should use level 3 (###).
 Although this will make the section numeration start at 0, e.g 1.0.1, 1.0.2, …
 To avoid this we appended <code>{-}</code> to the sections titles so that the numeration does not show.</p>
 <p>If a new file is created with more documentation, its name should be placed, including extension, in the desired location in <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/docs/src/_bookdown.yml#L26-L45">this list</a> of the <code>docks/src/_bookdown.yml</code> file.</p>

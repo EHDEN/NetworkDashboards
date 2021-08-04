@@ -1,5 +1,3 @@
-fig:dashboardsLayout
-fig:intro
 fig:dataSourceFilter
 fig:conditionDrugProcedureDeviceMeasurementObservationTypes
 fig:unnamed-chunk-1
