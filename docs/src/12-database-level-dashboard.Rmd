@@ -6,11 +6,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Database Level Dashboard
+## Database-Level Dashboard
 
 <!-- Discuss the goal of this dashboard... TO DO -->
 
-This dashboard is an exact copy of the [Per Database](#PerDatabaseDashboard) dashboard but several legends and fields
+This dashboard is an exact copy of the [Network Dashboard](#PerDatabaseDashboard) dashboard but several legends and fields
 displayed on the original are hidden either through CSS or by changing some chart settings.
 On the following sections we will only present the things to change on the original charts.
 

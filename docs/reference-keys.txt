@@ -13,6 +13,7 @@ code-documentation
 dashboards
 PerDatabaseDashboard
 database-level-dashboard
+materialized-views-1
 general-deprecated
 person-deprecated
 observation-period-deprecated
