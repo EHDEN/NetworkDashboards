@@ -70,6 +70,7 @@ def create_materialized_view(  # noqa
                             f"CREATE MATERIALIZED VIEW {new_obj.matviewname} AS {new_obj.definition}"
                         )
                     except ProgrammingError as e:
+                        # no need to rename back the materialized view since the transaction will rollback
                         self.update_state(
                             state=states.FAILURE,
                             meta={

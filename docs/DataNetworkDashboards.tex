@@ -120,7 +120,7 @@
 
 \title{Data Network Dashboards}
 \author{This document is currently under construction}
-\date{2021-08-04}
+\date{2021-08-05}
 
 \begin{document}
 \maketitle
@@ -178,7 +178,9 @@ To develop this tool, EHDEN organized a hack-a-thon (Aveiro, December 2-3, 2019)
 
 This manual was written to be a guide for a clean installation of this system with all the dashboards that we defined during the project. The first chapter describes the goal of the system and the second how to install the system. The remaining chapters are dedicated to the dashboards, in which chapters describes one dashboard and all its charts. To simplify the representation of the dashboard's layout, we used similar schemas as it is presented in Figure \ref{fig:dashboardsLayout}. The white box is the dashboard and the inside boxes are charts. The colour changes in relation to the type of chart.
 
-\label{fig:dashboardsLayout}Example of a dashboards tool presenting the databases available in the network (simulated data)
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/dashboardsLayout} \caption{Example of a dashboards tool presenting the databases available in the network (simulated data)}\label{fig:dashboardsLayout}
+\end{figure}
 
 \hypertarget{license}{%
 \subsection*{License}\label{license}}
@@ -1180,11 +1182,52 @@ If a new file is created with more documentation, its name should be placed, inc
 
 Materialized Queries Manager
 
-admin changes
-
 Models
 
-managed model
+This app has only one model, MaterializedQuery, which maps to a Postgres materialized view.
+To avoid having to maintain the consistency between both the records of this Django app and the Postgres materialized views:
+
+\begin{itemize}
+\tightlist
+\item
+  the managed Meta flag was set to \texttt{False} to avoid Django creating migrations to the model
+\item
+  the db\_table Meta flag was set to the name of the table where Postgres stores the information about the existing materialized views (\texttt{pg\_matviews}).
+\item
+  the fields of the model, matviewname and definition, use the same name and type as the ones of the \texttt{pg\_matviews} Postgres table.
+\end{itemize}
+
+Views
+
+This app has no view exposed since all operations to the MaterializedQuery models are expected to be performed in the Django admin app.
+
+However, we had to change Django's default behaviors for the create, update and delete operations of the model.
+For the delete operation, we overrode the delete method of the MaterializedQuery Django model to just execute a \texttt{DROP\ MATERIALIZED\ VIEW} SQL statement.
+Related to creation and update we had to change some internal methods of Django's admin app ModelAdmin base class.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \href{https://github.com/django/django/blob/3.2.5/django/contrib/admin/options.py\#L1542}{\_changeform\_view}: where Model records were being created.
+  Instead, \texttt{CREATE\ MATERIALIZED\ VIEW} and \texttt{ALTER\ MATERIALIZED\ VIEW} SQL statements are executed.
+  However, since some materialized views might take some time to build, create a record like this could lead to a browser timeout.
+  We then decided to execute these statements in a celery background task.
+  The main changes were made \href{https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/materialized_queries_manager/admin.py\#L87-L92}{here} where we launch the background task.
+\item
+  \href{https://github.com/django/django/blob/3.2.5/django/contrib/admin/options.py\#L1176}{response\_add}: Since the materialized view might not be created the right way, saying ``A record was created successfully'' is not adequate.
+  We then \href{https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/materialized_queries_manager/admin.py\#L177-L183}{changed the message} that is presented after the creation to tell in the id of the background task that is creating the materialized query.
+  The result of the query can then be consulted on the associated Task Results record on the Celery Results section app of the Django admin console.
+\item
+  \href{https://github.com/django/django/blob/3.2.5/django/contrib/admin/options.py\#L1253}{response\_change}: changes \href{https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/materialized_queries_manager/admin.py\#L213-L219}{here} with the same ideas behind as response\_add.
+\end{enumerate}
+
+If any catalogue results files are being uploaded to the platform, any worker attempting to create or change a materialized view will block until such data is uploaded.
+Also if any worker is creating materialized views, no other worker can upload catalogue results data.
+
+Through the admin console, there is also the possibility to refresh a specific MaterializedQuery.
+To do so, on the list view, select the MaterializedQueries to refresh, then on the actions dropdown select ``Refresh selected materialized queries''.
+Once again to avoid timeouts, such operations are executed on a background task.
 
 Tabs Manager
 

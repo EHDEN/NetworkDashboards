@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2021-08-04" />
+<meta name="date" content="2021-08-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -298,23 +298,51 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 8</span> Code Documentation</h1>
 <div id="apps" class="section level3 unnumbered" number="">
 <h3>Apps</h3>
-<h3>
-Materialized Queries Manager
-</h3>
-<p>admin changes</p>
 <h4>
-Models
+Materialized Queries Manager
 </h4>
-<p>managed model</p>
-<h3>
+<h5>
+Models
+</h5>
+<p>This app has only one model, MaterializedQuery, which maps to a Postgres materialized view.
+To avoid having to maintain the consistency between both the records of this Django app and the Postgres materialized views:</p>
+<ul>
+<li>the managed Meta flag was set to <code>False</code> to avoid Django creating migrations to the model</li>
+<li>the db_table Meta flag was set to the name of the table where Postgres stores the information about the existing materialized views (<code>pg_matviews</code>).</li>
+<li>the fields of the model, matviewname and definition, use the same name and type as the ones of the <code>pg_matviews</code> Postgres table.</li>
+</ul>
+<h5>
+Views
+</h5>
+<p>This app has no view exposed since all operations to the MaterializedQuery models are expected to be performed in the Django admin app.</p>
+<p>However, we had to change Django’s default behaviors for the create, update and delete operations of the model.
+For the delete operation, we overrode the delete method of the MaterializedQuery Django model to just execute a <code>DROP MATERIALIZED VIEW</code> SQL statement.
+Related to creation and update we had to change some internal methods of Django’s admin app ModelAdmin base class.</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://github.com/django/django/blob/3.2.5/django/contrib/admin/options.py#L1542">_changeform_view</a>: where Model records were being created.
+Instead, <code>CREATE MATERIALIZED VIEW</code> and <code>ALTER MATERIALIZED VIEW</code> SQL statements are executed.
+However, since some materialized views might take some time to build, create a record like this could lead to a browser timeout.
+We then decided to execute these statements in a celery background task.
+The main changes were made <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/materialized_queries_manager/admin.py#L87-L92">here</a> where we launch the background task.</li>
+<li><a href="https://github.com/django/django/blob/3.2.5/django/contrib/admin/options.py#L1176">response_add</a>: Since the materialized view might not be created the right way, saying “A record was created successfully” is not adequate.
+We then <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/materialized_queries_manager/admin.py#L177-L183">changed the message</a> that is presented after the creation to tell in the id of the background task that is creating the materialized query.
+The result of the query can then be consulted on the associated Task Results record on the Celery Results section app of the Django admin console.</li>
+<li><a href="https://github.com/django/django/blob/3.2.5/django/contrib/admin/options.py#L1253">response_change</a>: changes <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/materialized_queries_manager/admin.py#L213-L219">here</a> with the same ideas behind as response_add.</li>
+</ol>
+<p>If any catalogue results files are being uploaded to the platform, any worker attempting to create or change a materialized view will block until such data is uploaded.
+Also if any worker is creating materialized views, no other worker can upload catalogue results data.</p>
+<p>Through the admin console, there is also the possibility to refresh a specific MaterializedQuery.
+To do so, on the list view, select the MaterializedQueries to refresh, then on the actions dropdown select “Refresh selected materialized queries”.
+Once again to avoid timeouts, such operations are executed on a background task.</p>
+<h4>
 Tabs Manager
-</h3>
+</h4>
 <p>Currently, this app is not being used and the URL mapping was delete.
 To use it again uncomment the tabsManager <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/dashboard_viewer/urls.py#L29">line</a> on the dashboard_viewer/dashboard_viewer/urls.py file.
 Then you can access the tabs page through the <code>[BASE_RUL]/tabs/</code> URL.</p>
-<h4>
+<h5>
 Views
-</h4>
+</h5>
 <p>On this app, there is only one view.
 It is a simple page with just a sidebar to choose which dashboard to displays on an iframe.
 Besides the simplicity, all the animations around the sidebar buttons are handled by CSS with some JS that adds and removes classes to HTML elements, as events (hover and click) happen.
@@ -322,21 +350,21 @@ To facilitate the development process of CSS, <a href="https://sass-lang.com/">S
 It prevents duplication with the addition of variables and adds the possibility to express parent classes by nesting their declaration.</p>
 <p>In cases where there are a lot of buttons on the sidebar, some buttons might get impossible to reach since they are out of the field of view.
 To avoid this we make use of <a href="https://github.com/Grsmto/simplebar">SimpleBar</a>, which makes the sidebar scrollable, displaying a scroll bar on the right side of the sidebar whenever there are elements outside of the field of view.</p>
-<h4>
+<h5>
 API
-</h4>
+</h5>
 <p>There is one endpoint, <code>[BASE_URL]/api/</code>, where a JSON object of tabs and groups of tabs and their sub-tabs are returned.</p>
-<h4>
+<h5>
 Models
-</h4>
+</h5>
 <p><img src="images/code-documentation/tabs-models.png" /></p>
-<h3>
-Uploader
-</h3>
-<p>all possible error messages for uploads</p>
 <h4>
-Models
+Uploader
 </h4>
+<p>all possible error messages for uploads</p>
+<h5>
+Models
+</h5>
 <p><img src="images/code-documentation/uploader-models.png" /></p>
 </div>
 <div id="external-node-packages" class="section level3 unnumbered" number="">
