@@ -183,8 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8" data-path="code-documentation.html"><a href="code-documentation.html"><i class="fa fa-check"></i><b>8</b> Code Documentation</a>
 <ul>
 <li class="chapter" data-level="" data-path="code-documentation.html"><a href="code-documentation.html#apps"><i class="fa fa-check"></i>Apps</a></li>
-<li class="chapter" data-level="" data-path="code-documentation.html"><a href="code-documentation.html#external-node-packages"><i class="fa fa-check"></i>External Node Packages</a></li>
-<li class="chapter" data-level="" data-path="code-documentation.html"><a href="code-documentation.html#docker"><i class="fa fa-check"></i>Docker</a></li>
+<li class="chapter" data-level="" data-path="code-documentation.html"><a href="code-documentation.html#javascript-packages"><i class="fa fa-check"></i>JavaScript Packages</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="dashboards.html"><a href="dashboards.html"><i class="fa fa-check"></i><b>9</b> Dashboards</a>
 <ul>
@@ -361,17 +360,133 @@ Models
 <h4>
 Uploader
 </h4>
-<p>all possible error messages for uploads</p>
+<h5>
+Views
+</h5>
+<p>This app exposes three views:
+1. Creation of a data source
+2. Edition of a data source
+3. To Upload or consult the history of uploads of catalogue results files.</p>
+<p>The first one can be accessed through the <code>[BASE_URL]/uploader/[DATA_SOURCE_HASH]/</code> URL.</p>
+<ul>
+<li>If no hash is provided on the URL then on the creation of the data source a random one will be assigned.</li>
+<li>If there is already a data source with the provided hash then the user is redirected to the upload page of that data source.</li>
+</ul>
+<p>This view also allows creating data sources without displaying the webform, redirecting directly to the uploader page.
+This can be achieved by providing the data of several fields of the form as URL arguments.
+E.g. <code>[BASE_URL]/uploader/[DATA_SOURCE_HASH]/?acronym=test...</code>.
+This is implemented in a way so that whenever a GET is performed, it checks the URL arguments and tries to submit the data source form.
+If it is valid, all the required fields were provided and are valid, then the user is redirected to the upload page.
+Else all the valid values are set in the form, the invalid ones are being discarded, and the data source creation page is presented with no error messages.
+The country field should contain a value from the ones available on the dropdown presented in the webform and since the coordinates is a two-component value it should be provided as <code>coordinates_0=[LATITUDE]&amp;coordinates_1=[LONGITUDE]</code>.
+It is important to note that this view does not require a CSRF token, so a normal POST form submission can be performed to create a data source.</p>
+<hr />
+<p>The second one can be accessed through the <code>[BASE_URL]/uploader/[DATA_SOURCE_HASH]/edit/</code> URL or by clicking on the Edit button on the data source upload page.</p>
+<hr />
+<p>Finally, on the upload page, a data owner can consult the history of uploads, their state, and eventually error messages if some went wrong.
+Whenever an upload is made its state will be pending.
+After the upload, with a 5-second interval, a request is made to the backend to check if the status of the upload changed.
+If it fails, an error message will be provided in a tooltip above a button with a message icon.
+Else the state will change to Done and the information about the upload retrieved from the uploaded file, present on the check status request, is filled.</p>
+<p>Related to file uploading, after the file form is submitted no validation is made and a message is presented to the user telling that the file is being processed in the background, then the fetch status process mentioned before starts.
+If validations were performed before returning a message to the user, if the validation took too much time, the browser could timeout.
+Also if some unexpected error happened on the insertion process performed in the background, the user would get any feedback.</p>
+<p>Related to the background task that validates and uploads the data, the validation can fail if:</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Error</th>
+<th align="center">Message</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Invalid Number of Columns</td>
+<td align="center">The provided file has an invalid number of columns</td>
+</tr>
+<tr class="even">
+<td align="center">Invalid CSV File Format</td>
+<td align="center">The provided file has an invalid CSV format. Make sure is a text file separated by commas and you either have 7 (regular results file) or 13 (results file with dist columns) columns.</td>
+</tr>
+<tr class="odd">
+<td align="center">Missing Required Fields</td>
+<td align="center">Some rows have null values either on the column “analysis_id” or “count_value”</td>
+</tr>
+<tr class="even">
+<td align="center">Invalid Field Types</td>
+<td align="center">The provided file has invalid values on some columns. Remember that only the "stratum_*" columns accept strings, all the other fields expect numeric types.</td>
+</tr>
+<tr class="odd">
+<td align="center">Duplicated Metadata Rows</td>
+<td align="center">Analysis id[output] duplicated on multiple rows. Try (re)running the plugin CatalogueExport on your database.</td>
+</tr>
+<tr class="even">
+<td align="center">Missing Required Metadata Row</td>
+<td align="center">Analysis id 0 is missing. Try (re)running the plugin CatalogueExport on your database.</td>
+</tr>
+</tbody>
+</table>
+<p>Any other error is considered an unexpected error and the following message will be presented “An unexpected error occurred while processing your file. Please contact the system administrator for more details.”.</p>
+<p>If the file passes all validations, it goes to the upload data phase.
+Here, if workers are creating or refreshing materialized queries then the worker blocks.
+If there are other workers inserting data for the same data source it will also block.
+However, several workers of different data sources can insert data at the same time.
+All the workers, after inserting the data, check if they are the only worker inserting data. If so they refresh the existing materialized queries.
+Else the next worker to finish inserting data will do the same check.</p>
+<h5>
+Widgets
+</h5>
+<p>For the data source form two custom widgets were created for the following fields:</p>
+<ul>
+<li>Database Type: To avoid having duplicate entries with the same meaning (e.g. Hospital, hospital), the input of this field has a autocomplete list where existing values are suggested to the user.
+Also before saving the field to the database spaces are trimmed and the values are transformed into title case <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/uploader/forms.py#L25">here</a>.</li>
+<li>Coordinates: 1. This is a two-component field; 2. Inserting coordinates by hand is tedious. Considering the previous points, we created a widget with a map built with <a href="https://leafletjs.com/">leaflet</a> where the user just needs to click on the map.</li>
+</ul>
+<h5>
+API
+</h5>
+<p>This app provided two API endpoints</p>
+<ol style="list-style-type: decimal">
+<li><p>Update data source information: a PATCH request with a JSON object on the body of the request with the fields and their new values.</p></li>
+<li><p>Pending upload status: a GET request that returns JSON data where there is always a <code>status</code> field that can have three statuses which then can lead to additional data be also present:</p></li>
+</ol>
+<ul>
+<li>Pending: the upload in question hasn’t finished</li>
+<li>Done: the upload finished and there was nothing wrong with the uploaded file.
+Along with the status, there will be a <code>data</code> field with a JSON object with the fields <code>r_package_version</code>, <code>generation_date</code>, <code>cdm_version</code>, and <code>vocabulary_version</code> which are data source information that was extracted from the uploaded file.</li>
+<li>Failed: the upload finished but there was something wrong with the uploaded file.
+Along with the status, there will be a <code>failure_msg</code> field telling the reason for the failure.</li>
+</ul>
 <h5>
 Models
 </h5>
 <p><img src="images/code-documentation/uploader-models.png" /></p>
+<ul>
+<li>Country data is loaded in a fresh installation through the <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/docker-init.sh">docker-init.sh</a> script if no records are present on the Country table.</li>
+<li>The DataSource model doesn’t have a foreign key to the DatabaseType model to then facilitate the creation of SQL queries to feet Superset’s dashboards.
+The DatabaseType is used anyway to have a faster way to check if a certain database type already exists on the database, avoiding going through every DataSource record.</li>
+<li>The same situation of the DatabaseType model also happens between the UploadHistory and PendingUpload models.
+There is no foreign key between a UploadHistory and a PendingUpload.
+This is because PendingUpload records are deleted once an upload is successful.
+When the upload view requests the status of a certain upload, it uses the id of the pending upload.
+If no pending upload is found, it is assumed that the upload was successful and searches for uploads on the UploadHistory model with the pending_upload_id field equal to the certain upload id.
+Related to where the uploaded files are stored, within the media directory there will be a <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/dashboard_viewer/settings.py#L198">ACHILLES_RESULTS_STORAGE_PATH</a> directory which will have a directory for each data source.
+Within this last directory, first, files are uploaded to a <code>failure</code> directory.
+If the upload is successful the file is moved to a success directory.
+In both cases, the file name will be the date of when the file is being saved into disk plus its original extensions.</li>
+</ul>
 </div>
-<div id="external-node-packages" class="section level3 unnumbered" number="">
-<h3>External Node Packages</h3>
-</div>
-<div id="docker" class="section level3 unnumbered" number="">
-<h3>Docker</h3>
+<div id="javascript-packages" class="section level3 unnumbered" number="">
+<h3>JavaScript Packages</h3>
+<p>While developing the templates for Django views, if a certain javascript library is required, like jquery, one option is to insert <code>script</code> tags on the templates and point the src to a CDN.
+However, this makes the process of maintaining the libraries tedious since a developer has to search and change all the <code>script</code> tags if for example wants to update the library’s version.
+To avoid this problem we have a <code>package.json</code> file where we define all the libraries that we use and their version.
+Then we <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/dashboard_viewer/settings.py#L182">add</a> the <code>node_modules</code> directory as a static file directory.
+With this alternative, updating a library is as simple as changing a number of the <code>package.json</code> file, run <code>npm install</code> and collect the static files again.</p>
 
 </div>
 </div>
