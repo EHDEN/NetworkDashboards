@@ -573,78 +573,252 @@ SELECT source.name AS source_name,
  GROUP BY source.name, source.database_type, country.country, concept.domain_id, concept.concept_id, concept.concept_name;
 ```
 
-### {-}
+### data_density {-}
 
 ```sql
+SELECT source.acronym,
+   t1.table_name AS series_name,
+   to_date(t1.stratum_1, 'YYYYMM'::text) AS x_calendar_month,
+   t1.count_value AS y_record_count
+  FROM (( SELECT achilles_results.data_source_id AS id,
+           'Visit occurrence'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 220)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Condition occurrence'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 420)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Death'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 502)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Procedure occurrence'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 620)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Drug exposure'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 720)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Observation'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 820)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Drug era'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 920)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Device Exposure'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 2120)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Condition era'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 1020)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Observation period'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 111)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Measurement'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 1820)) t1
+    JOIN data_source source ON ((source.id = t1.id)))
+ ORDER BY t1.table_name, (
+       CASE
+           WHEN (t1.stratum_1 ~ '^\d+\.?\d+$'::text) THEN t1.stratum_1
+           ELSE NULL::text
+       END)::integer;
 ```
 
-### {-}
+### records_per_person {-}
 
 ```sql
+SELECT source.acronym,
+   t1.table_name AS series_name,
+   to_date(t1.stratum_1, 'YYYYMM'::text) AS x_calendar_month,
+   round(((1.0 * (t1.count_value)::numeric) / (denom.count_value)::numeric), 5) AS y_record_count
+  FROM ((( SELECT achilles_results.data_source_id AS id,
+           'Visit occurrence'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 220)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Condition occurrence'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 420)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Death'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 502)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Procedure occurrence'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 620)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Drug exposure'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 720)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Observation'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 820)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Device exposure'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 2120)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Drug era'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 920)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Condition era'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 1020)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Observation period'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 111)
+       UNION ALL
+        SELECT achilles_results.data_source_id AS id,
+           'Measurement'::text AS table_name,
+           achilles_results.stratum_1,
+           achilles_results.count_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 1820)) t1
+    JOIN ( SELECT achilles_results.id,
+           achilles_results.analysis_id,
+           achilles_results.stratum_1,
+           achilles_results.stratum_2,
+           achilles_results.stratum_3,
+           achilles_results.stratum_4,
+           achilles_results.stratum_5,
+           achilles_results.count_value,
+           achilles_results.data_source_id,
+           achilles_results.avg_value,
+           achilles_results.max_value,
+           achilles_results.median_value,
+           achilles_results.min_value,
+           achilles_results.p10_value,
+           achilles_results.p25_value,
+           achilles_results.p75_value,
+           achilles_results.p90_value,
+           achilles_results.stdev_value
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = 117)) denom ON (((t1.stratum_1 = denom.stratum_1) AND (t1.id = denom.data_source_id))))
+    JOIN data_source source ON ((source.id = t1.id)))
+ ORDER BY t1.table_name, (
+       CASE
+           WHEN (t1.stratum_1 ~ '^\d+\.?\d+$'::text) THEN t1.stratum_1
+           ELSE NULL::text
+       END)::integer;
 ```
 
-### {-}
+### visit_age_distribution {-}
 
 ```sql
+SELECT source.name,
+   source.acronym,
+   c1.concept_name,
+   c2.concept_name AS gender,
+   achilles.count_value,
+   achilles.p10_value AS p10,
+   achilles.p25_value AS p25,
+   achilles.median_value AS median,
+   achilles.p75_value AS p75,
+   achilles.p90_value AS p90
+  FROM (((achilles_results achilles
+    JOIN data_source source ON ((achilles.data_source_id = source.id)))
+    JOIN concept c1 ON ((achilles.stratum_1 = (c1.concept_id)::text)))
+    JOIN concept c2 ON ((achilles.stratum_2 = (c2.concept_id)::text)))
+ WHERE (achilles.analysis_id = 206)
+ ORDER BY source.name, c1.concept_name, c2.concept_name;
 ```
 
-### {-}
+### concept_browser_table2 {-}
 
 ```sql
+SELECT
+   source.acronym,
+   (((('<a href="https://athena.ohdsi.org/search-terms/terms/'::text || ar1.concept_id) || '"target="_blank">'::text) || ar1.concept_id) || '</a>'::text) AS concept_id,
+   concept.concept_name,
+   concept.domain_id,
+   (ar1.rc)::integer AS rc,
+   (ar2.drc)::integer AS drc
+  FROM (((( SELECT achilles_results.data_source_id,
+           achilles_results.analysis_id,
+           achilles_results.stratum_1 AS concept_id,
+           achilles_results.count_value AS rc
+          FROM achilles_results
+         WHERE (achilles_results.analysis_id = ANY (ARRAY[(401)::bigint, (601)::bigint, (701)::bigint, (801)::bigint, (1801)::bigint, (2101)::bigint]))) ar1
+    JOIN ( SELECT ar.data_source_id,
+           ar.analysis_id,
+           ar.stratum_1 AS concept_id,
+           ar.count_value AS drc
+          FROM achilles_results ar
+         WHERE (ar.analysis_id = ANY (ARRAY[(430)::bigint, (630)::bigint, (730)::bigint, (830)::bigint, (1830)::bigint, (2130)::bigint]))) ar2 ON (((ar1.concept_id = ar2.concept_id) AND (ar1.data_source_id = ar2.data_source_id))))
+    JOIN data_source source ON ((ar1.data_source_id = source.id)))
+    JOIN concept concept ON ((ar1.concept_id = (concept.concept_id)::text)))
+ ORDER BY ((ar2.drc)::integer) DESC;
 ```
-
-### {-}
-
-```sql
-```
-
-### {-}
-
-```sql
-```
-
-### {-}
-
-```sql
-```
-
-### {-}
-
-```sql
-```
-
-### {-}
-
-```sql
-```
-
-### {-}
-
-```sql
-```
-
-### {-}
-
-```sql
-```
-
-### {-}
-
-```sql
-```
-
-### {-}
-
-```sql
-```
-
-### {-}
-
-```sql
-```
-
-### {-}
-
-```sql
-```
-

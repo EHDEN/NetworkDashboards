@@ -237,21 +237,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#domain_filter"><i class="fa fa-check"></i>domain_filter</a></li>
 <li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#concept_browser_table3"><i class="fa fa-check"></i>concept_browser_table3</a></li>
 <li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#concept_coverage2"><i class="fa fa-check"></i>concept_coverage2</a></li>
-<li><a href="materialized-views-1.html#section"></a></li>
-<li><a href="materialized-views-1.html#section-1"></a></li>
-<li><a href="materialized-views-1.html#section-2"></a></li>
-<li><a href="materialized-views-1.html#section-3"></a></li>
-<li><a href="materialized-views-1.html#section-4"></a></li>
-<li><a href="materialized-views-1.html#section-5"></a></li>
-<li><a href="materialized-views-1.html#section-6"></a></li>
-<li><a href="materialized-views-1.html#section-7"></a></li>
-<li><a href="materialized-views-1.html#section-8"></a></li>
-<li><a href="materialized-views-1.html#section-9"></a></li>
-<li><a href="materialized-views-1.html#section-10"></a></li>
-<li><a href="materialized-views-1.html#section-11"></a></li>
-<li><a href="materialized-views-1.html#section-12"></a></li>
-<li><a href="materialized-views-1.html#section-13"></a></li>
-<li><a href="materialized-views-1.html#section-14"></a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#data_density"><i class="fa fa-check"></i>data_density</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#records_per_person"><i class="fa fa-check"></i>records_per_person</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#visit_age_distribution"><i class="fa fa-check"></i>visit_age_distribution</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#concept_browser_table2"><i class="fa fa-check"></i>concept_browser_table2</a></li>
 </ul></li>
 <li class="chapter" data-level="9.4" data-path="general-deprecated.html"><a href="general-deprecated.html"><i class="fa fa-check"></i><b>9.4</b> General [Deprecated]</a>
 <ul>
@@ -867,65 +856,247 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb35-23"><a href="materialized-views-1.html#cb35-23" aria-hidden="true"></a>    <span class="kw">JOIN</span> concept concept <span class="kw">ON</span> ((ar1.concept_id <span class="op">=</span> (concept.concept_id):<span class="ch">:text</span>)))</span>
 <span id="cb35-24"><a href="materialized-views-1.html#cb35-24" aria-hidden="true"></a> <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">source</span>.name, <span class="kw">source</span>.database_type, country.country, concept.domain_id, concept.concept_id, concept.concept_name;</span></code></pre></div>
 </div>
-<div id="section" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb36"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
+<div id="data_density" class="section level3 unnumbered" number="">
+<h3>data_density</h3>
+<div class="sourceCode" id="cb36"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb36-1"><a href="materialized-views-1.html#cb36-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.acronym,</span>
+<span id="cb36-2"><a href="materialized-views-1.html#cb36-2" aria-hidden="true"></a>   t1.table_name <span class="kw">AS</span> series_name,</span>
+<span id="cb36-3"><a href="materialized-views-1.html#cb36-3" aria-hidden="true"></a>   <span class="fu">to_date</span>(t1.stratum_1, <span class="st">&#39;YYYYMM&#39;</span>:<span class="ch">:text</span>) <span class="kw">AS</span> x_calendar_month,</span>
+<span id="cb36-4"><a href="materialized-views-1.html#cb36-4" aria-hidden="true"></a>   t1.count_value <span class="kw">AS</span> y_record_count</span>
+<span id="cb36-5"><a href="materialized-views-1.html#cb36-5" aria-hidden="true"></a>  <span class="kw">FROM</span> (( <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb36-6"><a href="materialized-views-1.html#cb36-6" aria-hidden="true"></a>           <span class="st">&#39;Visit occurrence&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb36-7"><a href="materialized-views-1.html#cb36-7" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb36-8"><a href="materialized-views-1.html#cb36-8" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb36-9"><a href="materialized-views-1.html#cb36-9" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb36-10"><a href="materialized-views-1.html#cb36-10" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">220</span>)</span>
+<span id="cb36-11"><a href="materialized-views-1.html#cb36-11" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb36-12"><a href="materialized-views-1.html#cb36-12" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb36-13"><a href="materialized-views-1.html#cb36-13" aria-hidden="true"></a>           <span class="st">&#39;Condition occurrence&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb36-14"><a href="materialized-views-1.html#cb36-14" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb36-15"><a href="materialized-views-1.html#cb36-15" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb36-16"><a href="materialized-views-1.html#cb36-16" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb36-17"><a href="materialized-views-1.html#cb36-17" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">420</span>)</span>
+<span id="cb36-18"><a href="materialized-views-1.html#cb36-18" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb36-19"><a href="materialized-views-1.html#cb36-19" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb36-20"><a href="materialized-views-1.html#cb36-20" aria-hidden="true"></a>           <span class="st">&#39;Death&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb36-21"><a href="materialized-views-1.html#cb36-21" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb36-22"><a href="materialized-views-1.html#cb36-22" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb36-23"><a href="materialized-views-1.html#cb36-23" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb36-24"><a href="materialized-views-1.html#cb36-24" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">502</span>)</span>
+<span id="cb36-25"><a href="materialized-views-1.html#cb36-25" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb36-26"><a href="materialized-views-1.html#cb36-26" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb36-27"><a href="materialized-views-1.html#cb36-27" aria-hidden="true"></a>           <span class="st">&#39;Procedure occurrence&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb36-28"><a href="materialized-views-1.html#cb36-28" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb36-29"><a href="materialized-views-1.html#cb36-29" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb36-30"><a href="materialized-views-1.html#cb36-30" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb36-31"><a href="materialized-views-1.html#cb36-31" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">620</span>)</span>
+<span id="cb36-32"><a href="materialized-views-1.html#cb36-32" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb36-33"><a href="materialized-views-1.html#cb36-33" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb36-34"><a href="materialized-views-1.html#cb36-34" aria-hidden="true"></a>           <span class="st">&#39;Drug exposure&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb36-35"><a href="materialized-views-1.html#cb36-35" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb36-36"><a href="materialized-views-1.html#cb36-36" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb36-37"><a href="materialized-views-1.html#cb36-37" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb36-38"><a href="materialized-views-1.html#cb36-38" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">720</span>)</span>
+<span id="cb36-39"><a href="materialized-views-1.html#cb36-39" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb36-40"><a href="materialized-views-1.html#cb36-40" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb36-41"><a href="materialized-views-1.html#cb36-41" aria-hidden="true"></a>           <span class="st">&#39;Observation&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb36-42"><a href="materialized-views-1.html#cb36-42" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb36-43"><a href="materialized-views-1.html#cb36-43" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb36-44"><a href="materialized-views-1.html#cb36-44" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb36-45"><a href="materialized-views-1.html#cb36-45" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">820</span>)</span>
+<span id="cb36-46"><a href="materialized-views-1.html#cb36-46" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb36-47"><a href="materialized-views-1.html#cb36-47" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb36-48"><a href="materialized-views-1.html#cb36-48" aria-hidden="true"></a>           <span class="st">&#39;Drug era&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb36-49"><a href="materialized-views-1.html#cb36-49" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb36-50"><a href="materialized-views-1.html#cb36-50" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb36-51"><a href="materialized-views-1.html#cb36-51" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb36-52"><a href="materialized-views-1.html#cb36-52" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">920</span>)</span>
+<span id="cb36-53"><a href="materialized-views-1.html#cb36-53" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb36-54"><a href="materialized-views-1.html#cb36-54" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb36-55"><a href="materialized-views-1.html#cb36-55" aria-hidden="true"></a>           <span class="st">&#39;Device Exposure&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb36-56"><a href="materialized-views-1.html#cb36-56" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb36-57"><a href="materialized-views-1.html#cb36-57" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb36-58"><a href="materialized-views-1.html#cb36-58" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb36-59"><a href="materialized-views-1.html#cb36-59" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">2120</span>)</span>
+<span id="cb36-60"><a href="materialized-views-1.html#cb36-60" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb36-61"><a href="materialized-views-1.html#cb36-61" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb36-62"><a href="materialized-views-1.html#cb36-62" aria-hidden="true"></a>           <span class="st">&#39;Condition era&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb36-63"><a href="materialized-views-1.html#cb36-63" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb36-64"><a href="materialized-views-1.html#cb36-64" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb36-65"><a href="materialized-views-1.html#cb36-65" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb36-66"><a href="materialized-views-1.html#cb36-66" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">1020</span>)</span>
+<span id="cb36-67"><a href="materialized-views-1.html#cb36-67" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb36-68"><a href="materialized-views-1.html#cb36-68" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb36-69"><a href="materialized-views-1.html#cb36-69" aria-hidden="true"></a>           <span class="st">&#39;Observation period&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb36-70"><a href="materialized-views-1.html#cb36-70" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb36-71"><a href="materialized-views-1.html#cb36-71" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb36-72"><a href="materialized-views-1.html#cb36-72" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb36-73"><a href="materialized-views-1.html#cb36-73" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">111</span>)</span>
+<span id="cb36-74"><a href="materialized-views-1.html#cb36-74" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb36-75"><a href="materialized-views-1.html#cb36-75" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb36-76"><a href="materialized-views-1.html#cb36-76" aria-hidden="true"></a>           <span class="st">&#39;Measurement&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb36-77"><a href="materialized-views-1.html#cb36-77" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb36-78"><a href="materialized-views-1.html#cb36-78" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb36-79"><a href="materialized-views-1.html#cb36-79" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb36-80"><a href="materialized-views-1.html#cb36-80" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">1820</span>)) t1</span>
+<span id="cb36-81"><a href="materialized-views-1.html#cb36-81" aria-hidden="true"></a>    <span class="kw">JOIN</span> data_source <span class="kw">source</span> <span class="kw">ON</span> ((<span class="kw">source</span>.<span class="kw">id</span> <span class="op">=</span> t1.<span class="kw">id</span>)))</span>
+<span id="cb36-82"><a href="materialized-views-1.html#cb36-82" aria-hidden="true"></a> <span class="kw">ORDER</span> <span class="kw">BY</span> t1.table_name, (</span>
+<span id="cb36-83"><a href="materialized-views-1.html#cb36-83" aria-hidden="true"></a>       <span class="cf">CASE</span></span>
+<span id="cb36-84"><a href="materialized-views-1.html#cb36-84" aria-hidden="true"></a>           <span class="cf">WHEN</span> (t1.stratum_1 ~ <span class="st">&#39;^\d+\.?\d+$&#39;</span>:<span class="ch">:text</span>) <span class="cf">THEN</span> t1.stratum_1</span>
+<span id="cb36-85"><a href="materialized-views-1.html#cb36-85" aria-hidden="true"></a>           <span class="cf">ELSE</span> <span class="kw">NULL</span>:<span class="ch">:text</span></span>
+<span id="cb36-86"><a href="materialized-views-1.html#cb36-86" aria-hidden="true"></a>       <span class="cf">END</span>):<span class="ch">:integer</span>;</span></code></pre></div>
 </div>
-<div id="section-1" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb37"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
+<div id="records_per_person" class="section level3 unnumbered" number="">
+<h3>records_per_person</h3>
+<div class="sourceCode" id="cb37"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb37-1"><a href="materialized-views-1.html#cb37-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.acronym,</span>
+<span id="cb37-2"><a href="materialized-views-1.html#cb37-2" aria-hidden="true"></a>   t1.table_name <span class="kw">AS</span> series_name,</span>
+<span id="cb37-3"><a href="materialized-views-1.html#cb37-3" aria-hidden="true"></a>   <span class="fu">to_date</span>(t1.stratum_1, <span class="st">&#39;YYYYMM&#39;</span>:<span class="ch">:text</span>) <span class="kw">AS</span> x_calendar_month,</span>
+<span id="cb37-4"><a href="materialized-views-1.html#cb37-4" aria-hidden="true"></a>   <span class="fu">round</span>(((<span class="fl">1.0</span> <span class="op">*</span> (t1.count_value):<span class="ch">:numeric</span>) <span class="op">/</span> (denom.count_value):<span class="ch">:numeric</span>), <span class="dv">5</span>) <span class="kw">AS</span> y_record_count</span>
+<span id="cb37-5"><a href="materialized-views-1.html#cb37-5" aria-hidden="true"></a>  <span class="kw">FROM</span> ((( <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb37-6"><a href="materialized-views-1.html#cb37-6" aria-hidden="true"></a>           <span class="st">&#39;Visit occurrence&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb37-7"><a href="materialized-views-1.html#cb37-7" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb37-8"><a href="materialized-views-1.html#cb37-8" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb37-9"><a href="materialized-views-1.html#cb37-9" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb37-10"><a href="materialized-views-1.html#cb37-10" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">220</span>)</span>
+<span id="cb37-11"><a href="materialized-views-1.html#cb37-11" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb37-12"><a href="materialized-views-1.html#cb37-12" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb37-13"><a href="materialized-views-1.html#cb37-13" aria-hidden="true"></a>           <span class="st">&#39;Condition occurrence&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb37-14"><a href="materialized-views-1.html#cb37-14" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb37-15"><a href="materialized-views-1.html#cb37-15" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb37-16"><a href="materialized-views-1.html#cb37-16" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb37-17"><a href="materialized-views-1.html#cb37-17" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">420</span>)</span>
+<span id="cb37-18"><a href="materialized-views-1.html#cb37-18" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb37-19"><a href="materialized-views-1.html#cb37-19" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb37-20"><a href="materialized-views-1.html#cb37-20" aria-hidden="true"></a>           <span class="st">&#39;Death&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb37-21"><a href="materialized-views-1.html#cb37-21" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb37-22"><a href="materialized-views-1.html#cb37-22" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb37-23"><a href="materialized-views-1.html#cb37-23" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb37-24"><a href="materialized-views-1.html#cb37-24" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">502</span>)</span>
+<span id="cb37-25"><a href="materialized-views-1.html#cb37-25" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb37-26"><a href="materialized-views-1.html#cb37-26" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb37-27"><a href="materialized-views-1.html#cb37-27" aria-hidden="true"></a>           <span class="st">&#39;Procedure occurrence&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb37-28"><a href="materialized-views-1.html#cb37-28" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb37-29"><a href="materialized-views-1.html#cb37-29" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb37-30"><a href="materialized-views-1.html#cb37-30" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb37-31"><a href="materialized-views-1.html#cb37-31" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">620</span>)</span>
+<span id="cb37-32"><a href="materialized-views-1.html#cb37-32" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb37-33"><a href="materialized-views-1.html#cb37-33" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb37-34"><a href="materialized-views-1.html#cb37-34" aria-hidden="true"></a>           <span class="st">&#39;Drug exposure&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb37-35"><a href="materialized-views-1.html#cb37-35" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb37-36"><a href="materialized-views-1.html#cb37-36" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb37-37"><a href="materialized-views-1.html#cb37-37" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb37-38"><a href="materialized-views-1.html#cb37-38" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">720</span>)</span>
+<span id="cb37-39"><a href="materialized-views-1.html#cb37-39" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb37-40"><a href="materialized-views-1.html#cb37-40" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb37-41"><a href="materialized-views-1.html#cb37-41" aria-hidden="true"></a>           <span class="st">&#39;Observation&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb37-42"><a href="materialized-views-1.html#cb37-42" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb37-43"><a href="materialized-views-1.html#cb37-43" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb37-44"><a href="materialized-views-1.html#cb37-44" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb37-45"><a href="materialized-views-1.html#cb37-45" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">820</span>)</span>
+<span id="cb37-46"><a href="materialized-views-1.html#cb37-46" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb37-47"><a href="materialized-views-1.html#cb37-47" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb37-48"><a href="materialized-views-1.html#cb37-48" aria-hidden="true"></a>           <span class="st">&#39;Device exposure&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb37-49"><a href="materialized-views-1.html#cb37-49" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb37-50"><a href="materialized-views-1.html#cb37-50" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb37-51"><a href="materialized-views-1.html#cb37-51" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb37-52"><a href="materialized-views-1.html#cb37-52" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">2120</span>)</span>
+<span id="cb37-53"><a href="materialized-views-1.html#cb37-53" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb37-54"><a href="materialized-views-1.html#cb37-54" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb37-55"><a href="materialized-views-1.html#cb37-55" aria-hidden="true"></a>           <span class="st">&#39;Drug era&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb37-56"><a href="materialized-views-1.html#cb37-56" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb37-57"><a href="materialized-views-1.html#cb37-57" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb37-58"><a href="materialized-views-1.html#cb37-58" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb37-59"><a href="materialized-views-1.html#cb37-59" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">920</span>)</span>
+<span id="cb37-60"><a href="materialized-views-1.html#cb37-60" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb37-61"><a href="materialized-views-1.html#cb37-61" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb37-62"><a href="materialized-views-1.html#cb37-62" aria-hidden="true"></a>           <span class="st">&#39;Condition era&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb37-63"><a href="materialized-views-1.html#cb37-63" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb37-64"><a href="materialized-views-1.html#cb37-64" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb37-65"><a href="materialized-views-1.html#cb37-65" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb37-66"><a href="materialized-views-1.html#cb37-66" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">1020</span>)</span>
+<span id="cb37-67"><a href="materialized-views-1.html#cb37-67" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb37-68"><a href="materialized-views-1.html#cb37-68" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb37-69"><a href="materialized-views-1.html#cb37-69" aria-hidden="true"></a>           <span class="st">&#39;Observation period&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb37-70"><a href="materialized-views-1.html#cb37-70" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb37-71"><a href="materialized-views-1.html#cb37-71" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb37-72"><a href="materialized-views-1.html#cb37-72" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb37-73"><a href="materialized-views-1.html#cb37-73" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">111</span>)</span>
+<span id="cb37-74"><a href="materialized-views-1.html#cb37-74" aria-hidden="true"></a>       <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb37-75"><a href="materialized-views-1.html#cb37-75" aria-hidden="true"></a>        <span class="kw">SELECT</span> achilles_results.data_source_id <span class="kw">AS</span> <span class="kw">id</span>,</span>
+<span id="cb37-76"><a href="materialized-views-1.html#cb37-76" aria-hidden="true"></a>           <span class="st">&#39;Measurement&#39;</span>:<span class="ch">:text</span> <span class="kw">AS</span> table_name,</span>
+<span id="cb37-77"><a href="materialized-views-1.html#cb37-77" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb37-78"><a href="materialized-views-1.html#cb37-78" aria-hidden="true"></a>           achilles_results.count_value</span>
+<span id="cb37-79"><a href="materialized-views-1.html#cb37-79" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb37-80"><a href="materialized-views-1.html#cb37-80" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">1820</span>)) t1</span>
+<span id="cb37-81"><a href="materialized-views-1.html#cb37-81" aria-hidden="true"></a>    <span class="kw">JOIN</span> ( <span class="kw">SELECT</span> achilles_results.<span class="kw">id</span>,</span>
+<span id="cb37-82"><a href="materialized-views-1.html#cb37-82" aria-hidden="true"></a>           achilles_results.analysis_id,</span>
+<span id="cb37-83"><a href="materialized-views-1.html#cb37-83" aria-hidden="true"></a>           achilles_results.stratum_1,</span>
+<span id="cb37-84"><a href="materialized-views-1.html#cb37-84" aria-hidden="true"></a>           achilles_results.stratum_2,</span>
+<span id="cb37-85"><a href="materialized-views-1.html#cb37-85" aria-hidden="true"></a>           achilles_results.stratum_3,</span>
+<span id="cb37-86"><a href="materialized-views-1.html#cb37-86" aria-hidden="true"></a>           achilles_results.stratum_4,</span>
+<span id="cb37-87"><a href="materialized-views-1.html#cb37-87" aria-hidden="true"></a>           achilles_results.stratum_5,</span>
+<span id="cb37-88"><a href="materialized-views-1.html#cb37-88" aria-hidden="true"></a>           achilles_results.count_value,</span>
+<span id="cb37-89"><a href="materialized-views-1.html#cb37-89" aria-hidden="true"></a>           achilles_results.data_source_id,</span>
+<span id="cb37-90"><a href="materialized-views-1.html#cb37-90" aria-hidden="true"></a>           achilles_results.avg_value,</span>
+<span id="cb37-91"><a href="materialized-views-1.html#cb37-91" aria-hidden="true"></a>           achilles_results.max_value,</span>
+<span id="cb37-92"><a href="materialized-views-1.html#cb37-92" aria-hidden="true"></a>           achilles_results.median_value,</span>
+<span id="cb37-93"><a href="materialized-views-1.html#cb37-93" aria-hidden="true"></a>           achilles_results.min_value,</span>
+<span id="cb37-94"><a href="materialized-views-1.html#cb37-94" aria-hidden="true"></a>           achilles_results.p10_value,</span>
+<span id="cb37-95"><a href="materialized-views-1.html#cb37-95" aria-hidden="true"></a>           achilles_results.p25_value,</span>
+<span id="cb37-96"><a href="materialized-views-1.html#cb37-96" aria-hidden="true"></a>           achilles_results.p75_value,</span>
+<span id="cb37-97"><a href="materialized-views-1.html#cb37-97" aria-hidden="true"></a>           achilles_results.p90_value,</span>
+<span id="cb37-98"><a href="materialized-views-1.html#cb37-98" aria-hidden="true"></a>           achilles_results.stdev_value</span>
+<span id="cb37-99"><a href="materialized-views-1.html#cb37-99" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb37-100"><a href="materialized-views-1.html#cb37-100" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="dv">117</span>)) denom <span class="kw">ON</span> (((t1.stratum_1 <span class="op">=</span> denom.stratum_1) <span class="kw">AND</span> (t1.<span class="kw">id</span> <span class="op">=</span> denom.data_source_id))))</span>
+<span id="cb37-101"><a href="materialized-views-1.html#cb37-101" aria-hidden="true"></a>    <span class="kw">JOIN</span> data_source <span class="kw">source</span> <span class="kw">ON</span> ((<span class="kw">source</span>.<span class="kw">id</span> <span class="op">=</span> t1.<span class="kw">id</span>)))</span>
+<span id="cb37-102"><a href="materialized-views-1.html#cb37-102" aria-hidden="true"></a> <span class="kw">ORDER</span> <span class="kw">BY</span> t1.table_name, (</span>
+<span id="cb37-103"><a href="materialized-views-1.html#cb37-103" aria-hidden="true"></a>       <span class="cf">CASE</span></span>
+<span id="cb37-104"><a href="materialized-views-1.html#cb37-104" aria-hidden="true"></a>           <span class="cf">WHEN</span> (t1.stratum_1 ~ <span class="st">&#39;^\d+\.?\d+$&#39;</span>:<span class="ch">:text</span>) <span class="cf">THEN</span> t1.stratum_1</span>
+<span id="cb37-105"><a href="materialized-views-1.html#cb37-105" aria-hidden="true"></a>           <span class="cf">ELSE</span> <span class="kw">NULL</span>:<span class="ch">:text</span></span>
+<span id="cb37-106"><a href="materialized-views-1.html#cb37-106" aria-hidden="true"></a>       <span class="cf">END</span>):<span class="ch">:integer</span>;</span></code></pre></div>
 </div>
-<div id="section-2" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb38"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
+<div id="visit_age_distribution" class="section level3 unnumbered" number="">
+<h3>visit_age_distribution</h3>
+<div class="sourceCode" id="cb38"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb38-1"><a href="materialized-views-1.html#cb38-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb38-2"><a href="materialized-views-1.html#cb38-2" aria-hidden="true"></a>   <span class="kw">source</span>.acronym,</span>
+<span id="cb38-3"><a href="materialized-views-1.html#cb38-3" aria-hidden="true"></a>   c1.concept_name,</span>
+<span id="cb38-4"><a href="materialized-views-1.html#cb38-4" aria-hidden="true"></a>   c2.concept_name <span class="kw">AS</span> gender,</span>
+<span id="cb38-5"><a href="materialized-views-1.html#cb38-5" aria-hidden="true"></a>   achilles.count_value,</span>
+<span id="cb38-6"><a href="materialized-views-1.html#cb38-6" aria-hidden="true"></a>   achilles.p10_value <span class="kw">AS</span> p10,</span>
+<span id="cb38-7"><a href="materialized-views-1.html#cb38-7" aria-hidden="true"></a>   achilles.p25_value <span class="kw">AS</span> p25,</span>
+<span id="cb38-8"><a href="materialized-views-1.html#cb38-8" aria-hidden="true"></a>   achilles.median_value <span class="kw">AS</span> <span class="fu">median</span>,</span>
+<span id="cb38-9"><a href="materialized-views-1.html#cb38-9" aria-hidden="true"></a>   achilles.p75_value <span class="kw">AS</span> p75,</span>
+<span id="cb38-10"><a href="materialized-views-1.html#cb38-10" aria-hidden="true"></a>   achilles.p90_value <span class="kw">AS</span> p90</span>
+<span id="cb38-11"><a href="materialized-views-1.html#cb38-11" aria-hidden="true"></a>  <span class="kw">FROM</span> (((achilles_results achilles</span>
+<span id="cb38-12"><a href="materialized-views-1.html#cb38-12" aria-hidden="true"></a>    <span class="kw">JOIN</span> data_source <span class="kw">source</span> <span class="kw">ON</span> ((achilles.data_source_id <span class="op">=</span> <span class="kw">source</span>.<span class="kw">id</span>)))</span>
+<span id="cb38-13"><a href="materialized-views-1.html#cb38-13" aria-hidden="true"></a>    <span class="kw">JOIN</span> concept c1 <span class="kw">ON</span> ((achilles.stratum_1 <span class="op">=</span> (c1.concept_id):<span class="ch">:text</span>)))</span>
+<span id="cb38-14"><a href="materialized-views-1.html#cb38-14" aria-hidden="true"></a>    <span class="kw">JOIN</span> concept c2 <span class="kw">ON</span> ((achilles.stratum_2 <span class="op">=</span> (c2.concept_id):<span class="ch">:text</span>)))</span>
+<span id="cb38-15"><a href="materialized-views-1.html#cb38-15" aria-hidden="true"></a> <span class="kw">WHERE</span> (achilles.analysis_id <span class="op">=</span> <span class="dv">206</span>)</span>
+<span id="cb38-16"><a href="materialized-views-1.html#cb38-16" aria-hidden="true"></a> <span class="kw">ORDER</span> <span class="kw">BY</span> <span class="kw">source</span>.name, c1.concept_name, c2.concept_name;</span></code></pre></div>
 </div>
-<div id="section-3" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb39"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
-</div>
-<div id="section-4" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb40"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
-</div>
-<div id="section-5" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb41"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
-</div>
-<div id="section-6" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb42"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
-</div>
-<div id="section-7" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb43"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
-</div>
-<div id="section-8" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb44"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
-</div>
-<div id="section-9" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb45"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
-</div>
-<div id="section-10" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb46"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
-</div>
-<div id="section-11" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb47"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
-</div>
-<div id="section-12" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb48"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
-</div>
-<div id="section-13" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb49"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
-</div>
-<div id="section-14" class="section level3 unnumbered" number="">
-<h3 class="unnumbered" number=""></h3>
-<div class="sourceCode" id="cb50"><pre class="sourceCode sql"><code class="sourceCode sql"></code></pre></div>
+<div id="concept_browser_table2" class="section level3 unnumbered" number="">
+<h3>concept_browser_table2</h3>
+<div class="sourceCode" id="cb39"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb39-1"><a href="materialized-views-1.html#cb39-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
+<span id="cb39-2"><a href="materialized-views-1.html#cb39-2" aria-hidden="true"></a>   <span class="kw">source</span>.acronym,</span>
+<span id="cb39-3"><a href="materialized-views-1.html#cb39-3" aria-hidden="true"></a>   ((((<span class="st">&#39;&lt;a href=&quot;https://athena.ohdsi.org/search-terms/terms/&#39;</span>:<span class="ch">:text</span> <span class="op">||</span> ar1.concept_id) <span class="op">||</span> <span class="st">&#39;&quot;target=&quot;_blank&quot;&gt;&#39;</span>:<span class="ch">:text</span>) <span class="op">||</span> ar1.concept_id) <span class="op">||</span> <span class="st">&#39;&lt;/a&gt;&#39;</span>:<span class="ch">:text</span>) <span class="kw">AS</span> concept_id,</span>
+<span id="cb39-4"><a href="materialized-views-1.html#cb39-4" aria-hidden="true"></a>   concept.concept_name,</span>
+<span id="cb39-5"><a href="materialized-views-1.html#cb39-5" aria-hidden="true"></a>   concept.domain_id,</span>
+<span id="cb39-6"><a href="materialized-views-1.html#cb39-6" aria-hidden="true"></a>   (ar1.rc):<span class="ch">:integer</span> <span class="kw">AS</span> rc,</span>
+<span id="cb39-7"><a href="materialized-views-1.html#cb39-7" aria-hidden="true"></a>   (ar2.drc):<span class="ch">:integer</span> <span class="kw">AS</span> drc</span>
+<span id="cb39-8"><a href="materialized-views-1.html#cb39-8" aria-hidden="true"></a>  <span class="kw">FROM</span> (((( <span class="kw">SELECT</span> achilles_results.data_source_id,</span>
+<span id="cb39-9"><a href="materialized-views-1.html#cb39-9" aria-hidden="true"></a>           achilles_results.analysis_id,</span>
+<span id="cb39-10"><a href="materialized-views-1.html#cb39-10" aria-hidden="true"></a>           achilles_results.stratum_1 <span class="kw">AS</span> concept_id,</span>
+<span id="cb39-11"><a href="materialized-views-1.html#cb39-11" aria-hidden="true"></a>           achilles_results.count_value <span class="kw">AS</span> rc</span>
+<span id="cb39-12"><a href="materialized-views-1.html#cb39-12" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results</span>
+<span id="cb39-13"><a href="materialized-views-1.html#cb39-13" aria-hidden="true"></a>         <span class="kw">WHERE</span> (achilles_results.analysis_id <span class="op">=</span> <span class="kw">ANY</span> (<span class="dt">ARRAY</span>[(<span class="dv">401</span>):<span class="ch">:bigint</span>, (<span class="dv">601</span>):<span class="ch">:bigint</span>, (<span class="dv">701</span>):<span class="ch">:bigint</span>, (<span class="dv">801</span>):<span class="ch">:bigint</span>, (<span class="dv">1801</span>):<span class="ch">:bigint</span>, (<span class="dv">2101</span>):<span class="ch">:bigint</span>]))) ar1</span>
+<span id="cb39-14"><a href="materialized-views-1.html#cb39-14" aria-hidden="true"></a>    <span class="kw">JOIN</span> ( <span class="kw">SELECT</span> ar.data_source_id,</span>
+<span id="cb39-15"><a href="materialized-views-1.html#cb39-15" aria-hidden="true"></a>           ar.analysis_id,</span>
+<span id="cb39-16"><a href="materialized-views-1.html#cb39-16" aria-hidden="true"></a>           ar.stratum_1 <span class="kw">AS</span> concept_id,</span>
+<span id="cb39-17"><a href="materialized-views-1.html#cb39-17" aria-hidden="true"></a>           ar.count_value <span class="kw">AS</span> drc</span>
+<span id="cb39-18"><a href="materialized-views-1.html#cb39-18" aria-hidden="true"></a>          <span class="kw">FROM</span> achilles_results ar</span>
+<span id="cb39-19"><a href="materialized-views-1.html#cb39-19" aria-hidden="true"></a>         <span class="kw">WHERE</span> (ar.analysis_id <span class="op">=</span> <span class="kw">ANY</span> (<span class="dt">ARRAY</span>[(<span class="dv">430</span>):<span class="ch">:bigint</span>, (<span class="dv">630</span>):<span class="ch">:bigint</span>, (<span class="dv">730</span>):<span class="ch">:bigint</span>, (<span class="dv">830</span>):<span class="ch">:bigint</span>, (<span class="dv">1830</span>):<span class="ch">:bigint</span>, (<span class="dv">2130</span>):<span class="ch">:bigint</span>]))) ar2 <span class="kw">ON</span> (((ar1.concept_id <span class="op">=</span> ar2.concept_id) <span class="kw">AND</span> (ar1.data_source_id <span class="op">=</span> ar2.data_source_id))))</span>
+<span id="cb39-20"><a href="materialized-views-1.html#cb39-20" aria-hidden="true"></a>    <span class="kw">JOIN</span> data_source <span class="kw">source</span> <span class="kw">ON</span> ((ar1.data_source_id <span class="op">=</span> <span class="kw">source</span>.<span class="kw">id</span>)))</span>
+<span id="cb39-21"><a href="materialized-views-1.html#cb39-21" aria-hidden="true"></a>    <span class="kw">JOIN</span> concept concept <span class="kw">ON</span> ((ar1.concept_id <span class="op">=</span> (concept.concept_id):<span class="ch">:text</span>)))</span>
+<span id="cb39-22"><a href="materialized-views-1.html#cb39-22" aria-hidden="true"></a> <span class="kw">ORDER</span> <span class="kw">BY</span> ((ar2.drc):<span class="ch">:integer</span>) <span class="kw">DESC</span>;</span></code></pre></div>
 
 </div>
 </div>

@@ -41,19 +41,19 @@ or remove it so the "Edit Dashboard" button can show again.
 
 #### Country Filter {-}
 
-Materialized View: [meta_data_table](materialized-views-1.html#meta_data_table)
+Dataset: Materialized View [meta_data_table](materialized-views-1.html#meta_data_table)
 
 ![](images/11-network-dashboard/01-filters/01-country.png)
 
 #### Database Type Filter {-}
 
-Materialized View: [meta_data_table](materialized-views-1.html#meta_data_table)
+Dataset: Materialized View [meta_data_table](materialized-views-1.html#meta_data_table)
 
 ![](images/11-network-dashboard/01-filters/02-database-type.png)
 
 #### Data Source Filter {-}
 
-Materialized View: [meta_data_table](materialized-views-1.html#meta_data_table)
+Dataset: Materialized View [meta_data_table](materialized-views-1.html#meta_data_table)
 
 ![](images/11-network-dashboard/01-filters/03-datasource.png)
 
@@ -61,49 +61,49 @@ Materialized View: [meta_data_table](materialized-views-1.html#meta_data_table)
 
 #### Countries {-}
 
-Materialized View: [meta_data_table](materialized-views-1.html#meta_data_table)
+Dataset: Materialized View [meta_data_table](materialized-views-1.html#meta_data_table)
 
 ![](images/11-network-dashboard/02-overview/01-countries.png)
 
 #### Data Sources {-}
 
-Materialized View: [meta_data_table](materialized-views-1.html#meta_data_table)
+Dataset: Materialized View [meta_data_table](materialized-views-1.html#meta_data_table)
 
 ![](images/11-network-dashboard/02-overview/02-datasource.png)
 
 #### Datasource Types {-}
 
-Materialized View: [meta_data_table](materialized-views-1.html#meta_data_table)
+Dataset: Materialized View [meta_data_table](materialized-views-1.html#meta_data_table)
 
 ![](images/11-network-dashboard/02-overview/03-datasource-type.png)
 
 #### Patients {-}
 
-Materialized View: [meta_data_table](materialized-views-1.html#meta_data_table)
+Dataset: Materialized View [meta_data_table](materialized-views-1.html#meta_data_table)
 
 ![](images/11-network-dashboard/02-overview/04-patients.png)
 
 #### Patients {-}
 
-Materialized View: [meta_data_table](materialized-views-1.html#meta_data_table)
+Dataset: Materialized View [meta_data_table](materialized-views-1.html#meta_data_table)
 
 ![](images/11-network-dashboard/02-overview/04-patients.png)
 
 #### Patients by Country {-}
 
-Materialized View: [meta_data_table](materialized-views-1.html#patients_per_country_and_database_type)
+Dataset: Materialized View [meta_data_table](materialized-views-1.html#patients_per_country_and_database_type)
 
 ![](images/11-network-dashboard/02-overview/05-patients-by-country.png)
 
 #### Database Types per Country {-}
 
-Materialized View: [meta_data_table](materialized-views-1.html#patients_per_country_and_database_type)
+Dataset: Materialized View [meta_data_table](materialized-views-1.html#patients_per_country_and_database_type)
 
 ![](images/11-network-dashboard/02-overview/06-database-types-by-country.png)
 
 #### Meta Data {-}
 
-Materialized View: [meta_data_table](materialized-views-1.html#meta_data_table)
+Dataset: Materialized View [meta_data_table](materialized-views-1.html#meta_data_table)
 
 ![](images/11-network-dashboard/02-overview/07-metadata.png)
 
@@ -111,43 +111,43 @@ Materialized View: [meta_data_table](materialized-views-1.html#meta_data_table)
 
 #### Number of Patients {-}
 
-Materialized View: [number_of_patients](materialized-views-1.html#number_of_patients)
+Dataset: Materialized View [number_of_patients](materialized-views-1.html#number_of_patients)
 
 ![](images/11-network-dashboard/03-demographics/01-number-of-patients.png)
 
 #### Gender Table {-}
 
-Materialized View: [gender](materialized-views-1.html#gender)
+Dataset: Materialized View [gender](materialized-views-1.html#gender)
 
 ![](images/11-network-dashboard/03-demographics/02-gender-table.png)
 
 #### Gender Pie {-}
 
-Materialized View: [gender](materialized-views-1.html#gender)
+Dataset: Materialized View [gender](materialized-views-1.html#gender)
 
 ![](images/11-network-dashboard/03-demographics/03-gender-pie.png)
 
 #### Age at first observation Table {-}
 
-Materialized View: [age1observation_table](materialized-views-1.html#age1observation_table)
+Dataset: Materialized View [age1observation_table](materialized-views-1.html#age1observation_table)
 
 ![](images/11-network-dashboard/03-demographics/04-age-at-first-observation-table.png)
 
 #### Age at first observation Bar Chart {-}
 
-Materialized View: [age1observation_bar_chart](materialized-views-1.html#age1observation_bar_chart)
+Dataset: Materialized View [age1observation_bar_chart](materialized-views-1.html#age1observation_bar_chart)
 
 ![](images/11-network-dashboard/03-demographics/05-age-at-first-observation-bar-chart.png)
 
 #### Distribution of age at first observation period {-}
 
-Materialized View: [distribution_of_age_at_first_observation_period](materialized-views-1.html#distribution_of_age_at_first_observation_period)
+Dataset: Materialized View [distribution_of_age_at_first_observation_period](materialized-views-1.html#distribution_of_age_at_first_observation_period)
 
 ![](images/11-network-dashboard/03-demographics/06-dist-age-at-fist-obs-period.png)
 
 #### Year of Birth {-}
 
-Materialized View: [year_of_birth](materialized-views-1.html#year_of_birth)
+Dataset: Materialized View [year_of_birth](materialized-views-1.html#year_of_birth)
 
 ![](images/11-network-dashboard/03-demographics/07-year-of-birth.png)
 
@@ -155,55 +155,55 @@ Materialized View: [year_of_birth](materialized-views-1.html#year_of_birth)
 
 #### Average number of records per person {-}
 
-Materialized View: [avg_num_of_records_per_person](materialized-views-1.html#avg_num_of_records_per_person)
+Dataset: Materialized View [avg_num_of_records_per_person](materialized-views-1.html#avg_num_of_records_per_person)
 
 ![](images/11-network-dashboard/04-data-domains/01-avg-num-recs-per-person.png)
 
 #### Total number of records {-}
 
-Materialized View: [data_domain_total_num_of_records](materialized-views-1.html#data_domain_total_num_of_records)
+Dataset: Materialized View [data_domain_total_num_of_records](materialized-views-1.html#data_domain_total_num_of_records)
 
 ![](images/11-network-dashboard/04-data-domains/02-total-num-of-rec.png)
 
 #### Number of distinct visit occurrence concepts per person {-}
 
-Materialized View: [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
+Dataset: Materialized View [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
 
 ![](images/11-network-dashboard/04-data-domains/03-num-distinct-visit-occurr-concepts-pperson.png)
 
 #### Number of distinct condition occurrence concepts per person {-}
 
-Materialized View: [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
+Dataset: Materialized View [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
 
 ![](images/11-network-dashboard/04-data-domains/04-num-distinct-cond-occur-concepts-pperson.png)
 
 #### Number of distinct procedure occurrence concepts per person {-}
 
-Materialized View: [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
+Dataset: Materialized View [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
 
 ![](images/11-network-dashboard/04-data-domains/05-num-distinct-proced-occur-concepts-pperson.png)
 
 #### Number of distinct drug exposure concepts per person {-}
 
-Materialized View: [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
+Dataset: Materialized View [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
 
 ![](images/11-network-dashboard/04-data-domains/06-num-distinct-drug-occur-concepts-pperson.png)
 
 #### Number of distinct observation occurrence concepts per person {-}
 
-Materialized View: [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
+Dataset: Materialized View [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
 
 ![](images/11-network-dashboard/04-data-domains/07-num-distinct-observ-occur-concepts-pperson.png)
 
 #### Number of distinct mesurement occurrence concepts per person {-}
 
-Materialized View: [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
+Dataset: Materialized View [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
 
 ![](images/11-network-dashboard/04-data-domains/08-num-distinct-mesur-occur-concepts-pperson.png)
 
 ### Data Provenance Tab {-}
 
-Materialized View: [data_provenance](materialized-views-1.html#data_provenance)
+Dataset: Materialized View [data_provenance](materialized-views-1.html#data_provenance)
 
 ![](images/11-network-dashboard/05-visit-type-pivot.png)
 
@@ -211,25 +211,25 @@ Materialized View: [data_provenance](materialized-views-1.html#data_provenance)
 
 #### Number of Patitents in Observation Period {-}
 
-Materialized View: [num_of_patients_in_observation_period](materialized-views-1.html#num_of_patients_in_observation_period)
+Dataset: Materialized View [num_of_patients_in_observation_period](materialized-views-1.html#num_of_patients_in_observation_period)
 
 ![](images/11-network-dashboard/06-observation-period/01-num-patients-in-ober-period.png)
 
 #### Cumulative Observation Period {-}
 
-Materialized View: [cumulative_observation_time](materialized-views-1.html#cumulative_observation_time)
+Dataset: Materialized View [cumulative_observation_time](materialized-views-1.html#cumulative_observation_time)
 
 ![](images/11-network-dashboard/06-observation-period/02-cumulative-oberv-time.png)
 
 #### Number of Observation Periods {-}
 
-Materialized View: [number_of_observation_periods](materialized-views-1.html#number_of_observation_periods)
+Dataset: Materialized View [number_of_observation_periods](materialized-views-1.html#number_of_observation_periods)
 
 ![](images/11-network-dashboard/06-observation-period/03-num-observ-periods.png)
 
 #### Length of observation (days) of first observation period {-}
 
-Materialized View: [length_of_observation_of_first_observation_period](materialized-views-1.html#length_of_observation_of_first_observation_period)
+Dataset: Materialized View [length_of_observation_of_first_observation_period](materialized-views-1.html#length_of_observation_of_first_observation_period)
 
 ![](images/11-network-dashboard/06-observation-period/04-len-observ-days-first-observ-period.png)
 
@@ -237,13 +237,13 @@ Materialized View: [length_of_observation_of_first_observation_period](materiali
 
 #### Visit Type Graph {-}
 
-Materialized View: [visit_type_bar_chart](materialized-views-1.html#visit_type_bar_chart)
+Dataset: Materialized View [visit_type_bar_chart](materialized-views-1.html#visit_type_bar_chart)
 
 ![](images/11-network-dashboard/07-visit/01-visit-type-graph.png)
 
 #### Visit Type {-}
 
-Materialized View: [visit_type_table](materialized-views-1.html#visit_type_table)
+Dataset: Materialized View [visit_type_table](materialized-views-1.html#visit_type_table)
 
 ![](images/11-network-dashboard/07-visit/02-visit-type.png)
 
@@ -251,19 +251,19 @@ Materialized View: [visit_type_table](materialized-views-1.html#visit_type_table
 
 #### Domain Filter {-}
 
-Materialized View: [domain_filter](materialized-views-1.html#domain_filter)
+Dataset: Materialized View [domain_filter](materialized-views-1.html#domain_filter)
 
 ![](images/11-network-dashboard/08-concept-browser/01-domain-filter.png)
 
 #### Concept Browser {-}
 
-Materialized View: [concept_browser_table3](materialized-views-1.html#concept_browser_table3)
+Dataset: Materialized View [concept_browser_table3](materialized-views-1.html#concept_browser_table3)
 
 ![](images/11-network-dashboard/08-concept-browser/02-concept-browser.png)
 
 #### Concept Network Coverage {-}
 
-Materialized View: [concept_coverage2](materialized-views-1.html#concept_coverage2)
+Dataset: Materialized View [concept_coverage2](materialized-views-1.html#concept_coverage2)
 
 ![](images/11-network-dashboard/08-concept-browser/03-concept-network-coverage.png)
 

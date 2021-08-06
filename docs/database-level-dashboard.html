@@ -237,21 +237,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#domain_filter"><i class="fa fa-check"></i>domain_filter</a></li>
 <li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#concept_browser_table3"><i class="fa fa-check"></i>concept_browser_table3</a></li>
 <li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#concept_coverage2"><i class="fa fa-check"></i>concept_coverage2</a></li>
-<li><a href="materialized-views-1.html#section"></a></li>
-<li><a href="materialized-views-1.html#section-1"></a></li>
-<li><a href="materialized-views-1.html#section-2"></a></li>
-<li><a href="materialized-views-1.html#section-3"></a></li>
-<li><a href="materialized-views-1.html#section-4"></a></li>
-<li><a href="materialized-views-1.html#section-5"></a></li>
-<li><a href="materialized-views-1.html#section-6"></a></li>
-<li><a href="materialized-views-1.html#section-7"></a></li>
-<li><a href="materialized-views-1.html#section-8"></a></li>
-<li><a href="materialized-views-1.html#section-9"></a></li>
-<li><a href="materialized-views-1.html#section-10"></a></li>
-<li><a href="materialized-views-1.html#section-11"></a></li>
-<li><a href="materialized-views-1.html#section-12"></a></li>
-<li><a href="materialized-views-1.html#section-13"></a></li>
-<li><a href="materialized-views-1.html#section-14"></a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#data_density"><i class="fa fa-check"></i>data_density</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#records_per_person"><i class="fa fa-check"></i>records_per_person</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#visit_age_distribution"><i class="fa fa-check"></i>visit_age_distribution</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#concept_browser_table2"><i class="fa fa-check"></i>concept_browser_table2</a></li>
 </ul></li>
 <li class="chapter" data-level="9.4" data-path="general-deprecated.html"><a href="general-deprecated.html"><i class="fa fa-check"></i><b>9.4</b> General [Deprecated]</a>
 <ul>
@@ -355,59 +344,35 @@ add the following JSON entry to the JSON object of the <code>JSON Metadata</code
 <span id="cb14-2"><a href="database-level-dashboard.html#cb14-2" aria-hidden="true"></a><span class="fu">.dashboard-filter-indicators-container</span> {</span>
 <span id="cb14-3"><a href="database-level-dashboard.html#cb14-3" aria-hidden="true"></a>    <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
 <span id="cb14-4"><a href="database-level-dashboard.html#cb14-4" aria-hidden="true"></a>}</span>
-<span id="cb14-5"><a href="database-level-dashboard.html#cb14-5" aria-hidden="true"></a><span class="co">/* hides the acronym filter */</span></span>
-<span id="cb14-6"><a href="database-level-dashboard.html#cb14-6" aria-hidden="true"></a><span class="fu">.grid-content</span> <span class="op">&gt;</span> <span class="fu">.dragdroppable.dragdroppable-row</span> <span class="op">&gt;</span> <span class="fu">.with-popover-menu</span> {</span>
-<span id="cb14-7"><a href="database-level-dashboard.html#cb14-7" aria-hidden="true"></a>    <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb14-8"><a href="database-level-dashboard.html#cb14-8" aria-hidden="true"></a>}</span>
-<span id="cb14-9"><a href="database-level-dashboard.html#cb14-9" aria-hidden="true"></a><span class="co">/*</span></span>
-<span id="cb14-10"><a href="database-level-dashboard.html#cb14-10" aria-hidden="true"></a><span class="al">WARNING</span><span class="co"> panel 1 id hardcoded</span></span>
-<span id="cb14-11"><a href="database-level-dashboard.html#cb14-11" aria-hidden="true"></a><span class="co">Hides the X Axis Label of the heatmap on the Data Domains tab</span></span>
-<span id="cb14-12"><a href="database-level-dashboard.html#cb14-12" aria-hidden="true"></a><span class="co">*/</span></span>
-<span id="cb14-13"><a href="database-level-dashboard.html#cb14-13" aria-hidden="true"></a><span class="pp">#TABS-nlIU6H5mcT-pane-1</span> g<span class="fu">.x.axis</span> <span class="op">&gt;</span> g<span class="fu">.tick</span> text {</span>
-<span id="cb14-14"><a href="database-level-dashboard.html#cb14-14" aria-hidden="true"></a>    <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb14-15"><a href="database-level-dashboard.html#cb14-15" aria-hidden="true"></a>}</span>
-<span id="cb14-16"><a href="database-level-dashboard.html#cb14-16" aria-hidden="true"></a><span class="co">/*</span></span>
-<span id="cb14-17"><a href="database-level-dashboard.html#cb14-17" aria-hidden="true"></a><span class="al">WARNING</span><span class="co"> panel 2 id hardcoded</span></span>
-<span id="cb14-18"><a href="database-level-dashboard.html#cb14-18" aria-hidden="true"></a><span class="co">Hides the X Axis Labels of the bar charts on the Data Provenance tab</span></span>
-<span id="cb14-19"><a href="database-level-dashboard.html#cb14-19" aria-hidden="true"></a><span class="co">*/</span></span>
-<span id="cb14-20"><a href="database-level-dashboard.html#cb14-20" aria-hidden="true"></a><span class="pp">#TABS-nlIU6H5mcT-pane-2</span> g<span class="fu">.nv-x.nv-axis.nvd3-svg</span> <span class="op">&gt;</span> g<span class="fu">.nvd3.nv-wrap.nv-axis</span> <span class="op">&gt;</span> g <span class="op">&gt;</span> g<span class="fu">.tick.zero</span> <span class="op">&gt;</span> text {</span>
-<span id="cb14-21"><a href="database-level-dashboard.html#cb14-21" aria-hidden="true"></a>    <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb14-22"><a href="database-level-dashboard.html#cb14-22" aria-hidden="true"></a>}</span></code></pre></div>
+<span id="cb14-5"><a href="database-level-dashboard.html#cb14-5" aria-hidden="true"></a></span>
+<span id="cb14-6"><a href="database-level-dashboard.html#cb14-6" aria-hidden="true"></a><span class="co">/* hides the acronym filter */</span></span>
+<span id="cb14-7"><a href="database-level-dashboard.html#cb14-7" aria-hidden="true"></a><span class="fu">.grid-content</span> <span class="op">&gt;</span> <span class="fu">.dragdroppable.dragdroppable-row</span> <span class="op">&gt;</span> <span class="fu">.with-popover-menu</span> {</span>
+<span id="cb14-8"><a href="database-level-dashboard.html#cb14-8" aria-hidden="true"></a>    <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb14-9"><a href="database-level-dashboard.html#cb14-9" aria-hidden="true"></a>}</span>
+<span id="cb14-10"><a href="database-level-dashboard.html#cb14-10" aria-hidden="true"></a></span>
+<span id="cb14-11"><a href="database-level-dashboard.html#cb14-11" aria-hidden="true"></a><span class="co">/*</span></span>
+<span id="cb14-12"><a href="database-level-dashboard.html#cb14-12" aria-hidden="true"></a><span class="co"> * </span><span class="al">WARNING</span><span class="co"> panel 1 id hardcoded</span></span>
+<span id="cb14-13"><a href="database-level-dashboard.html#cb14-13" aria-hidden="true"></a><span class="co"> * Hides the X Axis Label of the heatmap on the Data Domains tab</span></span>
+<span id="cb14-14"><a href="database-level-dashboard.html#cb14-14" aria-hidden="true"></a><span class="co"> */</span></span>
+<span id="cb14-15"><a href="database-level-dashboard.html#cb14-15" aria-hidden="true"></a><span class="pp">#TABS-nlIU6H5mcT-pane-1</span> g<span class="fu">.x.axis</span> <span class="op">&gt;</span> g<span class="fu">.tick</span> text {</span>
+<span id="cb14-16"><a href="database-level-dashboard.html#cb14-16" aria-hidden="true"></a>    <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb14-17"><a href="database-level-dashboard.html#cb14-17" aria-hidden="true"></a>}</span>
+<span id="cb14-18"><a href="database-level-dashboard.html#cb14-18" aria-hidden="true"></a></span>
+<span id="cb14-19"><a href="database-level-dashboard.html#cb14-19" aria-hidden="true"></a><span class="co">/*</span></span>
+<span id="cb14-20"><a href="database-level-dashboard.html#cb14-20" aria-hidden="true"></a><span class="co"> * </span><span class="al">WARNING</span><span class="co"> panel 2 id hardcoded</span></span>
+<span id="cb14-21"><a href="database-level-dashboard.html#cb14-21" aria-hidden="true"></a><span class="co"> * Hides the X Axis Labels of the bar charts on the Data Provenance tab</span></span>
+<span id="cb14-22"><a href="database-level-dashboard.html#cb14-22" aria-hidden="true"></a><span class="co"> */</span></span>
+<span id="cb14-23"><a href="database-level-dashboard.html#cb14-23" aria-hidden="true"></a><span class="pp">#TABS-nlIU6H5mcT-pane-2</span> g<span class="fu">.nv-x.nv-axis.nvd3-svg</span> <span class="op">&gt;</span> g<span class="fu">.nvd3.nv-wrap.nv-axis</span> <span class="op">&gt;</span> g <span class="op">&gt;</span> g<span class="fu">.tick.zero</span> <span class="op">&gt;</span> text {</span>
+<span id="cb14-24"><a href="database-level-dashboard.html#cb14-24" aria-hidden="true"></a>    <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb14-25"><a href="database-level-dashboard.html#cb14-25" aria-hidden="true"></a>}</span></code></pre></div>
 <p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
 <div id="data-source-filter---hidden" class="section level3 unnumbered" number="">
 <h3>Data Source Filter - hidden</h3>
+<p>Dataset: <code>data_source</code> table of the <code>achilles</code> database.</p>
 <p><strong>For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.</strong></p>
-<div id="sql-query" class="section level4 unnumbered" number="">
-<h4>SQL query</h4>
-<p>No SQL query, use the sql table <code>data_source</code> of the <code>achilles</code> database.</p>
-</div>
-<div id="chart-settings" class="section level4 unnumbered" number="">
-<h4>Chart settings</h4>
-<ul>
-<li>Data Tab
-<ul>
-<li>Datasource &amp; Chart Type
-<ul>
-<li>Visualization Type: Filter Box</li>
-</ul></li>
-<li>Time
-<ul>
-<li>Time range: No filter</li>
-</ul></li>
-<li>Filters Configuration
-<ul>
-<li>Filters:
-<ul>
-<li>acronym</li>
-</ul></li>
-<li>Date Filter: off</li>
-<li>Instant Filtering: on</li>
-</ul></li>
-</ul></li>
-</ul>
-</div>
+<p><img src="images/12-database-level/01-acronym-filter.png" /></p>
 </div>
 <div id="demographics-tab-1" class="section level3 unnumbered" number="">
 <h3>Demographics Tab</h3>
@@ -423,19 +388,6 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 <h4>Gender Pie</h4>
 <p>No changes</p>
 </div>
-<div id="age-at-first-observation---table" class="section level4 unnumbered" number="">
-<h4>Age at first observation - Table</h4>
-<p>Remove the <code>name</code> field from the columns to display.</p>
-<ul>
-<li>Data Tab
-<ul>
-<li>Query
-<ul>
-<li>Columns: 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 80-90, 90+</li>
-</ul></li>
-</ul></li>
-</ul>
-</div>
 <div id="age-at-first-observation---bars" class="section level4 unnumbered" number="">
 <h4>Age at first observation - Bars</h4>
 <p>Remove legend.</p>
@@ -448,6 +400,10 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 </ul></li>
 </ul></li>
 </ul>
+</div>
+<div id="distribution-of-age-at-first-observation-period-1" class="section level4 unnumbered" number="">
+<h4>Distribution of age at first observation period</h4>
+<p>No changes</p>
 </div>
 <div id="year-of-birth-1" class="section level4 unnumbered" number="">
 <h4>Year of Birth</h4>
@@ -465,11 +421,37 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
 <div id="data-domains-tab-1" class="section level3 unnumbered" number="">
 <h3>Data Domains Tab</h3>
+<div id="average-number-of-records-per-person-1" class="section level4 unnumbered" number="">
+<h4>Average number of records per person</h4>
 <p>No changes</p>
+</div>
+<div id="total-number-of-records-1" class="section level4 unnumbered" number="">
+<h4>Total number of records</h4>
+<p>No changes</p>
+</div>
+<div id="data-density-plot" class="section level4 unnumbered" number="">
+<h4>Data Density Plot</h4>
+<p>Dataset: Materialized View <a href="materialized-views-1.html#data_density">data_density</a></p>
+<p><img src="images/12-database-level/03-data-domains/03-data-density.png" /></p>
+</div>
+<div id="records-per-person" class="section level4 unnumbered" number="">
+<h4>Records per person</h4>
+<p>Dataset: Materialized View <a href="materialized-views-1.html#records_per_person">records_per_person</a></p>
+<p><img src="images/12-database-level/03-data-domains/04-records-per-person.png" /></p>
+</div>
+<div id="concepts-per-person" class="section level4 unnumbered" number="">
+<h4>Concepts per person</h4>
+<p>Dataset: Materialized View <a href="materialized-views-1.html#number_of_distinct_per_person">number_of_distinct_per_person</a></p>
+<p><img src="images/12-database-level/03-data-domains/05-concepts-pperson.png" /></p>
+</div>
 </div>
 <div id="data-provenance-tab-1" class="section level3 unnumbered" number="">
 <h3>Data Provenance Tab</h3>
-<p>No changes</p>
+<div id="type-concepts" class="section level4 unnumbered" number="">
+<h4>Type Concepts</h4>
+<p>Dataset: Materialized View <a href="materialized-views-1.html#data_provenance">data_provenance</a></p>
+<p><img src="images/12-database-level/04-type-concepts.png" /></p>
+</div>
 </div>
 <div id="observation-period-tab-1" class="section level3 unnumbered" number="">
 <h3>Observation Period Tab</h3>
@@ -486,6 +468,10 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 </ul></li>
 </ul>
 </div>
+<div id="length-of-observation-days-of-first-observation-period-1" class="section level4 unnumbered" number="">
+<h4>Length of observation (days) of first observation period</h4>
+<p>No changes</p>
+</div>
 <div id="cumulative-observation-period-1" class="section level4 unnumbered" number="">
 <h4>Cumulative Observation Period</h4>
 <p>Remove legend.</p>
@@ -498,6 +484,10 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 </ul></li>
 </ul></li>
 </ul>
+</div>
+<div id="number-of-observation-periods-1" class="section level4 unnumbered" number="">
+<h4>Number of Observation Periods</h4>
+<p>No changes</p>
 </div>
 </div>
 <div id="visit-tab-1" class="section level3 unnumbered" number="">
@@ -528,37 +518,30 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 </ul></li>
 </ul>
 </div>
+<div id="visit-age-distribution" class="section level4 unnumbered" number="">
+<h4>Visit Age Distribution</h4>
+<p>Dataset: Materialized View <a href="materialized-views-1.html#visit_age_distribution">visit_age_distribution</a></p>
+<p><img src="images/12-database-level/05-visit-age-distribution.png" /></p>
+</div>
 </div>
 <div id="concept-browser-tab-1" class="section level3 unnumbered" number="">
 <h3>Concept Browser Tab</h3>
-<div id="concept-browser-table" class="section level4 unnumbered" number="">
-<h4>Concept Browser Table</h4>
-<p>Remove the <code>source_name</code> field from the columns to display.</p>
-<ul>
-<li>Data Tab
-<ul>
-<li>Query
-<ul>
-<li>Columns: concept_id, concept_name, domain_id, magnitude_persons, magnitude_occurrences</li>
-</ul></li>
-</ul></li>
-</ul>
+<div id="domain-filter-1" class="section level4 unnumbered" number="">
+<h4>Domain Filter</h4>
+<p>No changes</p>
+</div>
+<div id="concept-browser-1" class="section level4 unnumbered" number="">
+<h4>Concept Browser</h4>
+<p>Dataset: Materialized View <a href="materialized-views-1.html#concept_browser_table2">concept_browser_table2</a></p>
+<p><img src="images/12-database-level/06-concept-browser.png" /></p>
 </div>
 </div>
 <div id="meta-data-tab" class="section level3 unnumbered" number="">
 <h3>Meta Data Tab</h3>
-<div id="meta-data-table" class="section level4 unnumbered" number="">
-<h4>Meta Data Table</h4>
-<p>Remove the <code>name</code> field from the columns to display.</p>
-<ul>
-<li>Data Tab
-<ul>
-<li>Query
-<ul>
-<li>Columns: source_release_date, cdm_release_date, cdm_version, vocabulary_version</li>
-</ul></li>
-</ul></li>
-</ul>
+<div id="meta-data-1" class="section level4 unnumbered" number="">
+<h4>Meta Data</h4>
+<p>Dataset: Materialized View <a href="materialized-views-1.html#meta_data_table">meta_data_table</a></p>
+<p><img src="images/12-database-level/07-metadata.png" /></p>
 
 </div>
 </div>
