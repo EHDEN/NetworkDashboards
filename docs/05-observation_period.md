@@ -23,9 +23,10 @@ or remove it so the "Edit Dashboard" button can show again.
 
 ### Data Source Filter {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}(\#fig:dataSourceFilter)
-\end{figure}
+<div class="figure">
+<img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
+<p class="caption">(\#fig:dataSourceFilter)Settings for creating the Data Source filter chart</p>
+</div>
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
@@ -50,9 +51,10 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
 
 The Number of Patients in Observation Period plot shows the number of patients that contribute at least one day in a specific month.
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/05-observation_period/02-number_of_patients_in_observation_period} \caption{Settings for creating the Number of Patients in Observation Period chart}(\#fig:numPatientsInObserPeriod)
-\end{figure}
+<div class="figure">
+<img src="images/05-observation_period/02-number_of_patients_in_observation_period.png" alt="Settings for creating the Number of Patients in Observation Period chart" width="100%" />
+<p class="caption">(\#fig:numPatientsInObserPeriod)Settings for creating the Number of Patients in Observation Period chart</p>
+</div>
 
 #### SQL query {-}
 
@@ -88,9 +90,10 @@ WHERE analysis_id = 110
 
 ### Observation Period Start Dates {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/05-observation_period/03-observation_period_start_dates} \caption{Settings for creating the Observation Period Start Dates chart}(\#fig:observationPeriodStartDates)
-\end{figure}
+<div class="figure">
+<img src="images/05-observation_period/03-observation_period_start_dates.png" alt="Settings for creating the Observation Period Start Dates chart" width="100%" />
+<p class="caption">(\#fig:observationPeriodStartDates)Settings for creating the Observation Period Start Dates chart</p>
+</div>
 
 #### SQL query {-}
 
@@ -126,9 +129,10 @@ WHERE analysis_id = 111
 
 ### Observation Period End Dates {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/05-observation_period/04-observation_period_end_dates} \caption{Settings for creating the Observation Period End Dates chart}(\#fig:observationPeriodEndDates)
-\end{figure}
+<div class="figure">
+<img src="images/05-observation_period/04-observation_period_end_dates.png" alt="Settings for creating the Observation Period End Dates chart" width="100%" />
+<p class="caption">(\#fig:observationPeriodEndDates)Settings for creating the Observation Period End Dates chart</p>
+</div>
 
 #### SQL query {-}
 

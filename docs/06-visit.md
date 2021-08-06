@@ -25,9 +25,10 @@ or remove it so the "Edit Dashboard" button can show again.
 
 ### Data Source Filter {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}(\#fig:dataSourceFilter)
-\end{figure}
+<div class="figure">
+<img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
+<p class="caption">(\#fig:dataSourceFilter)Settings for creating the Data Source filter chart</p>
+</div>
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
@@ -50,9 +51,10 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
 
 ### Visit Type Table {#visitTypeTable} {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/06-visit/02-visit_types_table} \caption{Settings for creating the Visit Type Table chart}(\#fig:visitTypeTable)
-\end{figure}
+<div class="figure">
+<img src="images/06-visit/02-visit_types_table.png" alt="Settings for creating the Visit Type Table chart" width="100%" />
+<p class="caption">(\#fig:visitTypeTable)Settings for creating the Visit Type Table chart</p>
+</div>
 
 #### SQL query {-}
 
@@ -82,9 +84,10 @@ ORDER BY "Count" DESC
 
 ### Visit Types Bars {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/06-visit/03-visit_types_bars} \caption{Settings for creating the Visit Types bar chart}(\#fig:visitTypeBars)
-\end{figure}
+<div class="figure">
+<img src="images/06-visit/03-visit_types_bars.png" alt="Settings for creating the Visit Types bar chart" width="100%" />
+<p class="caption">(\#fig:visitTypeBars)Settings for creating the Visit Types bar chart</p>
+</div>
 
 #### SQL query {-}
 

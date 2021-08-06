@@ -187,8 +187,6 @@ All the code is stored in the `docs/src` directory as well as the script to buil
 **Do not change** the files in the root of the `docs` directory, because those files will be removed during the build processed and replaced by the new ones.
 Therefore, to update this documentation, apply the changes to the files in the directory `docs/src`.
 To build the documentation, you need to have [R](https://www.r-project.org/) installed, and if you are using UNIX-based systems, you only need to run `sh _build.sh` in the `docs/src` directory.
-The `_build.sh` script executes three commands at the same time to generate different output formats which might conflict with eachother.
-If some error happends telling that a file was not found and you didn't change nothing related to the specific file, rerun the `_build.sh` script.
 
 In this documentation, we also describe all the settings around the dashboards that are used on the EHDEN project.
 To avoid an extensive table of contents and also to avoid having a big chapter page for dashboards, we [configured](https://github.com/EHDEN/NetworkDashboards/blob/master/docs/src/_output.yml#L9) this GitBook to split different sections into different pages.

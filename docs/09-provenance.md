@@ -23,9 +23,10 @@ or remove it so the "Edit Dashboard" button can show again.
 
 ### Data Source Filter {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}(\#fig:dataSourceFilter)
-\end{figure}
+<div class="figure">
+<img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
+<p class="caption">(\#fig:dataSourceFilter)Settings for creating the Data Source filter chart</p>
+</div>
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
@@ -48,9 +49,10 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
 
 ### Condition & Drug & Procedure & Device & Measurement & Observation Types {#dataProvenanceCharts} {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/09-provenance/02-condition_drug_procedure_device_measurement_observation_types} \caption{Settings for creating the Condition, Drug, Procedure, Device, Measurement and Observation charts}(\#fig:conditionDrugProcedureDeviceMeasurementObservationTypes)
-\end{figure}
+<div class="figure">
+<img src="images/09-provenance/02-condition_drug_procedure_device_measurement_observation_types.png" alt="Settings for creating the Condition, Drug, Procedure, Device, Measurement and Observation charts" width="100%" />
+<p class="caption">(\#fig:conditionDrugProcedureDeviceMeasurementObservationTypes)Settings for creating the Condition, Drug, Procedure, Device, Measurement and Observation charts</p>
+</div>
 
 #### SQL query {-}
 

@@ -23,9 +23,10 @@ or remove it so the "Edit Dashboard" button can show again.
 
 ### Database Type and Country Filter {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/03-general/01-filters} \caption{Settings for creating filters charts}(\#fig:filters)
-\end{figure}
+<div class="figure">
+<img src="images/03-general/01-filters.png" alt="Settings for creating filters charts" width="100%" />
+<p class="caption">(\#fig:filters)Settings for creating filters charts</p>
+</div>
 
 Theses filter were designed to be used in the dashboard aiming the filtering of the data based on the field ''database_type'' and "country" from the table ''data_source''.
 
@@ -57,9 +58,10 @@ INNER JOIN public.country AS country ON source.country_id=country.id
 
 ### Total Number of Patients {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/03-general/02-total_number_of_patients} \caption{Settings for creating the Total Number of Patients chart}(\#fig:totalNumberOfPatients)
-\end{figure}
+<div class="figure">
+<img src="images/03-general/02-total_number_of_patients.png" alt="Settings for creating the Total Number of Patients chart" width="100%" />
+<p class="caption">(\#fig:totalNumberOfPatients)Settings for creating the Total Number of Patients chart</p>
+</div>
 
 #### SQL query {-}
 
@@ -93,9 +95,10 @@ WHERE analysis_id = 1
 
 ### Network Growth by Date {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/03-general/03-network_growth_by_date} \caption{Settings for creating the Network Growth by Date chart}(\#fig:networkGrowthByDate)
-\end{figure}
+<div class="figure">
+<img src="images/03-general/03-network_growth_by_date.png" alt="Settings for creating the Network Growth by Date chart" width="100%" />
+<p class="caption">(\#fig:networkGrowthByDate)Settings for creating the Network Growth by Date chart</p>
+</div>
 
 #### SQL query {-}
 
@@ -139,9 +142,10 @@ WHERE analysis_id = 2
 
 ### Patients per Country {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/03-general/04-patients_per_country} \caption{Settings for creating the Patients per Country chart}(\#fig:patientsPerCountry)
-\end{figure}
+<div class="figure">
+<img src="images/03-general/04-patients_per_country.png" alt="Settings for creating the Patients per Country chart" width="100%" />
+<p class="caption">(\#fig:patientsPerCountry)Settings for creating the Patients per Country chart</p>
+</div>
 
 #### SQL query {#patientsPerCountryQuery} {-}
 
@@ -174,9 +178,10 @@ WHERE analysis_id = 1
 
 ### Database Types per Country {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/03-general/05-database_types_per_country} \caption{Settings for creating the Database Type per Country chart}(\#fig:dbsTypesPerCountry)
-\end{figure}
+<div class="figure">
+<img src="images/03-general/05-database_types_per_country.png" alt="Settings for creating the Database Type per Country chart" width="100%" />
+<p class="caption">(\#fig:dbsTypesPerCountry)Settings for creating the Database Type per Country chart</p>
+</div>
 
 #### SQL query {-}
 
@@ -199,9 +204,10 @@ Same as [Patients per Country](#patientsPerCountryQuery) query
 
 ### World Map {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/03-general/06-world_map} \caption{Settings for creating the World Map chart}(\#fig:worldMap)
-\end{figure}
+<div class="figure">
+<img src="images/03-general/06-world_map.png" alt="Settings for creating the World Map chart" width="100%" />
+<p class="caption">(\#fig:worldMap)Settings for creating the World Map chart</p>
+</div>
 
 <!-- Discuss what is important to see in this chart... TO DO -->
 
@@ -233,9 +239,10 @@ INNER JOIN public.country AS country ON source.country_id=country.id
 
 ### Meta Data {-#metaDataTable}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/03-general/07-meta_data} \caption{Settings for creating the Meta Data chart}(\#fig:metaData)
-\end{figure}
+<div class="figure">
+<img src="images/03-general/07-meta_data.png" alt="Settings for creating the Meta Data chart" width="100%" />
+<p class="caption">(\#fig:metaData)Settings for creating the Meta Data chart</p>
+</div>
 
 #### SQL query {-}
 

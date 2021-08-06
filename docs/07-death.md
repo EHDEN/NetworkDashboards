@@ -23,9 +23,10 @@ or remove it so the "Edit Dashboard" button can show again.
 
 ### Data Source Filter {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/shared/data_source_filter} \caption{Settings for creating the Data Source filter chart}(\#fig:dataSourceFilter)
-\end{figure}
+<div class="figure">
+<img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
+<p class="caption">(\#fig:dataSourceFilter)Settings for creating the Data Source filter chart</p>
+</div>
 
 **For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.**
 
@@ -48,9 +49,10 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
 
 ### Number of Records {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/07-death/02-number_of_records} \caption{Settings for creating the Number of Records chart}(\#fig:numberOfRecords)
-\end{figure}
+<div class="figure">
+<img src="images/07-death/02-number_of_records.png" alt="Settings for creating the Number of Records chart" width="100%" />
+<p class="caption">(\#fig:numberOfRecords)Settings for creating the Number of Records chart</p>
+</div>
 
 #### SQL query {-}
 
@@ -82,9 +84,10 @@ WHERE analysis_id = 501
 
 ### Death By Year per Thousand People {-}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/07-death/03-deaths_by_year_per_thousand_people} \caption{Settings for creating the Death by Year per Thousand People chart}(\#fig:deathByYearPerThousandPeople)
-\end{figure}
+<div class="figure">
+<img src="images/07-death/03-deaths_by_year_per_thousand_people.png" alt="Settings for creating the Death by Year per Thousand People chart" width="100%" />
+<p class="caption">(\#fig:deathByYearPerThousandPeople)Settings for creating the Death by Year per Thousand People chart</p>
+</div>
 
 #### SQL query {-}
 
