@@ -151,187 +151,122 @@ Materialized View: [year_of_birth](materialized-views-1.html#year_of_birth)
 
 ### Data Domains Tab {-}
 
-#### Average Number of Records per Person {-}
+#### Average number of records per person {-}
 
-Same chart as the one used on the [Data Domains](#avgRecordsPerPerson) dashboard.
+Materialized View: [avg_num_of_records_per_person](materialized-views-1.html#avg_num_of_records_per_person)
 
-#### Total Number of Records {-}
+![](images/11-network-dashboard/04-data-domains/01-avg-num-recs-per-person.png)
 
-##### SQL query {-}
+#### Total number of records {-}
 
-```sql
-SELECT
-data_source.name,
-data_source.acronym,
-    CASE 
-    WHEN analysis_id = 201 THEN 'Visit'
-    WHEN analysis_id = 401 THEN 'Condition'
-    WHEN analysis_id = 501 THEN 'Death'
-    WHEN analysis_id = 601 THEN 'Procedure'
-    WHEN analysis_id = 701 THEN 'Drug Exposure'
-    WHEN analysis_id = 801 THEN 'Observation'
-    WHEN analysis_id = 1801 THEN 'Measurement'
-    WHEN analysis_id = 2101 THEN 'Device'
-    WHEN analysis_id = 2201 THEN 'Note'
-    END AS Data_Domain,
-    SUM(count_value) AS "count"
-FROM achilles_results
-JOIN data_source ON achilles_results.data_source_id=data_source.id
-GROUP BY name, acronym, analysis_id
-HAVING analysis_id IN (201, 401, 501, 601, 701, 801, 1801, 2101, 2201)
-```
+Materialized View: [data_domain_total_num_of_records](materialized-views-1.html#data_domain_total_num_of_records)
 
-##### Chart settings {-}
+![](images/11-network-dashboard/04-data-domains/02-total-num-of-rec.png)
 
-- Data Tab
-  - Datasource & Chart Type
-    - Visualization Type: Pie Chart
-  - Time
-    - Time range: No filter
-  - Query
-    - Metric: MAX(count)
-    - Group by: data_domain
-    - Row limit: None
+#### Number of distinct visit occurrence concepts per person {-}
+
+Materialized View: [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
+
+![](images/11-network-dashboard/04-data-domains/03-num-distinct-visit-occurr-concepts-pperson.png)
+
+#### Number of distinct condition occurrence concepts per person {-}
+
+Materialized View: [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
+
+![](images/11-network-dashboard/04-data-domains/04-num-distinct-cond-occur-concepts-pperson.png)
+
+#### Number of distinct procedure occurrence concepts per person {-}
+
+Materialized View: [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
+
+![](images/11-network-dashboard/04-data-domains/05-num-distinct-proced-occur-concepts-pperson.png)
+
+#### Number of distinct drug exposure concepts per person {-}
+
+Materialized View: [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
+
+![](images/11-network-dashboard/04-data-domains/06-num-distinct-drug-occur-concepts-pperson.png)
+
+#### Number of distinct observation occurrence concepts per person {-}
+
+Materialized View: [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
+
+![](images/11-network-dashboard/04-data-domains/07-num-distinct-observ-occur-concepts-pperson.png)
+
+#### Number of distinct mesurement occurrence concepts per person {-}
+
+Materialized View: [number_of_distinct_per_person](materialized-views-1.html#number_of_distinct_per_person)
+
+![](images/11-network-dashboard/04-data-domains/08-num-distinct-mesur-occur-concepts-pperson.png)
 
 ### Data Provenance Tab {-}
 
-Same six charts used on the [Provenance](#dataProvenanceCharts) dashboard.
+Materialized View: [data_provenance](materialized-views-1.html#data_provenance)
+
+![](images/11-network-dashboard/05-visit-type-pivot.png)
 
 ### Observation Period Tab {-}
 
 #### Number of Patitents in Observation Period {-}
 
-Same chart used on the [Observation Period](#numInObservationPeriod) dashboard.
+Materialized View: [num_of_patients_in_observation_period](materialized-views-1.html#num_of_patients_in_observation_period)
+
+![](images/11-network-dashboard/06-observation-period/01-num-patients-in-ober-period.png)
 
 #### Cumulative Observation Period {-}
 
-The cumulative observation time plot shows the percentage of patients that have more that X days of observation time.
+Materialized View: [cumulative_observation_time](materialized-views-1.html#cumulative_observation_time)
 
-##### SQL Query {-}
+![](images/11-network-dashboard/06-observation-period/02-cumulative-oberv-time.png)
 
-```sql
-SELECT
-  name,
-  acronym,
-  xLengthOfObservation,
-  round(cumulative_sum / total, 5) as yPercentPersons
-FROM (
-  SELECT data_source_id, CAST(stratum_1 AS INTEGER) * 30 AS xLengthOfObservation, SUM(count_value) OVER (PARTITION BY data_source_id ORDER BY CAST(stratum_1 AS INTEGER) DESC) as cumulative_sum
-  FROM achilles_results
-  WHERE analysis_id = 108
-) AS cumulative_sums
-JOIN (
-  SELECT data_source_id, count_value as total
-  FROM achilles_results
-  WHERE analysis_id = 1
-) AS totals
-ON cumulative_sums.data_source_id = totals.data_source_id
-JOIN data_source ON cumulative_sums.data_source_id = data_source.id
-ORDER BY name, xLengthOfObservation
-```
+#### Number of Observation Periods {-}
 
-##### Chart settings {-}
+Materialized View: [number_of_observation_periods](materialized-views-1.html#number_of_observation_periods)
 
-- Data Tab
-  - Datasource & Chart Type
-    - Visualization Type: Bar Chart
-  - Time
-    - Time range: No filter
-  - Query
-    - Metrics: SUM(ypercentpersons)
-    - Series: xlengthofobservation
-    - Breakdowns: name
-    - Row limit: None
-- Customize Tab
-  - Chart Options
-    - Sort Bars: on
-    - Y Axis Fomat: ,.1% (12345.432 => 1,234,543.2%)
-    - Y Axis Label: Number of Patients
-  - X Axis
-    - X Axis Label: Days
-    - Reduce X ticks: on
+![](images/11-network-dashboard/06-observation-period/03-num-observ-periods.png)
+
+#### Length of observation (days) of first observation period {-}
+
+Materialized View: [length_of_observation_of_first_observation_period](materialized-views-1.html#length_of_observation_of_first_observation_period)
+
+![](images/11-network-dashboard/06-observation-period/04-len-observ-days-first-observ-period.png)
 
 ### Visit Tab {-}
 
 #### Visit Type Graph {-}
 
-##### SQL Query {-}
+Materialized View: [visit_type_bar_chart](materialized-views-1.html#visit_type_bar_chart)
 
-```sql
-SELECT
-  data_source.name,
-  data_source.acronym,
-  concept.concept_name,
-  achilles_results.count_value AS num_persons
-FROM (SELECT * FROM achilles_results WHERE analysis_id = 200) AS achilles_results
-JOIN data_source ON achilles_results.data_source_id = data_source.id
-JOIN concept ON CAST(achilles_results.stratum_1 AS BIGINT) = concept.concept_id
-```
+![](images/11-network-dashboard/07-visit/01-visit-type-graph.png)
 
-##### Chart settings {-}
+#### Visit Type {-}
 
-- Data Tab
-  - Datasource & Chart Type
-    - Visualization Type: Bar Chart
-  - Time
-    - Time range: No filter
-  - Query
-    - Metrics: SUM(num_persons)
-    - Series: concept_name
-    - Breakdowns: name
-    - Row limit: None
+Materialized View: [visit_type_table](materialized-views-1.html#visit_type_table)
 
-#### Visit Type Table {-}
-
-##### SQL Query {-}
-
-```sql
-SELECT
-  name,
-  acronym,
-  concept.concept_name,
-  ar1.count_value AS num_persons,
-  round(100.0 * ar1.count_value / denom.count_value, 2) AS percent_persons,
-  round(1.0 * ar2.count_value / ar1.count_value, 2) AS records_per_person
-FROM (
-  SELECT *
-  FROM achilles_results WHERE analysis_id = 200) AS ar1
-  JOIN (
-    SELECT *
-    FROM achilles_results WHERE analysis_id = 201) AS ar2
-    ON ar1.stratum_1 = ar2.stratum_1 AND ar1.data_source_id = ar2.data_source_id
-  JOIN (
-    SELECT *
-    FROM achilles_results WHERE analysis_id = 1) AS denom
-    ON ar1.data_source_id = denom.data_source_id
-  JOIN data_source ON data_source.id = ar1.data_source_id
-  JOIN concept ON CAST(ar1.stratum_1 AS INTEGER) = concept_id
-ORDER BY ar1.data_source_id, ar1.count_value DESC
-```
-
-##### Chart Settings {-}
-
-- Data Tab
-  - Datasource & Chart Type
-    - Visualization Type: Table
-  - Time
-    - Time range: No filter
-  - Query
-    - Query Mode: Raw Records
-    - Columns: name, visit_type, num_persons, percent_persons with label persons (%), records_per_person
-    - Row limit: None
-- Customize Tab
-  - Options
-    - Show Cell Bars: off
+![](images/11-network-dashboard/07-visit/02-visit-type.png)
 
 ### Concept Browser Tab {-}
 
-#### Concept Browser Table {-}
+#### Domain Filter {-}
 
-Same chart used on the [Concept Browser](#conceptBrowserTable) dashboard.
+Materialized View: [domain_filter](materialized-views-1.html#domain_filter)
 
-### Meta Data Tab {-}
+![](images/11-network-dashboard/08-concept-browser/01-domain-filter.png)
 
-#### Meta Data Table {-}
+#### Concept Browser {-}
 
-Same chart used on the [General](#metaDataTable) dashboard.
+Materialized View: [concept_browser_table3](materialized-views-1.html#concept_browser_table3)
+
+![](images/11-network-dashboard/08-concept-browser/02-concept-browser.png)
+
+#### Concept Network Coverage {-}
+
+Materialized View: [concept_coverage2](materialized-views-1.html#concept_coverage2)
+
+![](images/11-network-dashboard/08-concept-browser/03-concept-network-coverage.png)
+
+### About Tab {-}
+
+Markdown dashboard components
+
+![](images/11-network-dashboard/09-about.png)

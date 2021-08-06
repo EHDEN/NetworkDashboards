@@ -120,7 +120,7 @@
 
 \title{Data Network Dashboards}
 \author{This document is currently under construction}
-\date{2021-08-05}
+\date{2021-08-06}
 
 \begin{document}
 \maketitle
@@ -1621,90 +1621,76 @@ Materialized View: \href{materialized-views-1.html\#year_of_birth}{year\_of\_bir
 \addcontentsline{toc}{subsection}{Data Domains Tab}
 
 \hypertarget{average-number-of-records-per-person}{%
-\subsubsection*{Average Number of Records per Person}\label{average-number-of-records-per-person}}
-\addcontentsline{toc}{subsubsection}{Average Number of Records per Person}
+\subsubsection*{Average number of records per person}\label{average-number-of-records-per-person}}
+\addcontentsline{toc}{subsubsection}{Average number of records per person}
 
-Same chart as the one used on the \protect\hyperlink{avgRecordsPerPerson}{Data Domains} dashboard.
+Materialized View: \href{materialized-views-1.html\#avg_num_of_records_per_person}{avg\_num\_of\_records\_per\_person}
+
+\includegraphics{images/11-network-dashboard/04-data-domains/01-avg-num-recs-per-person.png}
 
 \hypertarget{total-number-of-records}{%
-\subsubsection*{Total Number of Records}\label{total-number-of-records}}
-\addcontentsline{toc}{subsubsection}{Total Number of Records}
+\subsubsection*{Total number of records}\label{total-number-of-records}}
+\addcontentsline{toc}{subsubsection}{Total number of records}
 
-\hypertarget{sql-query}{%
-\paragraph*{SQL query}\label{sql-query}}
-\addcontentsline{toc}{paragraph}{SQL query}
+Materialized View: \href{materialized-views-1.html\#data_domain_total_num_of_records}{data\_domain\_total\_num\_of\_records}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{SELECT}
-\NormalTok{data\_source.name,}
-\NormalTok{data\_source.acronym,}
-    \ControlFlowTok{CASE} 
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{201} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Visit\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{401} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{501} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Death\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{601} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{701} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug Exposure\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{801} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{1801} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{2101} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{2201} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Note\textquotesingle{}}
-    \ControlFlowTok{END} \KeywordTok{AS}\NormalTok{ Data\_Domain,}
-    \FunctionTok{SUM}\NormalTok{(count\_value) }\KeywordTok{AS} \OtherTok{"count"}
-\KeywordTok{FROM}\NormalTok{ achilles\_results}
-\KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ achilles\_results.data\_source\_id}\OperatorTok{=}\NormalTok{data\_source.}\KeywordTok{id}
-\KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ name, acronym, analysis\_id}
-\KeywordTok{HAVING}\NormalTok{ analysis\_id }\KeywordTok{IN}\NormalTok{ (}\DecValTok{201}\NormalTok{, }\DecValTok{401}\NormalTok{, }\DecValTok{501}\NormalTok{, }\DecValTok{601}\NormalTok{, }\DecValTok{701}\NormalTok{, }\DecValTok{801}\NormalTok{, }\DecValTok{1801}\NormalTok{, }\DecValTok{2101}\NormalTok{, }\DecValTok{2201}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
+\includegraphics{images/11-network-dashboard/04-data-domains/02-total-num-of-rec.png}
 
-\hypertarget{chart-settings}{%
-\paragraph*{Chart settings}\label{chart-settings}}
-\addcontentsline{toc}{paragraph}{Chart settings}
+\hypertarget{number-of-distinct-visit-occurrence-concepts-per-person}{%
+\subsubsection*{Number of distinct visit occurrence concepts per person}\label{number-of-distinct-visit-occurrence-concepts-per-person}}
+\addcontentsline{toc}{subsubsection}{Number of distinct visit occurrence concepts per person}
 
-\begin{itemize}
-\tightlist
-\item
-  Data Tab
+Materialized View: \href{materialized-views-1.html\#number_of_distinct_per_person}{number\_of\_distinct\_per\_person}
 
-  \begin{itemize}
-  \tightlist
-  \item
-    Datasource \& Chart Type
+\includegraphics{images/11-network-dashboard/04-data-domains/03-num-distinct-visit-occurr-concepts-pperson.png}
 
-    \begin{itemize}
-    \tightlist
-    \item
-      Visualization Type: Pie Chart
-    \end{itemize}
-  \item
-    Time
+\hypertarget{number-of-distinct-condition-occurrence-concepts-per-person}{%
+\subsubsection*{Number of distinct condition occurrence concepts per person}\label{number-of-distinct-condition-occurrence-concepts-per-person}}
+\addcontentsline{toc}{subsubsection}{Number of distinct condition occurrence concepts per person}
 
-    \begin{itemize}
-    \tightlist
-    \item
-      Time range: No filter
-    \end{itemize}
-  \item
-    Query
+Materialized View: \href{materialized-views-1.html\#number_of_distinct_per_person}{number\_of\_distinct\_per\_person}
 
-    \begin{itemize}
-    \tightlist
-    \item
-      Metric: MAX(count)
-    \item
-      Group by: data\_domain
-    \item
-      Row limit: None
-    \end{itemize}
-  \end{itemize}
-\end{itemize}
+\includegraphics{images/11-network-dashboard/04-data-domains/04-num-distinct-cond-occur-concepts-pperson.png}
+
+\hypertarget{number-of-distinct-procedure-occurrence-concepts-per-person}{%
+\subsubsection*{Number of distinct procedure occurrence concepts per person}\label{number-of-distinct-procedure-occurrence-concepts-per-person}}
+\addcontentsline{toc}{subsubsection}{Number of distinct procedure occurrence concepts per person}
+
+Materialized View: \href{materialized-views-1.html\#number_of_distinct_per_person}{number\_of\_distinct\_per\_person}
+
+\includegraphics{images/11-network-dashboard/04-data-domains/05-num-distinct-proced-occur-concepts-pperson.png}
+
+\hypertarget{number-of-distinct-drug-exposure-concepts-per-person}{%
+\subsubsection*{Number of distinct drug exposure concepts per person}\label{number-of-distinct-drug-exposure-concepts-per-person}}
+\addcontentsline{toc}{subsubsection}{Number of distinct drug exposure concepts per person}
+
+Materialized View: \href{materialized-views-1.html\#number_of_distinct_per_person}{number\_of\_distinct\_per\_person}
+
+\includegraphics{images/11-network-dashboard/04-data-domains/06-num-distinct-drug-occur-concepts-pperson.png}
+
+\hypertarget{number-of-distinct-observation-occurrence-concepts-per-person}{%
+\subsubsection*{Number of distinct observation occurrence concepts per person}\label{number-of-distinct-observation-occurrence-concepts-per-person}}
+\addcontentsline{toc}{subsubsection}{Number of distinct observation occurrence concepts per person}
+
+Materialized View: \href{materialized-views-1.html\#number_of_distinct_per_person}{number\_of\_distinct\_per\_person}
+
+\includegraphics{images/11-network-dashboard/04-data-domains/07-num-distinct-observ-occur-concepts-pperson.png}
+
+\hypertarget{number-of-distinct-mesurement-occurrence-concepts-per-person}{%
+\subsubsection*{Number of distinct mesurement occurrence concepts per person}\label{number-of-distinct-mesurement-occurrence-concepts-per-person}}
+\addcontentsline{toc}{subsubsection}{Number of distinct mesurement occurrence concepts per person}
+
+Materialized View: \href{materialized-views-1.html\#number_of_distinct_per_person}{number\_of\_distinct\_per\_person}
+
+\includegraphics{images/11-network-dashboard/04-data-domains/08-num-distinct-mesur-occur-concepts-pperson.png}
 
 \hypertarget{data-provenance-tab}{%
 \subsection*{Data Provenance Tab}\label{data-provenance-tab}}
 \addcontentsline{toc}{subsection}{Data Provenance Tab}
 
-Same six charts used on the \protect\hyperlink{dataProvenanceCharts}{Provenance} dashboard.
+Materialized View: \href{materialized-views-1.html\#data_provenance}{data\_provenance}
+
+\includegraphics{images/11-network-dashboard/05-visit-type-pivot.png}
 
 \hypertarget{observation-period-tab}{%
 \subsection*{Observation Period Tab}\label{observation-period-tab}}
@@ -1714,112 +1700,33 @@ Same six charts used on the \protect\hyperlink{dataProvenanceCharts}{Provenance}
 \subsubsection*{Number of Patitents in Observation Period}\label{number-of-patitents-in-observation-period}}
 \addcontentsline{toc}{subsubsection}{Number of Patitents in Observation Period}
 
-Same chart used on the \protect\hyperlink{numInObservationPeriod}{Observation Period} dashboard.
+Materialized View: \href{materialized-views-1.html\#num_of_patients_in_observation_period}{num\_of\_patients\_in\_observation\_period}
+
+\includegraphics{images/11-network-dashboard/06-observation-period/01-num-patients-in-ober-period.png}
 
 \hypertarget{cumulative-observation-period}{%
 \subsubsection*{Cumulative Observation Period}\label{cumulative-observation-period}}
 \addcontentsline{toc}{subsubsection}{Cumulative Observation Period}
 
-The cumulative observation time plot shows the percentage of patients that have more that X days of observation time.
+Materialized View: \href{materialized-views-1.html\#cumulative_observation_time}{cumulative\_observation\_time}
 
-\hypertarget{sql-query-1}{%
-\paragraph*{SQL Query}\label{sql-query-1}}
-\addcontentsline{toc}{paragraph}{SQL Query}
+\includegraphics{images/11-network-dashboard/06-observation-period/02-cumulative-oberv-time.png}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{SELECT}
-\NormalTok{  name,}
-\NormalTok{  acronym,}
-\NormalTok{  xLengthOfObservation,}
-  \FunctionTok{round}\NormalTok{(cumulative\_sum }\OperatorTok{/}\NormalTok{ total, }\DecValTok{5}\NormalTok{) }\KeywordTok{as}\NormalTok{ yPercentPersons}
-\KeywordTok{FROM}\NormalTok{ (}
-  \KeywordTok{SELECT}\NormalTok{ data\_source\_id, }\FunctionTok{CAST}\NormalTok{(stratum\_1 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{*} \DecValTok{30} \KeywordTok{AS}\NormalTok{ xLengthOfObservation, }\FunctionTok{SUM}\NormalTok{(count\_value) }\KeywordTok{OVER}\NormalTok{ (}\KeywordTok{PARTITION} \KeywordTok{BY}\NormalTok{ data\_source\_id }\KeywordTok{ORDER} \KeywordTok{BY} \FunctionTok{CAST}\NormalTok{(stratum\_1 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\KeywordTok{DESC}\NormalTok{) }\KeywordTok{as}\NormalTok{ cumulative\_sum}
-  \KeywordTok{FROM}\NormalTok{ achilles\_results}
-  \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{108}
-\NormalTok{) }\KeywordTok{AS}\NormalTok{ cumulative\_sums}
-\KeywordTok{JOIN}\NormalTok{ (}
-  \KeywordTok{SELECT}\NormalTok{ data\_source\_id, count\_value }\KeywordTok{as}\NormalTok{ total}
-  \KeywordTok{FROM}\NormalTok{ achilles\_results}
-  \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{1}
-\NormalTok{) }\KeywordTok{AS}\NormalTok{ totals}
-\KeywordTok{ON}\NormalTok{ cumulative\_sums.data\_source\_id }\OperatorTok{=}\NormalTok{ totals.data\_source\_id}
-\KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ cumulative\_sums.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}
-\KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ name, xLengthOfObservation}
-\end{Highlighting}
-\end{Shaded}
+\hypertarget{number-of-observation-periods}{%
+\subsubsection*{Number of Observation Periods}\label{number-of-observation-periods}}
+\addcontentsline{toc}{subsubsection}{Number of Observation Periods}
 
-\hypertarget{chart-settings-1}{%
-\paragraph*{Chart settings}\label{chart-settings-1}}
-\addcontentsline{toc}{paragraph}{Chart settings}
+Materialized View: \href{materialized-views-1.html\#number_of_observation_periods}{number\_of\_observation\_periods}
 
-\begin{itemize}
-\tightlist
-\item
-  Data Tab
+\includegraphics{images/11-network-dashboard/06-observation-period/03-num-observ-periods.png}
 
-  \begin{itemize}
-  \tightlist
-  \item
-    Datasource \& Chart Type
+\hypertarget{length-of-observation-days-of-first-observation-period}{%
+\subsubsection*{Length of observation (days) of first observation period}\label{length-of-observation-days-of-first-observation-period}}
+\addcontentsline{toc}{subsubsection}{Length of observation (days) of first observation period}
 
-    \begin{itemize}
-    \tightlist
-    \item
-      Visualization Type: Bar Chart
-    \end{itemize}
-  \item
-    Time
+Materialized View: \href{materialized-views-1.html\#length_of_observation_of_first_observation_period}{length\_of\_observation\_of\_first\_observation\_period}
 
-    \begin{itemize}
-    \tightlist
-    \item
-      Time range: No filter
-    \end{itemize}
-  \item
-    Query
-
-    \begin{itemize}
-    \tightlist
-    \item
-      Metrics: SUM(ypercentpersons)
-    \item
-      Series: xlengthofobservation
-    \item
-      Breakdowns: name
-    \item
-      Row limit: None
-    \end{itemize}
-  \end{itemize}
-\item
-  Customize Tab
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Chart Options
-
-    \begin{itemize}
-    \tightlist
-    \item
-      Sort Bars: on
-    \item
-      Y Axis Fomat: ,.1\% (12345.432 =\textgreater{} 1,234,543.2\%)
-    \item
-      Y Axis Label: Number of Patients
-    \end{itemize}
-  \item
-    X Axis
-
-    \begin{itemize}
-    \tightlist
-    \item
-      X Axis Label: Days
-    \item
-      Reduce X ticks: on
-    \end{itemize}
-  \end{itemize}
-\end{itemize}
+\includegraphics{images/11-network-dashboard/06-observation-period/04-len-observ-days-first-observ-period.png}
 
 \hypertarget{visit-tab}{%
 \subsection*{Visit Tab}\label{visit-tab}}
@@ -1829,176 +1736,53 @@ The cumulative observation time plot shows the percentage of patients that have 
 \subsubsection*{Visit Type Graph}\label{visit-type-graph}}
 \addcontentsline{toc}{subsubsection}{Visit Type Graph}
 
-\hypertarget{sql-query-2}{%
-\paragraph*{SQL Query}\label{sql-query-2}}
-\addcontentsline{toc}{paragraph}{SQL Query}
+Materialized View: \href{materialized-views-1.html\#visit_type_bar_chart}{visit\_type\_bar\_chart}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{SELECT}
-\NormalTok{  data\_source.name,}
-\NormalTok{  data\_source.acronym,}
-\NormalTok{  concept.concept\_name,}
-\NormalTok{  achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ num\_persons}
-\KeywordTok{FROM}\NormalTok{ (}\KeywordTok{SELECT} \OperatorTok{*} \KeywordTok{FROM}\NormalTok{ achilles\_results }\KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{200}\NormalTok{) }\KeywordTok{AS}\NormalTok{ achilles\_results}
-\KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ achilles\_results.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}
-\KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON} \FunctionTok{CAST}\NormalTok{(achilles\_results.stratum\_1 }\KeywordTok{AS}\NormalTok{ BIGINT) }\OperatorTok{=}\NormalTok{ concept.concept\_id}
-\end{Highlighting}
-\end{Shaded}
+\includegraphics{images/11-network-dashboard/07-visit/01-visit-type-graph.png}
 
-\hypertarget{chart-settings-2}{%
-\paragraph*{Chart settings}\label{chart-settings-2}}
-\addcontentsline{toc}{paragraph}{Chart settings}
+\hypertarget{visit-type}{%
+\subsubsection*{Visit Type}\label{visit-type}}
+\addcontentsline{toc}{subsubsection}{Visit Type}
 
-\begin{itemize}
-\tightlist
-\item
-  Data Tab
+Materialized View: \href{materialized-views-1.html\#visit_type_table}{visit\_type\_table}
 
-  \begin{itemize}
-  \tightlist
-  \item
-    Datasource \& Chart Type
-
-    \begin{itemize}
-    \tightlist
-    \item
-      Visualization Type: Bar Chart
-    \end{itemize}
-  \item
-    Time
-
-    \begin{itemize}
-    \tightlist
-    \item
-      Time range: No filter
-    \end{itemize}
-  \item
-    Query
-
-    \begin{itemize}
-    \tightlist
-    \item
-      Metrics: SUM(num\_persons)
-    \item
-      Series: concept\_name
-    \item
-      Breakdowns: name
-    \item
-      Row limit: None
-    \end{itemize}
-  \end{itemize}
-\end{itemize}
-
-\hypertarget{visit-type-table}{%
-\subsubsection*{Visit Type Table}\label{visit-type-table}}
-\addcontentsline{toc}{subsubsection}{Visit Type Table}
-
-\hypertarget{sql-query-3}{%
-\paragraph*{SQL Query}\label{sql-query-3}}
-\addcontentsline{toc}{paragraph}{SQL Query}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{SELECT}
-\NormalTok{  name,}
-\NormalTok{  acronym,}
-\NormalTok{  concept.concept\_name,}
-\NormalTok{  ar1.count\_value }\KeywordTok{AS}\NormalTok{ num\_persons,}
-  \FunctionTok{round}\NormalTok{(}\FloatTok{100.0} \OperatorTok{*}\NormalTok{ ar1.count\_value }\OperatorTok{/}\NormalTok{ denom.count\_value, }\DecValTok{2}\NormalTok{) }\KeywordTok{AS}\NormalTok{ percent\_persons,}
-  \FunctionTok{round}\NormalTok{(}\FloatTok{1.0} \OperatorTok{*}\NormalTok{ ar2.count\_value }\OperatorTok{/}\NormalTok{ ar1.count\_value, }\DecValTok{2}\NormalTok{) }\KeywordTok{AS}\NormalTok{ records\_per\_person}
-\KeywordTok{FROM}\NormalTok{ (}
-  \KeywordTok{SELECT} \OperatorTok{*}
-  \KeywordTok{FROM}\NormalTok{ achilles\_results }\KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{200}\NormalTok{) }\KeywordTok{AS}\NormalTok{ ar1}
-  \KeywordTok{JOIN}\NormalTok{ (}
-    \KeywordTok{SELECT} \OperatorTok{*}
-    \KeywordTok{FROM}\NormalTok{ achilles\_results }\KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{201}\NormalTok{) }\KeywordTok{AS}\NormalTok{ ar2}
-    \KeywordTok{ON}\NormalTok{ ar1.stratum\_1 }\OperatorTok{=}\NormalTok{ ar2.stratum\_1 }\KeywordTok{AND}\NormalTok{ ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ ar2.data\_source\_id}
-  \KeywordTok{JOIN}\NormalTok{ (}
-    \KeywordTok{SELECT} \OperatorTok{*}
-    \KeywordTok{FROM}\NormalTok{ achilles\_results }\KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{) }\KeywordTok{AS}\NormalTok{ denom}
-    \KeywordTok{ON}\NormalTok{ ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ denom.data\_source\_id}
-  \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ data\_source.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ ar1.data\_source\_id}
-  \KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON} \FunctionTok{CAST}\NormalTok{(ar1.stratum\_1 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{=}\NormalTok{ concept\_id}
-\KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ ar1.data\_source\_id, ar1.count\_value }\KeywordTok{DESC}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{chart-settings-3}{%
-\paragraph*{Chart Settings}\label{chart-settings-3}}
-\addcontentsline{toc}{paragraph}{Chart Settings}
-
-\begin{itemize}
-\tightlist
-\item
-  Data Tab
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Datasource \& Chart Type
-
-    \begin{itemize}
-    \tightlist
-    \item
-      Visualization Type: Table
-    \end{itemize}
-  \item
-    Time
-
-    \begin{itemize}
-    \tightlist
-    \item
-      Time range: No filter
-    \end{itemize}
-  \item
-    Query
-
-    \begin{itemize}
-    \tightlist
-    \item
-      Query Mode: Raw Records
-    \item
-      Columns: name, visit\_type, num\_persons, percent\_persons with label persons (\%), records\_per\_person
-    \item
-      Row limit: None
-    \end{itemize}
-  \end{itemize}
-\item
-  Customize Tab
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Options
-
-    \begin{itemize}
-    \tightlist
-    \item
-      Show Cell Bars: off
-    \end{itemize}
-  \end{itemize}
-\end{itemize}
+\includegraphics{images/11-network-dashboard/07-visit/02-visit-type.png}
 
 \hypertarget{concept-browser-tab}{%
 \subsection*{Concept Browser Tab}\label{concept-browser-tab}}
 \addcontentsline{toc}{subsection}{Concept Browser Tab}
 
-\hypertarget{concept-browser-table}{%
-\subsubsection*{Concept Browser Table}\label{concept-browser-table}}
-\addcontentsline{toc}{subsubsection}{Concept Browser Table}
+\hypertarget{domain-filter}{%
+\subsubsection*{Domain Filter}\label{domain-filter}}
+\addcontentsline{toc}{subsubsection}{Domain Filter}
 
-Same chart used on the \protect\hyperlink{conceptBrowserTable}{Concept Browser} dashboard.
+Materialized View: \href{materialized-views-1.html\#domain_filter}{domain\_filter}
 
-\hypertarget{meta-data-tab}{%
-\subsection*{Meta Data Tab}\label{meta-data-tab}}
-\addcontentsline{toc}{subsection}{Meta Data Tab}
+\includegraphics{images/11-network-dashboard/08-concept-browser/01-domain-filter.png}
 
-\hypertarget{meta-data-table}{%
-\subsubsection*{Meta Data Table}\label{meta-data-table}}
-\addcontentsline{toc}{subsubsection}{Meta Data Table}
+\hypertarget{concept-browser}{%
+\subsubsection*{Concept Browser}\label{concept-browser}}
+\addcontentsline{toc}{subsubsection}{Concept Browser}
 
-Same chart used on the \protect\hyperlink{metaDataTable}{General} dashboard.
+Materialized View: \href{materialized-views-1.html\#concept_browser_table3}{concept\_browser\_table3}
+
+\includegraphics{images/11-network-dashboard/08-concept-browser/02-concept-browser.png}
+
+\hypertarget{concept-network-coverage}{%
+\subsubsection*{Concept Network Coverage}\label{concept-network-coverage}}
+\addcontentsline{toc}{subsubsection}{Concept Network Coverage}
+
+Materialized View: \href{materialized-views-1.html\#concept_coverage2}{concept\_coverage2}
+
+\includegraphics{images/11-network-dashboard/08-concept-browser/03-concept-network-coverage.png}
+
+\hypertarget{about-tab}{%
+\subsection*{About Tab}\label{about-tab}}
+\addcontentsline{toc}{subsection}{About Tab}
+
+Markdown dashboard components
+
+\includegraphics{images/11-network-dashboard/09-about.png}
 
 \hypertarget{database-level-dashboard}{%
 \section{Database-Level Dashboard}\label{database-level-dashboard}}
@@ -2069,14 +1853,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
-\hypertarget{sql-query-4}{%
-\subsubsection*{SQL query}\label{sql-query-4}}
+\hypertarget{sql-query}{%
+\subsubsection*{SQL query}\label{sql-query}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
-\hypertarget{chart-settings-4}{%
-\subsubsection*{Chart settings}\label{chart-settings-4}}
+\hypertarget{chart-settings}{%
+\subsubsection*{Chart settings}\label{chart-settings}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -2309,8 +2093,8 @@ Remove legend.
   \end{itemize}
 \end{itemize}
 
-\hypertarget{visit-type-table-1}{%
-\subsubsection*{Visit Type Table}\label{visit-type-table-1}}
+\hypertarget{visit-type-table}{%
+\subsubsection*{Visit Type Table}\label{visit-type-table}}
 \addcontentsline{toc}{subsubsection}{Visit Type Table}
 
 Remove the \texttt{name} field from the columns to display.
@@ -2337,8 +2121,8 @@ Remove the \texttt{name} field from the columns to display.
 \subsection*{Concept Browser Tab}\label{concept-browser-tab-1}}
 \addcontentsline{toc}{subsection}{Concept Browser Tab}
 
-\hypertarget{concept-browser-table-1}{%
-\subsubsection*{Concept Browser Table}\label{concept-browser-table-1}}
+\hypertarget{concept-browser-table}{%
+\subsubsection*{Concept Browser Table}\label{concept-browser-table}}
 \addcontentsline{toc}{subsubsection}{Concept Browser Table}
 
 Remove the \texttt{source\_name} field from the columns to display.
@@ -2361,12 +2145,12 @@ Remove the \texttt{source\_name} field from the columns to display.
   \end{itemize}
 \end{itemize}
 
-\hypertarget{meta-data-tab-1}{%
-\subsection*{Meta Data Tab}\label{meta-data-tab-1}}
+\hypertarget{meta-data-tab}{%
+\subsection*{Meta Data Tab}\label{meta-data-tab}}
 \addcontentsline{toc}{subsection}{Meta Data Tab}
 
-\hypertarget{meta-data-table-1}{%
-\subsubsection*{Meta Data Table}\label{meta-data-table-1}}
+\hypertarget{meta-data-table}{%
+\subsubsection*{Meta Data Table}\label{meta-data-table}}
 \addcontentsline{toc}{subsubsection}{Meta Data Table}
 
 Remove the \texttt{name} field from the columns to display.
@@ -2608,6 +2392,598 @@ Remove the \texttt{name} field from the columns to display.
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{avg_num_of_records_per_person}{%
+\subsection*{avg\_num\_of\_records\_per\_person}\label{avg_num_of_records_per_person}}
+\addcontentsline{toc}{subsection}{avg\_num\_of\_records\_per\_person}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT} \KeywordTok{source}\NormalTok{.name,}
+   \KeywordTok{source}\NormalTok{.acronym,}
+   \KeywordTok{source}\NormalTok{.database\_type,}
+\NormalTok{   country.country,}
+       \ControlFlowTok{CASE}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{201}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Visit\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{401}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{501}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Death\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{601}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{701}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug Exposure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{801}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1801}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2101}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2201}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Note\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:text}
+       \ControlFlowTok{END} \KeywordTok{AS}\NormalTok{ data\_domain,}
+\NormalTok{   (}\FunctionTok{sum}\NormalTok{(achilles.count\_value) }\OperatorTok{/} \FunctionTok{avg}\NormalTok{(counts.num\_persons)) }\KeywordTok{AS}\NormalTok{ records\_per\_person}
+  \KeywordTok{FROM}\NormalTok{ (((achilles\_results achilles}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
+    \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.data\_source\_id,}
+\NormalTok{           achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ num\_persons}
+          \KeywordTok{FROM}\NormalTok{ achilles\_results}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{)) counts }\KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=}\NormalTok{ counts.data\_source\_id)))}
+ \KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ achilles.analysis\_id, }\KeywordTok{source}\NormalTok{.name, }\KeywordTok{source}\NormalTok{.acronym, }\KeywordTok{source}\NormalTok{.database\_type, country.country}
+\KeywordTok{HAVING}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{201}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{401}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{501}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{601}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{701}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2101}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2201}\NormalTok{):}\CharTok{:bigint}\NormalTok{]));}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{data_domain_total_num_of_records}{%
+\subsection*{data\_domain\_total\_num\_of\_records}\label{data_domain_total_num_of_records}}
+\addcontentsline{toc}{subsection}{data\_domain\_total\_num\_of\_records}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT}\NormalTok{ data\_source.name,}
+\NormalTok{   data\_source.acronym,}
+\NormalTok{   data\_source.database\_type,}
+\NormalTok{   country.country,}
+       \ControlFlowTok{CASE}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{201}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Visit\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{401}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{501}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Death\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{601}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{701}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug Exposure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{801}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1801}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{2101}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{2201}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Note\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:text}
+       \ControlFlowTok{END} \KeywordTok{AS}\NormalTok{ data\_domain,}
+   \FunctionTok{sum}\NormalTok{(achilles\_results.count\_value) }\KeywordTok{AS} \FunctionTok{count}
+  \KeywordTok{FROM}\NormalTok{ ((achilles\_results}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ ((achilles\_results.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ data\_source.country\_id)))}
+ \KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ data\_source.name, data\_source.acronym, data\_source.database\_type, country.country, achilles\_results.analysis\_id}
+\KeywordTok{HAVING}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{201}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{401}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{501}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{601}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{701}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2101}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2201}\NormalTok{):}\CharTok{:bigint}\NormalTok{]));}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{number_of_distinct_per_person}{%
+\subsection*{number\_of\_distinct\_per\_person}\label{number_of_distinct_per_person}}
+\addcontentsline{toc}{subsection}{number\_of\_distinct\_per\_person}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT} \KeywordTok{source}\NormalTok{.name,}
+   \KeywordTok{source}\NormalTok{.acronym,}
+\NormalTok{   country.country,}
+\NormalTok{   achilles.analysis\_id,}
+       \ControlFlowTok{CASE}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{203}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Visit\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{403}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{603}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{703}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug Exposure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{803}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1803}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:text}
+       \ControlFlowTok{END} \KeywordTok{AS}\NormalTok{ data\_domain,}
+\NormalTok{   achilles.count\_value,}
+\NormalTok{   achilles.min\_value,}
+\NormalTok{   achilles.p10\_value }\KeywordTok{AS}\NormalTok{ p10,}
+\NormalTok{   achilles.p25\_value }\KeywordTok{AS}\NormalTok{ p25,}
+\NormalTok{   achilles.median\_value }\KeywordTok{AS} \FunctionTok{median}\NormalTok{,}
+\NormalTok{   achilles.p75\_value }\KeywordTok{AS}\NormalTok{ p75,}
+\NormalTok{   achilles.p90\_value }\KeywordTok{AS}\NormalTok{ p90,}
+\NormalTok{   achilles.max\_value}
+  \KeywordTok{FROM}\NormalTok{ ((achilles\_results achilles}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((}\KeywordTok{source}\NormalTok{.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)))}
+ \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{203}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{403}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{603}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{703}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{803}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{183}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))}
+ \KeywordTok{ORDER} \KeywordTok{BY} \KeywordTok{source}\NormalTok{.name;}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{data_provenance}{%
+\subsection*{data\_provenance}\label{data_provenance}}
+\addcontentsline{toc}{subsection}{data\_provenance}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT} \KeywordTok{source}\NormalTok{.name,}
+   \KeywordTok{source}\NormalTok{.acronym,}
+   \KeywordTok{source}\NormalTok{.database\_type,}
+\NormalTok{   country.country,}
+       \ControlFlowTok{CASE}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{405}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{605}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{705}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{805}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1805}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2105}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{ELSE} \StringTok{\textquotesingle{}Other\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+       \ControlFlowTok{END} \KeywordTok{AS}\NormalTok{ domain\_name,}
+\NormalTok{   c1.concept\_name,}
+   \FunctionTok{sum}\NormalTok{(achilles.count\_value) }\KeywordTok{AS}\NormalTok{ num\_records}
+  \KeywordTok{FROM}\NormalTok{ (((achilles\_results achilles}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
+    \KeywordTok{JOIN}\NormalTok{ concept c1 }\KeywordTok{ON}\NormalTok{ ((achilles.stratum\_2 }\OperatorTok{=}\NormalTok{ (c1.concept\_id):}\CharTok{:text}\NormalTok{)))}
+ \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{405}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{605}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{705}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{805}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1805}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2105}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))}
+ \KeywordTok{GROUP} \KeywordTok{BY} \KeywordTok{source}\NormalTok{.name, }\KeywordTok{source}\NormalTok{.acronym, }\KeywordTok{source}\NormalTok{.database\_type, country.country, c1.concept\_name,}
+       \ControlFlowTok{CASE}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{405}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{605}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{705}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{805}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1805}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2105}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{ELSE} \StringTok{\textquotesingle{}Other\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+       \ControlFlowTok{END}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{num_of_patients_in_observation_period}{%
+\subsection*{num\_of\_patients\_in\_observation\_period}\label{num_of_patients_in_observation_period}}
+\addcontentsline{toc}{subsection}{num\_of\_patients\_in\_observation\_period}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT} \KeywordTok{source}\NormalTok{.name,}
+   \KeywordTok{source}\NormalTok{.acronym,}
+   \KeywordTok{source}\NormalTok{.database\_type,}
+\NormalTok{   country.country,}
+   \FunctionTok{to\_date}\NormalTok{(achilles.stratum\_1, }\StringTok{\textquotesingle{}YYYYMM\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\KeywordTok{AS} \DataTypeTok{date}\NormalTok{,}
+\NormalTok{   achilles.count\_value }\KeywordTok{AS} \OtherTok{"Nr\_patients"}
+  \KeywordTok{FROM}\NormalTok{ ((achilles\_results achilles}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
+ \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{110}\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{cumulative_observation_time}{%
+\subsection*{cumulative\_observation\_time}\label{cumulative_observation_time}}
+\addcontentsline{toc}{subsection}{cumulative\_observation\_time}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT}\NormalTok{ data\_source.name,}
+\NormalTok{   data\_source.acronym,}
+\NormalTok{   data\_source.database\_type,}
+\NormalTok{   country.country,}
+\NormalTok{   cumulative\_sums.xlengthofobservation,}
+   \FunctionTok{round}\NormalTok{((cumulative\_sums.cumulative\_sum }\OperatorTok{/}\NormalTok{ (totals.total):}\CharTok{:numeric}\NormalTok{), }\DecValTok{5}\NormalTok{) }\KeywordTok{AS}\NormalTok{ ypercentpersons}
+  \KeywordTok{FROM}\NormalTok{ (((( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.data\_source\_id,}
+\NormalTok{           ((achilles\_results.stratum\_1):}\CharTok{:integer} \OperatorTok{*} \DecValTok{30}\NormalTok{) }\KeywordTok{AS}\NormalTok{ xlengthofobservation,}
+           \FunctionTok{sum}\NormalTok{(achilles\_results.count\_value) }\KeywordTok{OVER}\NormalTok{ (}\KeywordTok{PARTITION} \KeywordTok{BY}\NormalTok{ achilles\_results.data\_source\_id }\KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ (achilles\_results.stratum\_1):}\CharTok{:integer} \KeywordTok{DESC}\NormalTok{) }\KeywordTok{AS}\NormalTok{ cumulative\_sum}
+          \KeywordTok{FROM}\NormalTok{ achilles\_results}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{108}\NormalTok{)) cumulative\_sums}
+    \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.data\_source\_id,}
+\NormalTok{           achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ total}
+          \KeywordTok{FROM}\NormalTok{ achilles\_results}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{)) totals }\KeywordTok{ON}\NormalTok{ ((cumulative\_sums.data\_source\_id }\OperatorTok{=}\NormalTok{ totals.data\_source\_id)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ ((cumulative\_sums.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ data\_source.country\_id)))}
+ \KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ data\_source.name, cumulative\_sums.xlengthofobservation;}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{number_of_observation_periods}{%
+\subsection*{number\_of\_observation\_periods}\label{number_of_observation_periods}}
+\addcontentsline{toc}{subsection}{number\_of\_observation\_periods}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT}\NormalTok{ ar.data\_source\_id }\KeywordTok{AS} \KeywordTok{id}\NormalTok{,}
+\NormalTok{   ds.acronym,}
+\NormalTok{   ds.name,}
+\NormalTok{   country.country,}
+\NormalTok{   ar.stratum\_1,}
+\NormalTok{   ar.count\_value,}
+\NormalTok{   pa.nrpatients }\KeywordTok{AS}\NormalTok{ patients,}
+   \FunctionTok{round}\NormalTok{((((}\DecValTok{100}\NormalTok{):}\CharTok{:numeric} \OperatorTok{*}\NormalTok{ (ar.count\_value):}\CharTok{:numeric}\NormalTok{) }\OperatorTok{/}\NormalTok{ (pa.nrpatients):}\CharTok{:numeric}\NormalTok{), }\DecValTok{2}\NormalTok{) }\KeywordTok{AS}\NormalTok{ percentage}
+  \KeywordTok{FROM}\NormalTok{ (((achilles\_results ar}
+    \KeywordTok{JOIN}\NormalTok{ data\_source ds }\KeywordTok{ON}\NormalTok{ ((ds.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ ar.data\_source\_id)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((ds.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ nrpatients,}
+\NormalTok{           achilles\_results.data\_source\_id}
+          \KeywordTok{FROM}\NormalTok{ achilles\_results}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{0}\NormalTok{)) pa }\KeywordTok{ON}\NormalTok{ ((pa.data\_source\_id }\OperatorTok{=}\NormalTok{ ds.}\KeywordTok{id}\NormalTok{)))}
+ \KeywordTok{WHERE}\NormalTok{ (ar.analysis\_id }\OperatorTok{=} \DecValTok{113}\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{length_of_observation_of_first_observation_period}{%
+\subsection*{length\_of\_observation\_of\_first\_observation\_period}\label{length_of_observation_of_first_observation_period}}
+\addcontentsline{toc}{subsection}{length\_of\_observation\_of\_first\_observation\_period}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT} \KeywordTok{source}\NormalTok{.name,}
+   \KeywordTok{source}\NormalTok{.acronym,}
+\NormalTok{   country.country,}
+\NormalTok{   achilles.count\_value,}
+\NormalTok{   achilles.min\_value,}
+\NormalTok{   achilles.p10\_value }\KeywordTok{AS}\NormalTok{ p10,}
+\NormalTok{   achilles.p25\_value }\KeywordTok{AS}\NormalTok{ p25,}
+\NormalTok{   achilles.median\_value }\KeywordTok{AS} \FunctionTok{median}\NormalTok{,}
+\NormalTok{   achilles.p75\_value }\KeywordTok{AS}\NormalTok{ p75,}
+\NormalTok{   achilles.p90\_value }\KeywordTok{AS}\NormalTok{ p90,}
+\NormalTok{   achilles.max\_value}
+  \KeywordTok{FROM}\NormalTok{ ((achilles\_results achilles}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((}\KeywordTok{source}\NormalTok{.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)))}
+ \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{105}\NormalTok{)}
+ \KeywordTok{ORDER} \KeywordTok{BY} \KeywordTok{source}\NormalTok{.name;}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{visit_type_bar_chart}{%
+\subsection*{visit\_type\_bar\_chart}\label{visit_type_bar_chart}}
+\addcontentsline{toc}{subsection}{visit\_type\_bar\_chart}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT}\NormalTok{ data\_source.name,}
+\NormalTok{   data\_source.acronym,}
+\NormalTok{   data\_source.database\_type,}
+\NormalTok{   country.country,}
+\NormalTok{   concept.concept\_name,}
+\NormalTok{   achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ num\_persons}
+  \KeywordTok{FROM}\NormalTok{ (((( }\KeywordTok{SELECT}\NormalTok{ achilles\_results\_1.}\KeywordTok{id}\NormalTok{,}
+\NormalTok{           achilles\_results\_1.analysis\_id,}
+\NormalTok{           achilles\_results\_1.stratum\_1,}
+\NormalTok{           achilles\_results\_1.stratum\_2,}
+\NormalTok{           achilles\_results\_1.stratum\_3,}
+\NormalTok{           achilles\_results\_1.stratum\_4,}
+\NormalTok{           achilles\_results\_1.stratum\_5,}
+\NormalTok{           achilles\_results\_1.count\_value,}
+\NormalTok{           achilles\_results\_1.data\_source\_id,}
+\NormalTok{           achilles\_results\_1.avg\_value,}
+\NormalTok{           achilles\_results\_1.max\_value,}
+\NormalTok{           achilles\_results\_1.median\_value,}
+\NormalTok{           achilles\_results\_1.min\_value,}
+\NormalTok{           achilles\_results\_1.p10\_value,}
+\NormalTok{           achilles\_results\_1.p25\_value,}
+\NormalTok{           achilles\_results\_1.p75\_value,}
+\NormalTok{           achilles\_results\_1.p90\_value,}
+\NormalTok{           achilles\_results\_1.stdev\_value}
+          \KeywordTok{FROM}\NormalTok{ achilles\_results achilles\_results\_1}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results\_1.analysis\_id }\OperatorTok{=} \DecValTok{200}\NormalTok{)) achilles\_results}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ ((achilles\_results.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ data\_source.country\_id)))}
+    \KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON}\NormalTok{ (((achilles\_results.stratum\_1):}\CharTok{:integer} \OperatorTok{=}\NormalTok{ concept.concept\_id)));}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{visit_type_table}{%
+\subsection*{visit\_type\_table}\label{visit_type_table}}
+\addcontentsline{toc}{subsection}{visit\_type\_table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT}\NormalTok{ data\_source.name,}
+\NormalTok{   data\_source.acronym,}
+\NormalTok{   data\_source.database\_type,}
+\NormalTok{   country.country,}
+\NormalTok{   concept.concept\_name,}
+\NormalTok{   ar1.count\_value }\KeywordTok{AS}\NormalTok{ num\_persons,}
+   \FunctionTok{round}\NormalTok{(((}\FloatTok{100.0} \OperatorTok{*}\NormalTok{ (ar1.count\_value):}\CharTok{:numeric}\NormalTok{) }\OperatorTok{/}\NormalTok{ (denom.count\_value):}\CharTok{:numeric}\NormalTok{), }\DecValTok{2}\NormalTok{) }\KeywordTok{AS}\NormalTok{ percent\_persons,}
+   \FunctionTok{round}\NormalTok{(((}\FloatTok{1.0} \OperatorTok{*}\NormalTok{ (ar2.count\_value):}\CharTok{:numeric}\NormalTok{) }\OperatorTok{/}\NormalTok{ (ar1.count\_value):}\CharTok{:numeric}\NormalTok{), }\DecValTok{2}\NormalTok{) }\KeywordTok{AS}\NormalTok{ records\_per\_person}
+  \KeywordTok{FROM}\NormalTok{ (((((( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.}\KeywordTok{id}\NormalTok{,}
+\NormalTok{           achilles\_results.analysis\_id,}
+\NormalTok{           achilles\_results.stratum\_1,}
+\NormalTok{           achilles\_results.stratum\_2,}
+\NormalTok{           achilles\_results.stratum\_3,}
+\NormalTok{           achilles\_results.stratum\_4,}
+\NormalTok{           achilles\_results.stratum\_5,}
+\NormalTok{           achilles\_results.count\_value,}
+\NormalTok{           achilles\_results.data\_source\_id,}
+\NormalTok{           achilles\_results.avg\_value,}
+\NormalTok{           achilles\_results.max\_value,}
+\NormalTok{           achilles\_results.median\_value,}
+\NormalTok{           achilles\_results.min\_value,}
+\NormalTok{           achilles\_results.p10\_value,}
+\NormalTok{           achilles\_results.p25\_value,}
+\NormalTok{           achilles\_results.p75\_value,}
+\NormalTok{           achilles\_results.p90\_value,}
+\NormalTok{           achilles\_results.stdev\_value}
+          \KeywordTok{FROM}\NormalTok{ achilles\_results}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{200}\NormalTok{)) ar1}
+    \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.}\KeywordTok{id}\NormalTok{,}
+\NormalTok{           achilles\_results.analysis\_id,}
+\NormalTok{           achilles\_results.stratum\_1,}
+\NormalTok{           achilles\_results.stratum\_2,}
+\NormalTok{           achilles\_results.stratum\_3,}
+\NormalTok{           achilles\_results.stratum\_4,}
+\NormalTok{           achilles\_results.stratum\_5,}
+\NormalTok{           achilles\_results.count\_value,}
+\NormalTok{           achilles\_results.data\_source\_id,}
+\NormalTok{           achilles\_results.avg\_value,}
+\NormalTok{           achilles\_results.max\_value,}
+\NormalTok{           achilles\_results.median\_value,}
+\NormalTok{           achilles\_results.min\_value,}
+\NormalTok{           achilles\_results.p10\_value,}
+\NormalTok{           achilles\_results.p25\_value,}
+\NormalTok{           achilles\_results.p75\_value,}
+\NormalTok{           achilles\_results.p90\_value,}
+\NormalTok{           achilles\_results.stdev\_value}
+          \KeywordTok{FROM}\NormalTok{ achilles\_results}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{201}\NormalTok{)) ar2 }\KeywordTok{ON}\NormalTok{ (((ar1.stratum\_1 }\OperatorTok{=}\NormalTok{ ar2.stratum\_1) }\KeywordTok{AND}\NormalTok{ (ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ ar2.data\_source\_id))))}
+    \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.}\KeywordTok{id}\NormalTok{,}
+\NormalTok{           achilles\_results.analysis\_id,}
+\NormalTok{           achilles\_results.stratum\_1,}
+\NormalTok{           achilles\_results.stratum\_2,}
+\NormalTok{           achilles\_results.stratum\_3,}
+\NormalTok{           achilles\_results.stratum\_4,}
+\NormalTok{           achilles\_results.stratum\_5,}
+\NormalTok{           achilles\_results.count\_value,}
+\NormalTok{           achilles\_results.data\_source\_id,}
+\NormalTok{           achilles\_results.avg\_value,}
+\NormalTok{           achilles\_results.max\_value,}
+\NormalTok{           achilles\_results.median\_value,}
+\NormalTok{           achilles\_results.min\_value,}
+\NormalTok{           achilles\_results.p10\_value,}
+\NormalTok{           achilles\_results.p25\_value,}
+\NormalTok{           achilles\_results.p75\_value,}
+\NormalTok{           achilles\_results.p90\_value,}
+\NormalTok{           achilles\_results.stdev\_value}
+          \KeywordTok{FROM}\NormalTok{ achilles\_results}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{)) denom }\KeywordTok{ON}\NormalTok{ ((ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ denom.data\_source\_id)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ ((data\_source.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ ar1.data\_source\_id)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ data\_source.country\_id)))}
+    \KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON}\NormalTok{ (((ar1.stratum\_1):}\CharTok{:integer} \OperatorTok{=}\NormalTok{ concept.concept\_id)))}
+ \KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ ar1.data\_source\_id, ar1.count\_value }\KeywordTok{DESC}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{domain_filter}{%
+\subsection*{domain\_filter}\label{domain_filter}}
+\addcontentsline{toc}{subsection}{domain\_filter}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT}\NormalTok{ concept.concept\_name,}
+\NormalTok{   concept.domain\_id,}
+   \KeywordTok{source}\NormalTok{.name,}
+   \KeywordTok{source}\NormalTok{.acronym,}
+   \KeywordTok{source}\NormalTok{.database\_type,}
+\NormalTok{   country.country}
+  \KeywordTok{FROM}\NormalTok{ (((achilles\_results}
+    \KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON}\NormalTok{ (((achilles\_results.stratum\_1):}\CharTok{:bigint} \OperatorTok{=}\NormalTok{ concept.concept\_id)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles\_results.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
+ \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{201}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{401}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{601}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{701}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{901}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1001}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{200}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{400}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{600}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{700}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{800}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1800}\NormalTok{):}\CharTok{:bigint}\NormalTok{]));}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{concept_browser_table3}{%
+\subsection*{concept\_browser\_table3}\label{concept_browser_table3}}
+\addcontentsline{toc}{subsection}{concept\_browser\_table3}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT} \KeywordTok{source}\NormalTok{.name,}
+   \KeywordTok{source}\NormalTok{.acronym,}
+   \KeywordTok{source}\NormalTok{.database\_type,}
+\NormalTok{   country.country,}
+\NormalTok{   ((((}\StringTok{\textquotesingle{}\textless{}a href="https://athena.ohdsi.org/search{-}terms/terms/\textquotesingle{}}\NormalTok{:}\CharTok{:text} \OperatorTok{||}\NormalTok{ ar1.concept\_id) }\OperatorTok{||} \StringTok{\textquotesingle{}"target="\_blank"\textgreater{}\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\OperatorTok{||}\NormalTok{ ar1.concept\_id) }\OperatorTok{||} \StringTok{\textquotesingle{}\textless{}/a\textgreater{}\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{   concept.concept\_name,}
+\NormalTok{   concept.domain\_id,}
+\NormalTok{   (ar1.rc):}\CharTok{:integer} \KeywordTok{AS}\NormalTok{ rc,}
+\NormalTok{   (ar2.drc):}\CharTok{:integer} \KeywordTok{AS}\NormalTok{ drc}
+  \KeywordTok{FROM}\NormalTok{ ((((( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.data\_source\_id,}
+\NormalTok{           achilles\_results.analysis\_id,}
+\NormalTok{           achilles\_results.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{           achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ rc}
+          \KeywordTok{FROM}\NormalTok{ achilles\_results}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{401}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{601}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{701}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2101}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))) ar1}
+    \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ ar.data\_source\_id,}
+\NormalTok{           ar.analysis\_id,}
+\NormalTok{           ar.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{           ar.count\_value }\KeywordTok{AS}\NormalTok{ drc}
+          \KeywordTok{FROM}\NormalTok{ achilles\_results ar}
+         \KeywordTok{WHERE}\NormalTok{ (ar.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{430}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{630}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{730}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{830}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1830}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2130}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))) ar2 }\KeywordTok{ON}\NormalTok{ (((ar1.concept\_id }\OperatorTok{=}\NormalTok{ ar2.concept\_id) }\KeywordTok{AND}\NormalTok{ (ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ ar2.data\_source\_id))))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((ar1.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((}\KeywordTok{source}\NormalTok{.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ concept concept }\KeywordTok{ON}\NormalTok{ ((ar1.concept\_id }\OperatorTok{=}\NormalTok{ (concept.concept\_id):}\CharTok{:text}\NormalTok{)))}
+ \KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ ((ar2.drc):}\CharTok{:integer}\NormalTok{) }\KeywordTok{DESC}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{concept_coverage2}{%
+\subsection*{concept\_coverage2}\label{concept_coverage2}}
+\addcontentsline{toc}{subsection}{concept\_coverage2}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT} \KeywordTok{source}\NormalTok{.name }\KeywordTok{AS}\NormalTok{ source\_name,}
+   \KeywordTok{source}\NormalTok{.database\_type,}
+\NormalTok{   country.country,}
+\NormalTok{   ((((}\StringTok{\textquotesingle{}\textless{}a href="https://athena.ohdsi.org/search{-}terms/terms/\textquotesingle{}}\NormalTok{:}\CharTok{:text} \OperatorTok{||}\NormalTok{ concept.concept\_id) }\OperatorTok{||} \StringTok{\textquotesingle{}" target="\_blank"\textgreater{}\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\OperatorTok{||}\NormalTok{ concept.concept\_id) }\OperatorTok{||} \StringTok{\textquotesingle{}\textless{}/a\textgreater{}\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{   concept.concept\_name,}
+\NormalTok{   concept.domain\_id,}
+   \FunctionTok{sum}\NormalTok{((ar1.rc):}\CharTok{:integer}\NormalTok{) }\KeywordTok{AS}\NormalTok{ rc,}
+   \FunctionTok{sum}\NormalTok{((ar2.drc):}\CharTok{:integer}\NormalTok{) }\KeywordTok{AS}\NormalTok{ drc}
+  \KeywordTok{FROM}\NormalTok{ ((((( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.data\_source\_id,}
+\NormalTok{           achilles\_results.analysis\_id,}
+\NormalTok{           achilles\_results.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{           achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ rc}
+          \KeywordTok{FROM}\NormalTok{ achilles\_results}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{401}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{601}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{701}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2101}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))) ar1}
+    \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ ar.data\_source\_id,}
+\NormalTok{           ar.analysis\_id,}
+\NormalTok{           ar.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{           ar.count\_value }\KeywordTok{AS}\NormalTok{ drc}
+          \KeywordTok{FROM}\NormalTok{ achilles\_results ar}
+         \KeywordTok{WHERE}\NormalTok{ (ar.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{430}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{630}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{730}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{830}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1830}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2130}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))) ar2 }\KeywordTok{ON}\NormalTok{ (((ar1.concept\_id }\OperatorTok{=}\NormalTok{ ar2.concept\_id) }\KeywordTok{AND}\NormalTok{ (ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ ar2.data\_source\_id))))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((ar1.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
+    \KeywordTok{JOIN}\NormalTok{ concept concept }\KeywordTok{ON}\NormalTok{ ((ar1.concept\_id }\OperatorTok{=}\NormalTok{ (concept.concept\_id):}\CharTok{:text}\NormalTok{)))}
+ \KeywordTok{GROUP} \KeywordTok{BY} \KeywordTok{source}\NormalTok{.name, }\KeywordTok{source}\NormalTok{.database\_type, country.country, concept.domain\_id, concept.concept\_id, concept.concept\_name;}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section}{%
+\subsection*{}\label{section}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-1}{%
+\subsection*{}\label{section-1}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-2}{%
+\subsection*{}\label{section-2}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-3}{%
+\subsection*{}\label{section-3}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-4}{%
+\subsection*{}\label{section-4}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-5}{%
+\subsection*{}\label{section-5}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-6}{%
+\subsection*{}\label{section-6}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-7}{%
+\subsection*{}\label{section-7}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-8}{%
+\subsection*{}\label{section-8}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-9}{%
+\subsection*{}\label{section-9}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-10}{%
+\subsection*{}\label{section-10}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-11}{%
+\subsection*{}\label{section-11}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-12}{%
+\subsection*{}\label{section-12}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-13}{%
+\subsection*{}\label{section-13}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section-14}{%
+\subsection*{}\label{section-14}}
+\addcontentsline{toc}{subsection}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
 \hypertarget{general-deprecated}{%
 \section{General {[}Deprecated{]}}\label{general-deprecated}}
 
@@ -2640,8 +3016,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 
 \textbf{For the filters to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
-\hypertarget{sql-query-5}{%
-\subsubsection*{SQL query}\label{sql-query-5}}
+\hypertarget{sql-query-1}{%
+\subsubsection*{SQL query}\label{sql-query-1}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -2655,8 +3031,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-5}{%
-\subsubsection*{Chart settings}\label{chart-settings-5}}
+\hypertarget{chart-settings-1}{%
+\subsubsection*{Chart settings}\label{chart-settings-1}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -2711,8 +3087,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \includegraphics[width=1\linewidth]{images/03-general/02-total_number_of_patients} \caption{Settings for creating the Total Number of Patients chart}\label{fig:totalNumberOfPatients}
 \end{figure}
 
-\hypertarget{sql-query-6}{%
-\subsubsection*{SQL query}\label{sql-query-6}}
+\hypertarget{sql-query-2}{%
+\subsubsection*{SQL query}\label{sql-query-2}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -2729,8 +3105,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-6}{%
-\subsubsection*{Chart settings}\label{chart-settings-6}}
+\hypertarget{chart-settings-2}{%
+\subsubsection*{Chart settings}\label{chart-settings-2}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -2795,8 +3171,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \includegraphics[width=1\linewidth]{images/03-general/03-network_growth_by_date} \caption{Settings for creating the Network Growth by Date chart}\label{fig:networkGrowthByDate}
 \end{figure}
 
-\hypertarget{sql-query-7}{%
-\subsubsection*{SQL query}\label{sql-query-7}}
+\hypertarget{sql-query-3}{%
+\subsubsection*{SQL query}\label{sql-query-3}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -2819,8 +3195,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-7}{%
-\subsubsection*{Chart settings}\label{chart-settings-7}}
+\hypertarget{chart-settings-3}{%
+\subsubsection*{Chart settings}\label{chart-settings-3}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -2911,8 +3287,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-8}{%
-\subsubsection*{Chart settings}\label{chart-settings-8}}
+\hypertarget{chart-settings-4}{%
+\subsubsection*{Chart settings}\label{chart-settings-4}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -2983,14 +3359,14 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \includegraphics[width=1\linewidth]{images/03-general/05-database_types_per_country} \caption{Settings for creating the Database Type per Country chart}\label{fig:dbsTypesPerCountry}
 \end{figure}
 
-\hypertarget{sql-query-8}{%
-\subsubsection*{SQL query}\label{sql-query-8}}
+\hypertarget{sql-query-4}{%
+\subsubsection*{SQL query}\label{sql-query-4}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 
-\hypertarget{chart-settings-9}{%
-\subsubsection*{Chart settings}\label{chart-settings-9}}
+\hypertarget{chart-settings-5}{%
+\subsubsection*{Chart settings}\label{chart-settings-5}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -3049,8 +3425,8 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \includegraphics[width=1\linewidth]{images/03-general/06-world_map} \caption{Settings for creating the World Map chart}\label{fig:worldMap}
 \end{figure}
 
-\hypertarget{sql-query-9}{%
-\subsubsection*{SQL query}\label{sql-query-9}}
+\hypertarget{sql-query-5}{%
+\subsubsection*{SQL query}\label{sql-query-5}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -3066,8 +3442,8 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-10}{%
-\subsubsection*{Chart settings}\label{chart-settings-10}}
+\hypertarget{chart-settings-6}{%
+\subsubsection*{Chart settings}\label{chart-settings-6}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -3122,8 +3498,8 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \includegraphics[width=1\linewidth]{images/03-general/07-meta_data} \caption{Settings for creating the Meta Data chart}\label{fig:metaData}
 \end{figure}
 
-\hypertarget{sql-query-10}{%
-\subsubsection*{SQL query}\label{sql-query-10}}
+\hypertarget{sql-query-6}{%
+\subsubsection*{SQL query}\label{sql-query-6}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -3144,8 +3520,8 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-11}{%
-\subsubsection*{Chart settings}\label{chart-settings-11}}
+\hypertarget{chart-settings-7}{%
+\subsubsection*{Chart settings}\label{chart-settings-7}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -3230,14 +3606,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
-\hypertarget{sql-query-11}{%
-\subsubsection*{SQL query}\label{sql-query-11}}
+\hypertarget{sql-query-7}{%
+\subsubsection*{SQL query}\label{sql-query-7}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
-\hypertarget{chart-settings-12}{%
-\subsubsection*{Chart settings}\label{chart-settings-12}}
+\hypertarget{chart-settings-8}{%
+\subsubsection*{Chart settings}\label{chart-settings-8}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -3292,8 +3668,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \includegraphics[width=1\linewidth]{images/04-person/02-age_at_first_observation_table} \caption{Settings for creating the Age at First Observation Table chart}\label{fig:ageFirstObservationTable}
 \end{figure}
 
-\hypertarget{sql-query-12}{%
-\subsubsection*{SQL query}\label{sql-query-12}}
+\hypertarget{sql-query-8}{%
+\subsubsection*{SQL query}\label{sql-query-8}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -3318,8 +3694,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-13}{%
-\subsubsection*{Chart settings}\label{chart-settings-13}}
+\hypertarget{chart-settings-9}{%
+\subsubsection*{Chart settings}\label{chart-settings-9}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -3380,8 +3756,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \includegraphics[width=1\linewidth]{images/04-person/03-age_at_first_observation_bar} \caption{Settings for creating the Age at First Observation Bar chart}\label{fig:ageFirstObservationBar}
 \end{figure}
 
-\hypertarget{sql-query-13}{%
-\subsubsection*{SQL query}\label{sql-query-13}}
+\hypertarget{sql-query-9}{%
+\subsubsection*{SQL query}\label{sql-query-9}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -3396,8 +3772,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-14}{%
-\subsubsection*{Chart settings}\label{chart-settings-14}}
+\hypertarget{chart-settings-10}{%
+\subsubsection*{Chart settings}\label{chart-settings-10}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -3474,8 +3850,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \includegraphics[width=1\linewidth]{images/04-person/04-year_of_birth} \caption{Settings for creating the Year of Birth chart}\label{fig:yearOfBirth}
 \end{figure}
 
-\hypertarget{sql-query-14}{%
-\subsubsection*{SQL query}\label{sql-query-14}}
+\hypertarget{sql-query-10}{%
+\subsubsection*{SQL query}\label{sql-query-10}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -3490,8 +3866,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-15}{%
-\subsubsection*{Chart settings}\label{chart-settings-15}}
+\hypertarget{chart-settings-11}{%
+\subsubsection*{Chart settings}\label{chart-settings-11}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -3570,8 +3946,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \includegraphics[width=1\linewidth]{images/04-person/05-gender} \caption{Settings for creating the Gender chart}\label{fig:gender}
 \end{figure}
 
-\hypertarget{sql-query-15}{%
-\subsubsection*{SQL query}\label{sql-query-15}}
+\hypertarget{sql-query-11}{%
+\subsubsection*{SQL query}\label{sql-query-11}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -3591,8 +3967,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-16}{%
-\subsubsection*{Chart settings}\label{chart-settings-16}}
+\hypertarget{chart-settings-12}{%
+\subsubsection*{Chart settings}\label{chart-settings-12}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -3691,14 +4067,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
-\hypertarget{sql-query-16}{%
-\subsubsection*{SQL query}\label{sql-query-16}}
+\hypertarget{sql-query-12}{%
+\subsubsection*{SQL query}\label{sql-query-12}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
-\hypertarget{chart-settings-17}{%
-\subsubsection*{Chart settings}\label{chart-settings-17}}
+\hypertarget{chart-settings-13}{%
+\subsubsection*{Chart settings}\label{chart-settings-13}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -3755,8 +4131,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \includegraphics[width=1\linewidth]{images/05-observation_period/02-number_of_patients_in_observation_period} \caption{Settings for creating the Number of Patients in Observation Period chart}\label{fig:numPatientsInObserPeriod}
 \end{figure}
 
-\hypertarget{sql-query-17}{%
-\subsubsection*{SQL query}\label{sql-query-17}}
+\hypertarget{sql-query-13}{%
+\subsubsection*{SQL query}\label{sql-query-13}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -3771,8 +4147,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-18}{%
-\subsubsection*{Chart settings}\label{chart-settings-18}}
+\hypertarget{chart-settings-14}{%
+\subsubsection*{Chart settings}\label{chart-settings-14}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -3849,8 +4225,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \includegraphics[width=1\linewidth]{images/05-observation_period/03-observation_period_start_dates} \caption{Settings for creating the Observation Period Start Dates chart}\label{fig:observationPeriodStartDates}
 \end{figure}
 
-\hypertarget{sql-query-18}{%
-\subsubsection*{SQL query}\label{sql-query-18}}
+\hypertarget{sql-query-14}{%
+\subsubsection*{SQL query}\label{sql-query-14}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -3865,8 +4241,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-19}{%
-\subsubsection*{Chart settings}\label{chart-settings-19}}
+\hypertarget{chart-settings-15}{%
+\subsubsection*{Chart settings}\label{chart-settings-15}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -3943,8 +4319,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \includegraphics[width=1\linewidth]{images/05-observation_period/04-observation_period_end_dates} \caption{Settings for creating the Observation Period End Dates chart}\label{fig:observationPeriodEndDates}
 \end{figure}
 
-\hypertarget{sql-query-19}{%
-\subsubsection*{SQL query}\label{sql-query-19}}
+\hypertarget{sql-query-15}{%
+\subsubsection*{SQL query}\label{sql-query-15}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -3959,8 +4335,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-20}{%
-\subsubsection*{Chart settings}\label{chart-settings-20}}
+\hypertarget{chart-settings-16}{%
+\subsubsection*{Chart settings}\label{chart-settings-16}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -4061,14 +4437,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
-\hypertarget{sql-query-20}{%
-\subsubsection*{SQL query}\label{sql-query-20}}
+\hypertarget{sql-query-16}{%
+\subsubsection*{SQL query}\label{sql-query-16}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
-\hypertarget{chart-settings-21}{%
-\subsubsection*{Chart settings}\label{chart-settings-21}}
+\hypertarget{chart-settings-17}{%
+\subsubsection*{Chart settings}\label{chart-settings-17}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -4123,8 +4499,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \includegraphics[width=1\linewidth]{images/06-visit/02-visit_types_table} \caption{Settings for creating the Visit Type Table chart}\label{fig:visitTypeTable}
 \end{figure}
 
-\hypertarget{sql-query-21}{%
-\subsubsection*{SQL query}\label{sql-query-21}}
+\hypertarget{sql-query-17}{%
+\subsubsection*{SQL query}\label{sql-query-17}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -4142,8 +4518,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-22}{%
-\subsubsection*{Chart settings}\label{chart-settings-22}}
+\hypertarget{chart-settings-18}{%
+\subsubsection*{Chart settings}\label{chart-settings-18}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -4190,8 +4566,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \includegraphics[width=1\linewidth]{images/06-visit/03-visit_types_bars} \caption{Settings for creating the Visit Types bar chart}\label{fig:visitTypeBars}
 \end{figure}
 
-\hypertarget{sql-query-22}{%
-\subsubsection*{SQL query}\label{sql-query-22}}
+\hypertarget{sql-query-18}{%
+\subsubsection*{SQL query}\label{sql-query-18}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -4207,8 +4583,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-23}{%
-\subsubsection*{Chart settings}\label{chart-settings-23}}
+\hypertarget{chart-settings-19}{%
+\subsubsection*{Chart settings}\label{chart-settings-19}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -4307,14 +4683,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
-\hypertarget{sql-query-23}{%
-\subsubsection*{SQL query}\label{sql-query-23}}
+\hypertarget{sql-query-19}{%
+\subsubsection*{SQL query}\label{sql-query-19}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
-\hypertarget{chart-settings-24}{%
-\subsubsection*{Chart settings}\label{chart-settings-24}}
+\hypertarget{chart-settings-20}{%
+\subsubsection*{Chart settings}\label{chart-settings-20}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -4369,8 +4745,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \includegraphics[width=1\linewidth]{images/07-death/02-number_of_records} \caption{Settings for creating the Number of Records chart}\label{fig:numberOfRecords}
 \end{figure}
 
-\hypertarget{sql-query-24}{%
-\subsubsection*{SQL query}\label{sql-query-24}}
+\hypertarget{sql-query-20}{%
+\subsubsection*{SQL query}\label{sql-query-20}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -4384,8 +4760,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-25}{%
-\subsubsection*{Chart settings}\label{chart-settings-25}}
+\hypertarget{chart-settings-21}{%
+\subsubsection*{Chart settings}\label{chart-settings-21}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -4456,8 +4832,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \includegraphics[width=1\linewidth]{images/07-death/03-deaths_by_year_per_thousand_people} \caption{Settings for creating the Death by Year per Thousand People chart}\label{fig:deathByYearPerThousandPeople}
 \end{figure}
 
-\hypertarget{sql-query-25}{%
-\subsubsection*{SQL query}\label{sql-query-25}}
+\hypertarget{sql-query-21}{%
+\subsubsection*{SQL query}\label{sql-query-21}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -4472,8 +4848,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-26}{%
-\subsubsection*{Chart settings}\label{chart-settings-26}}
+\hypertarget{chart-settings-22}{%
+\subsubsection*{Chart settings}\label{chart-settings-22}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -4574,8 +4950,8 @@ or remove it so the ``Edit Dashboard'' button can show again.
 
 \textbf{For the filters to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
-\hypertarget{sql-query-26}{%
-\subsubsection*{SQL query}\label{sql-query-26}}
+\hypertarget{sql-query-22}{%
+\subsubsection*{SQL query}\label{sql-query-22}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -4591,8 +4967,8 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-27}{%
-\subsubsection*{Chart settings}\label{chart-settings-27}}
+\hypertarget{chart-settings-23}{%
+\subsubsection*{Chart settings}\label{chart-settings-23}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -4647,14 +5023,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \includegraphics[width=1\linewidth]{images/08-concepts_browser/02-number_of_concepts} \caption{Settings for creating the Number of Concepts chart}\label{fig:numOfConcepts}
 \end{figure}
 
-\hypertarget{sql-query-27}{%
-\subsubsection*{SQL Query}\label{sql-query-27}}
+\hypertarget{sql-query-23}{%
+\subsubsection*{SQL Query}\label{sql-query-23}}
 \addcontentsline{toc}{subsubsection}{SQL Query}
 
 Same as \protect\hyperlink{Dataux5cux2520Sourceux5cux2520andux5cux2520Domainux5cux2520Filters}{Data Source and Domain filters} query
 
-\hypertarget{chart-settings-28}{%
-\subsubsection*{Chart settings}\label{chart-settings-28}}
+\hypertarget{chart-settings-24}{%
+\subsubsection*{Chart settings}\label{chart-settings-24}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -4758,8 +5134,8 @@ Same as \protect\hyperlink{Dataux5cux2520Sourceux5cux2520andux5cux2520Domainux5c
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-29}{%
-\subsubsection*{Chart settings}\label{chart-settings-29}}
+\hypertarget{chart-settings-25}{%
+\subsubsection*{Chart settings}\label{chart-settings-25}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -4850,14 +5226,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
-\hypertarget{sql-query-28}{%
-\subsubsection*{SQL query}\label{sql-query-28}}
+\hypertarget{sql-query-24}{%
+\subsubsection*{SQL query}\label{sql-query-24}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
-\hypertarget{chart-settings-30}{%
-\subsubsection*{Chart settings}\label{chart-settings-30}}
+\hypertarget{chart-settings-26}{%
+\subsubsection*{Chart settings}\label{chart-settings-26}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -4912,8 +5288,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \includegraphics[width=1\linewidth]{images/09-provenance/02-condition_drug_procedure_device_measurement_observation_types} \caption{Settings for creating the Condition, Drug, Procedure, Device, Measurement and Observation charts}\label{fig:conditionDrugProcedureDeviceMeasurementObservationTypes}
 \end{figure}
 
-\hypertarget{sql-query-29}{%
-\subsubsection*{SQL query}\label{sql-query-29}}
+\hypertarget{sql-query-25}{%
+\subsubsection*{SQL query}\label{sql-query-25}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 All 6 charts use the same sql query.
@@ -4946,8 +5322,8 @@ All 6 charts use the same sql query.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-31}{%
-\subsubsection*{Chart settings}\label{chart-settings-31}}
+\hypertarget{chart-settings-27}{%
+\subsubsection*{Chart settings}\label{chart-settings-27}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -5036,14 +5412,14 @@ or remove it so the ``Edit Dashboard'' button can show again.
 
 \textbf{For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.}
 
-\hypertarget{sql-query-30}{%
-\subsubsection*{SQL query}\label{sql-query-30}}
+\hypertarget{sql-query-26}{%
+\subsubsection*{SQL query}\label{sql-query-26}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} database.
 
-\hypertarget{chart-settings-32}{%
-\subsubsection*{Chart settings}\label{chart-settings-32}}
+\hypertarget{chart-settings-28}{%
+\subsubsection*{Chart settings}\label{chart-settings-28}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
@@ -5098,8 +5474,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \includegraphics[width=1\linewidth]{images/10-data_domain/02-avg_records_per_person} \caption{Settings for creating the Data Source filter chart}\label{fig:unnamed-chunk-1}
 \end{figure}
 
-\hypertarget{sql-query-31}{%
-\subsubsection*{SQL query}\label{sql-query-31}}
+\hypertarget{sql-query-27}{%
+\subsubsection*{SQL query}\label{sql-query-27}}
 \addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
@@ -5130,8 +5506,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{chart-settings-33}{%
-\subsubsection*{Chart settings}\label{chart-settings-33}}
+\hypertarget{chart-settings-29}{%
+\subsubsection*{Chart settings}\label{chart-settings-29}}
 \addcontentsline{toc}{subsubsection}{Chart settings}
 
 \begin{itemize}
