@@ -2,6 +2,9 @@ x-depends-on: &depends-on
   - postgres
   - redis
 
+x-superset-app-build: &superset-app-build
+  context: ../superset
+  dockerfile: ../docker/superset/Dockerfile
 x-superset-volumes: &superset-volumes
   - ./superset/docker-init.sh:/app/docker/docker-init.sh
   - superset_home:/app/superset_home
@@ -22,6 +25,8 @@ x-superset-environment: &superset-environment
   MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
   PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
 
+x-dashboard-build: &dashboard-build
+  context: ../dashboard_viewer
 x-dashboard-environment: &dashboard-environment
   POSTGRES_DEFAULT_HOST: postgres
   POSTGRES_DEFAULT_PORT: 5432
@@ -45,7 +50,7 @@ version: "3.7"
 services:
   #### SUPERSET ####
   superset:
-    image: aspedrosa/networkdashboards_superset
+    build: *superset-app-build
     restart: unless-stopped
     environment: *superset-environment
     user: "root"
@@ -53,40 +58,32 @@ services:
     volumes: *superset-volumes
     ports:
       - ${SUPERSET_PORT}:8088
-    networks:
-      - all
 
   superset-init:
-    image: aspedrosa/networkdashboards_superset
+    build: *superset-app-build
     command: ["/app/docker/docker-init.sh"]
     environment: *superset-environment
     user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
-    networks:
-      - all
 
   superset-worker:
-    image: aspedrosa/networkdashboards_superset
+    build: *superset-app-build
     command: ["/usr/bin/docker-bootstrap.sh", "worker"]
     restart: unless-stopped
     environment: *superset-environment
     user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
-    networks:
-      - all
 
   superset-worker-beat:
-    image: aspedrosa/networkdashboards_superset
+    build: *superset-app-build
     command: ["/usr/bin/docker-bootstrap.sh", "beat"]
     restart: unless-stopped
     environment: *superset-environment
     user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
-    networks:
-      - all
 
   #### DATA ####
   redis:
@@ -94,8 +91,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./volumes/redis:/data
-    networks:
-      - all
 
   postgres:
     image: postgres:10
@@ -111,53 +106,25 @@ services:
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
       - ./postgres-entrypoint:/docker-entrypoint-initdb.d
-    networks:
-      - all
-
-  #### DASHBOARD ####
-  nginx:
-    image: nginx:1.18.0
-    restart: unless-stopped
-    ports:
-      - ${NGINX_PORT}:80
-    volumes:
-      - ./nginx-config:/etc/nginx/conf.d
-      - dashboard_static:/static/dashboard
-      - ../dashboard_viewer/media:/media
-    depends_on:
-      - dashboard
-    networks:
-      - all
 
   dashboard_worker:
-    image: aspedrosa/networkdashboards
+    build: *dashboard-build
     environment: *dashboard-environment
     command: celery -A dashboard_viewer worker -Ofair -l INFO
     restart: unless-stopped
     depends_on: *depends-on
     volumes:
       - ../dashboard_viewer/media:/app/media
-    networks:
-      - all
 
   dashboard:
-    image: aspedrosa/networkdashboards
+    build: *dashboard-build
     environment: *dashboard-environment
+    ports:
+     - ${DASHBOARD_VIEWER_PORT}:8000
     depends_on: *depends-on
     restart: unless-stopped
     volumes:
-      - dashboard_static:/app/static
-      - ../dashboard_viewer/media:/app/media
-    networks:
-      - all
+      - ../dashboard_viewer:/app
 
 volumes:
   superset_home:
-  dashboard_static:
-
-networks:
-  all:
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.1.0.0/16

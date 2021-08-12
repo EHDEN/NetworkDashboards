@@ -1,0 +1,48 @@
+name: Test Build Docker Images
+
+on:
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  # JOB to run change detection
+  changes:
+    runs-on: ubuntu-latest
+    # Set job outputs to values from filter step
+    outputs:
+      dashboards: ${{ steps.filter.outputs.dashboards }}
+      superset: ${{ steps.filter.outputs.superset }}
+    steps:
+    # For pull requests it's not necessary to checkout the code
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          dashboards:
+            - 'dashboard_viewer/**'
+          superset:
+            - 'superset/**'
+
+  dashboards:
+    needs: changes
+    if: ${{ needs.changes.outputs.dashboards == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Test build
+        run: |
+          docker build dashboard_viewer
+
+  superset:
+    needs: changes
+    if: ${{ needs.changes.outputs.superset == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Test build
+        run: |
+          docker build superset
