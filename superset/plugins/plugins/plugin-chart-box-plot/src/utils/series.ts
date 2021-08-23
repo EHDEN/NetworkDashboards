@@ -25,6 +25,7 @@ import {
   NumberFormatter,
   TimeFormatter,
 } from '@superset-ui/core';
+import { format } from 'echarts';
 import { NULL_STRING } from '../constants';
 
 export function formatSeriesName(
@@ -84,4 +85,8 @@ export function extractGroupbyLabel({
       }),
     )
     .join(', ');
+}
+
+export function sanitizeHtml(text: string): string {
+  return format.encodeHTML(text);
 }

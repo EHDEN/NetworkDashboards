@@ -17,13 +17,9 @@
  * under the License.
  */
 import React from 'react';
-import { FeatureFlag, isFeatureEnabled, QueryMode, t } from '@superset-ui/core';
-import { ColumnOption, D3_FORMAT_DOCS, D3_FORMAT_OPTIONS, D3_TIME_FORMAT_OPTIONS, formatSelectOptions, sections, QueryModeLabel } from '@superset-ui/chart-controls';
-import { DEFAULT_FORM_DATA } from '../Pie/types';
+import { QueryMode, t } from '@superset-ui/core';
+import { ColumnOption, D3_FORMAT_DOCS, D3_FORMAT_OPTIONS, D3_TIME_FORMAT_OPTIONS, formatSelectOptions, sections, emitFilterControl, QueryModeLabel } from '@superset-ui/chart-controls';
 import { jsx as ___EmotionJSX } from "@emotion/react";
-const {
-  emitFilter
-} = DEFAULT_FORM_DATA;
 
 function getQueryMode(controls) {
   var _controls$query_mode, _controls$all_columns;
@@ -140,7 +136,7 @@ export default {
         label: t('Outliers'),
         description: t('Column holding outliers values')
       }
-    }], ['metrics'], ['adhoc_filters'], ['groupby'], ['columns'], ['limit'], [{
+    }], ['metrics'], ['adhoc_filters'], emitFilterControl, ['groupby'], ['columns'], ['limit'], [{
       name: 'whiskerOptions',
       config: {
         type: 'SelectControl',
@@ -155,16 +151,7 @@ export default {
   }, {
     label: t('Chart Options'),
     expanded: true,
-    controlSetRows: [['color_scheme'], isFeatureEnabled(FeatureFlag.DASHBOARD_CROSS_FILTERS) ? [{
-      name: 'emit_filter',
-      config: {
-        type: 'CheckboxControl',
-        label: t('Enable emitting filters'),
-        default: emitFilter,
-        renderTrigger: true,
-        description: t('Enable emmiting filters.')
-      }
-    }] : [], [{
+    controlSetRows: [['color_scheme'], [{
       name: 'x_ticks_layout',
       config: {
         type: 'SelectControl',

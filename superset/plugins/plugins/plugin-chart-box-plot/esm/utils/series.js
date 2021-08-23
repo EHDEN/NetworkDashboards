@@ -19,6 +19,7 @@
  * under the License.
  */
 import { GenericDataType } from '@superset-ui/core';
+import { format } from 'echarts';
 import { NULL_STRING } from '../constants';
 export function formatSeriesName(name, {
   numberFormatter,
@@ -64,4 +65,7 @@ export function extractGroupbyLabel({
       coltype: coltypeMapping[val]
     })
   })).join(', ');
+}
+export function sanitizeHtml(text) {
+  return format.encodeHTML(text);
 }

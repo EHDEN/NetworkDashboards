@@ -20,6 +20,7 @@ import { t, ChartMetadata, ChartPlugin, Behavior } from '@superset-ui/core';
 import buildQuery from './buildQuery';
 import controlPanel from './controlPanel';
 import transformProps from './transformProps';
+import example from './images/BoxPlot.jpg';
 import thumbnail from './images/thumbnail.png';
 import { BoxPlotQueryFormData, EchartsBoxPlotChartProps } from './types';
 
@@ -44,9 +45,14 @@ export default class EchartsBoxPlotChartPlugin extends ChartPlugin<
       loadChart: () => import('./EchartsBoxPlot'),
       metadata: new ChartMetadata({
         behaviors: [Behavior.INTERACTIVE_CHART],
+        category: t('Distribution'),
         credits: ['https://echarts.apache.org'],
-        description: 'Box Plot (Apache ECharts)',
+        description: t(
+          'Also known as a box and whisker plot, this visualization compares the distributions of a related metric across multiple groups. The box in the middle emphasizes the mean, median, and inner 2 quartiles. The whiskers around each box visualize the min, max, range, and outer 2 quartiles.',
+        ),
+        exampleGallery: [{ url: example }],
         name: t('Box Plot'),
+        tags: [t('ECharts'), t('Range'), t('Statistical')],
         thumbnail,
       }),
       transformProps,

@@ -17,8 +17,9 @@
  * under the License.
  */
 import { CategoricalColorNamespace, getMetricLabel, getNumberFormatter, getTimeFormatter, QueryMode } from '@superset-ui/core';
-import { extractGroupbyLabel, getColtypesMapping } from '../utils/series';
+import { extractGroupbyLabel, getColtypesMapping, sanitizeHtml } from '../utils/series';
 import { defaultGrid, defaultTooltip, defaultYAxis } from '../defaults';
+import { OpacityEnum } from '../constants';
 import d3 from 'd3';
 export default function transformProps(chartProps) {
   const {
@@ -81,6 +82,7 @@ export default function transformProps(chartProps) {
         return result;
       }, {});
       outlierData = Object.entries(outlierMapping).map(([groupbyLabel, outlierDatum]) => {
+        const isFiltered = filterState.selectedValues && !filterState.selectedValues.includes(groupbyLabel);
         return {
           name: 'outlier',
           type: 'scatter',
@@ -88,12 +90,13 @@ export default function transformProps(chartProps) {
           tooltip: {
             formatter: param => {
               const [outlierName, stats] = param.data;
-              const headline = groupby ? `<p><strong>${outlierName}</strong></p>` : '';
+              const headline = groupby ? `<p><strong>${sanitizeHtml(outlierName)}</strong></p>` : '';
               return `${headline}${numberFormatter(stats)}`;
             }
           },
           itemStyle: {
-            color: colorFn(groupbyLabel)
+            color: colorFn(groupbyLabel),
+            opacity: isFiltered ? OpacityEnum.SemiTransparent : OpacityEnum.NonTransparent
           }
         };
       }).flat(2);
@@ -109,12 +112,13 @@ export default function transformProps(chartProps) {
       maximum
     } = formData;
     transformedData = Object.entries(data).map(([groupByLabel, datum]) => {
+      const isFiltered = filterState.selectedValues && !filterState.selectedValues.includes(groupByLabel);
       return {
         name: groupByLabel,
         value: [datum[p10], datum[p25], datum[median], datum[p75], datum[p90], datum[minimum], datum[maximum], outlierMapping ? groupByLabel in outlierMapping ? outlierMapping[groupByLabel] : [] : []],
         itemStyle: {
           color: colorFn(groupByLabel),
-          opacity: 0.6,
+          opacity: isFiltered ? OpacityEnum.SemiTransparent : 0.6,
           borderColor: colorFn(groupByLabel)
         }
       };
@@ -130,12 +134,13 @@ export default function transformProps(chartProps) {
       });
       return metricLabels.map(metric => {
         const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
+        const isFiltered = filterState.selectedValues && !filterState.selectedValues.includes(name);
         return {
           name,
           value: [datum[`${metric}__min`], datum[`${metric}__q1`], datum[`${metric}__median`], datum[`${metric}__q3`], datum[`${metric}__max`], datum[`${metric}__mean`], datum[`${metric}__count`], datum[`${metric}__outliers`]],
           itemStyle: {
             color: colorFn(groupbyLabel),
-            opacity: 0.6,
+            opacity: isFiltered ? OpacityEnum.SemiTransparent : 0.6,
             borderColor: colorFn(groupbyLabel)
           }
         };
@@ -151,6 +156,7 @@ export default function transformProps(chartProps) {
       const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`; // Outlier data is a nested array of numbers (uncommon, therefore no need to add to DataRecordValue)
 
       const outlierDatum = datum[`${metric}__outliers`] || [];
+      const isFiltered = filterState.selectedValues && !filterState.selectedValues.includes(name);
       return {
         name: 'outlier',
         type: 'scatter',
@@ -158,12 +164,13 @@ export default function transformProps(chartProps) {
         tooltip: {
           formatter: param => {
             const [outlierName, stats] = param.data;
-            const headline = groupby ? `<p><strong>${outlierName}</strong></p>` : '';
+            const headline = groupby ? `<p><strong>${sanitizeHtml(outlierName)}</strong></p>` : '';
             return `${headline}${numberFormatter(stats)}`;
           }
         },
         itemStyle: {
-          color: colorFn(groupbyLabel)
+          color: colorFn(groupbyLabel),
+          opacity: isFiltered ? OpacityEnum.SemiTransparent : OpacityEnum.NonTransparent
         }
       };
     })).flat(2);
@@ -212,7 +219,7 @@ export default function transformProps(chartProps) {
           value,
           name
         } = param;
-        const headline = name ? `<p><strong>${name}</strong></p>` : '';
+        const headline = name ? `<p><strong>${sanitizeHtml(name)}</strong></p>` : '';
         let stats;
 
         if (queryMode == QueryMode.raw) {

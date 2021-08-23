@@ -18,8 +18,6 @@
  */
 import React from 'react';
 import {
-  FeatureFlag,
-  isFeatureEnabled,
   QueryFormColumn,
   QueryMode,
   t,
@@ -35,12 +33,10 @@ import {
   D3_TIME_FORMAT_OPTIONS,
   formatSelectOptions,
   sections,
+  emitFilterControl,
   sharedControls,
   QueryModeLabel,
 } from '@superset-ui/chart-controls';
-import { DEFAULT_FORM_DATA } from '../Pie/types';
-
-const { emitFilter } = DEFAULT_FORM_DATA;
 
 function getQueryMode(controls: ControlStateMapping): QueryMode {
   const mode = controls?.query_mode?.value;
@@ -180,6 +176,7 @@ export default {
         ],
         ['metrics'],
         ['adhoc_filters'],
+        emitFilterControl,
         ['groupby'],
         ['columns'],
         ['limit'],
@@ -209,20 +206,6 @@ export default {
       expanded: true,
       controlSetRows: [
         ['color_scheme'],
-        isFeatureEnabled(FeatureFlag.DASHBOARD_CROSS_FILTERS)
-          ? [
-              {
-                name: 'emit_filter',
-                config: {
-                  type: 'CheckboxControl',
-                  label: t('Enable emitting filters'),
-                  default: emitFilter,
-                  renderTrigger: true,
-                  description: t('Enable emmiting filters.'),
-                },
-              },
-            ]
-          : [],
         [
           {
             name: 'x_ticks_layout',
