@@ -128,6 +128,8 @@ services:
     command: celery -A dashboard_viewer worker -Ofair -l INFO
     restart: unless-stopped
     depends_on: *depends-on
+    volumes:
+      - ../dashboard_viewer/media:/app/media
     networks:
       - all
 
@@ -140,8 +142,6 @@ services:
     depends_on: *depends-on
     restart: unless-stopped
     volumes:
-      # required, to keep the achilles files outside
-      - ./volumes/achilles_results_files:/app/achilles_results_files
       # production
       - dashboard_static:/app/static
       - ../dashboard_viewer/media:/app/media

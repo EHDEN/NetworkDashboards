@@ -84,9 +84,8 @@ jobs:
     - name: Install Dependencies
       run: |
         pip install --upgrade pip
-        pip install -r requirements-dev/requirements-prospector.txt -r dashboard_viewer/requirements.txt -r backups/requirements.txt
+        pip install -r requirements-dev/requirements-prospector.txt -r dashboard_viewer/requirements.txt
     - name: prospector
       run: |
         prospector dashboard_viewer
         prospector docker/superset
-        prospector backups

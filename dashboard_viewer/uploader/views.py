@@ -1,217 +1,21 @@
-import csv
-import datetime
-import io
-import os
+import itertools
 
 import constance
-import numpy  # noqa
-import pandas
-from django.conf import settings
 from django.contrib import messages
 from django.forms import fields
-from django.shortcuts import redirect, render
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from .forms import AchillesResultsForm, EditSourceForm, SourceForm
-from .models import Country, DataSource, UploadHistory
+from .models import Country, DataSource, PendingUpload, UploadHistory
 from .serializers import DataSourceSerializer
-from .tasks import update_achilles_results_data
+from .tasks import upload_results_file
 
 PAGE_TITLE = "Dashboard Data Upload"
-
-
-def _check_correct(names, values, check, transform=None):
-    """
-    Transforms the values of given fields from the uploaded file
-     and check if they end up in the desired format
-
-    :param names: names of the fields to check
-    :param values: values of the fields to transform and check if they are
-     in the right format
-    :param transform: callable to transform the values of the
-     provided fields
-    :param check: callable check if the transform processes generated
-     a valid output
-    :return: the transformed fields or an error string
-    """
-    assert len(names) == len(values)
-
-    transformed_elements = [None] * len(names)
-    bad_elements = []
-
-    for i, name in enumerate(names):
-        transformed = values[i] if not transform else transform(values[i])
-        if not check(transformed):
-            bad_elements.append(name)
-        else:
-            transformed_elements[i] = transformed
-
-    if bad_elements:
-        return (
-            f" {bad_elements[0]} is"
-            if len(bad_elements) == 1
-            else f"s {', '.join(bad_elements[:-1])} and {bad_elements[-1]} are"
-        )
-
-    return transformed_elements
-
-
-def _extract_data_from_uploaded_file(request):
-    columns = [
-        "analysis_id",
-        "stratum_1",
-        "stratum_2",
-        "stratum_3",
-        "stratum_4",
-        "stratum_5",
-        "count_value",
-    ]
-
-    wrapper = io.TextIOWrapper(request.FILES["results_file"])
-    csv_reader = csv.reader(wrapper)
-
-    first_row = next(csv_reader)
-    wrapper.detach()
-
-    if len(first_row) == 16:
-        columns.extend(
-            [
-                "min_value",
-                "max_value",
-                "avg_value",
-                "stdev_value",
-                "median_value",
-                "p10_value",
-                "p25_value",
-                "p75_value",
-                "p90_value",
-            ]
-        )
-    elif len(first_row) != 7:
-        messages.error(
-            request,
-            mark_safe("The provided file has an invalid number of columns."),
-        )
-
-        return None
-
-    request.FILES["results_file"].seek(0)
-
-    try:
-        achilles_results = pandas.read_csv(
-            request.FILES["results_file"],
-            header=0,
-            dtype=str,
-            skip_blank_lines=False,
-            index_col=False,
-            names=columns,
-        )
-    except ValueError:
-        messages.error(
-            request,
-            mark_safe(
-                "The provided file has an invalid csv format. Make sure is a text file separated"
-                " by <b>commas</b> and you either have 7 (regular results file) or 13 (results file"
-                " with dist columns) columns."
-            ),
-        )
-
-        return None
-
-    if achilles_results[["analysis_id", "count_value"]].isna().values.any():
-        messages.error(
-            request,
-            mark_safe(
-                'Some rows have null values either on the column "analysis_id" or "count_value".'
-            ),
-        )
-
-        return None
-
-    try:
-        achilles_results = achilles_results.astype(
-            {
-                "analysis_id": numpy.int64,
-                "count_value": numpy.int64,
-            },
-        )
-        if len(achilles_results.columns) == 16:
-            achilles_results = achilles_results.astype(
-                {
-                    "min_value": float,
-                    "max_value": float,
-                    "avg_value": float,
-                    "stdev_value": float,
-                    "median_value": float,
-                    "p10_value": float,
-                    "p25_value": float,
-                    "p75_value": float,
-                    "p90_value": float,
-                },
-            )
-    except ValueError:
-        messages.error(
-            request,
-            mark_safe(
-                'The provided file has invalid values on some columns. Remember that only the "stratum_*" columns'
-                " accept strings, all the other fields expect numeric types."
-            ),
-        )
-
-        return None
-
-    analysis_0 = achilles_results[achilles_results.analysis_id == 0]
-    if analysis_0.empty:
-        messages.error(
-            request,
-            mark_safe(
-                "Analysis id 0 is missing. Try (re)running the plugin "
-                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
-                " on your database."
-            ),
-        )
-
-        return None
-
-    analysis_0 = analysis_0.reset_index()
-    analysis_5000 = achilles_results[achilles_results.analysis_id == 5000].reset_index()
-
-    output = _check_correct(
-        ["0"] + (["5000"] if not analysis_5000.empty else []),
-        [analysis_0] + ([analysis_5000] if not analysis_5000.empty else []),
-        lambda e: len(e) == 1,
-    )
-    if isinstance(output, str):
-        messages.error(
-            request,
-            mark_safe(
-                f"Analysis id{output} duplicated on multiple rows. Try (re)running the plugin "
-                "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
-                " on your database."
-            ),
-        )
-        return None
-
-    return {
-        "achilles_results": achilles_results,
-        "generation_date": analysis_0.loc[0, "stratum_3"],
-        "source_release_date": analysis_5000.loc[0, "stratum_2"]
-        if not analysis_5000.empty
-        else None,
-        "cdm_release_date": analysis_5000.loc[0, "stratum_3"]
-        if not analysis_5000.empty
-        else None,
-        "cdm_version": analysis_5000.loc[0, "stratum_4"]
-        if not analysis_5000.empty
-        else None,
-        "r_package_version": analysis_0.loc[0, "stratum_2"],
-        "vocabulary_version": analysis_5000.loc[0, "stratum_5"]
-        if not analysis_5000.empty
-        else None,
-    }
 
 
 @csrf_exempt
@@ -222,57 +26,37 @@ def upload_achilles_results(request, *args, **kwargs):
     except DataSource.DoesNotExist:
         return create_data_source(request, *args, **kwargs)
 
-    upload_history = list(UploadHistory.objects.filter(data_source=obj_data_source))
-    if request.method == "GET":
-        form = AchillesResultsForm()
-
-    elif request.method == "POST":
+    if request.method == "POST":
         form = AchillesResultsForm(request.POST, request.FILES)
 
         if form.is_valid():
-            data = _extract_data_from_uploaded_file(request)
+            pending_upload = PendingUpload.objects.create(
+                data_source=obj_data_source, uploaded_file=request.FILES["results_file"]
+            )
 
-            if data:
-                # launch an asynchronous task to insert the new data
-                update_achilles_results_data.delay(
-                    obj_data_source.id,
-                    upload_history[0].id if len(upload_history) > 0 else None,
-                    data["achilles_results"].to_json(),
-                )
+            messages.success(
+                request,
+                "File uploaded with success. The file is being processed and its status, on the upload history table "
+                "should update in the meantime.",
+            )
 
-                obj_data_source.release_date = data["source_release_date"]
-                obj_data_source.save()
+            task = upload_results_file.delay(pending_upload.id)
 
-                latest_upload = UploadHistory(
-                    data_source=obj_data_source,
-                    upload_date=datetime.datetime.today(),
-                    r_package_version=data["r_package_version"],
-                    generation_date=data["generation_date"],
-                    cdm_release_date=data["cdm_release_date"],
-                    cdm_version=data["cdm_version"],
-                    vocabulary_version=data["vocabulary_version"],
-                )
-                latest_upload.save()
-                upload_history = [latest_upload] + upload_history
+            pending_upload.task_id = task.task_id
+            pending_upload.save()
+    else:
+        form = AchillesResultsForm()
 
-                # save the achilles result file to disk
-                data_source_storage_path = os.path.join(
-                    settings.BASE_DIR,
-                    settings.ACHILLES_RESULTS_STORAGE_PATH,
-                    obj_data_source.hash,
-                )
-                os.makedirs(data_source_storage_path, exist_ok=True)
-                data["achilles_results"].to_csv(
-                    os.path.join(
-                        data_source_storage_path, f"{len(upload_history)}.csv"
-                    ),
-                    index=False,
-                )
+    upload_history = sorted(
+        itertools.chain(
+            UploadHistory.objects.filter(data_source=obj_data_source),
+            PendingUpload.objects.filter(data_source=obj_data_source),
+        ),
+        key=lambda upload: upload.upload_date,
+        reverse=True,
+    )
 
-                messages.success(
-                    request,
-                    "Results file uploaded with success. The dashboards will update in a few minutes.",
-                )
+    upload_history = list(map(lambda obj: (obj, obj.get_status()), upload_history))
 
     return render(
         request,
@@ -285,6 +69,39 @@ def upload_achilles_results(request, *args, **kwargs):
             "constance_config": constance.config,
             "page_title": PAGE_TITLE,
         },
+    )
+
+
+def get_upload_task_status(request, data_source, upload_id):
+    data_source = get_object_or_404(DataSource, hash=data_source)
+
+    try:
+        pending_upload = PendingUpload.objects.get(
+            id=upload_id, data_source=data_source
+        )
+    except PendingUpload.DoesNotExist:
+        # assume if the objects doesn't exist it finished
+        upload = get_object_or_404(
+            UploadHistory, data_source=data_source, pending_upload_id=upload_id
+        )
+
+        return JsonResponse(
+            {
+                "status": "Done",
+                "data": {
+                    "r_package_version": upload.r_package_version,
+                    "generation_date": upload.generation_date,
+                    "cdm_version": upload.cdm_version,
+                    "vocabulary_version": upload.vocabulary_version,
+                },
+            }
+        )
+
+    if pending_upload.status != PendingUpload.STATE_FAILED:
+        return JsonResponse({"status": pending_upload.get_status()})
+
+    return JsonResponse(
+        {"status": "Failed", "failure_msg": pending_upload.failure_message()}
     )
 
 

@@ -1,6 +1,12 @@
+import datetime
+import json
+import os
+import pathlib
 import uuid
 
+from django.conf import settings
 from django.db import models
+from django_celery_results.models import TaskResult
 
 
 class Country(models.Model):
@@ -10,7 +16,7 @@ class Country(models.Model):
 
     country = models.CharField(max_length=100, unique=True, help_text="Country name.")
     alpha2 = models.CharField(
-        max_length=3, unique=True, help_text=" ISO 3166-1 Alpha-2 Code"
+        max_length=3, unique=True, help_text="ISO 3166-1 Alpha-2 Code"
     )
     continent = models.CharField(max_length=50, help_text="Continent associated.")
 
@@ -36,6 +42,10 @@ class DatabaseType(models.Model):
         return self.__str__()
 
 
+def hash_generator():
+    return uuid.uuid4().hex
+
+
 # Not following the relational rules in the database_type field, but it will simplify the SQL queries in the SQL Lab
 class DataSource(models.Model):
     class Meta:
@@ -51,7 +61,7 @@ class DataSource(models.Model):
     )
     hash = models.CharField(
         blank=True,
-        default=lambda: uuid.uuid4().hex,
+        default=hash_generator,
         max_length=255,
         null=False,
         unique=True,
@@ -92,25 +102,115 @@ class DataSource(models.Model):
         return self.__str__()
 
 
+def failure_data_source_directory(instance, filename):
+    file_path = os.path.join(
+        settings.ACHILLES_RESULTS_STORAGE_PATH,
+        instance.data_source.hash,
+        "failure",
+        "%Y%m%d%H%M%S%f" + "".join(pathlib.Path(filename).suffixes),
+    )
+
+    return datetime.datetime.now().strftime(file_path)
+
+
+class PendingUpload(models.Model):
+    STATE_PENDING = 1
+    STATE_STARTED = 2
+    STATE_CANCELED = 3
+    STATE_FAILED = 4
+
+    STATES = (
+        (STATE_PENDING, "Pending"),
+        (STATE_STARTED, "Started"),
+        (STATE_CANCELED, "Canceled"),  # currently not being used
+        (STATE_FAILED, "Failed"),
+    )
+
+    class Meta:
+        ordering = ("-upload_date",)
+
+    data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
+    upload_date = models.DateTimeField(auto_now_add=True)
+    status = models.IntegerField(choices=STATES, default=STATE_PENDING)
+    uploaded_file = models.FileField(upload_to=failure_data_source_directory)
+    task_id = models.CharField(max_length=255, null=True)
+
+    def get_status(self):
+        for status_id, name in self.STATES:
+            if self.status == status_id:
+                return name
+
+        return None  # should never happen
+
+    def failure_message(self):
+        if self.status != self.STATE_FAILED:
+            return None
+
+        try:
+            task = TaskResult.objects.get(
+                task_id=self.task_id, task_name="uploader.tasks.upload_results_file"
+            )
+        except TaskResult.DoesNotExist:
+            return (
+                "The information about this failure was deleted. Probably because this upload history "
+                "record is an old one. If not please contact the system administrator for more details. "
+            )
+
+        result = json.loads(task.result)
+        if result["exc_module"] == "uploader.file_handler.checks":
+            return result["exc_message"][0]
+        return (
+            "An unexpected error occurred while processing your file. Please contact the "
+            "system administrator for more details."
+        )
+
+
+def success_data_source_directory(instance, filename):
+    file_path = os.path.join(
+        settings.ACHILLES_RESULTS_STORAGE_PATH,
+        instance.data_source.hash,
+        "success",
+        "%Y%m%d%H%M%S%f" + "".join(pathlib.Path(filename).suffixes),
+    )
+
+    return datetime.datetime.now().strftime(file_path)
+
+
 class UploadHistory(models.Model):
+    """
+    Successful uploads only
+    """
+
     class Meta:
         get_latest_by = "upload_date"
         ordering = ("-upload_date",)
         db_table = "upload_history"
 
     data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
-    upload_date = models.DateTimeField()
+    upload_date = models.DateTimeField(auto_now_add=True)
     r_package_version = models.CharField(max_length=50, null=True)
     generation_date = models.CharField(max_length=50, null=True)
     cdm_release_date = models.CharField(max_length=50, null=True)
     cdm_version = models.CharField(max_length=50, null=True)
     vocabulary_version = models.CharField(max_length=50, null=True)
+    uploaded_file = models.FileField(
+        null=True, upload_to=success_data_source_directory
+    )  # For backwards compatibility its easier to make this null=True
+    pending_upload_id = models.IntegerField(
+        null=True,
+        help_text="The id of the PendingUpload record that originated this successful upload."
+        # aspedrosa: A foreign key is not used here since a PendingUpload record is erased once is successful. This
+        #  is field is then only used to get the result data of pending upload through the get_upload_task_status view
+    )
 
     def __repr__(self):
         return self.__str__()
 
     def __str__(self):
         return f"{self.data_source.name} - {self.upload_date}"
+
+    def get_status(self):
+        return "Done"
 
 
 class AchillesResults(models.Model):
@@ -121,37 +221,7 @@ class AchillesResults(models.Model):
             models.Index(fields=("analysis_id",)),
         ]
 
-    data_source = models.ForeignKey(
-        DataSource, on_delete=models.CASCADE, limit_choices_to={"draft": False}
-    )
-    analysis_id = models.BigIntegerField()
-    stratum_1 = models.TextField(null=True)
-    stratum_2 = models.TextField(null=True)
-    stratum_3 = models.TextField(null=True)
-    stratum_4 = models.TextField(null=True)
-    stratum_5 = models.TextField(null=True)
-    count_value = models.BigIntegerField()
-    min_value = models.BigIntegerField(null=True)
-    max_value = models.BigIntegerField(null=True)
-    avg_value = models.FloatField(null=True)
-    stdev_value = models.FloatField(null=True)
-    median_value = models.BigIntegerField(null=True)
-    p10_value = models.BigIntegerField(null=True)
-    p25_value = models.BigIntegerField(null=True)
-    p75_value = models.BigIntegerField(null=True)
-    p90_value = models.BigIntegerField(null=True)
-
-
-class AchillesResultsDraft(models.Model):
-    class Meta:
-        db_table = "achilles_results_draft"
-        indexes = [
-            models.Index(fields=("data_source",)),
-        ]
-
-    data_source = models.ForeignKey(
-        DataSource, on_delete=models.CASCADE, limit_choices_to={"draft": True}
-    )
+    data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
     analysis_id = models.BigIntegerField()
     stratum_1 = models.TextField(null=True)
     stratum_2 = models.TextField(null=True)
