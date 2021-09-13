@@ -59,9 +59,7 @@ class CoordinatesWidget(forms.MultiWidget):
         super().__init__(widgets, *args, **kwargs)
 
     def render(self, name, value, attrs=None, renderer=None):
-        text_inputs = super().render(
-            name, value, attrs, renderer
-        )
+        text_inputs = super().render(name, value, attrs, renderer)
 
         lat_input, lon_input = [
             inp for inp in self.html_tags_regex.split(text_inputs) if inp != ""
