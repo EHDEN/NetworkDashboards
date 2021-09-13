@@ -131,7 +131,7 @@ soupsieve==2.2.1
     # via beautifulsoup4
 sqlalchemy==1.4.21
     # via -r requirements.in
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via django
 urllib3==1.26.6
     # via requests
