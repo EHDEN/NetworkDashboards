@@ -16,4 +16,4 @@ def _set_eager():
 class CeleryTestSuiteRunner(DiscoverRunner):
     def setup_test_environment(self, **kwargs):
         _set_eager()
-        super(CeleryTestSuiteRunner, self).setup_test_environment(**kwargs)
+        super().setup_test_environment(**kwargs)

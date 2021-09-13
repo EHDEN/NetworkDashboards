@@ -72,7 +72,7 @@ def upload_achilles_results(request, *args, **kwargs):
     )
 
 
-def get_upload_task_status(request, data_source, upload_id):
+def get_upload_task_status(_request, data_source, upload_id):
     data_source = get_object_or_404(DataSource, hash=data_source)
 
     try:
@@ -128,7 +128,7 @@ def _get_fields_initial_values(request, initial):
 def _leave_valid_fields_values_only(request, initial, aux_form):
     for field_name, field in SourceForm.base_fields.items():
         if isinstance(field, fields.MultiValueField):
-            decompressed = list()
+            decompressed = []
 
             for i in range(len(field.widget.widgets)):
                 generated_field_name = f"{field_name}_{i}"
@@ -137,7 +137,7 @@ def _leave_valid_fields_values_only(request, initial, aux_form):
                     del initial[generated_field_name]
                     decompressed.append(value)
                 else:
-                    decompressed = list()
+                    decompressed = []
                     break
 
             if decompressed:
@@ -156,7 +156,7 @@ def _leave_valid_fields_values_only(request, initial, aux_form):
 def create_data_source(request, *_, **kwargs):
     data_source = kwargs.get("data_source")
     if request.method == "GET":
-        initial = dict()
+        initial = {}
         if data_source is not None:
             initial["hash"] = data_source
 
