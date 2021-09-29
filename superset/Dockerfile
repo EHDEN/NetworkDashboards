@@ -1,4 +1,4 @@
-# Based on https://github.com/apache/superset/blob/1.3.0/Dockerfile
+# Based on https://github.com/apache/superset/blob/1.3.1/Dockerfile
 
 ######################################################################
 # PY stage that simply does a pip install on our requirements
