@@ -1,6 +1,7 @@
 RUN=1
+TMP_DIRECTORY=/tmp
 CONSTANCE_REDIS_DB=2
 APP_NAME=dashboards_backups
 SERVER=dropbox
-BACKUP_CHAIN_CONFIG="week:%H%M%S%f:4:2;month:%9M%S%f:4:2;:%H%M%S%f"
+BACKUP_CHAIN_CONFIG="week:%y-%m-%d_%H-%M:7:7;month:%y-%m-%d_week%V:4:4;year:%y-%m-%d_month%m"
 CREDENTIALS_FILE_PATH=$HOME/NetworkDashboards/backups/.credentials
