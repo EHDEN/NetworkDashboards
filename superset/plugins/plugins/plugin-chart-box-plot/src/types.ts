@@ -16,8 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { EChartsOption } from 'echarts';
-
 export type EchartsStylesProps = {
   height: number;
   width: number;
@@ -26,35 +24,5 @@ export type EchartsStylesProps = {
 export interface EchartsProps {
   height: number;
   width: number;
-  echartOptions: EChartsOption;
-  eventHandlers?: EventHandlers;
-  selectedValues?: Record<number, string>;
+  echartOptions: echarts.EChartOption;
 }
-
-export enum LegendOrientation {
-  Top = 'top',
-  Bottom = 'bottom',
-  Left = 'left',
-  Right = 'right',
-}
-
-export enum LegendType {
-  Scroll = 'scroll',
-  Plain = 'plain',
-}
-
-export type EchartsLegendFormData = {
-  legendMargin: number | null | string;
-  legendOrientation: LegendOrientation;
-  legendType: LegendType;
-  showLegend: boolean;
-};
-
-export const DEFAULT_LEGEND_FORM_DATA: EchartsLegendFormData = {
-  legendMargin: null,
-  legendOrientation: LegendOrientation.Top,
-  legendType: LegendType.Scroll,
-  showLegend: false,
-};
-
-export type EventHandlers = Record<string, { (props: any): void }>;

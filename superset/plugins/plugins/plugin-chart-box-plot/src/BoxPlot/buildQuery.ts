@@ -24,7 +24,6 @@ const PERCENTILE_REGEX = /(\d+)\/(\d+) percentiles/;
 export default function buildQuery(formData: BoxPlotQueryFormData) {
   const {
     query_mode,
-    groupby = [],
     minimum,
     p10,
     p25,
@@ -33,9 +32,10 @@ export default function buildQuery(formData: BoxPlotQueryFormData) {
     p90,
     maximum,
     whiskerOptions,
-    columns: distributionColumns = [],
   } = formData;
   return buildQueryContext(formData, baseQueryObject => {
+    const { groupby } = baseQueryObject;
+
     if (query_mode == 'raw') {
       if (groupby.length == 0) {
         throw new Error(`Error: No series column defined.`);
@@ -78,8 +78,9 @@ export default function buildQuery(formData: BoxPlotQueryFormData) {
 
     let whiskerType: BoxPlotQueryObjectWhiskerType;
     let percentiles: [number, number] | undefined;
-    const { columns = [], metrics = [] } = baseQueryObject;
+    const { columns, metrics } = baseQueryObject;
     const percentileMatch = PERCENTILE_REGEX.exec(whiskerOptions as string);
+    const distributionColumns = columns || [];
 
     if (whiskerOptions === 'Tukey') {
       whiskerType = 'tukey';
@@ -95,13 +96,15 @@ export default function buildQuery(formData: BoxPlotQueryFormData) {
       {
         ...baseQueryObject,
         is_timeseries: distributionColumns.length === 0,
+        groupby: (groupby || []).concat(distributionColumns),
+        columns: [],
         post_processing: [
           {
             operation: 'boxplot',
             options: {
               whisker_type: whiskerType,
               percentiles,
-              groupby: columns.filter(x => !distributionColumns.includes(x)),
+              groupby,
               metrics: metrics.map(getMetricLabel),
             },
           },

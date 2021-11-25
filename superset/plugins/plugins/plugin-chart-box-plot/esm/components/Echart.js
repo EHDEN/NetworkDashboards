@@ -19,7 +19,6 @@
 import React, { useRef, useEffect } from 'react';
 import { styled } from '@superset-ui/core';
 import { init } from 'echarts';
-import { jsx as ___EmotionJSX } from "@emotion/react";
 const Styles = styled.div`
   height: ${({
   height
@@ -31,14 +30,10 @@ const Styles = styled.div`
 export default function Echart({
   width,
   height,
-  echartOptions,
-  eventHandlers,
-  selectedValues = {}
+  echartOptions
 }) {
   const divRef = useRef(null);
   const chartRef = useRef();
-  const currentSelection = Object.keys(selectedValues) || [];
-  const previousSelection = useRef([]);
   useEffect(() => {
     if (!divRef.current) return;
 
@@ -46,27 +41,8 @@ export default function Echart({
       chartRef.current = init(divRef.current);
     }
 
-    Object.entries(eventHandlers || {}).forEach(([name, handler]) => {
-      var _chartRef$current, _chartRef$current2;
-
-      (_chartRef$current = chartRef.current) == null ? void 0 : _chartRef$current.off(name);
-      (_chartRef$current2 = chartRef.current) == null ? void 0 : _chartRef$current2.on(name, handler);
-    });
     chartRef.current.setOption(echartOptions, true);
-    chartRef.current.dispatchAction({
-      type: 'downplay',
-      dataIndex: previousSelection.current.filter(value => !currentSelection.includes(value))
-    });
-
-    if (currentSelection.length) {
-      chartRef.current.dispatchAction({
-        type: 'highlight',
-        dataIndex: currentSelection
-      });
-    }
-
-    previousSelection.current = currentSelection;
-  }, [echartOptions, eventHandlers, selectedValues]);
+  }, [echartOptions]);
   useEffect(() => {
     if (chartRef.current) {
       chartRef.current.resize({
@@ -75,7 +51,7 @@ export default function Echart({
       });
     }
   }, [width, height]);
-  return ___EmotionJSX(Styles, {
+  return /*#__PURE__*/React.createElement(Styles, {
     ref: divRef,
     height: height,
     width: width

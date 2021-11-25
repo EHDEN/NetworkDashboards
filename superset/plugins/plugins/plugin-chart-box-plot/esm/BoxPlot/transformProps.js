@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { CategoricalColorNamespace, getMetricLabel, getNumberFormatter, getTimeFormatter, QueryMode } from '@superset-ui/core';
-import { extractGroupbyLabel, getColtypesMapping } from '../utils/series';
+import { CategoricalColorNamespace, getMetricLabel, getNumberFormatter } from '@superset-ui/core';
+import { QueryMode } from './controlPanel';
+import { extractGroupbyLabel } from '../utils/series';
 import { defaultGrid, defaultTooltip, defaultYAxis } from '../defaults';
 import d3 from 'd3';
 export default function transformProps(chartProps) {
@@ -25,26 +26,15 @@ export default function transformProps(chartProps) {
     width,
     height,
     formData,
-    hooks,
-    ownState,
     queriesData
   } = chartProps;
-  const {
-    data: original_data = []
-  } = queriesData[0];
-  const {
-    setDataMask = () => {}
-  } = hooks;
-  const coltypeMapping = getColtypesMapping(queriesData[0]);
   const {
     colorScheme,
     queryMode,
     groupby = [],
     metrics: formdataMetrics = [],
     numberFormat,
-    dateFormat,
-    xTicksLayout,
-    emitFilter
+    xTicksLayout
   } = formData;
   const colorFn = CategoricalColorNamespace.getScale(colorScheme);
   const numberFormatter = getNumberFormatter(numberFormat);
@@ -53,9 +43,7 @@ export default function transformProps(chartProps) {
   if (queryMode == QueryMode.raw) {
     const data = d3.nest().key(row => extractGroupbyLabel({
       datum: row,
-      groupby,
-      coltypeMapping,
-      timeFormatter: getTimeFormatter(dateFormat)
+      groupby
     })).entries(queriesData[0].data).reduce((result, item, _) => {
       result[item.key] = item.values[0];
       return result;
@@ -68,9 +56,7 @@ export default function transformProps(chartProps) {
     if (outliers && !Array.isArray(outliers)) {
       outlierMapping = d3.nest().key(row => extractGroupbyLabel({
         datum: row,
-        groupby,
-        coltypeMapping,
-        timeFormatter: getTimeFormatter(dateFormat)
+        groupby
       })).entries(queriesData[1].data).reduce((result, item, _) => {
         const values = item.values.filter(v => v[outliers]);
 
@@ -120,13 +106,12 @@ export default function transformProps(chartProps) {
       };
     }).flatMap(row => row);
   } else {
+    const data = queriesData[0].data || [];
     const metricLabels = formdataMetrics.map(getMetricLabel);
-    transformedData = original_data.map(datum => {
+    transformedData = data.map(datum => {
       const groupbyLabel = extractGroupbyLabel({
         datum,
-        groupby,
-        coltypeMapping,
-        timeFormatter: getTimeFormatter(dateFormat)
+        groupby
       });
       return metricLabels.map(metric => {
         const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
@@ -141,12 +126,10 @@ export default function transformProps(chartProps) {
         };
       });
     }).flatMap(row => row);
-    outlierData = original_data.map(datum => metricLabels.map(metric => {
+    outlierData = data.map(datum => metricLabels.map(metric => {
       const groupbyLabel = extractGroupbyLabel({
         datum,
-        groupby,
-        coltypeMapping,
-        timeFormatter: getTimeFormatter(dateFormat)
+        groupby
       });
       const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`; // Outlier data is a nested array of numbers (uncommon, therefore no need to add to DataRecordValue)
 
@@ -169,25 +152,7 @@ export default function transformProps(chartProps) {
     })).flat(2);
   }
 
-  const labelMap = original_data.reduce((acc, datum) => {
-    const label = extractGroupbyLabel({
-      datum,
-      groupby,
-      coltypeMapping,
-      timeFormatter: getTimeFormatter(dateFormat)
-    });
-    return { ...acc,
-      [label]: groupby.map(col => datum[col])
-    };
-  }, {});
-  const selectedValues = (ownState.selectedValues || []).reduce((acc, selectedValue) => {
-    const index = transformedData.findIndex(({
-      name
-    }) => name === selectedValue);
-    return { ...acc,
-      [index]: selectedValue
-    };
-  }, {});
+  outlierData = outlierData || [];
   let axisLabel;
   if (xTicksLayout === '45°') axisLabel = {
     rotate: -45
@@ -199,37 +164,8 @@ export default function transformProps(chartProps) {
     rotate: -45
   };else axisLabel = {
     show: true
-  };
-  outlierData = outlierData || [];
-  const series = [{
-    name: 'boxplot',
-    type: 'boxplot',
-    data: transformedData,
-    tooltip: {
-      formatter: param => {
-        // @ts-ignore
-        const {
-          value,
-          name
-        } = param;
-        const headline = name ? `<p><strong>${name}</strong></p>` : '';
-        let stats;
+  }; // @ts-ignore
 
-        if (queryMode == QueryMode.raw) {
-          stats = [`Max: ${numberFormatter(value[7])}`, `90th Percentile: ${numberFormatter(value[5])}`, `75th Percentile: ${numberFormatter(value[4])}`, `Median: ${numberFormatter(value[3])}`, `25th Percentile: ${numberFormatter(value[2])}`, `10th Percentile: ${numberFormatter(value[1])}`, `Min: ${numberFormatter(value[6])}`];
-        } else {
-          stats = [`Max: ${numberFormatter(value[5])}`, `3rd Quartile: ${numberFormatter(value[4])}`, `Mean: ${numberFormatter(value[6])}`, `Median: ${numberFormatter(value[3])}`, `1st Quartile: ${numberFormatter(value[2])}`, `Min: ${numberFormatter(value[1])}`, `# Observations: ${numberFormatter(value[7])}`];
-        }
-
-        if (value[8].length > 0) {
-          stats.push(`# Outliers: ${numberFormatter(value[8].length)}`);
-        }
-
-        return headline + stats.join('<br/>');
-      }
-    }
-  }, // @ts-ignore
-  ...outlierData];
   const echartOptions = {
     grid: { ...defaultGrid,
       top: 30,
@@ -254,17 +190,41 @@ export default function transformProps(chartProps) {
         type: 'shadow'
       }
     },
-    series
+    series: [{
+      name: 'boxplot',
+      type: 'boxplot',
+      avoidLabelOverlap: true,
+      // @ts-ignore
+      data: transformedData,
+      tooltip: {
+        formatter: param => {
+          // @ts-ignore
+          const {
+            value,
+            name
+          } = param;
+          const headline = name ? `<p><strong>${name}</strong></p>` : '';
+          let stats;
+
+          if (queryMode == QueryMode.raw) {
+            stats = [`Max: ${numberFormatter(value[7])}`, `90th Percentile: ${numberFormatter(value[5])}`, `75th Percentile: ${numberFormatter(value[4])}`, `Median: ${numberFormatter(value[3])}`, `25th Percentile: ${numberFormatter(value[2])}`, `10th Percentile: ${numberFormatter(value[1])}`, `Min: ${numberFormatter(value[6])}`];
+          } else {
+            stats = [`Max: ${numberFormatter(value[5])}`, `3rd Quartile: ${numberFormatter(value[4])}`, `Mean: ${numberFormatter(value[6])}`, `Median: ${numberFormatter(value[3])}`, `1st Quartile: ${numberFormatter(value[2])}`, `Min: ${numberFormatter(value[1])}`, `# Observations: ${numberFormatter(value[7])}`];
+          }
+
+          if (value[8].length > 0) {
+            stats.push(`# Outliers: ${numberFormatter(value[8].length)}`);
+          }
+
+          return headline + stats.join('<br/>');
+        }
+      }
+    }, // @ts-ignore
+    ...outlierData]
   };
   return {
-    formData,
     width,
     height,
-    echartOptions,
-    setDataMask,
-    emitFilter,
-    labelMap,
-    groupby,
-    selectedValues
+    echartOptions
   };
 }
