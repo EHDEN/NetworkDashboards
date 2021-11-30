@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>9.10 Provenance [Deprecated] | Data Network Dashboards</title>
   <meta name="description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="9.10 Provenance [Deprecated] | Data Network Dashboards" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2021-08-10" />
+<meta name="date" content="2021-11-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +33,9 @@
   
 <link rel="prev" href="concepts-browser-deprecated.html"/>
 <link rel="next" href="data-domains-deprecated.html"/>
-<script src="libs/header-attrs-2.9/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -42,7 +43,6 @@
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
-
 
 
 
@@ -336,7 +336,7 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
 <div id="data-source-filter-5" class="section level3 unnumbered" number="">
 <h3>Data Source Filter</h3>
-<div class="figure"><span id="fig:dataSourceFilter"></span>
+<div class="figure"><span style="display:block;" id="fig:dataSourceFilter"></span>
 <img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
 <p class="caption">
 Figure 9.8: Settings for creating the Data Source filter chart
@@ -375,7 +375,7 @@ Figure 9.8: Settings for creating the Data Source filter chart
 </div>
 <div id="condition-drug-procedure-device-measurement-observation-types-dataprovenancecharts" class="section level3 unnumbered" number="">
 <h3>Condition &amp; Drug &amp; Procedure &amp; Device &amp; Measurement &amp; Observation Types {#dataProvenanceCharts}</h3>
-<div class="figure"><span id="fig:conditionDrugProcedureDeviceMeasurementObservationTypes"></span>
+<div class="figure"><span style="display:block;" id="fig:conditionDrugProcedureDeviceMeasurementObservationTypes"></span>
 <img src="images/09-provenance/02-condition_drug_procedure_device_measurement_observation_types.png" alt="Settings for creating the Condition, Drug, Procedure, Device, Measurement and Observation charts" width="100%" />
 <p class="caption">
 Figure 9.22: Settings for creating the Condition, Drug, Procedure, Device, Measurement and Observation charts
@@ -452,7 +452,6 @@ Figure 9.22: Settings for creating the Condition, Drug, Procedure, Device, Measu
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -492,6 +491,10 @@ gitbook.start({
 "text": null
 },
 "download": ["DataNetworkDashboards.pdf", "DataNetworkDashboards.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

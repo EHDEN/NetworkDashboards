@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>9.5 Person [Deprecated] | Data Network Dashboards</title>
   <meta name="description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="9.5 Person [Deprecated] | Data Network Dashboards" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2021-08-10" />
+<meta name="date" content="2021-11-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +33,9 @@
   
 <link rel="prev" href="general-deprecated.html"/>
 <link rel="next" href="observation-period-deprecated.html"/>
-<script src="libs/header-attrs-2.9/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -42,7 +43,6 @@
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
-
 
 
 
@@ -344,7 +344,7 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
 <div id="data-source-filter-1" class="section level3 unnumbered" number="">
 <h3>Data Source Filter</h3>
-<div class="figure"><span id="fig:dataSourceFilter"></span>
+<div class="figure"><span style="display:block;" id="fig:dataSourceFilter"></span>
 <img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
 <p class="caption">
 Figure 9.8: Settings for creating the Data Source filter chart
@@ -383,7 +383,7 @@ Figure 9.8: Settings for creating the Data Source filter chart
 </div>
 <div id="age-at-first-observation---table-age1observationtable" class="section level3 unnumbered" number="">
 <h3>Age at first observation - Table {#age1ObservationTable}</h3>
-<div class="figure"><span id="fig:ageFirstObservationTable"></span>
+<div class="figure"><span style="display:block;" id="fig:ageFirstObservationTable"></span>
 <img src="images/04-person/02-age_at_first_observation_table.png" alt="Settings for creating the Age at First Observation Table chart" width="100%" />
 <p class="caption">
 Figure 9.9: Settings for creating the Age at First Observation Table chart
@@ -440,7 +440,7 @@ Figure 9.9: Settings for creating the Age at First Observation Table chart
 </div>
 <div id="age-at-first-observation---bars-age1observationbars" class="section level3 unnumbered" number="">
 <h3>Age at first observation - Bars {#age1ObservationBars}</h3>
-<div class="figure"><span id="fig:ageFirstObservationBar"></span>
+<div class="figure"><span style="display:block;" id="fig:ageFirstObservationBar"></span>
 <img src="images/04-person/03-age_at_first_observation_bar.png" alt="Settings for creating the Age at First Observation Bar chart" width="100%" />
 <p class="caption">
 Figure 9.10: Settings for creating the Age at First Observation Bar chart
@@ -495,7 +495,7 @@ Figure 9.10: Settings for creating the Age at First Observation Bar chart
 </div>
 <div id="year-of-birth-yearofbirth" class="section level3 unnumbered" number="">
 <h3>Year of Birth {#yearOfBirth}</h3>
-<div class="figure"><span id="fig:yearOfBirth"></span>
+<div class="figure"><span style="display:block;" id="fig:yearOfBirth"></span>
 <img src="images/04-person/04-year_of_birth.png" alt="Settings for creating the Year of Birth chart" width="100%" />
 <p class="caption">
 Figure 9.11: Settings for creating the Year of Birth chart
@@ -551,7 +551,7 @@ Figure 9.11: Settings for creating the Year of Birth chart
 </div>
 <div id="gender-1" class="section level3 unnumbered" number="">
 <h3>Gender</h3>
-<div class="figure"><span id="fig:gender"></span>
+<div class="figure"><span style="display:block;" id="fig:gender"></span>
 <img src="images/04-person/05-gender.png" alt="Settings for creating the Gender chart" width="100%" />
 <p class="caption">
 Figure 9.12: Settings for creating the Gender chart
@@ -621,7 +621,6 @@ Figure 9.12: Settings for creating the Gender chart
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -661,6 +660,10 @@ gitbook.start({
 "text": null
 },
 "download": ["DataNetworkDashboards.pdf", "DataNetworkDashboards.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
