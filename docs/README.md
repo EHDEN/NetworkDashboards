@@ -3,7 +3,7 @@
 ## Requirements (Debian)
 
 ```sh
-sudo apt install -y r-base pandoc pandoc pandoc-citeproc texlive-xetex
+sudo apt install -y r-base pandoc pandoc-citeproc texlive-xetex
 sudo Rscript -e 'install.packages("bookdown")'
 ```
 
