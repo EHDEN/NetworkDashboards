@@ -93,10 +93,6 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.CASCADE, to="uploader.DataSource"
             ),
         ),
-        migrations.RemoveField(
-            model_name="datasource",
-            name="draft",
-        ),
         migrations.RunSQL(
             "INSERT INTO achilles_results ("
             "    analysis_id,"
@@ -107,7 +103,7 @@ class Migration(migrations.Migration):
             "    median_value,"
             "    p10_value, p25_value, p75_value, p90_value,"
             "    data_source_id"
-            ") select "
+            ") SELECT "
             "    analysis_id,"
             "    stratum_1, stratum_2, stratum_3, stratum_4, stratum_5,"
             "    count_value,"
@@ -116,7 +112,7 @@ class Migration(migrations.Migration):
             "    median_value,"
             "    p10_value, p25_value, p75_value, p90_value,"
             "    data_source_id "
-            "from achilles_results_draft;"
+            "FROM achilles_results_draft;"
         ),
         migrations.DeleteModel(
             name="AchillesResultsDraft",
