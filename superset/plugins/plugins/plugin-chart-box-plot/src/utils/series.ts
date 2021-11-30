@@ -18,10 +18,8 @@
  * under the License.
  */
 import {
-  ChartDataResponseResult,
   DataRecord,
   DataRecordValue,
-  GenericDataType,
   NumberFormatter,
   TimeFormatter,
 } from '@superset-ui/core';
@@ -32,11 +30,9 @@ export function formatSeriesName(
   {
     numberFormatter,
     timeFormatter,
-    coltype,
   }: {
     numberFormatter?: NumberFormatter;
     timeFormatter?: TimeFormatter;
-    coltype?: GenericDataType;
   } = {},
 ): string {
   if (name === undefined || name === null) {
@@ -48,40 +44,24 @@ export function formatSeriesName(
   if (typeof name === 'boolean') {
     return name.toString();
   }
-  if (name instanceof Date || coltype === GenericDataType.TEMPORAL) {
-      const d = name instanceof Date ? name : new Date(name);
-  
-      return timeFormatter ? timeFormatter(d) : d.toISOString();
+  if (name instanceof Date) {
+    return timeFormatter ? timeFormatter(name) : name.toISOString();
   }
   return name;
 }
-
-export const getColtypesMapping = ({
-  coltypes = [],
-  colnames = [],
-}: ChartDataResponseResult): Record<string, GenericDataType> =>
-  colnames.reduce((accumulator, item, index) => ({ ...accumulator, [item]: coltypes[index] }), {});
 
 export function extractGroupbyLabel({
   datum = {},
   groupby,
   numberFormatter,
   timeFormatter,
-  coltypeMapping = {},
 }: {
   datum?: DataRecord;
   groupby?: string[] | null;
   numberFormatter?: NumberFormatter;
   timeFormatter?: TimeFormatter;
-  coltypeMapping: Record<string, GenericDataType>;
 }): string {
   return (groupby || [])
-    .map(val =>
-      formatSeriesName(datum[val], {
-        numberFormatter,
-        timeFormatter,
-        ...(coltypeMapping[val] && { coltype: coltypeMapping[val] }),
-      }),
-    )
+    .map(val => formatSeriesName(datum[val], { numberFormatter, timeFormatter }))
     .join(', ');
 }
