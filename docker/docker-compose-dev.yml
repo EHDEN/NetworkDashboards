@@ -2,6 +2,9 @@ x-depends-on: &depends-on
   - postgres
   - redis
 
+x-superset-app-build: &superset-app-build
+  context: ../superset
+  dockerfile: ../docker/superset/Dockerfile
 x-superset-volumes: &superset-volumes
   - ./superset/docker-init.sh:/app/docker/docker-init.sh
   - superset_home:/app/superset_home
@@ -22,6 +25,8 @@ x-superset-environment: &superset-environment
   REDIS_RESULTS_DB: 3
   SUPERSET_ENV: production
 
+x-dashboard-build: &dashboard-build
+  context: ../dashboard_viewer
 x-dashboard-environment: &dashboard-environment
   POSTGRES_DEFAULT_HOST: postgres
   POSTGRES_DEFAULT_PORT: 5432
@@ -40,14 +45,12 @@ x-dashboard-environment: &dashboard-environment
   REDIS_CONSTANCE_DB: 2
   SECRET_KEY: ${DASHBOARD_VIEWER_SECRET_KEY}
   DASHBOARD_VIEWER_ENV: ${INSTALLATION_ENV}
-  SINGLE_APPLICATION_MODE: ${SINGLE_APPLICATION_MODE}
-  MAIN_APPLICATION_HOST: ${MAIN_APPLICATION_HOST}
 
 version: "3.7"
 services:
   #### SUPERSET ####
   superset:
-    image: aspedrosa/networkdashboards_superset
+    build: *superset-app-build
     restart: unless-stopped
     environment: *superset-environment
     user: "root"
@@ -57,7 +60,7 @@ services:
       - ${SUPERSET_PORT}:8080
 
   superset-init:
-    image: aspedrosa/networkdashboards_superset
+    build: *superset-app-build
     command: ["/app/docker/docker-init.sh"]
     environment: *superset-environment
     user: "root"
@@ -65,7 +68,7 @@ services:
     volumes: *superset-volumes
 
   superset-worker:
-    image: aspedrosa/networkdashboards_superset
+    build: *superset-app-build
     command: ["/usr/bin/docker-bootstrap.sh", "worker"]
     restart: unless-stopped
     environment: *superset-environment
@@ -74,7 +77,7 @@ services:
     volumes: *superset-volumes
 
   superset-worker-beat:
-    image: aspedrosa/networkdashboards_superset
+    build: *superset-app-build
     command: ["/usr/bin/docker-bootstrap.sh", "beat"]
     restart: unless-stopped
     environment: *superset-environment
@@ -104,21 +107,8 @@ services:
       - ./volumes/postgres:/var/lib/postgresql/data
       - ./postgres-entrypoint:/docker-entrypoint-initdb.d
 
-  #### DASHBOARD ####
-  nginx:
-    image: nginx:1.18.0
-    restart: unless-stopped
-    ports:
-      - ${NGINX_PORT}:80
-    volumes:
-      - ./nginx-config:/etc/nginx/conf.d
-      - dashboard_static:/static/dashboard
-      - ../dashboard_viewer/media:/media
-    depends_on:
-      - dashboard
-
   dashboard_worker:
-    image: aspedrosa/networkdashboards
+    build: *dashboard-build
     environment: *dashboard-environment
     command: celery -A dashboard_viewer worker -Ofair -l INFO
     restart: unless-stopped
@@ -127,14 +117,14 @@ services:
       - ../dashboard_viewer/media:/app/media
 
   dashboard:
-    image: aspedrosa/networkdashboards
+    build: *dashboard-build
     environment: *dashboard-environment
+    ports:
+     - ${DASHBOARD_VIEWER_PORT}:8000
     depends_on: *depends-on
     restart: unless-stopped
     volumes:
-      - dashboard_static:/app/static
-      - ../dashboard_viewer/media:/app/media
+      - ../dashboard_viewer:/app
 
 volumes:
   superset_home:
-  dashboard_static:
