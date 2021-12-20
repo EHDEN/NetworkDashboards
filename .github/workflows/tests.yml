@@ -27,8 +27,8 @@ jobs:
           ${{ runner.os }}-pip-
     - name: Setup Data Containers
       run: |
-        export $(grep -v '^#' tests/.env | xargs -d '\n')
         cd tests
+        export $(grep -v '^#' .env | xargs -d '\n')
         docker-compose up -d
     - name: Install Dependencies
       run: |

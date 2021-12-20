@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Processes | Data Network Dashboards</title>
+  <meta name="description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Processes | Data Network Dashboards" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Processes | Data Network Dashboards" />
+  
+  <meta name="twitter:description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
+  
+
+<meta name="author" content="This document is currently under construction" />
+
+
+<meta name="date" content="2021-12-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="installation.html"/>
+<link rel="next" href="backups.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Data Network Dashboards</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#contributors"><i class="fa fa-check"></i>Contributors</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#considerations"><i class="fa fa-check"></i>Considerations</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledges"><i class="fa fa-check"></i>Acknowledges</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="installation.html"><a href="installation.html"><i class="fa fa-check"></i><b>3</b> Installation</a>
+<ul>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html#first-steps"><i class="fa fa-check"></i>First Steps</a></li>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html#dashboard-viewer-setup"><i class="fa fa-check"></i>Dashboard Viewer setup</a></li>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html#insert-concepts"><i class="fa fa-check"></i>Insert Concepts</a></li>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html#superset-setup"><i class="fa fa-check"></i>Superset setup</a></li>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html#dummy-data"><i class="fa fa-check"></i>Dummy data</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="processes.html"><a href="processes.html"><i class="fa fa-check"></i><b>4</b> Processes</a>
+<ul>
+<li class="chapter" data-level="" data-path="processes.html"><a href="processes.html#data-sources"><i class="fa fa-check"></i>Data Sources</a></li>
+<li class="chapter" data-level="" data-path="processes.html"><a href="processes.html#catalogue-results-files"><i class="fa fa-check"></i>Catalogue Results Files</a></li>
+<li class="chapter" data-level="" data-path="processes.html"><a href="processes.html#materialized-views"><i class="fa fa-check"></i>Materialized Views</a></li>
+<li class="chapter" data-level="" data-path="processes.html"><a href="processes.html#tabs-view-deprecated"><i class="fa fa-check"></i>Tabs View [Deprecated]</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="backups.html"><a href="backups.html"><i class="fa fa-check"></i><b>5</b> Backups</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="restore.html"><a href="restore.html"><i class="fa fa-check"></i><b>5.1</b> Restore</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="customizations.html"><a href="customizations.html"><i class="fa fa-check"></i><b>6</b> Customizations</a>
+<ul>
+<li class="chapter" data-level="" data-path="customizations.html"><a href="customizations.html#platform-logo"><i class="fa fa-check"></i>Platform Logo</a></li>
+<li class="chapter" data-level="" data-path="customizations.html"><a href="customizations.html#platform-title"><i class="fa fa-check"></i>Platform Title</a></li>
+<li class="chapter" data-level="" data-path="customizations.html"><a href="customizations.html#uploader-page-texts"><i class="fa fa-check"></i>Uploader Page Texts</a></li>
+<li class="chapter" data-level="" data-path="customizations.html"><a href="customizations.html#allow-draft-status-updates"><i class="fa fa-check"></i>Allow Draft Status Updates</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="development-instructions.html"><a href="development-instructions.html"><i class="fa fa-check"></i><b>7</b> Development Instructions</a>
+<ul>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#repository-structure-description"><i class="fa fa-check"></i>Repository Structure Description</a></li>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#superset"><i class="fa fa-check"></i>Superset</a></li>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#github-actions"><i class="fa fa-check"></i>Github Actions</a></li>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#tests"><i class="fa fa-check"></i>Tests</a></li>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#python-requirements"><i class="fa fa-check"></i>Python Requirements</a></li>
+<li class="chapter" data-level="" data-path="development-instructions.html"><a href="development-instructions.html#documentation"><i class="fa fa-check"></i>Documentation</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="code-documentation.html"><a href="code-documentation.html"><i class="fa fa-check"></i><b>8</b> Code Documentation</a>
+<ul>
+<li class="chapter" data-level="" data-path="code-documentation.html"><a href="code-documentation.html#apps"><i class="fa fa-check"></i>Apps</a></li>
+<li class="chapter" data-level="" data-path="code-documentation.html"><a href="code-documentation.html#javascript-packages"><i class="fa fa-check"></i>JavaScript Packages</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="dashboards.html"><a href="dashboards.html"><i class="fa fa-check"></i><b>9</b> Dashboards</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html"><i class="fa fa-check"></i><b>9.1</b> Network Dashboard</a>
+<ul>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#label-colors"><i class="fa fa-check"></i>Label Colors</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#css"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#filters"><i class="fa fa-check"></i>Filters</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#overview-tab"><i class="fa fa-check"></i>Overview Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#demographics-tab"><i class="fa fa-check"></i>Demographics Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#data-domains-tab"><i class="fa fa-check"></i>Data Domains Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#data-provenance-tab"><i class="fa fa-check"></i>Data Provenance Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#observation-period-tab"><i class="fa fa-check"></i>Observation Period Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#visit-tab"><i class="fa fa-check"></i>Visit Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#concept-browser-tab"><i class="fa fa-check"></i>Concept Browser Tab</a></li>
+<li class="chapter" data-level="" data-path="PerDatabaseDashboard.html"><a href="PerDatabaseDashboard.html#about-tab"><i class="fa fa-check"></i>About Tab</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html"><i class="fa fa-check"></i><b>9.2</b> Database-Level Dashboard</a>
+<ul>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#label-colors-1"><i class="fa fa-check"></i>Label Colors</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#css-1"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#data-source-filter---hidden"><i class="fa fa-check"></i>Data Source Filter - hidden</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#demographics-tab-1"><i class="fa fa-check"></i>Demographics Tab</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#data-domains-tab-1"><i class="fa fa-check"></i>Data Domains Tab</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#data-provenance-tab-1"><i class="fa fa-check"></i>Data Provenance Tab</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#observation-period-tab-1"><i class="fa fa-check"></i>Observation Period Tab</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#visit-tab-1"><i class="fa fa-check"></i>Visit Tab</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#concept-browser-tab-1"><i class="fa fa-check"></i>Concept Browser Tab</a></li>
+<li class="chapter" data-level="" data-path="database-level-dashboard.html"><a href="database-level-dashboard.html#meta-data-tab"><i class="fa fa-check"></i>Meta Data Tab</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="materialized-views-1.html"><a href="materialized-views-1.html"><i class="fa fa-check"></i><b>9.3</b> Materialized views</a>
+<ul>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#meta_data_table"><i class="fa fa-check"></i>meta_data_table</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#patients_per_country_and_database_type"><i class="fa fa-check"></i>patients_per_country_and_database_type</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#number_of_patients"><i class="fa fa-check"></i>number_of_patients</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#gender"><i class="fa fa-check"></i>gender</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#age1observation_table"><i class="fa fa-check"></i>age1observation_table</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#age1observation_bar_chart"><i class="fa fa-check"></i>age1observation_bar_chart</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#distribution_of_age_at_first_observation_period"><i class="fa fa-check"></i>distribution_of_age_at_first_observation_period</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#year_of_birth"><i class="fa fa-check"></i>year_of_birth</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#avg_num_of_records_per_person"><i class="fa fa-check"></i>avg_num_of_records_per_person</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#data_domain_total_num_of_records"><i class="fa fa-check"></i>data_domain_total_num_of_records</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#number_of_distinct_per_person"><i class="fa fa-check"></i>number_of_distinct_per_person</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#data_provenance"><i class="fa fa-check"></i>data_provenance</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#num_of_patients_in_observation_period"><i class="fa fa-check"></i>num_of_patients_in_observation_period</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#cumulative_observation_time"><i class="fa fa-check"></i>cumulative_observation_time</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#number_of_observation_periods"><i class="fa fa-check"></i>number_of_observation_periods</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#length_of_observation_of_first_observation_period"><i class="fa fa-check"></i>length_of_observation_of_first_observation_period</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#visit_type_bar_chart"><i class="fa fa-check"></i>visit_type_bar_chart</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#visit_type_table"><i class="fa fa-check"></i>visit_type_table</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#domain_filter"><i class="fa fa-check"></i>domain_filter</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#concept_browser_table3"><i class="fa fa-check"></i>concept_browser_table3</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#concept_coverage2"><i class="fa fa-check"></i>concept_coverage2</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#data_density"><i class="fa fa-check"></i>data_density</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#records_per_person"><i class="fa fa-check"></i>records_per_person</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#visit_age_distribution"><i class="fa fa-check"></i>visit_age_distribution</a></li>
+<li class="chapter" data-level="" data-path="materialized-views-1.html"><a href="materialized-views-1.html#concept_browser_table2"><i class="fa fa-check"></i>concept_browser_table2</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="general-deprecated.html"><a href="general-deprecated.html"><i class="fa fa-check"></i><b>9.4</b> General [Deprecated]</a>
+<ul>
+<li class="chapter" data-level="" data-path="general-deprecated.html"><a href="general-deprecated.html#css-2"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="general-deprecated.html"><a href="general-deprecated.html#database-type-and-country-filter"><i class="fa fa-check"></i>Database Type and Country Filter</a></li>
+<li class="chapter" data-level="" data-path="general-deprecated.html"><a href="general-deprecated.html#total-number-of-patients"><i class="fa fa-check"></i>Total Number of Patients</a></li>
+<li class="chapter" data-level="" data-path="general-deprecated.html"><a href="general-deprecated.html#network-growth-by-date"><i class="fa fa-check"></i>Network Growth by Date</a></li>
+<li class="chapter" data-level="" data-path="general-deprecated.html"><a href="general-deprecated.html#patients-per-country"><i class="fa fa-check"></i>Patients per Country</a></li>
+<li class="chapter" data-level="" data-path="general-deprecated.html"><a href="general-deprecated.html#database-types-per-country-1"><i class="fa fa-check"></i>Database Types per Country</a></li>
+<li class="chapter" data-level="" data-path="general-deprecated.html"><a href="general-deprecated.html#world-map"><i class="fa fa-check"></i>World Map</a></li>
+<li class="chapter" data-level="" data-path="general-deprecated.html"><a href="general-deprecated.html#metaDataTable"><i class="fa fa-check"></i>Meta Data</a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="person-deprecated.html"><a href="person-deprecated.html"><i class="fa fa-check"></i><b>9.5</b> Person [Deprecated]</a>
+<ul>
+<li class="chapter" data-level="" data-path="person-deprecated.html"><a href="person-deprecated.html#label-colors-2"><i class="fa fa-check"></i>Label Colors</a></li>
+<li class="chapter" data-level="" data-path="person-deprecated.html"><a href="person-deprecated.html#css-3"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="person-deprecated.html"><a href="person-deprecated.html#data-source-filter-1"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="person-deprecated.html"><a href="person-deprecated.html#age-at-first-observation---table-age1observationtable"><i class="fa fa-check"></i>Age at first observation - Table {#age1ObservationTable}</a></li>
+<li class="chapter" data-level="" data-path="person-deprecated.html"><a href="person-deprecated.html#age-at-first-observation---bars-age1observationbars"><i class="fa fa-check"></i>Age at first observation - Bars {#age1ObservationBars}</a></li>
+<li class="chapter" data-level="" data-path="person-deprecated.html"><a href="person-deprecated.html#year-of-birth-yearofbirth"><i class="fa fa-check"></i>Year of Birth {#yearOfBirth}</a></li>
+<li class="chapter" data-level="" data-path="person-deprecated.html"><a href="person-deprecated.html#gender-1"><i class="fa fa-check"></i>Gender</a></li>
+</ul></li>
+<li class="chapter" data-level="9.6" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html"><i class="fa fa-check"></i><b>9.6</b> Observation Period [Deprecated]</a>
+<ul>
+<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#css-4"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#data-source-filter-2"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#number-of-patients-in-observation-period-numinobservationperiod"><i class="fa fa-check"></i>Number of Patients in Observation Period {#numInObservationPeriod}</a></li>
+<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-start-dates"><i class="fa fa-check"></i>Observation Period Start Dates</a></li>
+<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-end-dates"><i class="fa fa-check"></i>Observation Period End Dates</a></li>
+</ul></li>
+<li class="chapter" data-level="9.7" data-path="visit-deprecated.html"><a href="visit-deprecated.html"><i class="fa fa-check"></i><b>9.7</b> Visit [Deprecated]</a>
+<ul>
+<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#css-5"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#data-source-filter-3"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-type-table-visittypetable"><i class="fa fa-check"></i>Visit Type Table {#visitTypeTable}</a></li>
+<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-types-bars"><i class="fa fa-check"></i>Visit Types Bars</a></li>
+</ul></li>
+<li class="chapter" data-level="9.8" data-path="death-deprecated.html"><a href="death-deprecated.html"><i class="fa fa-check"></i><b>9.8</b> Death [Deprecated]</a>
+<ul>
+<li class="chapter" data-level="" data-path="death-deprecated.html"><a href="death-deprecated.html#css-6"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="death-deprecated.html"><a href="death-deprecated.html#data-source-filter-4"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="death-deprecated.html"><a href="death-deprecated.html#number-of-records"><i class="fa fa-check"></i>Number of Records</a></li>
+<li class="chapter" data-level="" data-path="death-deprecated.html"><a href="death-deprecated.html#death-by-year-per-thousand-people"><i class="fa fa-check"></i>Death By Year per Thousand People</a></li>
+</ul></li>
+<li class="chapter" data-level="9.9" data-path="concepts-browser-deprecated.html"><a href="concepts-browser-deprecated.html"><i class="fa fa-check"></i><b>9.9</b> Concepts Browser [Deprecated]</a>
+<ul>
+<li class="chapter" data-level="" data-path="concepts-browser-deprecated.html"><a href="concepts-browser-deprecated.html#css-7"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="concepts-browser-deprecated.html"><a href="concepts-browser-deprecated.html#data-source-and-domain-filters"><i class="fa fa-check"></i>Data Source and Domain Filters</a></li>
+<li class="chapter" data-level="" data-path="concepts-browser-deprecated.html"><a href="concepts-browser-deprecated.html#number-of-concepts"><i class="fa fa-check"></i>Number of Concepts</a></li>
+<li class="chapter" data-level="" data-path="concepts-browser-deprecated.html"><a href="concepts-browser-deprecated.html#concept-browser-table-conceptbrowsertable"><i class="fa fa-check"></i>Concept Browser Table {#conceptBrowserTable}</a></li>
+</ul></li>
+<li class="chapter" data-level="9.10" data-path="provenance-deprecated.html"><a href="provenance-deprecated.html"><i class="fa fa-check"></i><b>9.10</b> Provenance [Deprecated]</a>
+<ul>
+<li class="chapter" data-level="" data-path="provenance-deprecated.html"><a href="provenance-deprecated.html#css-8"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="provenance-deprecated.html"><a href="provenance-deprecated.html#data-source-filter-5"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="provenance-deprecated.html"><a href="provenance-deprecated.html#condition-drug-procedure-device-measurement-observation-types-dataprovenancecharts"><i class="fa fa-check"></i>Condition &amp; Drug &amp; Procedure &amp; Device &amp; Measurement &amp; Observation Types {#dataProvenanceCharts}</a></li>
+</ul></li>
+<li class="chapter" data-level="9.11" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html"><i class="fa fa-check"></i><b>9.11</b> Data Domains [Deprecated]</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#css-9"><i class="fa fa-check"></i>CSS</a></li>
+<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#data-source-filter-6"><i class="fa fa-check"></i>Data Source Filter</a></li>
+<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#average-number-of-records-per-person-avgrecordsperperson"><i class="fa fa-check"></i>Average Number of Records per Person {#avgRecordsPerPerson}</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data Network Dashboards</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="processes" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Processes</h1>
+<div id="data-sources" class="section level3 unnumbered" number="">
+<h3>Data Sources</h3>
+<p><strong>Target: platform user</strong></p>
+<p>Before uploading any data to this platform, a data source owner has to create a data source instance to then associated the upload data with.</p>
+<p>The creation of data source is done through the <code>[BASE_URL]/uploader/</code> URL, where 7 fields are expected:</p>
+<ol style="list-style-type: decimal">
+<li>name: an extensive name</li>
+<li>acronym: a short name</li>
+<li>country: where is the data source localized</li>
+<li>link (Optional): web page of the data source</li>
+<li>database type: type of OMOP database</li>
+<li>coordinates: a more accurate representation of the data source’s localization</li>
+<li>hash (Optional): the internal unique identifier of a data source</li>
+</ol>
+<p>If you access <code>[BASE_URL]/uploader/</code> the 7th field (hash) is set automatically for something random, however, if you want to set it use the <code>[BASE_URL]/uploader/[HASH]/</code> URL.</p>
+<p>To avoid duplication on the database type field, this field is transformed (use title case and trimmed) and then is checked there is already a record (Database Type) with the same value.</p>
+<p>There are several ways to create a data source:</p>
+<ol style="list-style-type: decimal">
+<li>Create through a web form</li>
+</ol>
+<p>By accessing the <code>[BASE_URL]/uploader/</code> URL, you will get a form where you can field the fields, where the country field is a dropdown and the coordinates field is set through a map widget.</p>
+<p><img src="images/processes/processes_data_source_creation.png" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Automatically create when performing a GET to the <code>[BASE_URL]/uploader/</code> URL</li>
+</ol>
+<p>If the Network Dashboards platform is being used as a third-party application and the main application has all the data for the required fields, the data source can be automatically created and the user is redirected directly to the upload files page.</p>
+<p>To perform this, each field should be provided as a URL parameter when accessing the <code>[BASE_URL]/uploader/</code> URL. If all required fields are provided and are valid the data source is created and the user is redirected to the upload files page. If a required field is missing or is not valid the webform is presented to the user so it can manually fill those fields.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Automatically create by performing a POST to the <code>[BASE_URL]/uploader/</code> URL</li>
+</ol>
+<p>Since the creation URL does not have csrf cookie protection, you can perform a POST request as you were submitting a form.</p>
+<p><strong>Notes For the automatic options</strong>:</p>
+<ul>
+<li><p>Since the coordinates field is composed of two fields (latitude, longitude), it should be submitted as <code>coordinates_0=[latitude]</code> and <code>coordinates_1=[longitude]</code></p></li>
+<li><p>The country field should match one of the available on the dropdown of the webform.</p></li>
+</ul>
+<div id="draft-status" class="section level4 unnumbered" number="">
+<h4>Draft Status</h4>
+<p>After a data owner uploads data into his data source, he might not want to make it public right away.
+To achieve this a data source has a boolean field telling whether if the data source is in draft mode.
+This then also allows creating dashboards with data of non-draft data sources only.</p>
+<p>There are three ways to change the value of this draft status field:</p>
+<ol style="list-style-type: decimal">
+<li>Through the Django admin app (<code>[BASE_URL]/admin/</code>)</li>
+<li>Accessing the respective edit page of the data source. This requires a feature to be enabled, which is more detailed on the <a href="customizations.html#allow-draft-status-updates">Allow Draft Status Updates</a> section of the Customization chapter.</li>
+<li>Perform a PATCH request to the <code>[BASE_URL]/uploader/[HASH]/</code> URL. On this request, other fields, other than the draft status, can be changed. The body of the request must be a JSON object with the fields that will suffer changes and their new values.</li>
+</ol>
+</div>
+</div>
+<div id="catalogue-results-files" class="section level3 unnumbered" number="">
+<h3>Catalogue Results Files</h3>
+<p><strong>Target: platform user</strong></p>
+<p>Once a data source is created you can access its upload page by accessing the <code>[BASE_URL]/uploader/[HASH]/</code>. If no data source has the provided hash you will be redirected back to the data source creation form.</p>
+<p>On the upload page you can:</p>
+<ol style="list-style-type: decimal">
+<li>Go to the edit page of your data source</li>
+<li>Upload a catalogue results file</li>
+<li>Check the upload history</li>
+</ol>
+<p>A catalogue results file is a CSV file, the result obtained after running the <a href="https://github.com/EHDEN/CatalogueExport">EHDEN/CatalogueExport</a> R package on an OMOP database. It is a variant of the <a href="https://github.com/OHDSI/Achilles">OHDSI/Achilles</a> where it only extracts a subset of analyses of the ACHILLES’ original set.</p>
+<p>The upload form expects a CSV file with the following columns:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Required/Non-Nullable/Non-Empty</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>analysis_id</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>stratum_1</td>
+<td>string</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>stratum_2</td>
+<td>string</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td>stratum_3</td>
+<td>string</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>stratum_4</td>
+<td>string</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td>stratum_5</td>
+<td>string</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>count_value</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>min_value</td>
+<td>double</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>max_value</td>
+<td>double</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td>avg_value</td>
+<td>double</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>stdev_value</td>
+<td>double</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td>median_value</td>
+<td>double</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>p10_value</td>
+<td>double</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td>p25_value</td>
+<td>double</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>p75_value</td>
+<td>double</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td>p90_value</td>
+<td>double</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>The uploaded file must:</p>
+<ul>
+<li><p>either contain the first 7 columns OR all 16 columns</p></li>
+<li><p>contain the columns in the same order as presented in the table above</p></li>
+</ul>
+<p>While parsing the uploaded file, some data is extracted to then present on the Upload history and to update data source information. This data is extracted from the record with analysis id 0, <strong>which is required to be present on the file</strong>, and 5000, which is optional. Next is presented the data extracted and their description:</p>
+<ul>
+<li><p>R Package Version: the version of CatalogueExport R package used</p></li>
+<li><p>Generation Date: date at which the CatalogueExport was executed on the OMOP database</p></li>
+<li><p>Source Release Date: date at which the OMOP database was released</p></li>
+<li><p>CDM Release Date: date at which the used CDM version was released</p></li>
+<li><p>CDM Version: version of the CDM used</p></li>
+<li><p>Vocabulary Version: version of the vocabulary used</p></li>
+</ul>
+<p>The next table is presented where the previous data is stored on the rows with analysis id 0 and 5000:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Analysis Id</th>
+<th>Stratum 1</th>
+<th>Stratum 2</th>
+<th>Stratum 3</th>
+<th>Stratum 4</th>
+<th>Stratum 5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td></td>
+<td>R Package Version</td>
+<td>Generation Date</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>5000</td>
+<td></td>
+<td>Source Release Date</td>
+<td>CDM Release Date</td>
+<td>CDM Version</td>
+<td>Vocabulary Version</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="materialized-views" class="section level3 unnumbered" number="">
+<h3>Materialized Views</h3>
+<p><strong>Target: admin user</strong></p>
+<p>For each chart, Superset has an underlying SQL query which in our case is run every time a chart is rendered. If one of these queries takes too long to execute the charts will also take too long until they are rendered and eventually users might get timeout messages given a bad user experience.</p>
+<p>To avoid this problem, instead of executing the raw SQL query we create a <a href="https://www.postgresql.org/docs/10/rules-materializedviews.html">postgres materialized view</a> of the query, which is then used to feed the data to the chart. So only a simple <code>SELECT x FROM x</code> query is executed when a chart is rendered.</p>
+<p>So whenever I create a chart I have to access the Postgres console? No, we created an unmanaged Materialized Queries model that maps to the materialized views on Postgres. With it you can create new materialized views through the Django admin app, by accessing the <code>[BASE_URL]/admin/</code> URL.</p>
+<p><img src="images/processes/processes_materialized_view_creation.png" /></p>
+<p>You have to provide the materialized view name and its query, which will then be used to execute the query <code>CREATE MATERIALIZED VIEW [name] AS [query]</code>, which will be executed on a background task so the browser doesn’t hang and times out, in case of complicated queries. Taking this into account, the record associated will not appear on the Django admin app until the <code>CREATE MATERIALIZED VIEW</code> query finishes.</p>
+<p>To give feedback on the background task we use <a href="https://github.com/celery/django-celery-results">celery/django-celery-results</a>, so you can check the status of a task on the Task Results model of the Celery Results app</p>
+<p><img src="images/processes/processes_task_results.png" /></p>
+<p>After the creation of a Materialized Query, the will be a message telling the id of the task which is executing the <code>CREATE MATERIALIZED VIEW</code> query. You can then check for the record associated with the task, click on the id to get more details. If something went wrong check the error message either on Result Data or Traceback fields under the Result section</p>
+<p><img src="images/processes/processes_task_result_info.png" /></p>
+<p>After all this, the final step is to add the materialized view as a Dataset. Login into Superset, then go to Data -&gt; Datasets and create a new one. Select the <code>Achilles</code> database, the <code>public</code> schema, then the created materialized view and click “ADD”. After this, the materialized view can be used as a data source for a new chart.</p>
+</div>
+<div id="tabs-view-deprecated" class="section level3 unnumbered" number="">
+<h3>Tabs View [Deprecated]</h3>
+<p>Note: This app is no longer maintaned and the associated urls were unlinked.</p>
+<p><strong>Target: admin user</strong></p>
+<p>Once there are data sources on the platform, data was uploaded to them and there are dashboards created on Superset, researchers can now browse through the dashboards and analyze and compare the data of the different data sources.
+One way to allow this would be to let them browse through the dashboard list on Superset. However, if there was some dashboards not ready to show to the public users, they could still access them.</p>
+<p>For that, it was created a page, with a sidebar, where public users could browse through the available and ready dashboards.
+It can be accessed through the URL <code>[BASE_URL]/tabs/</code></p>
+<p><img src="images/processes/tabs.png" /></p>
+<p>The sidebar entries can be configured through the Django admin app, accessing the Tabsmanager app section.
+Here two models are available to create:</p>
+<ul>
+<li>Tab Groups: They allow to groups several sidebar entries within a collapsable group.</li>
+</ul>
+<p><img src="images/processes/tabs-group.png" /></p>
+<ul>
+<li>Tabs: Will create a clickable entry on the sidebar that can be presented within a group. When a tab is clicked the associated dashboard will be displayed on the page.</li>
+</ul>
+<p>Each entry, tab, or group of them, expects:</p>
+<ul>
+<li>Title/Name</li>
+<li>Icon: Name of a font awesome version 5 icon</li>
+<li>Position: Allows to order entries along the sidebar. If a Tab has a group, then this field will order the tabs within that group only.</li>
+<li>Visible: If whether or not this tab or group should be visible. The goal of this field is to avoid having to delete the record from the database just because a certain tab is not ready and later on created it from scratch.</li>
+</ul>
+<p>Tabs additionally expect an URL, which will be used to display a Superset dashboard in an iframe.
+To hide Superset’s menu bar, an additional <code>standalone</code> URL parameter should be appended to the provided URL of a tab.
+The value of the <code>standalone</code> arguments depends on the expected result:</p>
+<ul>
+<li>1: menu bar is hidden. the bar where the dashboard title, publish status, and three dots option menu are present will still appear</li>
+<li>2: both the menu bar and the dashboard title bar are hidden.</li>
+</ul>
+<p>By default, the dashboard of the first tab is displayed on the page, however, if one wants a specific tab to be displayed when the page is opened, its title should be present in the hash part of the URL.
+For example, if there is a tab called People, to make that tab selected at the start the following URL should be used <code>[BASE_URL]/tabs/#People</code>.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="installation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="backups.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/EHDEN/NetworkDashboards/edit/master/processes.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["DataNetworkDashboards.pdf", "DataNetworkDashboards.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
