@@ -20,6 +20,6 @@ def uploader_decorator(view_func):
                 return HttpResponseForbidden()
             return view_func(request, *args, **kwargs)
 
-        return wraps(wrapped_view)(check_host)
+        wrapped_view = wraps(wrapped_view)(check_host)
 
-    return view_func
+    return wrapped_view
