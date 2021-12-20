@@ -19,7 +19,10 @@
     {% block content %}
     {% endblock %}
 
-    <script src="{% static "jquery/dist/jquery.slim.min.js" %}"></script>
+
+    <script src="{% static "jquery/dist/jquery.min.js" %}"></script>
+    {% block body_before_bootstrap %}
+    {% endblock %}
     <script src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
 
     {% block body_tail %}

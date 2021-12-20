@@ -1,0 +1,32 @@
+[
+  {
+    "model": "uploader.datasource",
+    "pk": 1,
+    "fields": {
+      "name": "test1",
+      "acronym": "test1",
+      "hash": "test1",
+      "release_date": null,
+      "database_type": "Test",
+      "country": 178,
+      "latitude": 39.7958755252971,
+      "longitude": -8.349609375,
+      "link": ""
+    }
+  },
+  {
+    "model": "uploader.datasource",
+    "pk": 2,
+    "fields": {
+      "name": "test2",
+      "acronym": "test2",
+      "hash": "test2",
+      "release_date": null,
+      "database_type": "Test",
+      "country": 178,
+      "latitude": 39.8963912497403,
+      "longitude": -8.77989202737808,
+      "link": ""
+    }
+  }
+]

@@ -1,126 +1,100 @@
-from __future__ import absolute_import, unicode_literals
-
-from typing import Union
-
-import pandas
 from celery import shared_task
 from celery.utils.log import get_task_logger
-from django.conf import settings
 from django.core import serializers
 from django.core.cache import cache
-from django.db import connections, router, transaction
+from django.db import router, transaction
 from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
 
-from .models import AchillesResults, AchillesResultsArchive
+from .file_handler.checks import extract_data_from_uploaded_file
+from .file_handler.updates import update_achilles_results_data
+from .models import AchillesResults, PendingUpload, UploadHistory
 
 logger = get_task_logger(__name__)
 
 
 @shared_task
-def update_achilles_results_data(
-    db_id: int, last_upload_id: Union[int, None], achilles_results: str
-) -> None:
-    logger.info("Worker started [datasource %d]", db_id)
-    cache.incr("celery_workers_updating", ignore_key_check=True)
+def upload_results_file(pending_upload_id: int):
+    pending_upload = PendingUpload.objects.get(id=pending_upload_id)
 
-    # several workers can update records concurrently -> same as -> several threads can read from the same file
-    with RWLock(
-        cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
-    ):
-        # but only one worker can make updates associated to a specific data source at the same time
-        with cache.lock(f"celery_worker_lock_db_{db_id}"):
-            logger.info("Updating achilles results records [datasource %d]", db_id)
+    pending_upload.status = PendingUpload.STATE_STARTED
+    pending_upload.save()
 
-            entries = pandas.read_json(achilles_results)
+    data_source = pending_upload.data_source
 
-            if last_upload_id:
-                # if there were any records uploaded before
-                #  move them to the AchillesResultsArchive table
+    logger.info(
+        "Started to process file [datasource %d, pending upload %d]",
+        data_source.id,
+        pending_upload_id,
+    )
+
+    try:
+        logger.info(
+            "Checking file format and data [datasource %d, pending upload %d]",
+            data_source.id,
+            pending_upload_id,
+        )
+        file_metadata, data = extract_data_from_uploaded_file(
+            pending_upload.uploaded_file
+        )
+
+        try:
+            cache.incr("celery_workers_updating", ignore_key_check=True)
+
+            with RWLock(  # several workers can update their records in paralel -> same as -> several threads can read from the same file
+                cache.client.get_client(),
+                "celery_worker_updating",
+                RWLock.READ,
+                expire=None,
+            ), cache.lock(  # but only one worker can make updates associated to a specific data source at the same time
+                f"celery_worker_lock_db_{data_source.id}"
+            ), transaction.atomic(
+                using=router.db_for_write(AchillesResults)
+            ):
                 logger.info(
-                    "Moving old records to the %s table [datasource %d]",
-                    AchillesResultsArchive._meta.db_table,
-                    db_id,
+                    "Updating results data [datasource %d, pending upload %d]",
+                    data_source.id,
+                    pending_upload_id,
                 )
-                with transaction.atomic(
-                    using=router.db_for_write(AchillesResults)
-                ), connections["achilles"].cursor() as cursor:
-                    cursor.execute(
-                        f"""
-                        INSERT INTO {AchillesResultsArchive._meta.db_table} (
-                            {AchillesResultsArchive.analysis_id.field_name},
-                            {AchillesResultsArchive.stratum_1.field_name},
-                            {AchillesResultsArchive.stratum_2.field_name},
-                            {AchillesResultsArchive.stratum_3.field_name},
-                            {AchillesResultsArchive.stratum_4.field_name},
-                            {AchillesResultsArchive.stratum_5.field_name},
-                            {AchillesResultsArchive.count_value.field_name},
-                            {AchillesResultsArchive.min_value.field_name},
-                            {AchillesResultsArchive.max_value.field_name},
-                            {AchillesResultsArchive.avg_value.field_name},
-                            {AchillesResultsArchive.stdev_value.field_name},
-                            {AchillesResultsArchive.median_value.field_name},
-                            {AchillesResultsArchive.p10_value.field_name},
-                            {AchillesResultsArchive.p25_value.field_name},
-                            {AchillesResultsArchive.p75_value.field_name},
-                            {AchillesResultsArchive.p90_value.field_name},
-                            {AchillesResultsArchive.data_source.field.column},
-                            {AchillesResultsArchive.upload_info.field.column}
-                        )
-                        SELECT
-                            {AchillesResults.analysis_id.field_name},
-                            {AchillesResults.stratum_1.field_name},
-                            {AchillesResults.stratum_2.field_name},
-                            {AchillesResults.stratum_3.field_name},
-                            {AchillesResults.stratum_4.field_name},
-                            {AchillesResults.stratum_5.field_name},
-                            {AchillesResults.count_value.field_name},
-                            {AchillesResults.min_value.field_name},
-                            {AchillesResults.max_value.field_name},
-                            {AchillesResults.avg_value.field_name},
-                            {AchillesResults.stdev_value.field_name},
-                            {AchillesResults.median_value.field_name},
-                            {AchillesResults.p10_value.field_name},
-                            {AchillesResults.p25_value.field_name},
-                            {AchillesResults.p75_value.field_name},
-                            {AchillesResults.p90_value.field_name},
-                            %s, %s
-                        FROM {AchillesResults._meta.db_table}
-                        """,
-                        (db_id, last_upload_id),
-                    )
+
+                pending_upload.uploaded_file.seek(0)
+                update_achilles_results_data(logger, pending_upload, file_metadata)
 
                 logger.info(
-                    "Deleting old records from %s table [datasource %d]",
-                    AchillesResults._meta.db_table,
-                    db_id,
+                    "Creating an upload history record [datasource %d, pending upload %d]",
+                    data_source.id,
+                    pending_upload_id,
                 )
-                AchillesResults.objects.filter(data_source_id=db_id).delete()
 
-            entries["data_source_id"] = db_id
+                data_source.release_date = data["source_release_date"]
+                data_source.save()
 
-            logger.info(
-                "Inserting new records on %s table [datasource %d]",
-                AchillesResults._meta.db_table,
-                db_id,
-            )
+                pending_upload.uploaded_file.seek(0)
+                UploadHistory.objects.create(
+                    data_source=data_source,
+                    r_package_version=data["r_package_version"],
+                    generation_date=data["generation_date"],
+                    cdm_release_date=data["cdm_release_date"],
+                    cdm_version=data["cdm_version"],
+                    vocabulary_version=data["vocabulary_version"],
+                    uploaded_file=pending_upload.uploaded_file.file,
+                    pending_upload_id=pending_upload.id,
+                )
 
-            entries.to_sql(
-                AchillesResults._meta.db_table,
-                "postgresql"
-                f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
-                f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
-                f"/{settings.DATABASES['achilles']['NAME']}",
-                if_exists="append",
-                index=False,
-            )
+                pending_upload.uploaded_file.delete()
+                pending_upload.delete()
+        finally:
+            workers_updating = cache.decr("celery_workers_updating")
+    except Exception as e:
+        pending_upload.status = PendingUpload.STATE_FAILED
+        pending_upload.save()
+
+        raise e
 
     # The lines below can be used to later update materialized views of each chart
     # To be more efficient, they should only be updated when the is no more workers inserting records
-    if not cache.decr("celery_workers_updating"):
-        refresh(logger, db_id)
-
-    logger.info("Done [datasource %d]", db_id)
+    if not workers_updating:
+        refresh(logger, data_source.id)
 
 
 @shared_task

@@ -12,9 +12,8 @@ def uploader_decorator(view_func):
       If not response with 403
     Else don't do any verification
     """
+    wrapped_view = csrf_exempt(view_func)
     if not settings.SINGLE_APPLICATION_MODE:
-        wrapped_view = csrf_exempt(view_func)
-
         def check_host(request, *args, **kwargs):
             if request.get_host() != settings.MAIN_APPLICATION_HOST:
                 return HttpResponseForbidden()
