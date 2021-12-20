@@ -1,0 +1,111 @@
+[MESSAGES CONTROL]
+
+# Disable the message, report, category or checker with the given id(s). You
+# can either give multiple identifiers separated by comma (,) or put this
+# option multiple times (only on the command line, not in the configuration
+# file where it should appear only once). You can also use "--disable=all" to
+# disable everything first and then reenable specific checks. For example, if
+# you want to run only the similarities checker, you can use "--disable=all
+# --enable=similarities". If you want to run only the classes checker, but have
+# no Warning level messages displayed, use "--disable=all --enable=classes
+# --disable=W".
+disable=unnecessary-semicolon,
+        superfluous-parens,
+        bad-mcs-classmethod-argument,
+        too-many-lines,
+        bad-whitespace,
+        I0014,
+        relative-import,
+        E1103,
+        C0322,
+        fixme,
+        too-many-instance-attributes,
+        no-init,
+        C0323,
+        trailing-whitespace,
+        property-on-old-class,
+        too-few-public-methods,
+        invalid-name,
+        exec-used,
+        assignment-from-none,
+        C0324,
+        abstract-class-little-used,
+        pointless-except,
+        redefined-outer-name,
+        star-args,
+        missing-final-newline,
+        bad-mcs-method-argument,
+        empty-docstring,
+        no-name-in-module,
+        global-variable-undefined,
+        too-many-return-statements,
+        W0701,
+        bad-builtin,
+        W5103,
+        deprecated-lambda,
+        abstract-method,
+        no-member,
+        unused-format-string-key,
+        no-self-use,
+        wildcard-import,
+        too-many-public-methods,
+        broad-except,
+        bad-classmethod-argument,
+        bad-continuation,
+        attribute-defined-outside-init,
+        W0713,
+        ungrouped-imports,
+        anomalous-backslash-in-string,
+        too-many-ancestors,
+        wrong-import-order,
+        multiple-statements,
+        missing-docstring,
+        no-self-argument,
+        global-statement,
+        super-init-not-called,
+        raise-missing-from,
+        protected-access,
+        invalid-str-returned,
+        invalid-repr-returned,
+
+# Enable the message, report, category or checker with the given id(s). You can
+# either give multiple identifier separated by comma (,) or put this option
+# multiple time (only on the command line, not in the configuration file where
+# it should appear only once). See also the "--disable" option for examples.
+enable=
+
+
+[FORMAT]
+
+# Maximum number of characters on a single line.
+max-line-length=159
+
+# Maximum number of lines in a module.
+max-module-lines=1000
+
+
+[DESIGN]
+
+# Maximum number of attributes for a class (see R0902).
+max-attributes=7
+
+# Maximum number of branch for function / method body.
+max-branches=15
+
+# Maximum number of locals for function / method body.
+max-locals=15
+
+# Maximum number of parents for a class (see R0901).
+max-parents=7
+
+# Maximum number of public methods for a class (see R0904).
+max-public-methods=20
+
+# Maximum number of return / yield for function / method body.
+max-returns=6
+
+# Maximum number of statements in function / method body.
+max-statements=60
+
+# Minimum number of public methods for a class (see R0903).
+min-public-methods=1

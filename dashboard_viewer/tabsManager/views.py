@@ -91,7 +91,7 @@ def get_menu():
 
 
 class APITabsView(rest_views.APIView):
-    def get(self, request):
+    def get(self, _request):
         return Response(get_menu())
 
 

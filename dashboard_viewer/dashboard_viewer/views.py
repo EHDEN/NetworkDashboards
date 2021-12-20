@@ -8,7 +8,7 @@ from django.http import (
 from django.template import loader
 
 
-def server_error(request):
+def server_error(_request):
     template = loader.get_template("500.html")
     context = {
         "constance_config": constance.config,

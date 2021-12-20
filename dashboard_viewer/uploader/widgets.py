@@ -12,12 +12,12 @@ class ListTextWidget(forms.TextInput):
     """
 
     def __init__(self, query_obj, *args, **kwargs):
-        super(ListTextWidget, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.query_obj = query_obj
 
     def render(self, name, value, attrs=None, renderer=None):
         attrs.update({"list": f"{name}_list", "autocomplete": "off"})
-        text_html = super(ListTextWidget, self).render(name, value, attrs=attrs)
+        text_html = super().render(name, value, attrs=attrs)
         data_list = f'<datalist id="{name}_list">'
         for item in self.query_obj.all():
             data_list += f'<option value="{item}">'
@@ -59,9 +59,7 @@ class CoordinatesWidget(forms.MultiWidget):
         super().__init__(widgets, *args, **kwargs)
 
     def render(self, name, value, attrs=None, renderer=None):
-        text_inputs = super(CoordinatesWidget, self).render(
-            name, value, attrs, renderer
-        )
+        text_inputs = super().render(name, value, attrs, renderer)
 
         lat_input, lon_input = [
             inp for inp in self.html_tags_regex.split(text_inputs) if inp != ""
