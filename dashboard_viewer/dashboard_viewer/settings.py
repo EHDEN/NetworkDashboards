@@ -109,6 +109,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.media",
             ],
         },
     },
@@ -319,10 +320,8 @@ MARTOR_ENABLE_CONFIGS = {
 TEST_RUNNER = "dashboard_viewer.runners.CeleryTestSuiteRunner"
 
 
-"""
-Variables that allow restricting the access to the uploader app if this Django
-app is being used as a third-party tool and is being iframed. 
-"""
+# Variables that allow restricting the access to the uploader app if this Django
+#  app is being used as a third-party tool and is being iframed.
 SINGLE_APPLICATION_MODE = strtobool(os.environ.get("SINGLE_APPLICATION_MODE", "y")) == 1
 MAIN_APPLICATION_HOST = os.environ.get("MAIN_APPLICATION_HOST")
 
@@ -339,3 +338,6 @@ if not SINGLE_APPLICATION_MODE:
         )
 
     X_FRAME_OPTIONS = f"ALLOW-FROM https://{MAIN_APPLICATION_HOST}/"
+
+# required since django 3.2
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
