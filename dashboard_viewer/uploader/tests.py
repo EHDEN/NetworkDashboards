@@ -4,10 +4,16 @@ import logging
 import numpy
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase, TransactionTestCase, override_settings, tag
+from django.test import override_settings, tag, TestCase, TransactionTestCase
 
-from .file_handler.checks import (DuplicatedMetadataRow, FileChecksException, InvalidFieldValue, InvalidFileFormat,
-                                  MissingFieldValue, extract_data_from_uploaded_file)
+from .file_handler.checks import (
+    DuplicatedMetadataRow,
+    extract_data_from_uploaded_file,
+    FileChecksException,
+    InvalidFieldValue,
+    InvalidFileFormat,
+    MissingFieldValue,
+)
 from .file_handler.updates import update_achilles_results_data
 from .models import (
     AchillesResults,

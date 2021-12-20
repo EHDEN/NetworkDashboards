@@ -172,7 +172,7 @@ def create_data_source(request, *_, **kwargs):
                 obj.data_source = data_source
                 obj.save()
 
-                return redirect("/uploader/{}".format(obj.hash))
+                return redirect(f"/uploader/{obj.hash}")
 
             # since the form isn't valid, lets maintain only the valid fields
             _leave_valid_fields_values_only(request, initial, aux_form)
@@ -216,7 +216,7 @@ def create_data_source(request, *_, **kwargs):
                     obj.name,
                 ),
             )
-            return redirect("/uploader/{}".format(obj.hash))
+            return redirect(f"/uploader/{obj.hash}")
 
     return render(
         request,
@@ -270,7 +270,7 @@ def edit_data_source(request, *_, **kwargs):
                 request,
                 format_html("Data source <b>{}</b> edited with success.", obj.name),
             )
-            return redirect("/uploader/{}".format(obj.hash))
+            return redirect(f"/uploader/{obj.hash}")
 
     return render(
         request,

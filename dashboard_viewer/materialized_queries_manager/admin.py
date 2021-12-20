@@ -43,7 +43,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
         if to_field and not self.to_field_allowed(request, to_field):
             raise DisallowedModelAdminToField(
-                "The field %s cannot be referenced." % to_field
+                f"The field {to_field} cannot be referenced."
             )
 
         opts = self.model._meta
@@ -202,7 +202,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
             msg = format_html(_(self._get_first_phrase()), **msg_dict)
             self.message_user(request, msg, messages.SUCCESS)
             redirect_url = reverse(
-                "admin:%s_%s_add" % (opts.app_label, opts.model_name),
+                f"admin:{opts.app_label}_{opts.model_name}_add",
                 current_app=self.admin_site.name,
             )
             redirect_url = add_preserved_filters(
@@ -228,8 +228,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
             background_task_id = getattr(self, "background_task").id
             try:
                 task_url = reverse(
-                    "admin:%s_%s_change"
-                    % (TaskResult._meta.app_label, TaskResult._meta.model_name),
+                    f"admin:{TaskResult._meta.app_label}_{TaskResult._meta.model_name}_change",
                     args=(
                         quote(TaskResult.objects.get(task_id=background_task_id).pk),
                     ),

@@ -14,6 +14,7 @@ def uploader_decorator(view_func):
     """
     wrapped_view = csrf_exempt(view_func)
     if not settings.SINGLE_APPLICATION_MODE:
+
         def check_host(request, *args, **kwargs):
             if request.get_host() != settings.MAIN_APPLICATION_HOST:
                 return HttpResponseForbidden()
