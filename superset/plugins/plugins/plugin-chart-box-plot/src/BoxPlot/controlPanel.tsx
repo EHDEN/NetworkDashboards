@@ -17,38 +17,35 @@
  * under the License.
  */
 import React from 'react';
+import { t } from '@superset-ui/core';
 import {
-  FeatureFlag,
-  isFeatureEnabled,
-  QueryFormColumn,
-  QueryMode,
-  t,
-} from '@superset-ui/core';
-  
-import {
-  ColumnOption,
+  formatSelectOptions,
+  D3_FORMAT_OPTIONS,
   ControlConfig,
+  ColumnOption,
   ControlStateMapping,
   ControlPanelsContainerProps,
-  D3_FORMAT_DOCS,
-  D3_FORMAT_OPTIONS,
-  D3_TIME_FORMAT_OPTIONS,
-  formatSelectOptions,
-  sections,
   sharedControls,
-  QueryModeLabel,
+  sections,
 } from '@superset-ui/chart-controls';
-import { DEFAULT_FORM_DATA } from '../Pie/types';
 
-const { emitFilter } = DEFAULT_FORM_DATA;
+export enum QueryMode {
+  aggregate = 'aggregate',
+  raw = 'raw',
+}
+
+const QueryModeLabel = {
+  [QueryMode.aggregate]: t('Aggregate'),
+  [QueryMode.raw]: t('Raw Records'),
+};
 
 function getQueryMode(controls: ControlStateMapping): QueryMode {
   const mode = controls?.query_mode?.value;
   if (mode === QueryMode.aggregate || mode === QueryMode.raw) {
     return mode as QueryMode;
   }
-  const rawColumns = controls?.all_columns?.value as QueryFormColumn[] | undefined;
-  const hasRawColumns = rawColumns && rawColumns.length > 0;
+  const rawColumns = controls?.all_columns?.value;
+  const hasRawColumns = rawColumns && (rawColumns as string[])?.length > 0;
   return hasRawColumns ? QueryMode.raw : QueryMode.aggregate;
 }
 
@@ -56,7 +53,9 @@ function getQueryMode(controls: ControlStateMapping): QueryMode {
  * Visibility check
  */
 function isQueryMode(mode: QueryMode) {
-  return ({ controls }: ControlPanelsContainerProps) => getQueryMode(controls) === mode;
+  return ({ controls }: ControlPanelsContainerProps) => {
+    return getQueryMode(controls) === mode;
+  };
 }
 
 const isAggMode = isQueryMode(QueryMode.aggregate);
@@ -64,13 +63,21 @@ const isRawMode = isQueryMode(QueryMode.raw);
 
 const queryMode: ControlConfig<'RadioButtonControl'> = {
   type: 'RadioButtonControl',
-  label: t('Query mode'),
+  label: t('Query Mode'),
   default: null,
   options: [
-    [QueryMode.aggregate, QueryModeLabel[QueryMode.aggregate]],
-    [QueryMode.raw, QueryModeLabel[QueryMode.raw]]
+    {
+      label: QueryModeLabel[QueryMode.aggregate],
+      value: QueryMode.aggregate,
+    },
+    {
+      label: QueryModeLabel[QueryMode.raw],
+      value: QueryMode.raw,
+    },
   ],
-  mapStateToProps: ({ controls }) => ({ value: getQueryMode(controls) }),
+  mapStateToProps: ({ controls }) => {
+    return { value: getQueryMode(controls) };
+  },
 };
 
 const all_columns: typeof sharedControls.groupby = {
@@ -209,20 +216,6 @@ export default {
       expanded: true,
       controlSetRows: [
         ['color_scheme'],
-        isFeatureEnabled(FeatureFlag.DASHBOARD_CROSS_FILTERS)
-          ? [
-              {
-                name: 'emit_filter',
-                config: {
-                  type: 'CheckboxControl',
-                  label: t('Enable emitting filters'),
-                  default: emitFilter,
-                  renderTrigger: true,
-                  description: t('Enable emmiting filters.'),
-                },
-              },
-            ]
-          : [],
         [
           {
             name: 'x_ticks_layout',
@@ -250,20 +243,6 @@ export default {
               description: `${t('D3 format syntax: https://github.com/d3/d3-format')} ${t(
                 'Only applies when "Label Type" is set to show values.',
               )}`,
-            },
-          },
-        ],
-        [
-          {
-            name: 'date_format',
-            config: {
-              type: 'SelectControl',
-              freeForm: true,
-              label: t('Date format'),
-              renderTrigger: true,
-              choices: D3_TIME_FORMAT_OPTIONS,
-              default: 'smart_date',
-              description: D3_FORMAT_DOCS,
             },
           },
         ],

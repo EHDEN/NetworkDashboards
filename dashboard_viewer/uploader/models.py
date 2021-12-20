@@ -84,6 +84,7 @@ class DataSource(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     link = models.URLField(help_text="Link to home page of the data source", blank=True)
+    draft = models.BooleanField(default=True)
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None

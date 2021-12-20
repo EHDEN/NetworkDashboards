@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { EchartsBoxPlotChartPlugin } from '../src';
+import { EchartsPieChartPlugin, EchartsTimeseriesChartPlugin } from '../src';
 
 describe('@superset-ui/plugin-chart-echarts', () => {
   it('exists', () => {
-    expect(EchartsBoxPlotChartPlugin).toBeDefined();
+    expect(EchartsPieChartPlugin).toBeDefined();
+    expect(EchartsTimeseriesChartPlugin).toBeDefined();
   });
 });

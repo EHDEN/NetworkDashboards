@@ -9,21 +9,21 @@ x-superset-volumes: &superset-volumes
   - ./superset/docker-init.sh:/app/docker/docker-init.sh
   - superset_home:/app/superset_home
 x-superset-environment: &superset-environment
+  CYPRESS_CONFIG: "false"
+  DATABASE_DB: ${POSTGRES_SUPERSET_DB}
   DATABASE_DIALECT: postgresql
   DATABASE_HOST: postgres
+  DATABASE_PASSWORD: ${POSTGRES_SUPERSET_PASSWORD}
   DATABASE_PORT: 5432
   DATABASE_USER: ${POSTGRES_SUPERSET_USER}
-  DATABASE_PASSWORD: ${POSTGRES_SUPERSET_PASSWORD}
-  DATABASE_DB: ${POSTGRES_SUPERSET_DB}
+  FLASK_ENV: production
+  MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
+  PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
+  REDIS_CELERY_DB: 4
   REDIS_HOST: redis
   REDIS_PORT: 6379
   REDIS_RESULTS_DB: 3
-  REDIS_CELERY_DB: 4
-  FLASK_ENV: production
   SUPERSET_ENV: production
-  CYPRESS_CONFIG: "false"
-  MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
-  PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
 
 x-dashboard-build: &dashboard-build
   context: ../dashboard_viewer
@@ -57,7 +57,7 @@ services:
     depends_on: *depends-on
     volumes: *superset-volumes
     ports:
-      - ${SUPERSET_PORT}:8088
+      - ${SUPERSET_PORT}:8080
 
   superset-init:
     build: *superset-app-build

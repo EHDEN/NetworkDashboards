@@ -6,21 +6,21 @@ x-superset-volumes: &superset-volumes
   - ./superset/docker-init.sh:/app/docker/docker-init.sh
   - superset_home:/app/superset_home
 x-superset-environment: &superset-environment
+  CYPRESS_CONFIG: "false"
+  DATABASE_DB: ${POSTGRES_SUPERSET_DB}
   DATABASE_DIALECT: postgresql
   DATABASE_HOST: postgres
+  DATABASE_PASSWORD: ${POSTGRES_SUPERSET_PASSWORD}
   DATABASE_PORT: 5432
   DATABASE_USER: ${POSTGRES_SUPERSET_USER}
-  DATABASE_PASSWORD: ${POSTGRES_SUPERSET_PASSWORD}
-  DATABASE_DB: ${POSTGRES_SUPERSET_DB}
+  FLASK_ENV: production
+  MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
+  PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
+  REDIS_CELERY_DB: 4
   REDIS_HOST: redis
   REDIS_PORT: 6379
   REDIS_RESULTS_DB: 3
-  REDIS_CELERY_DB: 4
-  FLASK_ENV: production
   SUPERSET_ENV: production
-  CYPRESS_CONFIG: "false"
-  MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
-  PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
 
 x-dashboard-environment: &dashboard-environment
   POSTGRES_DEFAULT_HOST: postgres
@@ -52,9 +52,7 @@ services:
     depends_on: *depends-on
     volumes: *superset-volumes
     ports:
-      - ${SUPERSET_PORT}:8088
-    networks:
-      - all
+      - ${SUPERSET_PORT}:8080
 
   superset-init:
     image: aspedrosa/networkdashboards_superset
@@ -63,8 +61,6 @@ services:
     user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
-    networks:
-      - all
 
   superset-worker:
     image: aspedrosa/networkdashboards_superset
@@ -74,8 +70,6 @@ services:
     user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
-    networks:
-      - all
 
   superset-worker-beat:
     image: aspedrosa/networkdashboards_superset
@@ -85,8 +79,6 @@ services:
     user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
-    networks:
-      - all
 
   #### DATA ####
   redis:
@@ -94,8 +86,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./volumes/redis:/data
-    networks:
-      - all
 
   postgres:
     image: postgres:10
@@ -111,8 +101,6 @@ services:
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
       - ./postgres-entrypoint:/docker-entrypoint-initdb.d
-    networks:
-      - all
 
   #### DASHBOARD ####
   nginx:
@@ -126,8 +114,6 @@ services:
       - ../dashboard_viewer/media:/media
     depends_on:
       - dashboard
-    networks:
-      - all
 
   dashboard_worker:
     image: aspedrosa/networkdashboards
@@ -137,8 +123,6 @@ services:
     depends_on: *depends-on
     volumes:
       - ../dashboard_viewer/media:/app/media
-    networks:
-      - all
 
   dashboard:
     image: aspedrosa/networkdashboards
@@ -148,16 +132,7 @@ services:
     volumes:
       - dashboard_static:/app/static
       - ../dashboard_viewer/media:/app/media
-    networks:
-      - all
 
 volumes:
   superset_home:
   dashboard_static:
-
-networks:
-  all:
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.1.0.0/16

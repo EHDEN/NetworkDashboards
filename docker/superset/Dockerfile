@@ -1,4 +1,4 @@
-# Based on https://github.com/apache/superset/blob/1.1.0/Dockerfile
+# Based on https://github.com/apache/superset/blob/1.0.0rc1/Dockerfile
 
 ######################################################################
 # PY stage that simply does a pip install on our requirements
@@ -30,10 +30,7 @@ RUN cd /app \
 ######################################################################
 # Node stage to deal with static asset construction
 ######################################################################
-FROM node:14 AS superset-node
-
-ARG NPM_VER=7
-RUN npm install -g npm@${NPM_VER}
+FROM node:12 AS superset-node
 
 ARG NPM_BUILD_CMD="build"
 ENV BUILD_CMD=${NPM_BUILD_CMD}
@@ -48,7 +45,7 @@ COPY ./plugins/plugins /app/superset-frontend/plugins
 
 RUN /frontend-mem-nag.sh \
         && cd /app/superset-frontend \
-        && for f in $(ls /app/superset-frontend/plugins) ; do npm install --save ./plugins/$f ; done \
+        && for f in $(ls /app/superset-frontend/plugins) ; do npm install --save plugins/$f ; done \
         && npm ci \
         && mkdir -p package_json_files \
         && cp package*.json package_json_files
@@ -56,7 +53,6 @@ RUN /frontend-mem-nag.sh \
 # Next, copy in the rest and let webpack do its thing
 COPY ./repo/superset-frontend /app/superset-frontend
 
-#COPY ./plugins/setupPluginsExtra.ts /app/superset-frontend/src/setup/setupPluginsExtra.ts
 COPY ./plugins/MainPreset.js /app/superset-frontend/src/visualizations/presets/MainPreset.js
 
 # This is BY FAR the most expensive step (thanks Terser!)
@@ -79,7 +75,7 @@ ENV LANG=C.UTF-8 \
     FLASK_APP="superset.app:create_app()" \
     PYTHONPATH="/app/pythonpath" \
     SUPERSET_HOME="/app/superset_home" \
-    SUPERSET_PORT=8088
+    SUPERSET_PORT=8080
 
 RUN useradd --user-group --no-create-home --no-log-init --shell /bin/bash superset \
         && mkdir -p ${SUPERSET_HOME} ${PYTHONPATH} \
@@ -87,7 +83,6 @@ RUN useradd --user-group --no-create-home --no-log-init --shell /bin/bash supers
         && apt-get install -y --no-install-recommends \
             build-essential \
             default-libmysqlclient-dev \
-            libsasl2-modules-gssapi-mit \
             libpq-dev \
         && rm -rf /var/lib/apt/lists/*
 
@@ -108,7 +103,6 @@ RUN cd /app \
         && pip install -e .
 
 COPY ./repo/docker/docker-entrypoint.sh /usr/bin/
-COPY ./repo/docker/docker-bootstrap.sh /usr/bin/
 
 WORKDIR /app
 
