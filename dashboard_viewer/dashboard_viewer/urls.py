@@ -39,9 +39,9 @@ urlpatterns = [
     path("martor/", include("martor.urls")),
     path("uploader/", include("uploader.urls")),
     re_path(
-        r"^%s(?P<path>.*)$" % re.escape(settings.MEDIA_URL.lstrip("/")),
+        fr'^{re.escape(settings.MEDIA_URL.lstrip("/"))}(?P<path>.*)$',
         serve,
-        document_root=settings.MEDIA_ROOT,
+        document_root=settings.MEDIA_ROOT,  # noqa
     )
     if settings.DEBUG
     else re_path(r"^media/(?P<path>.*)$", production_media_files),
