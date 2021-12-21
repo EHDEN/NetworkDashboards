@@ -41,7 +41,7 @@ urlpatterns = [
     re_path(
         fr'^{re.escape(settings.MEDIA_URL.lstrip("/"))}(?P<path>.*)$',
         serve,
-        document_root=settings.MEDIA_ROOT,  # noqa
+        kwargs={"document_root": settings.MEDIA_ROOT},
     )
     if settings.DEBUG
     else re_path(r"^media/(?P<path>.*)$", production_media_files),
