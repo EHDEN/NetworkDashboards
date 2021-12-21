@@ -1,5 +1,6 @@
 import constance
 from django.http import (
+    HttpResponse,
     HttpResponseBadRequest,
     HttpResponseForbidden,
     HttpResponseNotFound,
@@ -38,3 +39,21 @@ def bad_request(request, exception):  # noqa
         "constance_config": constance.config,
     }
     return HttpResponseBadRequest(template.render(context))
+
+
+def production_media_files(request, path):
+    response = HttpResponse()
+    del response["Content-Type"]
+
+    if not path.startswith("achilles_results_files"):
+        response["X-Accel-Redirect"] = f"/normal_media/{path}"
+    else:
+        if not request.user.is_staff:
+            return HttpResponseForbidden()
+
+        if len(path[23:].split("/")) != 3:  # only allow serving files, not directories
+            return HttpResponseForbidden()
+
+        response["X-Accel-Redirect"] = f"/{path}"
+
+    return response
