@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>9.7 Visit [Deprecated] | Data Network Dashboards</title>
+  <title>5.2 Useful stuff | Data Network Dashboards</title>
   <meta name="description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="9.7 Visit [Deprecated] | Data Network Dashboards" />
+  <meta property="og:title" content="5.2 Useful stuff | Data Network Dashboards" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="9.7 Visit [Deprecated] | Data Network Dashboards" />
+  <meta name="twitter:title" content="5.2 Useful stuff | Data Network Dashboards" />
   
   <meta name="twitter:description" content="This is the manual for setting up a clean installation of the dashboards used in the EHDEN project." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="observation-period-deprecated.html"/>
-<link rel="next" href="death-deprecated.html"/>
+<link rel="prev" href="restore.html"/>
+<link rel="next" href="customizations.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -323,166 +323,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="visit-deprecated" class="section level2" number="9.7">
-<h2><span class="header-section-number">9.7</span> Visit [Deprecated]</h2>
-<!-- Discuss the goal of this dashboard... TO DO -->
-<p>This dashboard shows the different types of visits per data source (see <a href="https://ohdsi.github.io/CommonDataModel/cdm531.html#visit_occurrence">Visit Occurence Table</a>)</p>
-<div id="css-5" class="section level3 unnumbered" number="">
-<h3>CSS</h3>
-<p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb59-1"><a href="visit-deprecated.html#cb59-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
-<span id="cb59-2"><a href="visit-deprecated.html#cb59-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb59-3"><a href="visit-deprecated.html#cb59-3" aria-hidden="true"></a>}</span></code></pre></div>
-<p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
-or remove it so the “Edit Dashboard” button can show again.</p>
-</div>
-<div id="data-source-filter-3" class="section level3 unnumbered" number="">
-<h3>Data Source Filter</h3>
-<div class="figure"><span style="display:block;" id="fig:dataSourceFilter"></span>
-<img src="images/shared/data_source_filter.png" alt="Settings for creating the Data Source filter chart" width="100%" />
-<p class="caption">
-Figure 9.8: Settings for creating the Data Source filter chart
-</p>
-</div>
-<p><strong>For the filter to work the name of the fields to filter should match in all tables used on the charts of this dashboard.</strong></p>
-<div id="sql-query-15" class="section level4 unnumbered" number="">
-<h4>SQL query</h4>
-<p>No SQL query, use the sql table <code>data_source</code> of the <code>achilles</code> database.</p>
-</div>
-<div id="chart-settings-16" class="section level4 unnumbered" number="">
-<h4>Chart settings</h4>
+<div id="useful-stuff" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Useful stuff</h2>
 <ul>
-<li>Data Tab
-<ul>
-<li>Datasource &amp; Chart Type
-<ul>
-<li>Visualization Type: Filter Box</li>
-</ul></li>
-<li>Time
-<ul>
-<li>Time range: No filter</li>
-</ul></li>
-<li>Filters Configuration
-<ul>
-<li>Filters:
-<ul>
-<li>name</li>
-</ul></li>
-<li>Date Filter: off</li>
-<li>Instant Filtering: on</li>
-</ul></li>
-</ul></li>
-</ul>
-</div>
-</div>
-<div id="visit-type-table-visittypetable" class="section level3 unnumbered" number="">
-<h3>Visit Type Table {#visitTypeTable}</h3>
-<div class="figure"><span style="display:block;" id="fig:visitTypeTable"></span>
-<img src="images/06-visit/02-visit_types_table.png" alt="Settings for creating the Visit Type Table chart" width="100%" />
-<p class="caption">
-Figure 9.16: Settings for creating the Visit Type Table chart
-</p>
-</div>
-<div id="sql-query-16" class="section level4 unnumbered" number="">
-<h4>SQL query</h4>
-<div class="sourceCode" id="cb60"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb60-1"><a href="visit-deprecated.html#cb60-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
-<span id="cb60-2"><a href="visit-deprecated.html#cb60-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
-<span id="cb60-3"><a href="visit-deprecated.html#cb60-3" aria-hidden="true"></a>       concept_name <span class="kw">AS</span> <span class="ot">&quot;Type&quot;</span>,</span>
-<span id="cb60-4"><a href="visit-deprecated.html#cb60-4" aria-hidden="true"></a>       <span class="fu">MAX</span>(count_value) <span class="kw">AS</span> <span class="ot">&quot;Count&quot;</span></span>
-<span id="cb60-5"><a href="visit-deprecated.html#cb60-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb60-6"><a href="visit-deprecated.html#cb60-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb60-7"><a href="visit-deprecated.html#cb60-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
-<span id="cb60-8"><a href="visit-deprecated.html#cb60-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span>
-<span id="cb60-9"><a href="visit-deprecated.html#cb60-9" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> name, acronym, <span class="ot">&quot;Type&quot;</span></span>
-<span id="cb60-10"><a href="visit-deprecated.html#cb60-10" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="ot">&quot;Count&quot;</span> <span class="kw">DESC</span></span></code></pre></div>
-</div>
-<div id="chart-settings-17" class="section level4 unnumbered" number="">
-<h4>Chart settings</h4>
-<ul>
-<li>Data Tab
-<ul>
-<li>Datasource &amp; Chart Type
-<ul>
-<li>Visualization Type: Table</li>
-</ul></li>
-<li>Time
-<ul>
-<li>Time range: No filter</li>
-</ul></li>
-<li>Query
-<ul>
-<li>Query Mode: Raw Records</li>
-<li>Columns: name with label “Data Source”, Type, Count</li>
-</ul></li>
-</ul></li>
-</ul>
-</div>
-</div>
-<div id="visit-types-bars" class="section level3 unnumbered" number="">
-<h3>Visit Types Bars</h3>
-<div class="figure"><span style="display:block;" id="fig:visitTypeBars"></span>
-<img src="images/06-visit/03-visit_types_bars.png" alt="Settings for creating the Visit Types bar chart" width="100%" />
-<p class="caption">
-Figure 9.17: Settings for creating the Visit Types bar chart
-</p>
-</div>
-<div id="sql-query-17" class="section level4 unnumbered" number="">
-<h4>SQL query</h4>
-<div class="sourceCode" id="cb61"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb61-1"><a href="visit-deprecated.html#cb61-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name, </span>
-<span id="cb61-2"><a href="visit-deprecated.html#cb61-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
-<span id="cb61-3"><a href="visit-deprecated.html#cb61-3" aria-hidden="true"></a>       concept_name <span class="kw">AS</span> <span class="ot">&quot;Observation&quot;</span>, </span>
-<span id="cb61-4"><a href="visit-deprecated.html#cb61-4" aria-hidden="true"></a>       count_value</span>
-<span id="cb61-5"><a href="visit-deprecated.html#cb61-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles </span>
-<span id="cb61-6"><a href="visit-deprecated.html#cb61-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb61-7"><a href="visit-deprecated.html#cb61-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
-<span id="cb61-8"><a href="visit-deprecated.html#cb61-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span></code></pre></div>
-</div>
-<div id="chart-settings-18" class="section level4 unnumbered" number="">
-<h4>Chart settings</h4>
-<ul>
-<li>Data Tab
-<ul>
-<li>Datasource &amp; Chart Type
-<ul>
-<li>Visualization Type: Bar Chart</li>
-</ul></li>
-<li>Time
-<ul>
-<li>Time range: No filter</li>
-</ul></li>
-<li>Query
-<ul>
-<li>Metrics: MAX(count_value) with label Observations</li>
-<li>Series: name</li>
-<li>Breakdowns: Observation</li>
-</ul></li>
-</ul></li>
-<li>Customize Tab
-<ul>
-<li>Chart Options
-<ul>
-<li>Stacked Bars: on</li>
-<li>Sort Bars: on</li>
-<li>Extra Controls: on</li>
-</ul></li>
-<li>X Axis
-<ul>
-<li>X Axis Label: Databases</li>
-<li>Reduce X ticks: on</li>
-</ul></li>
-</ul></li>
+<li><p>How to create a shared link to a dropbox directory using its python’s API:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="useful-stuff.html#cb10-1" aria-hidden="true"></a><span class="ex">pip</span> install dropbox</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="useful-stuff.html#cb11-1" aria-hidden="true"></a><span class="im">import</span> dropbox</span>
+<span id="cb11-2"><a href="useful-stuff.html#cb11-2" aria-hidden="true"></a>d <span class="op">=</span> dropbox.Dropbox(API_TOKEN)</span>
+<span id="cb11-3"><a href="useful-stuff.html#cb11-3" aria-hidden="true"></a></span>
+<span id="cb11-4"><a href="useful-stuff.html#cb11-4" aria-hidden="true"></a><span class="co"># create a shared link for a directory</span></span>
+<span id="cb11-5"><a href="useful-stuff.html#cb11-5" aria-hidden="true"></a><span class="im">from</span> dropbox.sharing <span class="im">import</span> SharedLinkSettings</span>
+<span id="cb11-6"><a href="useful-stuff.html#cb11-6" aria-hidden="true"></a>sharing_settings <span class="op">=</span> SharedLinkSettings(require_password<span class="op">=</span><span class="va">True</span>, link_password<span class="op">=</span>DIRECTORY_PASSWORD)</span>
+<span id="cb11-7"><a href="useful-stuff.html#cb11-7" aria-hidden="true"></a>d.sharing_create_shared_link_with_settings(DIRECTORY_PATH, sharing_settings)</span>
+<span id="cb11-8"><a href="useful-stuff.html#cb11-8" aria-hidden="true"></a></span>
+<span id="cb11-9"><a href="useful-stuff.html#cb11-9" aria-hidden="true"></a><span class="co"># get all links</span></span>
+<span id="cb11-10"><a href="useful-stuff.html#cb11-10" aria-hidden="true"></a><span class="cf">for</span> link <span class="kw">in</span> d.sharing_get_shared_links().links:</span>
+<span id="cb11-11"><a href="useful-stuff.html#cb11-11" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span>link<span class="sc">.</span>path<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>link<span class="sc">.</span>url<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div></li>
 </ul>
 
 </div>
-</div>
-</div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="observation-period-deprecated.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="death-deprecated.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="restore.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="customizations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -513,7 +380,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/EHDEN/NetworkDashboards/edit/master/06-visit.Rmd",
+"link": "https://github.com/EHDEN/NetworkDashboards/edit/master/backups.Rmd",
 "text": "Edit"
 },
 "history": {

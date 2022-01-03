@@ -120,7 +120,7 @@
 
 \title{Data Network Dashboards}
 \author{This document is currently under construction}
-\date{2021-12-20}
+\date{2022-01-03}
 
 \begin{document}
 \maketitle
@@ -812,6 +812,36 @@ sudo chown -R 999:999 docker/volumes/redis
     \end{enumerate}
   \end{enumerate}
 \end{enumerate}
+
+\hypertarget{useful-stuff}{%
+\section{Useful stuff}\label{useful-stuff}}
+
+\begin{itemize}
+\item
+  How to create a shared link to a dropbox directory using its python's API:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ExtensionTok{pip}\NormalTok{ install dropbox}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ dropbox}
+\NormalTok{d }\OperatorTok{=}\NormalTok{ dropbox.Dropbox(API\_TOKEN)}
+
+\CommentTok{\# create a shared link for a directory}
+\ImportTok{from}\NormalTok{ dropbox.sharing }\ImportTok{import}\NormalTok{ SharedLinkSettings}
+\NormalTok{sharing\_settings }\OperatorTok{=}\NormalTok{ SharedLinkSettings(require\_password}\OperatorTok{=}\VariableTok{True}\NormalTok{, link\_password}\OperatorTok{=}\NormalTok{DIRECTORY\_PASSWORD)}
+\NormalTok{d.sharing\_create\_shared\_link\_with\_settings(DIRECTORY\_PATH, sharing\_settings)}
+
+\CommentTok{\# get all links}
+\ControlFlowTok{for}\NormalTok{ link }\KeywordTok{in}\NormalTok{ d.sharing\_get\_shared\_links().links:}
+    \BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"}\SpecialCharTok{\{}\NormalTok{link}\SpecialCharTok{.}\NormalTok{path}\SpecialCharTok{\}}\SpecialStringTok{ {-}\textgreater{} }\SpecialCharTok{\{}\NormalTok{link}\SpecialCharTok{.}\NormalTok{url}\SpecialCharTok{\}}\SpecialStringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
 
 \hypertarget{customizations}{%
 \chapter{Customizations}\label{customizations}}

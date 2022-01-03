@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2021-12-20" />
+<meta name="date" content="2022-01-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -163,6 +163,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="backups.html"><a href="backups.html"><i class="fa fa-check"></i><b>5</b> Backups</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="restore.html"><a href="restore.html"><i class="fa fa-check"></i><b>5.1</b> Restore</a></li>
+<li class="chapter" data-level="5.2" data-path="useful-stuff.html"><a href="useful-stuff.html"><i class="fa fa-check"></i><b>5.2</b> Useful stuff</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="customizations.html"><a href="customizations.html"><i class="fa fa-check"></i><b>6</b> Customizations</a>
 <ul>
@@ -329,17 +330,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>Label Colors</h3>
 <p>In order to obtain the colors blue and rose in the chart representing the gender distribution,
 add the following JSON entry to the JSON object of the <code>JSON Metadata</code> field on the edit dashboard page:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="PerDatabaseDashboard.html#cb11-1" aria-hidden="true"></a><span class="er">&quot;label_colors&quot;:</span> <span class="fu">{</span></span>
-<span id="cb11-2"><a href="PerDatabaseDashboard.html#cb11-2" aria-hidden="true"></a>    <span class="dt">&quot;Male&quot;</span><span class="fu">:</span> <span class="st">&quot;#3366FF&quot;</span><span class="fu">,</span> </span>
-<span id="cb11-3"><a href="PerDatabaseDashboard.html#cb11-3" aria-hidden="true"></a>    <span class="dt">&quot;Female&quot;</span><span class="fu">:</span> <span class="st">&quot;#FF3399&quot;</span></span>
-<span id="cb11-4"><a href="PerDatabaseDashboard.html#cb11-4" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb13-1"><a href="PerDatabaseDashboard.html#cb13-1" aria-hidden="true"></a><span class="er">&quot;label_colors&quot;:</span> <span class="fu">{</span></span>
+<span id="cb13-2"><a href="PerDatabaseDashboard.html#cb13-2" aria-hidden="true"></a>    <span class="dt">&quot;Male&quot;</span><span class="fu">:</span> <span class="st">&quot;#3366FF&quot;</span><span class="fu">,</span> </span>
+<span id="cb13-3"><a href="PerDatabaseDashboard.html#cb13-3" aria-hidden="true"></a>    <span class="dt">&quot;Female&quot;</span><span class="fu">:</span> <span class="st">&quot;#FF3399&quot;</span></span>
+<span id="cb13-4"><a href="PerDatabaseDashboard.html#cb13-4" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
 </div>
 <div id="css" class="section level3 unnumbered" number="">
 <h3>CSS</h3>
 <p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb12-1"><a href="PerDatabaseDashboard.html#cb12-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
-<span id="cb12-2"><a href="PerDatabaseDashboard.html#cb12-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb12-3"><a href="PerDatabaseDashboard.html#cb12-3" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb14-1"><a href="PerDatabaseDashboard.html#cb14-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
+<span id="cb14-2"><a href="PerDatabaseDashboard.html#cb14-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb14-3"><a href="PerDatabaseDashboard.html#cb14-3" aria-hidden="true"></a>}</span></code></pre></div>
 <p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the “Edit Dashboard” button can show again.</p>
 </div>

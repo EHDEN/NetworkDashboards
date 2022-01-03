@@ -98,3 +98,25 @@
       4. Remove the entire MEDIA_ROOT directory and exit the container
       
       5. Copy the media directory present on the backup file to the catalogue container `docker cp -a collected-media [CONTAINER_ID]:[MEDIA_ROOT_PARENT_PATH]`
+
+## Useful stuff
+
+- How to create a shared link to a dropbox directory using its python's API:
+
+   ```sh
+   pip install dropbox
+   ```
+
+   ```python
+   import dropbox
+   d = dropbox.Dropbox(API_TOKEN)
+
+   # create a shared link for a directory
+   from dropbox.sharing import SharedLinkSettings
+   sharing_settings = SharedLinkSettings(require_password=True, link_password=DIRECTORY_PASSWORD)
+   d.sharing_create_shared_link_with_settings(DIRECTORY_PATH, sharing_settings)
+
+   # get all links
+   for link in d.sharing_get_shared_links().links:
+       print(f"{link.path} -> {link.url}")
+   ```
