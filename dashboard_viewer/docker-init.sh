@@ -8,7 +8,7 @@ wait-for-it "$POSTGRES_ACHILLES_HOST:$POSTGRES_ACHILLES_PORT"
 # Apply django migrations
 echo "Applying migrations"
 python manage.py migrate
-python manage.py migrate --database=achilles uploader
+python manage.py migrate --database=achilles
 
 # Load countries data
 echo "Loading initial data"
