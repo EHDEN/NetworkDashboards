@@ -120,7 +120,7 @@
 
 \title{Data Network Dashboards}
 \author{This document is currently under construction}
-\date{2022-01-03}
+\date{2022-01-04}
 
 \begin{document}
 \maketitle
@@ -353,11 +353,9 @@ ALTER TABLE concept OWNER TO achiller
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
+  Bring up the containers: \texttt{docker-compose\ up\ -d}.
+\item
   Make sure that the container \texttt{superset-init} has finished before continuing. It is creating the necessary tables on the database and creating permissions and roles.
-\item
-  Execute the script \texttt{./superset/one\_time\_run\_scripts/superset-init.sh}. This will create an admin account and associate the~\texttt{achilles}~database to Superset.~\textbf{Attention:}~You must be in the docker directory to execute this script.
-\item
-  We have already built some dashboards so if you want to import them run the script \texttt{./superset/one\_time\_run\_scripts/load\_dashboards.sh}. \textbf{Attention:} You must be in the docker directory to execute this script.
 \item
   If you used the default ports:
 
@@ -368,6 +366,9 @@ ALTER TABLE concept OWNER TO achiller
   \item
     Go to \texttt{http://localhost:8088} to access superset.
   \end{itemize}
+\item
+  By default Superset's admin user credentials are admin/admin.
+  It is recommended that you change the password if you will use this in a production environment.
 \item
   To any anonymous user view dashboards, add the following:
 
@@ -385,6 +386,8 @@ ALTER TABLE concept OWNER TO achiller
     can read on Chart
   \item
     can read on CssTemplate
+  \item
+    can read on Dashboard
   \end{itemize}
 \end{enumerate}
 
@@ -988,9 +991,11 @@ The changes made to the Dockerfile to install the chart plugins are in \href{htt
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  Update repository's tags \texttt{git\ fetch\ -\/-tags}.
+  \texttt{cd} into superset's submodule directory.
 \item
-  \texttt{cd} into superset's submodule directory and checkout to the new desired release tag.
+  Get the latest tags: \texttt{git\ fetch}.
+\item
+  Checkout to the new desired release tag.
 \item
   Check if there are any changes made to superset's Dockerfile (on the root of the repository for the current latest release), adapt them, and insert them on our custom Dockerfile under the \texttt{docker/superset} directory.
 \item
@@ -1006,7 +1011,7 @@ The changes made to the Dockerfile to install the chart plugins are in \href{htt
 \subsubsection*{Chart Plugin Development}\label{chart-plugin-development}}
 \addcontentsline{toc}{subsubsection}{Chart Plugin Development}
 
-Instructions on how you can set up your development environment to develop a custom superset chart plugin:
+Instructions on how you can set up your development environment to develop on a custom superset chart plugin:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1016,7 +1021,7 @@ Instructions on how you can set up your development environment to develop a cus
   If you decide to use it anyways, remember \href{https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile\#L54}{this} and \href{https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile\#L99}{this} steps.
   They might override directories (\texttt{superset-frontend/node\_modules} and \texttt{superset/static/assets}) that are generated during the build process, which can cause frontend compilation errors or the app can serve outdated static files.
 \item
-  Clone the \href{https://github.com/apache-superset/superset-ui}{superset-ui} repository into the directory superset-frontend of the superset's repository.
+  Clone the \href{https://github.com/apache-superset/superset-ui}{superset-ui} repository into the directory superset-frontend of superset's repository.
 \item
   Follow the instructions of \href{https://superset.apache.org/docs/installation/building-custom-viz-plugins}{this tutorial} to create the necessary base files of your plugin.
 \item

@@ -17,19 +17,9 @@
  * under the License.
  */
 import React from 'react';
-import { t } from '@superset-ui/core';
-import { formatSelectOptions, D3_FORMAT_OPTIONS, ColumnOption, sections } from '@superset-ui/chart-controls';
-export let QueryMode;
-
-(function (QueryMode) {
-  QueryMode["aggregate"] = "aggregate";
-  QueryMode["raw"] = "raw";
-})(QueryMode || (QueryMode = {}));
-
-const QueryModeLabel = {
-  [QueryMode.aggregate]: t('Aggregate'),
-  [QueryMode.raw]: t('Raw Records')
-};
+import { QueryMode, t } from '@superset-ui/core';
+import { ColumnOption, D3_FORMAT_DOCS, D3_FORMAT_OPTIONS, D3_TIME_FORMAT_OPTIONS, formatSelectOptions, sections, emitFilterControl, QueryModeLabel } from '@superset-ui/chart-controls';
+import { jsx as ___EmotionJSX } from "@emotion/react";
 
 function getQueryMode(controls) {
   var _controls$query_mode, _controls$all_columns;
@@ -41,7 +31,7 @@ function getQueryMode(controls) {
   }
 
   const rawColumns = controls == null ? void 0 : (_controls$all_columns = controls.all_columns) == null ? void 0 : _controls$all_columns.value;
-  const hasRawColumns = rawColumns && (rawColumns == null ? void 0 : rawColumns.length) > 0;
+  const hasRawColumns = rawColumns && rawColumns.length > 0;
   return hasRawColumns ? QueryMode.raw : QueryMode.aggregate;
 }
 /**
@@ -52,31 +42,21 @@ function getQueryMode(controls) {
 function isQueryMode(mode) {
   return ({
     controls
-  }) => {
-    return getQueryMode(controls) === mode;
-  };
+  }) => getQueryMode(controls) === mode;
 }
 
 const isAggMode = isQueryMode(QueryMode.aggregate);
 const isRawMode = isQueryMode(QueryMode.raw);
 const queryMode = {
   type: 'RadioButtonControl',
-  label: t('Query Mode'),
+  label: t('Query mode'),
   default: null,
-  options: [{
-    label: QueryModeLabel[QueryMode.aggregate],
-    value: QueryMode.aggregate
-  }, {
-    label: QueryModeLabel[QueryMode.raw],
-    value: QueryMode.raw
-  }],
+  options: [[QueryMode.aggregate, QueryModeLabel[QueryMode.aggregate]], [QueryMode.raw, QueryModeLabel[QueryMode.raw]]],
   mapStateToProps: ({
     controls
-  }) => {
-    return {
-      value: getQueryMode(controls)
-    };
-  }
+  }) => ({
+    value: getQueryMode(controls)
+  })
 };
 const all_columns = {
   type: 'SelectControl',
@@ -87,11 +67,11 @@ const all_columns = {
   allowAll: true,
   commaChoosesOption: false,
   default: [],
-  optionRenderer: c => /*#__PURE__*/React.createElement(ColumnOption, {
+  optionRenderer: c => ___EmotionJSX(ColumnOption, {
     showType: true,
     column: c
   }),
-  valueRenderer: c => /*#__PURE__*/React.createElement(ColumnOption, {
+  valueRenderer: c => ___EmotionJSX(ColumnOption, {
     column: c
   }),
   valueKey: 'column_name',
@@ -156,7 +136,7 @@ export default {
         label: t('Outliers'),
         description: t('Column holding outliers values')
       }
-    }], ['metrics'], ['adhoc_filters'], ['groupby'], ['columns'], ['limit'], [{
+    }], ['metrics'], ['adhoc_filters'], emitFilterControl, ['groupby'], ['columns'], ['limit'], [{
       name: 'whiskerOptions',
       config: {
         type: 'SelectControl',
@@ -192,6 +172,17 @@ export default {
         default: 'SMART_NUMBER',
         choices: D3_FORMAT_OPTIONS,
         description: `${t('D3 format syntax: https://github.com/d3/d3-format')} ${t('Only applies when "Label Type" is set to show values.')}`
+      }
+    }], [{
+      name: 'date_format',
+      config: {
+        type: 'SelectControl',
+        freeForm: true,
+        label: t('Date format'),
+        renderTrigger: true,
+        choices: D3_TIME_FORMAT_OPTIONS,
+        default: 'smart_date',
+        description: D3_FORMAT_DOCS
       }
     }]]
   }],

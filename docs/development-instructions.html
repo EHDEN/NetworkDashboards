@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-01-03" />
+<meta name="date" content="2022-01-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -365,8 +365,9 @@ This will make changes to both the package.json and package-lock.json files and 
 <div id="update-superset" class="section level4 unnumbered" number="">
 <h4>Update Superset</h4>
 <ol style="list-style-type: decimal">
-<li><p>Update repository’s tags <code>git fetch --tags</code>.</p></li>
-<li><p><code>cd</code> into superset’s submodule directory and checkout to the new desired release tag.</p></li>
+<li><p><code>cd</code> into superset’s submodule directory.</p></li>
+<li><p>Get the latest tags: <code>git fetch</code>.</p></li>
+<li><p>Checkout to the new desired release tag.</p></li>
 <li><p>Check if there are any changes made to superset’s Dockerfile (on the root of the repository for the current latest release), adapt them, and insert them on our custom Dockerfile under the <code>docker/superset</code> directory.</p></li>
 <li><p>Check if there are any changes made to superset’s <code>superset-frontend/src/visualizations/presets/MainPreset.js</code> file.
 You can use the script <code>mainpreset_has_changes.py</code> under the <code>plugins</code> directory to check that.
@@ -377,13 +378,13 @@ Follow the instructions present <a href="https://github.com/EHDEN/NetworkDashboa
 </div>
 <div id="chart-plugin-development" class="section level4 unnumbered" number="">
 <h4>Chart Plugin Development</h4>
-<p>Instructions on how you can set up your development environment to develop a custom superset chart plugin:</p>
+<p>Instructions on how you can set up your development environment to develop on a custom superset chart plugin:</p>
 <ol style="list-style-type: decimal">
 <li><p>Clone the <a href="https://github.com/apache/superset">superset</a> repository.
 <strong>IMPORTANT NOTE</strong>: Since we build the superset’s docker image using the existing superset’s submodule, it’s better not to use it to develop the plugins.
 If you decide to use it anyways, remember <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L54">this</a> and <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L99">this</a> steps.
 They might override directories (<code>superset-frontend/node_modules</code> and <code>superset/static/assets</code>) that are generated during the build process, which can cause frontend compilation errors or the app can serve outdated static files.</p></li>
-<li><p>Clone the <a href="https://github.com/apache-superset/superset-ui">superset-ui</a> repository into the directory superset-frontend of the superset’s repository.</p></li>
+<li><p>Clone the <a href="https://github.com/apache-superset/superset-ui">superset-ui</a> repository into the directory superset-frontend of superset’s repository.</p></li>
 <li><p>Follow the instructions of <a href="https://superset.apache.org/docs/installation/building-custom-viz-plugins">this tutorial</a> to create the necessary base files of your plugin.</p></li>
 <li><p>Copy the file <code>MainPreset.js</code> present on this directory into the superset repository into the <code>superset-frontend/src/visualizations/presets/</code> directory.</p></li>
 <li><p>Add the line <code>npm install -f --no-optional --save ./superset-frontend/superset-ui/plugins/plugin-chart-[your-chart-name]</code> into the file <code>docker/docker-frontend.sh</code> of the superset repository before the existing <code>npm install ...</code> commands.</p></li>

@@ -3,7 +3,7 @@ x-depends-on: &depends-on
   - redis
 
 x-superset-volumes: &superset-volumes
-  - ./superset/docker-init.sh:/app/docker/docker-init.sh
+  - ../superset/repo/docker:/app/docker
   - superset_home:/app/superset_home
 x-superset-environment: &superset-environment
   CYPRESS_CONFIG: "false"
@@ -48,13 +48,14 @@ services:
   #### SUPERSET ####
   superset:
     image: aspedrosa/networkdashboards_superset
+    command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
     restart: unless-stopped
     environment: *superset-environment
     user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
     ports:
-      - ${SUPERSET_PORT}:8080
+      - ${SUPERSET_PORT}:8088
 
   superset-init:
     image: aspedrosa/networkdashboards_superset
@@ -66,7 +67,7 @@ services:
 
   superset-worker:
     image: aspedrosa/networkdashboards_superset
-    command: ["/usr/bin/docker-bootstrap.sh", "worker"]
+    command: ["/app/docker/docker-bootstrap.sh", "worker"]
     restart: unless-stopped
     environment: *superset-environment
     user: "root"
@@ -75,7 +76,7 @@ services:
 
   superset-worker-beat:
     image: aspedrosa/networkdashboards_superset
-    command: ["/usr/bin/docker-bootstrap.sh", "beat"]
+    command: ["/app/docker/docker-bootstrap.sh", "beat"]
     restart: unless-stopped
     environment: *superset-environment
     user: "root"

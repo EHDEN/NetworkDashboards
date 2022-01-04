@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-01-03" />
+<meta name="date" content="2022-01-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -382,14 +382,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="superset-setup" class="section level3 unnumbered" number="">
 <h3>Superset setup</h3>
 <ol style="list-style-type: decimal">
+<li><p>Bring up the containers: <code>docker-compose up -d</code>.</p></li>
 <li><p>Make sure that the container <code>superset-init</code> has finished before continuing. It is creating the necessary tables on the database and creating permissions and roles.</p></li>
-<li><p>Execute the script <code>./superset/one_time_run_scripts/superset-init.sh</code>. This will create an admin account and associate the <code>achilles</code> database to Superset. <strong>Attention:</strong> You must be in the docker directory to execute this script.</p></li>
-<li><p>We have already built some dashboards so if you want to import them run the script <code>./superset/one_time_run_scripts/load_dashboards.sh</code>. <strong>Attention:</strong> You must be in the docker directory to execute this script.</p></li>
 <li><p>If you used the default ports:</p>
 <ul>
 <li>Go to <code>http://localhost</code> to access the dashboard viewer app.</li>
 <li>Go to <code>http://localhost:8088</code> to access superset.</li>
 </ul></li>
+<li><p>By default Superset’s admin user credentials are admin/admin.
+It is recommended that you change the password if you will use this in a production environment.</p></li>
 <li><p>To any anonymous user view dashboards, add the following:</p>
 <ul>
 <li>all datasource access on all_datasource_access</li>
@@ -398,6 +399,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>can explore json on Superset</li>
 <li>can read on Chart</li>
 <li>can read on CssTemplate</li>
+<li>can read on Dashboard</li>
 </ul></li>
 </ol>
 </div>

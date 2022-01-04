@@ -18,3 +18,9 @@
  */
 // eslint-disable-next-line import/prefer-default-export
 export const NULL_STRING = '<NULL>';
+
+export enum OpacityEnum {
+  Transparent = 0,
+  SemiTransparent = 0.3,
+  NonTransparent = 1,
+}

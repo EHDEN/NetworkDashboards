@@ -93,16 +93,17 @@ The concepts table is not in the repository due to its dimension, therefore we u
 
 ### Superset setup {-}
 
-1. Make sure that the container `superset-init` has finished before continuing. It is creating the necessary tables on the database and creating permissions and roles.
+1. Bring up the containers: `docker-compose up -d`.
 
-2. Execute the script `./superset/one_time_run_scripts/superset-init.sh`. This will create an admin account and associate the `achilles` database to Superset. **Attention:** You must be in the docker directory to execute this script.
+2. Make sure that the container `superset-init` has finished before continuing. It is creating the necessary tables on the database and creating permissions and roles.
 
-3. We have already built some dashboards so if you want to import them run the script `./superset/one_time_run_scripts/load_dashboards.sh`. **Attention:** You must be in the docker directory to execute this script.
-
-4. If you used the default ports:
+3. If you used the default ports:
 
    - Go to `http://localhost` to access the dashboard viewer app.
    - Go to `http://localhost:8088` to access superset.
+
+4. By default Superset's admin user credentials are admin/admin.
+   It is recommended that you change the password if you will use this in a production environment.
 
 5. To any anonymous user view dashboards, add the following:
 
@@ -112,6 +113,7 @@ The concepts table is not in the repository due to its dimension, therefore we u
    - can explore json on Superset
    - can read on Chart
    - can read on CssTemplate
+   - can read on Dashboard
 
 ### Dummy data {-}
 

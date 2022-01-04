@@ -88,4 +88,3 @@ jobs:
     - name: prospector
       run: |
         prospector dashboard_viewer
-        prospector docker/superset

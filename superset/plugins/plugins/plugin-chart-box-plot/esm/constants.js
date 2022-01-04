@@ -18,3 +18,10 @@
  */
 // eslint-disable-next-line import/prefer-default-export
 export const NULL_STRING = '<NULL>';
+export let OpacityEnum;
+
+(function (OpacityEnum) {
+  OpacityEnum[OpacityEnum["Transparent"] = 0] = "Transparent";
+  OpacityEnum[OpacityEnum["SemiTransparent"] = 0.3] = "SemiTransparent";
+  OpacityEnum[OpacityEnum["NonTransparent"] = 1] = "NonTransparent";
+})(OpacityEnum || (OpacityEnum = {}));
