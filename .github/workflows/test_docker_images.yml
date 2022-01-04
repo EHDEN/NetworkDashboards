@@ -47,4 +47,4 @@ jobs:
 
       - name: Test build
         run: |
-          docker build -f docker/superset/Dockerfile superset
+          docker build superset
