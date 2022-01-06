@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        pythonversion: [3.7]
+        pythonversion: [3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -27,10 +27,8 @@ jobs:
           ${{ runner.os }}-pip-
     - name: Setup Data Containers
       run: |
-        export $(grep -v '^#' tests/.env | xargs -d '\n')
-        cp tests/docker-compose.yml docker
-        cp tests/init-dbs.sh docker/postgres-entrypoint
-        cd docker
+        cd tests
+        export $(grep -v '^#' .env | xargs -d '\n')
         docker-compose up -d
     - name: Install Dependencies
       run: |
@@ -40,5 +38,5 @@ jobs:
       run: |
         export $(grep -v '^#' tests/.env | xargs -d '\n')
         cd dashboard_viewer
-        python manage.py migrate
-        python manage.py test
+        python manage.py test --exclude-tag third-party-app
+        SINGLE_APPLICATION_MODE=n MAIN_APPLICATION_HOST=mainapp.host.com python manage.py test --tag third-party-app

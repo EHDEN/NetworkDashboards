@@ -16,13 +16,16 @@ def refresh(logger, db_id=None, query_set=None):
         )
 
         with connections["achilles"].cursor() as cursor:
-            for materialized_query in (
-                MaterializedQuery.objects.all() if not query_set else query_set
-            ):
+            to_refresh = MaterializedQuery.objects.all() if not query_set else query_set
+            total = len(to_refresh)
+
+            for i, materialized_query in enumerate(to_refresh):
                 try:
                     logger.info(
-                        "Refreshing materialized view %s [%s]",
+                        "Refreshing materialized view %s (%d/%d) [%s]",
                         materialized_query.matviewname,
+                        i + 1,
+                        total,
                         "command" if not db_id else f"datasource {db_id}",
                     )
                     cursor.execute(

@@ -1,4 +1,4 @@
-FROM python:3.8.6
+FROM python:3.9.8
 
 # Install Debian packages
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \

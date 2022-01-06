@@ -6,10 +6,10 @@ from django.forms import fields
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html, mark_safe
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from .decorators import uploader_decorator
 from .forms import AchillesResultsForm, EditSourceForm, SourceForm
 from .models import Country, DataSource, PendingUpload, UploadHistory
 from .serializers import DataSourceSerializer
@@ -18,7 +18,7 @@ from .tasks import upload_results_file
 PAGE_TITLE = "Dashboard Data Upload"
 
 
-@csrf_exempt
+@uploader_decorator
 def upload_achilles_results(request, *args, **kwargs):
     data_source = kwargs.get("data_source")
     try:
@@ -72,7 +72,7 @@ def upload_achilles_results(request, *args, **kwargs):
     )
 
 
-def get_upload_task_status(request, data_source, upload_id):
+def get_upload_task_status(_request, data_source, upload_id):
     data_source = get_object_or_404(DataSource, hash=data_source)
 
     try:
@@ -128,7 +128,7 @@ def _get_fields_initial_values(request, initial):
 def _leave_valid_fields_values_only(request, initial, aux_form):
     for field_name, field in SourceForm.base_fields.items():
         if isinstance(field, fields.MultiValueField):
-            decompressed = list()
+            decompressed = []
 
             for i in range(len(field.widget.widgets)):
                 generated_field_name = f"{field_name}_{i}"
@@ -137,7 +137,7 @@ def _leave_valid_fields_values_only(request, initial, aux_form):
                     del initial[generated_field_name]
                     decompressed.append(value)
                 else:
-                    decompressed = list()
+                    decompressed = []
                     break
 
             if decompressed:
@@ -152,11 +152,11 @@ def _leave_valid_fields_values_only(request, initial, aux_form):
                 del initial[field_name]
 
 
-@csrf_exempt
+@uploader_decorator
 def create_data_source(request, *_, **kwargs):
     data_source = kwargs.get("data_source")
     if request.method == "GET":
-        initial = dict()
+        initial = {}
         if data_source is not None:
             initial["hash"] = data_source
 
@@ -172,7 +172,7 @@ def create_data_source(request, *_, **kwargs):
                 obj.data_source = data_source
                 obj.save()
 
-                return redirect("/uploader/{}".format(obj.hash))
+                return redirect(f"/uploader/{obj.hash}")
 
             # since the form isn't valid, lets maintain only the valid fields
             _leave_valid_fields_values_only(request, initial, aux_form)
@@ -216,7 +216,7 @@ def create_data_source(request, *_, **kwargs):
                     obj.name,
                 ),
             )
-            return redirect("/uploader/{}".format(obj.hash))
+            return redirect(f"/uploader/{obj.hash}")
 
     return render(
         request,
@@ -233,7 +233,7 @@ def create_data_source(request, *_, **kwargs):
     )
 
 
-@csrf_exempt
+@uploader_decorator
 def edit_data_source(request, *_, **kwargs):
     data_source = kwargs.get("data_source")
     try:
@@ -270,7 +270,7 @@ def edit_data_source(request, *_, **kwargs):
                 request,
                 format_html("Data source <b>{}</b> edited with success.", obj.name),
             )
-            return redirect("/uploader/{}".format(obj.hash))
+            return redirect(f"/uploader/{obj.hash}")
 
     return render(
         request,

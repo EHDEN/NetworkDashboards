@@ -81,9 +81,8 @@ class DataSourceAdmin(admin.ModelAdmin):
                 request,
                 self.popup_response_template
                 or [
-                    "admin/%s/%s/popup_response.html"
-                    % (opts.app_label, opts.model_name),
-                    "admin/%s/popup_response.html" % opts.app_label,
+                    f"admin/{opts.app_label}/{opts.model_name}/popup_response.html",
+                    f"admin/{opts.app_label}/popup_response.html",
                     "admin/popup_response.html",
                 ],
                 {
@@ -107,7 +106,7 @@ class DataSourceAdmin(admin.ModelAdmin):
 
         if self.has_change_permission(request, None):
             post_url = reverse(
-                "admin:%s_%s_changelist" % (opts.app_label, opts.model_name),
+                f"admin:{opts.app_label}_{opts.model_name}_changelist",
                 current_app=self.admin_site.name,
             )
             preserved_filters = self.get_preserved_filters(request)

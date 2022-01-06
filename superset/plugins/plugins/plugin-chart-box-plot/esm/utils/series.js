@@ -18,10 +18,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import { GenericDataType } from '@superset-ui/core';
+import { format } from 'echarts';
 import { NULL_STRING } from '../constants';
 export function formatSeriesName(name, {
   numberFormatter,
-  timeFormatter
+  timeFormatter,
+  coltype
 } = {}) {
   if (name === undefined || name === null) {
     return NULL_STRING;
@@ -35,20 +38,34 @@ export function formatSeriesName(name, {
     return name.toString();
   }
 
-  if (name instanceof Date) {
-    return timeFormatter ? timeFormatter(name) : name.toISOString();
+  if (name instanceof Date || coltype === GenericDataType.TEMPORAL) {
+    const d = name instanceof Date ? name : new Date(name);
+    return timeFormatter ? timeFormatter(d) : d.toISOString();
   }
 
   return name;
 }
+export const getColtypesMapping = ({
+  coltypes = [],
+  colnames = []
+}) => colnames.reduce((accumulator, item, index) => ({ ...accumulator,
+  [item]: coltypes[index]
+}), {});
 export function extractGroupbyLabel({
   datum = {},
   groupby,
   numberFormatter,
-  timeFormatter
+  timeFormatter,
+  coltypeMapping = {}
 }) {
   return (groupby || []).map(val => formatSeriesName(datum[val], {
     numberFormatter,
-    timeFormatter
+    timeFormatter,
+    ...(coltypeMapping[val] && {
+      coltype: coltypeMapping[val]
+    })
   })).join(', ');
+}
+export function sanitizeHtml(text) {
+  return format.encodeHTML(text);
 }

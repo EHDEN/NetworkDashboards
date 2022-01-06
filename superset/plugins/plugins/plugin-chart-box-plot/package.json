@@ -26,10 +26,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@superset-ui/chart-controls": "0.16.9",
-    "@superset-ui/core": "0.16.7",
-    "@types/echarts": "^4.6.3",
-    "echarts": "^5.0.0"
+    "@superset-ui/chart-controls": "0.17.84",
+    "@superset-ui/core": "0.17.81",
+    "echarts": "^5.1.2"
   },
   "peerDependencies": {
     "react": "^16.13.1"

@@ -2,30 +2,26 @@ x-depends-on: &depends-on
   - postgres
   - redis
 
-x-superset-app-build: &superset-app-build
-  context: ../superset
-  dockerfile: ../docker/superset/Dockerfile
 x-superset-volumes: &superset-volumes
-  - ./superset/docker-init.sh:/app/docker/docker-init.sh
+  - ../superset/repo/docker:/app/docker
   - superset_home:/app/superset_home
 x-superset-environment: &superset-environment
+  CYPRESS_CONFIG: "false"
+  DATABASE_DB: ${POSTGRES_SUPERSET_DB}
   DATABASE_DIALECT: postgresql
   DATABASE_HOST: postgres
+  DATABASE_PASSWORD: ${POSTGRES_SUPERSET_PASSWORD}
   DATABASE_PORT: 5432
   DATABASE_USER: ${POSTGRES_SUPERSET_USER}
-  DATABASE_PASSWORD: ${POSTGRES_SUPERSET_PASSWORD}
-  DATABASE_DB: ${POSTGRES_SUPERSET_DB}
+  FLASK_ENV: production
+  MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
+  PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
+  REDIS_CELERY_DB: 4
   REDIS_HOST: redis
   REDIS_PORT: 6379
   REDIS_RESULTS_DB: 3
-  REDIS_CELERY_DB: 4
-  FLASK_ENV: production
   SUPERSET_ENV: production
-  MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
-  PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
 
-x-dashboard-build: &dashboard-build
-  context: ../dashboard_viewer
 x-dashboard-environment: &dashboard-environment
   POSTGRES_DEFAULT_HOST: postgres
   POSTGRES_DEFAULT_PORT: 5432
@@ -44,42 +40,48 @@ x-dashboard-environment: &dashboard-environment
   REDIS_CONSTANCE_DB: 2
   SECRET_KEY: ${DASHBOARD_VIEWER_SECRET_KEY}
   DASHBOARD_VIEWER_ENV: ${INSTALLATION_ENV}
+  SINGLE_APPLICATION_MODE: ${SINGLE_APPLICATION_MODE}
+  MAIN_APPLICATION_HOST: ${MAIN_APPLICATION_HOST}
 
 version: "3.7"
 services:
   #### SUPERSET ####
   superset:
-    build: *superset-app-build
+    image: aspedrosa/networkdashboards_superset
+    command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
     restart: unless-stopped
     environment: *superset-environment
     user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
     ports:
-      - ${SUPERSET_PORT}:8080
-    networks:
-      - all
+      - ${SUPERSET_PORT}:8088
 
   superset-init:
-    build: *superset-app-build
+    image: aspedrosa/networkdashboards_superset
     command: ["/app/docker/docker-init.sh"]
     environment: *superset-environment
     user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
-    networks:
-      - all
 
   superset-worker:
-    build: *superset-app-build
-    command: celery worker --app=superset.tasks.celery_app:app -Ofair -l INFO
+    image: aspedrosa/networkdashboards_superset
+    command: ["/app/docker/docker-bootstrap.sh", "worker"]
     restart: unless-stopped
     environment: *superset-environment
     user: "root"
     depends_on: *depends-on
     volumes: *superset-volumes
-    networks:
-      - all
+
+  superset-worker-beat:
+    image: aspedrosa/networkdashboards_superset
+    command: ["/app/docker/docker-bootstrap.sh", "beat"]
+    restart: unless-stopped
+    environment: *superset-environment
+    user: "root"
+    depends_on: *depends-on
+    volumes: *superset-volumes
 
   #### DATA ####
   redis:
@@ -87,8 +89,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./volumes/redis:/data
-    networks:
-      - all
 
   postgres:
     image: postgres:10
@@ -104,8 +104,6 @@ services:
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
       - ./postgres-entrypoint:/docker-entrypoint-initdb.d
-    networks:
-      - all
 
   #### DASHBOARD ####
   nginx:
@@ -119,44 +117,25 @@ services:
       - ../dashboard_viewer/media:/media
     depends_on:
       - dashboard
-    networks:
-      - all
 
   dashboard_worker:
-    build: *dashboard-build
+    image: aspedrosa/networkdashboards
     environment: *dashboard-environment
     command: celery -A dashboard_viewer worker -Ofair -l INFO
     restart: unless-stopped
     depends_on: *depends-on
     volumes:
       - ../dashboard_viewer/media:/app/media
-    networks:
-      - all
 
   dashboard:
-    build: *dashboard-build
+    image: aspedrosa/networkdashboards
     environment: *dashboard-environment
-    # ports for development
-    #ports:
-    # - ${DASHBOARD_VIEWER_PORT}:8000
     depends_on: *depends-on
     restart: unless-stopped
     volumes:
-      # production
       - dashboard_static:/app/static
       - ../dashboard_viewer/media:/app/media
-      # development
-      #- ../dashboard_viewer:/app
-    networks:
-      - all
 
 volumes:
   superset_home:
   dashboard_static:
-
-networks:
-  all:
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.1.0.0/16
