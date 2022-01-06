@@ -47,7 +47,7 @@ version: "3.7"
 services:
   #### SUPERSET ####
   superset:
-    image: aspedrosa/networkdashboards_superset
+    image: ehdenavr/networkdashboards_superset
     command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
     restart: unless-stopped
     environment: *superset-environment
@@ -58,7 +58,7 @@ services:
       - ${SUPERSET_PORT}:8088
 
   superset-init:
-    image: aspedrosa/networkdashboards_superset
+    image: ehdenavr/networkdashboards_superset
     command: ["/app/docker/docker-init.sh"]
     environment: *superset-environment
     user: "root"
@@ -66,7 +66,7 @@ services:
     volumes: *superset-volumes
 
   superset-worker:
-    image: aspedrosa/networkdashboards_superset
+    image: ehdenavr/networkdashboards_superset
     command: ["/app/docker/docker-bootstrap.sh", "worker"]
     restart: unless-stopped
     environment: *superset-environment
@@ -75,7 +75,7 @@ services:
     volumes: *superset-volumes
 
   superset-worker-beat:
-    image: aspedrosa/networkdashboards_superset
+    image: ehdenavr/networkdashboards_superset
     command: ["/app/docker/docker-bootstrap.sh", "beat"]
     restart: unless-stopped
     environment: *superset-environment
@@ -119,7 +119,7 @@ services:
       - dashboard
 
   dashboard_worker:
-    image: aspedrosa/networkdashboards
+    image: ehdenavr/networkdashboards
     environment: *dashboard-environment
     command: celery -A dashboard_viewer worker -Ofair -l INFO
     restart: unless-stopped
@@ -128,7 +128,7 @@ services:
       - ../dashboard_viewer/media:/app/media
 
   dashboard:
-    image: aspedrosa/networkdashboards
+    image: ehdenavr/networkdashboards
     environment: *dashboard-environment
     depends_on: *depends-on
     restart: unless-stopped
