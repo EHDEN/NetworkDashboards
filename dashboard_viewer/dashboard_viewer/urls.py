@@ -13,12 +13,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf import settings
-from django.conf.urls import static
-from django.contrib import admin
-from django.urls import include, path
+import re
 
-from .views import bad_request, forbidden, not_found, server_error
+from django.conf import settings
+from django.contrib import admin
+from django.urls import include, path, re_path
+from django.views.static import serve
+
+from .views import (
+    bad_request,
+    forbidden,
+    not_found,
+    production_media_files,
+    server_error,
+)
 
 handler400 = bad_request
 handler403 = forbidden
@@ -30,4 +38,11 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("martor/", include("martor.urls")),
     path("uploader/", include("uploader.urls")),
-] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    re_path(
+        fr'^{re.escape(settings.MEDIA_URL.lstrip("/"))}(?P<path>.*)$',
+        serve,
+        kwargs={"document_root": settings.MEDIA_ROOT},
+    )
+    if settings.DEBUG
+    else re_path(r"^media/(?P<path>.*)$", production_media_files),
+]

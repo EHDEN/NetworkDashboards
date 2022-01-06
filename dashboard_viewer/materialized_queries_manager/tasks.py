@@ -70,6 +70,7 @@ def create_materialized_view(  # noqa
                             f"CREATE MATERIALIZED VIEW {new_obj.matviewname} AS {new_obj.definition}"
                         )
                     except ProgrammingError as e:
+                        # no need to rename back the materialized view since the transaction will rollback
                         self.update_state(
                             state=states.FAILURE,
                             meta={
@@ -131,6 +132,5 @@ def create_materialized_view(  # noqa
 
 
 @shared_task
-def refresh_materialized_views_task(query_set):
-    query_set = serializers.deserialize("json", query_set)
-    refresh(logger, query_set=[mat_query.object for mat_query in query_set])
+def refresh_materialized_views_task(names):
+    refresh(logger, query_set=MaterializedQuery.objects.filter(matviewname__in=names))

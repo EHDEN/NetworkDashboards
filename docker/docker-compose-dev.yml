@@ -1,0 +1,130 @@
+x-depends-on: &depends-on
+  - postgres
+  - redis
+
+x-superset-app-build: &superset-app-build
+  context: ../superset
+x-superset-volumes: &superset-volumes
+  - ./superset/docker-init.sh:/app/docker/docker-init.sh
+  - superset_home:/app/superset_home
+x-superset-environment: &superset-environment
+  CYPRESS_CONFIG: "false"
+  DATABASE_DB: ${POSTGRES_SUPERSET_DB}
+  DATABASE_DIALECT: postgresql
+  DATABASE_HOST: postgres
+  DATABASE_PASSWORD: ${POSTGRES_SUPERSET_PASSWORD}
+  DATABASE_PORT: 5432
+  DATABASE_USER: ${POSTGRES_SUPERSET_USER}
+  FLASK_ENV: production
+  MAPBOX_API_KEY: ${SUPERSET_MAPBOX_API_KEY}
+  PYTHONPATH: /app/pythonpath:/app/pythonpath_docker
+  REDIS_CELERY_DB: 4
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
+  REDIS_RESULTS_DB: 3
+  SUPERSET_ENV: production
+
+x-dashboard-build: &dashboard-build
+  context: ../dashboard_viewer
+x-dashboard-environment: &dashboard-environment
+  POSTGRES_DEFAULT_HOST: postgres
+  POSTGRES_DEFAULT_PORT: 5432
+  POSTGRES_DEFAULT_USER: ${POSTGRES_DASHBOARD_VIEWER_USER}
+  POSTGRES_DEFAULT_PASSWORD: ${POSTGRES_DASHBOARD_VIEWER_PASSWORD}
+  POSTGRES_DEFAULT_DB: ${POSTGRES_DASHBOARD_VIEWER_DB}
+  POSTGRES_ACHILLES_HOST: postgres
+  POSTGRES_ACHILLES_PORT: 5432
+  POSTGRES_ACHILLES_USER: ${POSTGRES_ACHILLES_USER}
+  POSTGRES_ACHILLES_PASSWORD: ${POSTGRES_ACHILLES_PASSWORD}
+  POSTGRES_ACHILLES_DB: ${POSTGRES_ACHILLES_DB}
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
+  REDIS_CACHE_DB: 0
+  REDIS_CELERY_DB: 1
+  REDIS_CONSTANCE_DB: 2
+  SECRET_KEY: ${DASHBOARD_VIEWER_SECRET_KEY}
+  DASHBOARD_VIEWER_ENV: ${INSTALLATION_ENV}
+
+version: "3.7"
+services:
+  #### SUPERSET ####
+  superset:
+    build: *superset-app-build
+    command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
+    restart: unless-stopped
+    environment: *superset-environment
+    user: "root"
+    depends_on: *depends-on
+    volumes: *superset-volumes
+    ports:
+      - ${SUPERSET_PORT}:8088
+
+  superset-init:
+    build: *superset-app-build
+    command: ["/app/docker/docker-init.sh"]
+    environment: *superset-environment
+    user: "root"
+    depends_on: *depends-on
+    volumes: *superset-volumes
+
+  superset-worker:
+    build: *superset-app-build
+    command: ["/app/docker/docker-bootstrap.sh", "worker"]
+    restart: unless-stopped
+    environment: *superset-environment
+    user: "root"
+    depends_on: *depends-on
+    volumes: *superset-volumes
+
+  superset-worker-beat:
+    build: *superset-app-build
+    command: ["/app/docker/docker-bootstrap.sh", "beat"]
+    restart: unless-stopped
+    environment: *superset-environment
+    user: "root"
+    depends_on: *depends-on
+    volumes: *superset-volumes
+
+  #### DATA ####
+  redis:
+    image: redis:3.2
+    restart: unless-stopped
+    volumes:
+      - ./volumes/redis:/data
+
+  postgres:
+    image: postgres:10
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_ROOT_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
+      # Variables below are used to iniliaze databases for the
+      #  services below (superset and dashboard_viewer).
+      POSTGRES_DBS: ${POSTGRES_SUPERSET_DB} ${POSTGRES_DASHBOARD_VIEWER_DB} ${POSTGRES_ACHILLES_DB}
+      POSTGRES_DBS_USERS: ${POSTGRES_SUPERSET_USER} ${POSTGRES_DASHBOARD_VIEWER_USER} ${POSTGRES_ACHILLES_USER}
+      POSTGRES_DBS_PASSWORDS: ${POSTGRES_SUPERSET_PASSWORD} ${POSTGRES_DASHBOARD_VIEWER_PASSWORD} ${POSTGRES_ACHILLES_PASSWORD}
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+      - ./postgres-entrypoint:/docker-entrypoint-initdb.d
+
+  dashboard_worker:
+    build: *dashboard-build
+    environment: *dashboard-environment
+    command: celery -A dashboard_viewer worker -Ofair -l INFO
+    restart: unless-stopped
+    depends_on: *depends-on
+    volumes:
+      - ../dashboard_viewer/media:/app/media
+
+  dashboard:
+    build: *dashboard-build
+    environment: *dashboard-environment
+    ports:
+     - ${DASHBOARD_VIEWER_PORT}:8000
+    depends_on: *depends-on
+    restart: unless-stopped
+    volumes:
+      - ../dashboard_viewer:/app
+
+volumes:
+  superset_home:

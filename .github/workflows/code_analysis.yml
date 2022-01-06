@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        pythonversion: [3.7]
+        pythonversion: [3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        pythonversion: [3.7]
+        pythonversion: [3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -66,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        pythonversion: [3.7]
+        pythonversion: [3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -88,4 +88,3 @@ jobs:
     - name: prospector
       run: |
         prospector dashboard_viewer
-        prospector docker/superset

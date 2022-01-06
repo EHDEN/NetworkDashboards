@@ -109,7 +109,7 @@ class MaterializedQueryTestCase(TestCase):
                 "json",
                 [MaterializedQuery(matviewname="outlier", definition="SELECT 2")],
             ),
-            [{"changed": {"fields": ["definition"]}}],
+            [{"changed": {"fields": ["Definition"]}}],
         )
 
 

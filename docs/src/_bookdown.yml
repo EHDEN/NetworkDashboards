@@ -1,0 +1,46 @@
+
+book_filename: "DataNetworkDashboards"
+language:
+  label:
+    fig: "Figure "
+    tab: "Table "
+    eq: "Equation "
+    thm: "Theorem "
+    lem: "Lemma "
+    cor: "Corollary "
+    prp: "Proposition "
+    cnj: "Conjecture "
+    def: "Definition "
+    exm: "Example "
+    exr: "Exercise "
+    proof: "Proof. "
+    remark: "Remark. "
+    solution: 'Solution. '
+  ui:
+    edit: "Edit"
+    chapter_name: "Chapter "
+delete_merged_file: true
+new_session: true
+
+
+rmd_files: [
+  "index.Rmd",
+  "01-intro.Rmd",
+  "02-installation.Rmd",
+  "processes.Rmd",
+  "backups.Rmd",
+  "customizations.Rmd",
+  "development.Rmd",
+  "code-documentation.Rmd",
+  "11-network-dashboard.Rmd",
+  "12-database-level-dashboard.Rmd",
+  "materialized-views.Rmd",
+  "03-general.Rmd",
+  "04-person.Rmd",
+  "05-observation_period.Rmd",
+  "06-visit.Rmd",
+  "07-death.Rmd",
+  "08-concepts_browser.Rmd",
+  "09-provenance.Rmd",
+  "10-data_domains.Rmd"
+]

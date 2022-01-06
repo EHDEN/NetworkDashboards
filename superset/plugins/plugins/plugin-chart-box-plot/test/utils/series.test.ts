@@ -20,7 +20,9 @@ import { getNumberFormatter, getTimeFormatter } from '@superset-ui/core';
 import {
   extractGroupbyLabel,
   formatSeriesName,
+  sanitizeHtml,
 } from '../../src/utils/series';
+import { NULL_STRING } from '../../lib/constants';
 
 describe('extractGroupbyLabel', () => {
   it('should join together multiple groupby labels', () => {
@@ -85,5 +87,11 @@ describe('formatSeriesName', () => {
     expect(formatSeriesName(new Date('2020-09-11'), { timeFormatter })).toEqual(
       '2020-09-11 00:00:00',
     );
+  });
+});
+
+describe('sanitizeHtml', () => {
+  it('should remove html tags from series name', () => {
+    expect(sanitizeHtml(NULL_STRING)).toEqual('&lt;NULL&gt;');
   });
 });
