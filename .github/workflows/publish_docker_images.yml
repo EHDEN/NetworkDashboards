@@ -15,7 +15,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: aspedrosa/networkdashboards
+          images: ehdenavr/networkdashboards
           tags: |
               type=pep440,pattern={{version}}
 
@@ -44,7 +44,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: aspedrosa/networkdashboards_superset
+          images: ehdenavr/networkdashboards_superset
           tags: |
               type=pep440,pattern={{version}}
 

@@ -1,4 +1,4 @@
-celery==5.2.1                             # asynchronous task on uploader app
+celery==5.2.2                             # asynchronous task on uploader app
 django-bootstrap-datepicker-plus==3.0.5   # realease date on create data source form on uploader app
 django-bootstrap4==3.0.1                  # forms beautifier
 django-celery-results==2.2.0              # reports results from workers
