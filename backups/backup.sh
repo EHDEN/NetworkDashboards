@@ -66,16 +66,16 @@ print(settings.MEDIA_ROOT, end=\"\")
         docker cp -a $DASHBOARDS_CONTAINER_ID:$MEDIA_ROOT $TMP_BACKUP_DIRECTORY
 
         echo_step "6" "Compress gathered data"
-        COMPRESSED_FILE_PATH=$TMP_DIRECTORY/${APP_NAME}_$(date +"%Y%m%d%H%M%S").tar.xz
+        COMPRESSED_FILE_PATH=$TMP_DIRECTORY/${APP_NAME}_$(date +"%Y%m%d%H%M%S").zip
         (
             cd $TMP_DIRECTORY
             zip -q -r $COMPRESSED_FILE_PATH $BACKUP_DIRECTORY_NAME
             #tar -C $TMP_DIRECTORY -cJf $COMPRESSED_FILE_PATH $BACKUP_DIRECTORY_NAME
 
             echo_step "7" "Send to $SERVER"
-            #backup_uploader $APP_NAME $SERVER $CREDENTIALS_FILE_PATH $BACKUP_CHAIN_CONFIG $COMPRESSED_FILE_PATH
+            backup_uploader $APP_NAME $SERVER $CREDENTIALS_FILE_PATH $BACKUP_CHAIN_CONFIG $COMPRESSED_FILE_PATH
         ) || EXIT_STATUS=$?
-        #rm -f $COMPRESSED_FILE_PATH
+        rm -f $COMPRESSED_FILE_PATH
 
         exit $EXIT_STATUS
     ) || EXIT_STATUS=$?
