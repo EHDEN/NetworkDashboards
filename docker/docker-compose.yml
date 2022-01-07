@@ -88,7 +88,7 @@ services:
     image: redis:3.2
     restart: unless-stopped
     volumes:
-      - ./volumes/redis:/data
+      - ${VOLUMES_PATH}/redis:/data
 
   postgres:
     image: postgres:10
@@ -102,7 +102,7 @@ services:
       POSTGRES_DBS_USERS: ${POSTGRES_SUPERSET_USER} ${POSTGRES_DASHBOARD_VIEWER_USER} ${POSTGRES_ACHILLES_USER}
       POSTGRES_DBS_PASSWORDS: ${POSTGRES_SUPERSET_PASSWORD} ${POSTGRES_DASHBOARD_VIEWER_PASSWORD} ${POSTGRES_ACHILLES_PASSWORD}
     volumes:
-      - ./volumes/postgres:/var/lib/postgresql/data
+      - ${VOLUMES_PATH}/postgres:/var/lib/postgresql/data
       - ./postgres-entrypoint:/docker-entrypoint-initdb.d
 
   #### DASHBOARD ####
