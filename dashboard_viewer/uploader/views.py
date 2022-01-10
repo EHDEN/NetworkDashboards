@@ -10,6 +10,8 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from materialized_queries_manager.tasks import refresh_materialized_views_task
+from materialized_queries_manager.models import MaterializedQuery
 from .decorators import uploader_decorator
 from .forms import AchillesResultsForm, EditSourceForm, SourceForm
 from .models import Country, DataSource, PendingUpload, UploadHistory
@@ -304,6 +306,8 @@ class DataSourceUpdate(GenericViewSet):
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        refresh_materialized_views_task.delay([obj.matviewname for obj in MaterializedQuery.objects.all()])
 
         if getattr(instance, "_prefetched_objects_cache", None):
             # If 'prefetch_related' has been applied to a queryset, we need to
