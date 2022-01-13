@@ -14,7 +14,7 @@ libsass==0.21.0                           # to compile scss files into css
 gunicorn==20.1.0                          # for production deployment
 martor==1.6.7                             # markdown editor in admin app
 pandas==1.3.5                             # to handle achilles results files and their data
-Pillow==8.4.0                             # image fields (App Logo)
+Pillow==9.0.0                             # image fields (App Logo)
 psycopg2-binary==2.9.2                    # communicate with postgres
 redis==3.5.3                              # comunicate with redis (celery)
 git+https://github.com/bioinformatics-ua/redis-rw-lock.git#egg=redis-rw-lock
