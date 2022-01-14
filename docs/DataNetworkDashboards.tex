@@ -120,7 +120,7 @@
 
 \title{Data Network Dashboards}
 \author{This document is currently under construction}
-\date{2022-01-04}
+\date{2022-01-14}
 
 \begin{document}
 \maketitle
@@ -743,81 +743,23 @@ For example, if there is a tab called People, to make that tab selected at the s
 \end{enumerate}
 
 \hypertarget{restore}{%
-\section{Restore}\label{restore}}
+\subsection*{Restore}\label{restore}}
+\addcontentsline{toc}{subsection}{Restore}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  Select the compressed backup you want to restore and decompress it:
-
-  \texttt{tar\ -xJf\ BACKUP\_FILE.tar.xz}.
+  Select the compressed backup you want to restore.
 \item
-  \begin{enumerate}
-  \def\labelenumii{\arabic{enumii}.}
-  \item
-    \textbf{Redis}
-
-    \begin{enumerate}
-    \def\labelenumiii{\arabic{enumiii}.}
-    \item
-      Make sure the redis docker container is down.
-    \item
-      (Re)place the file \texttt{dump.rdb} on the redis volume by the file \texttt{redis.rdb}. By default the redis volume is located where this repository was cloned on the directory \texttt{docker/volumes/redis}.
-    \item
-      Change its permissions, owner and group:
-
-\begin{verbatim}
-chmod 0644 docker/volumes/redis/dump.rdb
-sudo chown -R 999:999 docker/volumes/redis
-\end{verbatim}
-    \end{enumerate}
-  \item
-    \textbf{Postgres}
-
-    \begin{enumerate}
-    \def\labelenumiii{\arabic{enumiii}.}
-    \item
-      Make sure all containers that make changes on the database are stopped.
-    \item
-      Copy the file \texttt{postgres\_backup.sql} into the postgres container
-
-      \texttt{docker\ cp\ postgres.sql\ {[}CONTAINER\_ID{]}:/tmp}.
-    \item
-      Execute the backup script:
-
-      \texttt{docker\ exec\ -u\ root\ dashboard\_viewer\_postgres\_1\ psql\ -f\ /tmp/postgres\_backup.sql\ -U\ \textbackslash{}\$POSTGRES\_USER\ -d\ \textbackslash{}\$POSTGRES\_DB}.
-    \end{enumerate}
-  \item
-    \textbf{Media Files} If you have a volume pointing to where the media files are stored, replace all files with the ones present on the downloaded backup file. Else:
-
-    \begin{enumerate}
-    \def\labelenumiii{\arabic{enumiii}.}
-    \item
-      Bring the dashoard container up \texttt{docker-compose\ up\ -d\ dashboard}
-    \item
-      Enter in the container \texttt{docker\ exec\ -it\ {[}CONTAINER\_ID{]}\ bash}
-    \item
-      If you don't know where the media files are stored you can check the value of the MEDIA\_ROOT variable
-
-      \begin{enumerate}
-      \def\labelenumiv{\arabic{enumiv}.}
-      \item
-        \texttt{python\ manage.py\ shell}
-      \item
-        \texttt{from\ django.conf\ import\ settings}
-      \item
-        \texttt{print(settings.MEDIA\_ROOT)}
-      \end{enumerate}
-    \item
-      Remove the entire MEDIA\_ROOT directory and exit the container
-    \item
-      Copy the media directory present on the backup file to the catalogue container \texttt{docker\ cp\ -a\ collected-media\ {[}CONTAINER\_ID{]}:{[}MEDIA\_ROOT\_PARENT\_PATH{]}}
-    \end{enumerate}
-  \end{enumerate}
+  Make sure that all the environment variables are the same as the ones that were used for the chosen backup file.
+  Additionally, the \texttt{.dashboards\_backups.conf} file is also necessary to set up, since the \texttt{TMP\_DIRECTORY} variable will be used.
+\item
+  Run the \texttt{backups/restore.sh} script.
 \end{enumerate}
 
 \hypertarget{useful-stuff}{%
-\section{Useful stuff}\label{useful-stuff}}
+\subsection*{Useful stuff}\label{useful-stuff}}
+\addcontentsline{toc}{subsection}{Useful stuff}
 
 \begin{itemize}
 \item
