@@ -9,7 +9,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.clickjacking import xframe_options_exempt
 from rest_framework.response import Response
-from rest_framework.utils import model_meta
 from rest_framework.viewsets import GenericViewSet
 
 from materialized_queries_manager.tasks import refresh_materialized_views_task
@@ -307,9 +306,9 @@ class DataSourceUpdate(GenericViewSet):
         # here we get the query set with select_for_update so it lock updates on that record
         queryset = self.filter_queryset(self.get_queryset().select_for_update())
 
-        assert self.lookup_field and not self.lookup_url_kwarg, (
-            "Expected lookup_field to be defined and not lookup_url_kwarg."
-        )
+        assert (
+            self.lookup_field and not self.lookup_url_kwarg
+        ), "Expected lookup_field to be defined and not lookup_url_kwarg."
 
         filter_kwargs = {self.lookup_field: self.kwargs[self.lookup_field]}
         obj = get_object_or_404(queryset, **filter_kwargs)
