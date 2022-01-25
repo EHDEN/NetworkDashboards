@@ -337,7 +337,5 @@ if not SINGLE_APPLICATION_MODE:
             "Only include the hostname part of the URL."
         )
 
-    X_FRAME_OPTIONS = f"ALLOW-FROM https://{MAIN_APPLICATION_HOST}/"
-
 # required since django 3.2
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

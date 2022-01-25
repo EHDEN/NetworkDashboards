@@ -6,7 +6,6 @@ from django.forms import fields
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html, mark_safe
-from django.views.decorators.clickjacking import xframe_options_exempt
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -22,7 +21,6 @@ PAGE_TITLE = "Dashboard Data Upload"
 
 
 @uploader_decorator
-@xframe_options_exempt
 def upload_achilles_results(request, *args, **kwargs):
     data_source = kwargs.get("data_source")
     try:
@@ -157,7 +155,6 @@ def _leave_valid_fields_values_only(request, initial, aux_form):
 
 
 @uploader_decorator
-@xframe_options_exempt
 def create_data_source(request, *_, **kwargs):
     data_source = kwargs.get("data_source")
     if request.method == "GET":
@@ -239,7 +236,6 @@ def create_data_source(request, *_, **kwargs):
 
 
 @uploader_decorator
-@xframe_options_exempt
 def edit_data_source(request, *_, **kwargs):
     data_source = kwargs.get("data_source")
     try:

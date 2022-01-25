@@ -2,6 +2,7 @@ from functools import wraps
 
 from django.conf import settings
 from django.http import HttpResponseForbidden
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -13,6 +14,8 @@ def uploader_decorator(view_func):
     Else don't do any verification
     """
     wrapped_view = csrf_exempt(view_func)
+    wrapped_view = xframe_options_exempt(wrapped_view)
+
     if not settings.SINGLE_APPLICATION_MODE:
 
         def check_host(request, *args, **kwargs):
