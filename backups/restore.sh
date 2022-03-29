@@ -34,11 +34,7 @@ EXIT_STATUS=0
     docker-compose stop dashboard dashboard_worker superset superset-worker superset-worker-beat >/dev/null 2>&1
     docker-compose up -d postgres >/dev/null 2>&1
 
-    while true ; do
-        docker-compose exec -T postgres sh -c "pg_isready" >/dev/null 2>&1
-        if [ $? -eq 0 ] ; then
-            break
-        fi
+    until docker-compose exec -T postgres sh -c "pg_isready" >/dev/null 2>&1 ; do
         sleep 2
     done
 
