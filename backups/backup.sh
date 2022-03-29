@@ -8,7 +8,7 @@ echo_step() {
 
 set -e
 
-. $HOME/.dashboards_backups.conf
+. "$(dirname "$0")/backups.conf"
 
 if [ $RUN -eq 0 ] ; then
     echo "run was 0. exitting"

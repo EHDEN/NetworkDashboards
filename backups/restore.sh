@@ -13,7 +13,7 @@ echo_step() {
   printf "%3s/%s %s\n" "$1" "$STEP_COUNT" "$2"
 }
 
-. $HOME/.dashboards_backups.conf
+. "$(dirname "$0")/backups.conf"
 
 echo_step 1 "Extracting backup file"
 
