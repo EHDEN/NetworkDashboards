@@ -120,7 +120,7 @@
 
 \title{Data Network Dashboards}
 \author{This document is currently under construction}
-\date{2022-01-14}
+\date{2022-03-29}
 
 \begin{document}
 \maketitle
@@ -681,7 +681,7 @@ For example, if there is a tab called People, to make that tab selected at the s
 \item
   Create a credentials file (the structure of the file depends on the target cloud server)
 \item
-  Create a \texttt{.dashboards\_backups.conf} file under your home directory (variable \texttt{\$HOME}) using \texttt{dashboards\_backups.conf.example} as base, setting the appropriate value for the several variables.
+  Create a \texttt{backups.conf} under the \texttt{backups} directory using \texttt{backups.conf.example} as base, setting the appropriate value for the several variables.
 
   For variables associated with files and directories always use \emph{absolute} paths.
 
@@ -752,7 +752,7 @@ For example, if there is a tab called People, to make that tab selected at the s
   Select the compressed backup you want to restore.
 \item
   Make sure that all the environment variables are the same as the ones that were used for the chosen backup file.
-  Additionally, the \texttt{.dashboards\_backups.conf} file is also necessary to set up, since the \texttt{TMP\_DIRECTORY} variable will be used.
+  Additionally, the \texttt{backups.conf} file is also necessary to set up, since the \texttt{TMP\_DIRECTORY} variable will be used.
 \item
   Run the \texttt{backups/restore.sh} script.
 \end{enumerate}

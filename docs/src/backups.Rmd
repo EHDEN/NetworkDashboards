@@ -2,7 +2,7 @@
 
 1. Create a credentials file (the structure of the file depends on the target cloud server)
 
-2. Create a `.dashboards_backups.conf` file under your home directory (variable `$HOME`) using `dashboards_backups.conf.example` as base, setting the appropriate value for the several variables.
+2. Create a `backups.conf` under the `backups` directory using `backups.conf.example` as base, setting the appropriate value for the several variables.
    
    For variables associated with files and directories always use *absolute* paths.
    
@@ -55,7 +55,7 @@
 1. Select the compressed backup you want to restore.
 
 2. Make sure that all the environment variables are the same as the ones that were used for the chosen backup file.
-   Additionally, the `.dashboards_backups.conf` file is also necessary to set up, since the `TMP_DIRECTORY` variable will be used.
+   Additionally, the `backups.conf` file is also necessary to set up, since the `TMP_DIRECTORY` variable will be used.
 
 3. Run the `backups/restore.sh` script.
 
