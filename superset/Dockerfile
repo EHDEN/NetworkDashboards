@@ -91,8 +91,8 @@ RUN mkdir -p ${PYTHONPATH} \
             libpq-dev \
         && rm -rf /var/lib/apt/lists/*
 
-# Copying default configs. No need for a volume
-COPY ./repo/docker/pythonpath_dev/superset_config.py ${PYTHONPATH}
+# Copying configs. No need for a volume
+COPY ./repo/docker/pythonpath_dev/superset_config.py ./superset_config_docker.py /app/pythonpath_docker/
 
 COPY --from=superset-py /usr/local/lib/python3.7/site-packages/ /usr/local/lib/python3.7/site-packages/
 # Copying site-packages doesn't move the CLIs, so let's copy them one by one
@@ -108,7 +108,8 @@ RUN cd /app \
         && pip install -e .
 
 COPY ./repo/docker/docker-entrypoint.sh /usr/bin/
-COPY ./repo/docker/docker-bootstrap.sh /usr/bin/
+# copy scripts to start containers to avoid volumes
+COPY ./repo/docker/docker-bootstrap.sh ./repo/docker/docker-init.sh ./repo/docker/docker-entrypoint.sh /app/docker/
 
 WORKDIR /app
 
