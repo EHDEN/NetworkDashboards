@@ -17,8 +17,8 @@ echo_step() {
 
 echo_step 1 "Extracting backup file"
 
-BACKUP_ROOT_DIRECTORY=$(unzip -qql $1 | head -n1 | sed -r '1 {s/([ ]+[^ ]+){3}\s+//;q}')
-unzip $1 -d "$TMP_DIRECTORY" >/dev/null
+BACKUP_ROOT_DIRECTORY=$(unzip -qql "$1" | head -n1 | sed -r '1 {s/([ ]+[^ ]+){3}\s+//;q}')
+unzip "$1" -d "$TMP_DIRECTORY" >/dev/null
 BACKUP_ROOT_DIRECTORY="$TMP_DIRECTORY/$BACKUP_ROOT_DIRECTORY"
 
 EXIT_STATUS=0
@@ -26,7 +26,7 @@ EXIT_STATUS=0
 (
   echo_step 2 "Get into the docker directory"
   PREVIOUS_PWD=$(pwd)
-  cd $(dirname "$0")
+  cd "$(dirname "$0")"
   (
     cd ../docker
 
@@ -39,7 +39,7 @@ EXIT_STATUS=0
     done
 
     CONTAINER_ID=$(docker-compose ps -q postgres)
-    docker cp $BACKUP_ROOT_DIRECTORY/postgres.sql $CONTAINER_ID:/tmp
+    docker cp "$BACKUP_ROOT_DIRECTORY/postgres.sql" $CONTAINER_ID:/tmp
     docker-compose exec -T postgres sh -c """
 psql -f /tmp/postgres.sql -U \$POSTGRES_USER -d postgres
 rm /tmp/postgres.sql
@@ -48,7 +48,7 @@ rm /tmp/postgres.sql
     echo_step 4 "Restoring redis"
     docker-compose up -d redis >/dev/null 2>&1
     CONTAINER_ID=$(docker-compose ps -q redis)
-    docker cp $BACKUP_ROOT_DIRECTORY/redis.rdb $CONTAINER_ID:/
+    docker cp "$BACKUP_ROOT_DIRECTORY/redis.rdb" $CONTAINER_ID:/
     docker-compose exec -T redis sh -c """
 mv /redis.rdb /data
 """
@@ -75,20 +75,20 @@ print(settings.MEDIA_ROOT, end=\"\")
 cd $MEDIA_ROOT
 find . -mindepth 1 -maxdepth 1 -exec rm -r {} +
 """
-    docker cp -a $BACKUP_ROOT_DIRECTORY/$(basename $MEDIA_ROOT) $CONTAINER_ID:$MEDIA_ROOT
+    docker cp -a "$BACKUP_ROOT_DIRECTORY/$(basename "$MEDIA_ROOT")" $CONTAINER_ID:"$MEDIA_ROOT"
     docker-compose exec -T dashboard sh -c """
 cd $MEDIA_ROOT
-find $(basename $MEDIA_ROOT) -mindepth 1 -maxdepth 1 -exec mv -t . -- {} +
-rmdir $(basename $MEDIA_ROOT)
+find $(basename "$MEDIA_ROOT") -mindepth 1 -maxdepth 1 -exec mv -t . -- {} +
+rmdir $(basename "$MEDIA_ROOT")
 """
 
     docker-compose up -d
   ) || EXIT_STATUS=$?
-  cd $PREVIOUS_PWD
+  cd "$PREVIOUS_PWD"
 
   exit $EXIT_STATUS
 ) || EXIT_STATUS=$?
-#rm -rf "$BACKUP_ROOT_DIRECTORY"
+rm -rf "$BACKUP_ROOT_DIRECTORY"
 
 if [ $EXIT_STATUS -ne 0 ] ;then
     echo "Failed with exit code $EXIT_STATUS"
