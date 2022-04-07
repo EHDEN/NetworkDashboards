@@ -3,7 +3,6 @@ x-depends-on: &depends-on
   - redis
 
 x-superset-volumes: &superset-volumes
-  - ../superset/repo/docker:/app/docker
   - superset_home:/app/superset_home
 x-superset-environment: &superset-environment
   CYPRESS_CONFIG: "false"
