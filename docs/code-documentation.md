@@ -42,7 +42,7 @@ Once again to avoid timeouts, such operations are executed on a background task.
 
 Currently, this app is not being used and the URL mapping was delete.
 To use it again uncomment the tabsManager [line](https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/dashboard_viewer/urls.py#L29) on the dashboard_viewer/dashboard_viewer/urls.py file.
-Then you can access the tabs page through the `[BASE_RUL]/tabs/` URL.
+Then you can access the tabs page through the `[BASE_URL]/tabs/` URL.
 
 <h5>Views</h5>
 

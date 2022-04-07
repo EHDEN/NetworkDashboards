@@ -78,7 +78,15 @@ Instructions on how you can set up your development environment to develop on a 
 
 2. Copy the file `MainPreset.js` present on this directory into the superset repository into the `superset-frontend/src/visualizations/presets/` directory.
 
-3. Add the line `npm install -f --no-optional --save ./superset-frontend/superset-ui/plugins/plugin-chart-[your-chart-name]` into the file `docker/docker-frontend.sh` of the superset repository before the existing `npm install ...` commands.
+3. Add the line
+
+   ```sh
+   npm install
+     -f --no-optional --save
+     ./superset-frontend/superset-ui/plugins/plugin-chart-[your-chart-name]
+   ```
+
+   into the file `docker/docker-frontend.sh` of the superset repository before the existing `npm install ...` commands.
 
 4. When the development is finished, on the root of the superset-ui repository run `yarn install` and then `yarn build [your-chart-name]`.
 

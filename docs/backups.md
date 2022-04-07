@@ -73,8 +73,14 @@
 
    # create a shared link for a directory
    from dropbox.sharing import SharedLinkSettings
-   sharing_settings = SharedLinkSettings(require_password=True, link_password=DIRECTORY_PASSWORD)
-   d.sharing_create_shared_link_with_settings(DIRECTORY_PATH, sharing_settings)
+   sharing_settings = SharedLinkSettings(
+       require_password=True,
+       link_password=DIRECTORY_PASSWORD,
+   )
+   d.sharing_create_shared_link_with_settings(
+       DIRECTORY_PATH,
+       sharing_settings,
+   )
 
    # get all links
    for link in d.sharing_get_shared_links().links:

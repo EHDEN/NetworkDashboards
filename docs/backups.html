@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-03-29" />
+<meta name="date" content="2022-04-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -268,7 +268,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#css-4"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#data-source-filter-2"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#number-of-patients-in-observation-period-numinobservationperiod"><i class="fa fa-check"></i>Number of Patients in Observation Period {#numInObservationPeriod}</a></li>
+<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#numInObservationPeriod"><i class="fa fa-check"></i>Number of Patients in Observation Period</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-start-dates"><i class="fa fa-check"></i>Observation Period Start Dates</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-end-dates"><i class="fa fa-check"></i>Observation Period End Dates</a></li>
 </ul></li>
@@ -276,7 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#css-5"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#data-source-filter-3"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-type-table-visittypetable"><i class="fa fa-check"></i>Visit Type Table {#visitTypeTable}</a></li>
+<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visitTypeTable"><i class="fa fa-check"></i>Visit Type Table</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-types-bars"><i class="fa fa-check"></i>Visit Types Bars</a></li>
 </ul></li>
 <li class="chapter" data-level="9.8" data-path="death-deprecated.html"><a href="death-deprecated.html"><i class="fa fa-check"></i><b>9.8</b> Death [Deprecated]</a>
@@ -303,7 +303,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#css-9"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#data-source-filter-6"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#average-number-of-records-per-person-avgrecordsperperson"><i class="fa fa-check"></i>Average Number of Records per Person {#avgRecordsPerPerson}</a></li>
+<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#avgRecordsPerPerson"><i class="fa fa-check"></i>Average Number of Records per Person</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -381,12 +381,18 @@ Additionally, the <code>backups.conf</code> file is also necessary to set up, si
 <span id="cb10-3"><a href="backups.html#cb10-3" aria-hidden="true"></a></span>
 <span id="cb10-4"><a href="backups.html#cb10-4" aria-hidden="true"></a><span class="co"># create a shared link for a directory</span></span>
 <span id="cb10-5"><a href="backups.html#cb10-5" aria-hidden="true"></a><span class="im">from</span> dropbox.sharing <span class="im">import</span> SharedLinkSettings</span>
-<span id="cb10-6"><a href="backups.html#cb10-6" aria-hidden="true"></a>sharing_settings <span class="op">=</span> SharedLinkSettings(require_password<span class="op">=</span><span class="va">True</span>, link_password<span class="op">=</span>DIRECTORY_PASSWORD)</span>
-<span id="cb10-7"><a href="backups.html#cb10-7" aria-hidden="true"></a>d.sharing_create_shared_link_with_settings(DIRECTORY_PATH, sharing_settings)</span>
-<span id="cb10-8"><a href="backups.html#cb10-8" aria-hidden="true"></a></span>
-<span id="cb10-9"><a href="backups.html#cb10-9" aria-hidden="true"></a><span class="co"># get all links</span></span>
-<span id="cb10-10"><a href="backups.html#cb10-10" aria-hidden="true"></a><span class="cf">for</span> link <span class="kw">in</span> d.sharing_get_shared_links().links:</span>
-<span id="cb10-11"><a href="backups.html#cb10-11" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span>link<span class="sc">.</span>path<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>link<span class="sc">.</span>url<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div></li>
+<span id="cb10-6"><a href="backups.html#cb10-6" aria-hidden="true"></a>sharing_settings <span class="op">=</span> SharedLinkSettings(</span>
+<span id="cb10-7"><a href="backups.html#cb10-7" aria-hidden="true"></a>    require_password<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-8"><a href="backups.html#cb10-8" aria-hidden="true"></a>    link_password<span class="op">=</span>DIRECTORY_PASSWORD,</span>
+<span id="cb10-9"><a href="backups.html#cb10-9" aria-hidden="true"></a>)</span>
+<span id="cb10-10"><a href="backups.html#cb10-10" aria-hidden="true"></a>d.sharing_create_shared_link_with_settings(</span>
+<span id="cb10-11"><a href="backups.html#cb10-11" aria-hidden="true"></a>    DIRECTORY_PATH,</span>
+<span id="cb10-12"><a href="backups.html#cb10-12" aria-hidden="true"></a>    sharing_settings,</span>
+<span id="cb10-13"><a href="backups.html#cb10-13" aria-hidden="true"></a>)</span>
+<span id="cb10-14"><a href="backups.html#cb10-14" aria-hidden="true"></a></span>
+<span id="cb10-15"><a href="backups.html#cb10-15" aria-hidden="true"></a><span class="co"># get all links</span></span>
+<span id="cb10-16"><a href="backups.html#cb10-16" aria-hidden="true"></a><span class="cf">for</span> link <span class="kw">in</span> d.sharing_get_shared_links().links:</span>
+<span id="cb10-17"><a href="backups.html#cb10-17" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span>link<span class="sc">.</span>path<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>link<span class="sc">.</span>url<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div></li>
 </ul>
 
 </div>
