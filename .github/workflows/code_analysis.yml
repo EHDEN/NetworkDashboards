@@ -87,4 +87,5 @@ jobs:
         pip install -r requirements-dev/requirements-prospector.txt -r dashboard_viewer/requirements.txt
     - name: prospector
       run: |
-        prospector dashboard_viewer
+        export $(grep -v '^#' tests/.env | xargs -d '\n')
+        DJANGO_SETTINGS_MODULE=dashboard_viewer.settings prospector dashboard_viewer
