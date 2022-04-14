@@ -9,6 +9,7 @@ from django.contrib.admin.options import get_content_type_for_model
 from django.core import serializers
 from django.core.cache import cache
 from django.db import connections, ProgrammingError, router, transaction
+
 from materialized_queries_manager.models import MaterializedQuery
 from materialized_queries_manager.utils import refresh
 

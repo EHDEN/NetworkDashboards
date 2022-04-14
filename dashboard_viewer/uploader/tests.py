@@ -46,19 +46,11 @@ class UploaderRestrictedAccess(TestCase):
         response = self.client.get("/uploader/test/", HTTP_HOST="mainapp.host.com")
 
         self.assertEqual(200, response.status_code)
-        self.assertTrue(response.has_header("X-Frame-Options"))
-        self.assertEqual(
-            "ALLOW-FROM HTTPS://MAINAPP.HOST.COM/", response["X-Frame-Options"]
-        )
 
     def test_not_block_other_urls(self):
         response = self.client.get("/admin/login/", HTTP_HOST="thisapp.host.com")
 
         self.assertEqual(200, response.status_code)
-        self.assertTrue(response.has_header("X-Frame-Options"))
-        self.assertEqual(
-            "ALLOW-FROM HTTPS://MAINAPP.HOST.COM/", response["X-Frame-Options"]
-        )
 
 
 class UploaderNonRestrictedAccess(TestCase):
@@ -74,8 +66,6 @@ class UploaderNonRestrictedAccess(TestCase):
         response = self.client.get("/uploader/test/", HTTP_HOST="some.domain.com")
 
         self.assertEqual(200, response.status_code)
-        if response.has_header("X-Frame-Options"):
-            self.assertNotIn("ALLOW-FROM ", response.get("X-Frame-Options"))
 
 
 class DataSourceCreator:
