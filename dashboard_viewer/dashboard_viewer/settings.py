@@ -325,7 +325,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 
 try:
-    import local_settings
+    import local_settings  # noqa
     from local_settings import *  # noqa
 except ImportError:
     pass
@@ -347,5 +347,7 @@ if not SINGLE_APPLICATION_MODE:
             "Only include the hostname part of the URL."
         )
 
-    if (len(ALLOWED_HOSTS) > 1 or ALLOWED_HOSTS[0] != "*") and MAIN_APPLICATION_HOST not in ALLOWED_HOSTS:
+    if (
+        len(ALLOWED_HOSTS) > 1 or ALLOWED_HOSTS[0] != "*"
+    ) and MAIN_APPLICATION_HOST not in ALLOWED_HOSTS:
         ALLOWED_HOSTS.append(MAIN_APPLICATION_HOST)

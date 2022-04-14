@@ -9,8 +9,8 @@ from django.utils.html import format_html, mark_safe
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from materialized_queries_manager.tasks import refresh_materialized_views_task
 from materialized_queries_manager.models import MaterializedQuery
+from materialized_queries_manager.tasks import refresh_materialized_views_task
 from .decorators import uploader_decorator
 from .forms import AchillesResultsForm, EditSourceForm, SourceForm
 from .models import Country, DataSource, PendingUpload, UploadHistory
@@ -303,7 +303,9 @@ class DataSourceUpdate(GenericViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        refresh_materialized_views_task.delay([obj.matviewname for obj in MaterializedQuery.objects.all()])
+        refresh_materialized_views_task.delay(
+            [obj.matviewname for obj in MaterializedQuery.objects.all()]
+        )
 
         if getattr(instance, "_prefetched_objects_cache", None):
             # If 'prefetch_related' has been applied to a queryset, we need to
