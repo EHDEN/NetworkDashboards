@@ -320,6 +320,16 @@ MARTOR_ENABLE_CONFIGS = {
 TEST_RUNNER = "dashboard_viewer.runners.CeleryTestSuiteRunner"
 
 
+# required since django 3.2
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+
+try:
+    import local_settings
+    from local_settings import *  # noqa
+except ImportError:
+    pass
+
 # Variables that allow restricting the access to the uploader app if this Django
 #  app is being used as a third-party tool and is being iframed.
 SINGLE_APPLICATION_MODE = strtobool(os.environ.get("SINGLE_APPLICATION_MODE", "y")) == 1
@@ -337,5 +347,5 @@ if not SINGLE_APPLICATION_MODE:
             "Only include the hostname part of the URL."
         )
 
-# required since django 3.2
-DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+    if (len(ALLOWED_HOSTS) > 1 or ALLOWED_HOSTS[0] != "*") and MAIN_APPLICATION_HOST not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(MAIN_APPLICATION_HOST)

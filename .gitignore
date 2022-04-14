@@ -1,3 +1,6 @@
+# django local settings
+local_settings.py
+
 # documentation temporary files
 docs/src/_book
 
