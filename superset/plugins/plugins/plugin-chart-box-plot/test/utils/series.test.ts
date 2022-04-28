@@ -22,7 +22,7 @@ import {
   formatSeriesName,
   sanitizeHtml,
 } from '../../src/utils/series';
-import { NULL_STRING } from '../../lib/constants';
+import { NULL_STRING } from '../../src/constants';
 
 describe('extractGroupbyLabel', () => {
   it('should join together multiple groupby labels', () => {

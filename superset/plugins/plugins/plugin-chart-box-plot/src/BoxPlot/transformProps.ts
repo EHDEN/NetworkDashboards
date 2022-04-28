@@ -19,13 +19,14 @@
 import {
   CategoricalColorNamespace,
   DataRecordValue,
+  getColumnLabel,
   DataRecord,
   getMetricLabel,
   getNumberFormatter,
   getTimeFormatter,
   QueryMode,
 } from '@superset-ui/core';
-import { EChartsOption, BoxplotSeriesOption } from 'echarts';
+import { EChartsCoreOption, BoxplotSeriesOption } from 'echarts';
 import { CallbackDataParams,  } from 'echarts/types/src/util/types';
 import {
   BoxPlotChartTransformedProps,
@@ -34,6 +35,7 @@ import {
 } from './types';
 import { extractGroupbyLabel, getColtypesMapping, sanitizeHtml } from '../utils/series';
 import { defaultGrid, defaultTooltip, defaultYAxis } from '../defaults';
+import { getPadding } from '../Timeseries/transformers';
 import { OpacityEnum } from '../constants';
 import d3 from 'd3';
 
@@ -48,14 +50,21 @@ export default function transformProps(
     colorScheme,
     queryMode,
     groupby = [],
-    metrics: formdataMetrics = [],
+    metrics = [],
     numberFormat,
     dateFormat,
     xTicksLayout,
     emitFilter,
+    legendOrientation = 'top',
+    xAxisTitle,
+    yAxisTitle,
+    xAxisTitleMargin,
+    yAxisTitleMargin,
+    yAxisTitlePosition,
   } = formData as BoxPlotQueryFormData;
   const colorFn = CategoricalColorNamespace.getScale(colorScheme as string);
   const numberFormatter = getNumberFormatter(numberFormat);
+  const groupbyLabels = groupby.map(getColumnLabel);
 
   let transformedData: {
     name: string;
@@ -73,7 +82,7 @@ export default function transformProps(
       .key(row => extractGroupbyLabel(
         {
           datum: row as DataRecord,
-          groupby,
+          groupby: groupbyLabels,
           coltypeMapping,
           timeFormatter: getTimeFormatter(dateFormat),
         }
@@ -92,7 +101,7 @@ export default function transformProps(
         .key(row => extractGroupbyLabel(
           {
             datum: row as DataRecord,
-            groupby,
+            groupby: groupbyLabels,
             coltypeMapping,
             timeFormatter: getTimeFormatter(dateFormat),
           }))
@@ -116,7 +125,7 @@ export default function transformProps(
               tooltip: {
                 formatter: (param: { data: [string, number] }) => {
                   const [outlierName, stats] = param.data;
-                  const headline = groupby
+                  const headline = groupbyLabels.length
                     ? `<p><strong>${sanitizeHtml(outlierName)}</strong></p>`
                     : '';
                   return `${headline}${numberFormatter(stats)}`;
@@ -169,13 +178,13 @@ export default function transformProps(
       .flatMap(row => row);
   }
   else {
-    const metricLabels = formdataMetrics.map(getMetricLabel);
+    const metricLabels = metrics.map(getMetricLabel);
 
     transformedData = original_data
       .map((datum: any) => {
         const groupbyLabel = extractGroupbyLabel({
           datum,
-          groupby,
+          groupby: groupbyLabels,
           coltypeMapping,
           timeFormatter: getTimeFormatter(dateFormat),
         });
@@ -209,7 +218,7 @@ export default function transformProps(
         metricLabels.map(metric => {
           const groupbyLabel = extractGroupbyLabel({
             datum,
-            groupby,
+            groupby: groupbyLabels,
             coltypeMapping,
             timeFormatter: getTimeFormatter(dateFormat),
           });
@@ -224,7 +233,7 @@ export default function transformProps(
             tooltip: {
               formatter: (param: { data: [string, number] }) => {
                 const [outlierName, stats] = param.data;
-                const headline = groupby
+                const headline = groupbyLabels.length
                   ? `<p><strong>${sanitizeHtml(outlierName)}</strong></p>`
                   : '';
                 return `${headline}${numberFormatter(stats)}`;
@@ -243,13 +252,13 @@ export default function transformProps(
   const labelMap = original_data.reduce((acc: Record<string, DataRecordValue[]>, datum) => {
     const label = extractGroupbyLabel({
       datum,
-      groupby,
+      groupby: groupbyLabels,
       coltypeMapping,
       timeFormatter: getTimeFormatter(dateFormat),
     });
     return {
       ...acc,
-      [label]: groupby.map(col => datum[col]),
+      [label]: groupbyLabels.map(col => datum[col]),
     };
   }, {});
 
@@ -322,24 +331,40 @@ export default function transformProps(
     // @ts-ignore
     ...outlierData,
   ];
+  const addYAxisTitleOffset = !!yAxisTitle;
+  const addXAxisTitleOffset = !!xAxisTitle;
+  const chartPadding = getPadding(
+    true,
+    legendOrientation,
+    addYAxisTitleOffset,
+    false,
+    null,
+    addXAxisTitleOffset,
+    yAxisTitlePosition,
+    yAxisTitleMargin,
+    xAxisTitleMargin,
+  );
 
-  const echartOptions: EChartsOption = {
+  const echartOptions: EChartsCoreOption = {
     grid: {
       ...defaultGrid,
-      top: 30,
-      bottom: 30,
-      left: 20,
-      right: 20,
+      ...chartPadding,
     },
     xAxis: {
       type: 'category',
       data: transformedData.map(row => row.name),
       axisLabel,
+      name: xAxisTitle,
+      nameGap: xAxisTitleMargin,
+      nameLocation: 'middle',
     },
     yAxis: {
       ...defaultYAxis,
       type: 'value',
       axisLabel: { formatter: numberFormatter },
+      name: yAxisTitle,
+      nameGap: yAxisTitleMargin,
+      nameLocation: yAxisTitlePosition === 'Left' ? 'middle' : 'end',
     },
     tooltip: {
       ...defaultTooltip,

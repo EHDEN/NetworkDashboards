@@ -1,4 +1,5 @@
 import {
+  QueryFormColumn,
   QueryFormData,
 } from '@superset-ui/core';
 import {
@@ -14,7 +15,7 @@ export type EchartsPieFormData = QueryFormData &
     currentOwnValue?: string[] | null;
     donut: boolean;
     defaultValue?: string[] | null;
-    groupby: string[];
+    groupby: QueryFormColumn[];
     innerRadius: number;
     labelLine: boolean;
     labelType: EchartsPieLabelType;

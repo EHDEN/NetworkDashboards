@@ -21,12 +21,15 @@ import {
   ChartDataResponseResult,
   DataRecord,
   DataRecordValue,
+  ensureIsArray,
   GenericDataType,
   NumberFormatter,
   TimeFormatter,
 } from '@superset-ui/core';
 import { format } from 'echarts';
 import { NULL_STRING } from '../constants';
+import { LegendOrientation } from '../types';
+import { defaultLegendPadding } from '../defaults';
 
 export function formatSeriesName(
   name: DataRecordValue | undefined,
@@ -76,7 +79,7 @@ export function extractGroupbyLabel({
   timeFormatter?: TimeFormatter;
   coltypeMapping: Record<string, GenericDataType>;
 }): string {
-  return (groupby || [])
+  return (ensureIsArray(groupby))
     .map(val =>
       formatSeriesName(datum[val], {
         numberFormatter,
@@ -85,6 +88,35 @@ export function extractGroupbyLabel({
       }),
     )
     .join(', ');
+}
+
+export function getChartPadding(
+  show: boolean,
+  orientation: LegendOrientation,
+  margin?: string | number | null,
+  padding?: { top?: number; bottom?: number; left?: number; right?: number },
+): {
+  bottom: number;
+  left: number;
+  right: number;
+  top: number;
+} {
+  let legendMargin;
+  if (!show) {
+    legendMargin = 0;
+  } else if (margin === null || margin === undefined || typeof margin === 'string') {
+    legendMargin = defaultLegendPadding[orientation];
+  } else {
+    legendMargin = margin;
+  }
+
+  const { bottom = 0, left = 0, right = 0, top = 0 } = padding || {};
+  return {
+    left: left + (orientation === LegendOrientation.Left ? legendMargin : 0),
+    right: right + (orientation === LegendOrientation.Right ? legendMargin : 0),
+    top: top + (orientation === LegendOrientation.Top ? legendMargin : 0),
+    bottom: bottom + (orientation === LegendOrientation.Bottom ? legendMargin : 0),
+  };
 }
 
 export function sanitizeHtml(text: string): string {

@@ -18,6 +18,10 @@
  */
 export { default as EchartsBoxPlotChartPlugin } from './BoxPlot';
 
+export { default as BoxPlotTransformProps } from './BoxPlot/transformProps';
+
+export * from './types';
+
 /**
  * Note: this file exports the default export from EchartsTimeseries.tsx.
  * If you want to export multiple visualization modules, you will need to
