@@ -30,23 +30,40 @@ export default function buildQuery(formData: BoxPlotQueryFormData) {
     p75,
     p90,
     maximum,
-    columns = [], granularity_sqla, groupby = [],
+    columns = [],
+    granularity_sqla,
+    groupby = [],
   } = formData;
   return buildQueryContext(formData, baseQueryObject => {
-    if (query_mode == 'raw') {
-      if (groupby.length == 0) {
+    if (query_mode === 'raw') {
+      if (groupby.length === 0) {
         throw new Error(`Error: No series column defined.`);
       }
 
-      const missing_columns = ['minimum', 'p10', 'p25', 'median', 'p75', 'p90', 'maximum']
+      const missing_columns = [
+        'minimum',
+        'p10',
+        'p25',
+        'median',
+        'p75',
+        'p90',
+        'maximum',
+      ]
         .filter(c => !formData[c] || Array.isArray(formData[c]))
         .map(c => c.toUpperCase());
       if (missing_columns.length > 0) {
         if (missing_columns.length > 1) {
-          throw new Error(`Error: Columns ${missing_columns.slice(0, missing_columns.length - 1).join(', ')} and ${missing_columns[missing_columns.length - 1]} are not defined.`);
-        }
-        else {
-          throw new Error(`Error: Column ${missing_columns[0]} is not defined.`);
+          throw new Error(
+            `Error: Columns ${missing_columns
+              .slice(0, missing_columns.length - 1)
+              .join(', ')} and ${
+              missing_columns[missing_columns.length - 1]
+            } are not defined.`,
+          );
+        } else {
+          throw new Error(
+            `Error: Column ${missing_columns[0]} is not defined.`,
+          );
         }
       }
 
@@ -56,18 +73,18 @@ export default function buildQuery(formData: BoxPlotQueryFormData) {
         {
           ...baseQueryObject,
           metrics: [],
-          groupby: [],
+          series_columns: groupby,
           columns: [...groupby, minimum, p10, p25, median, p75, p90, maximum],
         },
       ].concat(
         outliers && !Array.isArray(outliers)
-        ? {
-          ...baseQueryObject,
-          metrics: [],
-          groupby: [],
-          columns: [...groupby, outliers],
-        }
-        : []
+          ? {
+              ...baseQueryObject,
+              metrics: [],
+              series_columns: groupby,
+              columns: [...groupby, outliers],
+            }
+          : [],
       );
 
       return queries;

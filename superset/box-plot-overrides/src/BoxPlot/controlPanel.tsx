@@ -17,12 +17,8 @@
  * under the License.
  */
 import React from 'react';
-import {
-  QueryFormColumn,
-  QueryMode,
-  t,
-} from '@superset-ui/core';
-  
+import { QueryFormColumn, QueryMode, t } from '@superset-ui/core';
+
 import {
   ColumnOption,
   ControlConfig,
@@ -44,7 +40,9 @@ function getQueryMode(controls: ControlStateMapping): QueryMode {
   if (mode === QueryMode.aggregate || mode === QueryMode.raw) {
     return mode as QueryMode;
   }
-  const rawColumns = controls?.all_columns?.value as QueryFormColumn[] | undefined;
+  const rawColumns = controls?.all_columns?.value as
+    | QueryFormColumn[]
+    | undefined;
   const hasRawColumns = rawColumns && rawColumns.length > 0;
   return hasRawColumns ? QueryMode.raw : QueryMode.aggregate;
 }
@@ -53,7 +51,8 @@ function getQueryMode(controls: ControlStateMapping): QueryMode {
  * Visibility check
  */
 function isQueryMode(mode: QueryMode) {
-  return ({ controls }: ControlPanelsContainerProps) => getQueryMode(controls) === mode;
+  return ({ controls }: ControlPanelsContainerProps) =>
+    getQueryMode(controls) === mode;
 }
 
 const isAggMode = isQueryMode(QueryMode.aggregate);
@@ -65,7 +64,7 @@ const queryMode: ControlConfig<'RadioButtonControl'> = {
   default: null,
   options: [
     [QueryMode.aggregate, QueryModeLabel[QueryMode.aggregate]],
-    [QueryMode.raw, QueryModeLabel[QueryMode.raw]]
+    [QueryMode.raw, QueryModeLabel[QueryMode.raw]],
   ],
   mapStateToProps: ({ controls }) => ({ value: getQueryMode(controls) }),
 };
@@ -88,7 +87,6 @@ const all_columns: typeof sharedControls.groupby = {
   }),
   visibility: isRawMode,
 };
-
 
 const config: ControlPanelConfig = {
   controlPanelSections: [
@@ -191,7 +189,9 @@ const config: ControlPanelConfig = {
               freeForm: true,
               label: t('Whisker/outlier options'),
               default: 'Tukey',
-              description: t('Determines how whiskers and outliers are calculated.'),
+              description: t(
+                'Determines how whiskers and outliers are calculated.',
+              ),
               choices: formatSelectOptions([
                 'Tukey',
                 'Min/max (no outliers)',
@@ -216,7 +216,13 @@ const config: ControlPanelConfig = {
             config: {
               type: 'SelectControl',
               label: t('X Tick Layout'),
-              choices: formatSelectOptions(['auto', 'flat', '45°', '90°', 'staggered']),
+              choices: formatSelectOptions([
+                'auto',
+                'flat',
+                '45°',
+                '90°',
+                'staggered',
+              ]),
               default: 'auto',
               clearable: false,
               renderTrigger: true,
@@ -234,9 +240,10 @@ const config: ControlPanelConfig = {
               renderTrigger: true,
               default: 'SMART_NUMBER',
               choices: D3_FORMAT_OPTIONS,
-              description: `${t('D3 format syntax: https://github.com/d3/d3-format')} ${t(
-                'Only applies when "Label Type" is set to show values.',
-              )}`,
+              description: `${t(
+                'D3 format syntax: https://github.com/d3/d3-format',
+              )}
+                ${t('Only applies when "Label Type" is set to show values.')}`,
             },
           },
         ],

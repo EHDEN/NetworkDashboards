@@ -27,22 +27,26 @@ import {
   QueryMode,
 } from '@superset-ui/core';
 import { EChartsCoreOption, BoxplotSeriesOption } from 'echarts';
-import { CallbackDataParams,  } from 'echarts/types/src/util/types';
+import { CallbackDataParams } from 'echarts/types/src/util/types';
 import {
   BoxPlotChartTransformedProps,
   BoxPlotQueryFormData,
   EchartsBoxPlotChartProps,
 } from './types';
-import { extractGroupbyLabel, getColtypesMapping, sanitizeHtml } from '../utils/series';
+import {
+  extractGroupbyLabel,
+  getColtypesMapping,
+  sanitizeHtml,
+} from '../utils/series';
 import { defaultGrid, defaultTooltip, defaultYAxis } from '../defaults';
 import { getPadding } from '../Timeseries/transformers';
 import { OpacityEnum } from '../constants';
-import d3 from 'd3';
 
 export default function transformProps(
   chartProps: EchartsBoxPlotChartProps,
 ): BoxPlotChartTransformedProps {
-  const { width, height, formData, hooks, filterState, queriesData } = chartProps;
+  const { width, height, formData, hooks, filterState, queriesData } =
+    chartProps;
   const { data: original_data = [] } = queriesData[0];
   const { setDataMask = () => {} } = hooks;
   const coltypeMapping = getColtypesMapping(queriesData[0]);
@@ -70,92 +74,85 @@ export default function transformProps(
     name: string;
     value: any[];
     itemStyle: {
-        color: string;
-        opacity: number;
-        borderColor: string;
+      color: string;
+      opacity: number;
+      borderColor: string;
     };
-  }[], outlierData;
+  }[];
+  let outlierData;
 
-  if (queryMode == QueryMode.raw) {
-    const data = d3
-      .nest()
-      .key(row => extractGroupbyLabel(
-        {
+  if (queryMode === QueryMode.raw) {
+    const data = Object.fromEntries(
+      queriesData[0].data.map(row => {
+        const key = extractGroupbyLabel({
           datum: row as DataRecord,
           groupby: groupbyLabels,
           coltypeMapping,
           timeFormatter: getTimeFormatter(dateFormat),
-        }
-      ))
-      .entries(queriesData[0].data)
-      .reduce((result: {[key: string]: DataRecord}, item, _) => {
-        result[item.key] = item.values[0];
-        return result;
-      }, {})
+        });
 
-    const { outliers }  = formData;
-    let outlierMapping: {[key: string]: DataRecord[]};
+        return [key, row];
+      }),
+    );
+
+    const { outliers } = formData;
+    let outlierMapping: { [key: string]: DataRecord[] };
     if (outliers && !Array.isArray(outliers)) {
-      outlierMapping = d3
-        .nest()
-        .key(row => extractGroupbyLabel(
-          {
-            datum: row as DataRecord,
+      outlierMapping = queriesData[1].data.reduce(
+        (current: { [key: string]: DataRecord[] }, item) => {
+          const key = extractGroupbyLabel({
+            datum: item as DataRecord,
             groupby: groupbyLabels,
             coltypeMapping,
             timeFormatter: getTimeFormatter(dateFormat),
-          }))
-        .entries(queriesData[1].data)
-        .reduce((result: {[key: string]: DataRecord[]}, item, _) => {
-          const values = item.values.filter((v: DataRecord) => v[outliers])
-          if (values.length > 0) {
-            result[item.key] = values;
-          }
-          return result;
-        }, {});
+          });
+
+          const ret_val = { ...current };
+          ret_val[key] = ret_val[key] ? [...ret_val[key], item] : [item];
+          return ret_val;
+        },
+        {},
+      );
 
       outlierData = Object.entries(outlierMapping)
         .map(([groupbyLabel, outlierDatum]) => {
-            const isFiltered = filterState.selectedValues && !filterState.selectedValues.includes(groupbyLabel);
+          const isFiltered =
+            filterState.selectedValues &&
+            !filterState.selectedValues.includes(groupbyLabel);
 
-            return {
-              name: 'outlier',
-              type: 'scatter',
-              data: outlierDatum.map(val => [groupbyLabel, val[outliers]]),
-              tooltip: {
-                formatter: (param: { data: [string, number] }) => {
-                  const [outlierName, stats] = param.data;
-                  const headline = groupbyLabels.length
-                    ? `<p><strong>${sanitizeHtml(outlierName)}</strong></p>`
-                    : '';
-                  return `${headline}${numberFormatter(stats)}`;
-                },
+          return {
+            name: 'outlier',
+            type: 'scatter',
+            data: outlierDatum.map(val => [groupbyLabel, val[outliers]]),
+            tooltip: {
+              formatter: (param: { data: [string, number] }) => {
+                const [outlierName, stats] = param.data;
+                const headline = groupbyLabels.length
+                  ? `<p><strong>${sanitizeHtml(outlierName)}</strong></p>`
+                  : '';
+                return `${headline}${numberFormatter(stats)}`;
               },
-              itemStyle: {
-                color: colorFn(groupbyLabel),
-                opacity: isFiltered ? OpacityEnum.SemiTransparent : OpacityEnum.NonTransparent,
-              },
-            };
-          },
-        )
+            },
+            itemStyle: {
+              color: colorFn(groupbyLabel),
+              opacity: isFiltered
+                ? OpacityEnum.SemiTransparent
+                : OpacityEnum.NonTransparent,
+            },
+          };
+        })
         .flat(2);
     }
 
-    
-    const {
-      minimum,
-      p10,
-      p25,
-      median,
-      p75,
-      p90,
-      maximum,
-    } = formData as BoxPlotQueryFormData;
+    const { minimum, p10, p25, median, p75, p90, maximum } =
+      formData as BoxPlotQueryFormData;
 
     transformedData = Object.entries(data)
       .map(([groupByLabel, datum]) => {
-        const isFiltered = filterState.selectedValues && !filterState.selectedValues.includes(groupByLabel);
-        
+        const isFiltered =
+          filterState.selectedValues &&
+          !filterState.selectedValues.includes(groupByLabel);
+
         return {
           name: groupByLabel,
           value: [
@@ -166,18 +163,21 @@ export default function transformProps(
             datum[p90],
             datum[minimum],
             datum[maximum],
-            outlierMapping ? (groupByLabel in outlierMapping ? outlierMapping[groupByLabel] : []) : []
+            outlierMapping
+              ? groupByLabel in outlierMapping
+                ? outlierMapping[groupByLabel]
+                : []
+              : [],
           ],
           itemStyle: {
             color: colorFn(groupByLabel),
             opacity: isFiltered ? OpacityEnum.SemiTransparent : 0.6,
             borderColor: colorFn(groupByLabel),
           },
-        }
+        };
       })
       .flatMap(row => row);
-  }
-  else {
+  } else {
     const metricLabels = metrics.map(getMetricLabel);
 
     transformedData = original_data
@@ -189,8 +189,13 @@ export default function transformProps(
           timeFormatter: getTimeFormatter(dateFormat),
         });
         return metricLabels.map(metric => {
-          const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
-          const isFiltered = filterState.selectedValues && !filterState.selectedValues.includes(name);
+          const name =
+            metricLabels.length === 1
+              ? groupbyLabel
+              : `${groupbyLabel}, ${metric}`;
+          const isFiltered =
+            filterState.selectedValues &&
+            !filterState.selectedValues.includes(name);
           return {
             name,
             value: [
@@ -222,10 +227,15 @@ export default function transformProps(
             coltypeMapping,
             timeFormatter: getTimeFormatter(dateFormat),
           });
-          const name = metricLabels.length === 1 ? groupbyLabel : `${groupbyLabel}, ${metric}`;
+          const name =
+            metricLabels.length === 1
+              ? groupbyLabel
+              : `${groupbyLabel}, ${metric}`;
           // Outlier data is a nested array of numbers (uncommon, therefore no need to add to DataRecordValue)
           const outlierDatum = (datum[`${metric}__outliers`] || []) as number[];
-          const isFiltered = filterState.selectedValues && !filterState.selectedValues.includes(name);
+          const isFiltered =
+            filterState.selectedValues &&
+            !filterState.selectedValues.includes(name);
           return {
             name: 'outlier',
             type: 'scatter',
@@ -241,7 +251,9 @@ export default function transformProps(
             },
             itemStyle: {
               color: colorFn(groupbyLabel),
-              opacity: isFiltered ? OpacityEnum.SemiTransparent : OpacityEnum.NonTransparent,
+              opacity: isFiltered
+                ? OpacityEnum.SemiTransparent
+                : OpacityEnum.NonTransparent,
             },
           };
         }),
@@ -249,22 +261,27 @@ export default function transformProps(
       .flat(2);
   }
 
-  const labelMap = original_data.reduce((acc: Record<string, DataRecordValue[]>, datum) => {
-    const label = extractGroupbyLabel({
-      datum,
-      groupby: groupbyLabels,
-      coltypeMapping,
-      timeFormatter: getTimeFormatter(dateFormat),
-    });
-    return {
-      ...acc,
-      [label]: groupbyLabels.map(col => datum[col]),
-    };
-  }, {});
+  const labelMap = original_data.reduce(
+    (acc: Record<string, DataRecordValue[]>, datum) => {
+      const label = extractGroupbyLabel({
+        datum,
+        groupby: groupbyLabels,
+        coltypeMapping,
+        timeFormatter: getTimeFormatter(dateFormat),
+      });
+      return {
+        ...acc,
+        [label]: groupbyLabels.map(col => datum[col]),
+      };
+    },
+    {},
+  );
 
   const selectedValues = (filterState.selectedValues || []).reduce(
     (acc: Record<string, number>, selectedValue: string) => {
-      const index = transformedData.findIndex(({ name }) => name === selectedValue);
+      const index = transformedData.findIndex(
+        ({ name }) => name === selectedValue,
+      );
       return {
         ...acc,
         [index]: selectedValue,
@@ -294,12 +311,24 @@ export default function transformProps(
             value,
             name,
           }: {
-            value: [number, number, number, number, number, number, number, number, number[]];
+            value: [
+              number,
+              number,
+              number,
+              number,
+              number,
+              number,
+              number,
+              number,
+              number[],
+            ];
             name: string;
           } = param;
-          const headline = name ? `<p><strong>${sanitizeHtml(name)}</strong></p>` : '';
+          const headline = name
+            ? `<p><strong>${sanitizeHtml(name)}</strong></p>`
+            : '';
           let stats;
-          if (queryMode == QueryMode.raw) {
+          if (queryMode === QueryMode.raw) {
             stats = [
               `Max: ${numberFormatter(value[7])}`,
               `90th Percentile: ${numberFormatter(value[5])}`,
@@ -309,8 +338,7 @@ export default function transformProps(
               `10th Percentile: ${numberFormatter(value[1])}`,
               `Min: ${numberFormatter(value[6])}`,
             ];
-          }
-          else {
+          } else {
             stats = [
               `Max: ${numberFormatter(value[5])}`,
               `3rd Quartile: ${numberFormatter(value[4])}`,

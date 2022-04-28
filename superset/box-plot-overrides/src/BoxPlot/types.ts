@@ -29,15 +29,13 @@ import { EchartsTitleFormData, DEFAULT_TITLE_FORM_DATA } from '../types';
 
 export type BoxPlotQueryFormData = QueryFormData & {
   numberFormat?: string;
-  query_mode?: string;
+  query_mode?: BoxPlotFormDataQueryMode;
   whiskerOptions?: BoxPlotFormDataWhiskerOptions;
   xTickLayout?: BoxPlotFormXTickLayout;
   emitFilter: boolean;
 } & EchartsTitleFormData;
 
-export type BoxPlotFormDataQueryMode =
-  | 'aggregate'
-  | 'raw';
+export type BoxPlotFormDataQueryMode = 'aggregate' | 'raw';
 
 export type BoxPlotFormDataWhiskerOptions =
   | 'Tukey'
@@ -45,11 +43,17 @@ export type BoxPlotFormDataWhiskerOptions =
   | '2/98 percentiles'
   | '9/91 percentiles';
 
-export type BoxPlotFormXTickLayout = '45°' | '90°' | 'auto' | 'flat' | 'staggered';
+export type BoxPlotFormXTickLayout =
+  | '45°'
+  | '90°'
+  | 'auto'
+  | 'flat'
+  | 'staggered';
 
 // @ts-ignore
 export const DEFAULT_FORM_DATA: BoxPlotQueryFormData = {
   emitFilter: false,
+  query_mode: 'aggregate',
   ...DEFAULT_TITLE_FORM_DATA,
 };
 

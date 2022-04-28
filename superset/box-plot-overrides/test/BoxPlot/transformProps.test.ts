@@ -16,11 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { ChartProps } from '@superset-ui/core';
+import { ChartProps, SqlaFormData } from '@superset-ui/core';
+import { EchartsBoxPlotChartProps } from '../../src/BoxPlot/types';
 import transformProps from '../../src/BoxPlot/transformProps';
 
 describe('BoxPlot tranformProps', () => {
-  const formData = {
+  const formData: SqlaFormData = {
     datasource: '5__table',
     granularity_sqla: 'ds',
     time_grain_sqla: 'P1Y',
@@ -68,7 +69,9 @@ describe('BoxPlot tranformProps', () => {
   });
 
   it('should tranform chart props for viz', () => {
-    expect(transformProps(chartProps)).toEqual(
+    expect(
+      transformProps(chartProps as unknown as EchartsBoxPlotChartProps),
+    ).toEqual(
       expect.objectContaining({
         width: 800,
         height: 600,
@@ -79,11 +82,29 @@ describe('BoxPlot tranformProps', () => {
               data: expect.arrayContaining([
                 expect.objectContaining({
                   name: 'organic, Charlotte',
-                  value: [1.4775, 1.73875, 1.9025, 2.105, 2.505, 1.9405512820512825, 39, [2.735]],
+                  value: [
+                    1.4775,
+                    1.73875,
+                    1.9025,
+                    2.105,
+                    2.505,
+                    1.9405512820512825,
+                    39,
+                    [2.735],
+                  ],
                 }),
                 expect.objectContaining({
                   name: 'organic, Hartford Springfield',
-                  value: [1.862, 2.1285, 2.265, 2.32625, 2.595, 2.231141025641026, 39, []],
+                  value: [
+                    1.862,
+                    2.1285,
+                    2.265,
+                    2.32625,
+                    2.595,
+                    2.231141025641026,
+                    39,
+                    [],
+                  ],
                 }),
               ]),
             }),
