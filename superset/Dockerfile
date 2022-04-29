@@ -45,7 +45,7 @@ COPY ./repo/docker/frontend-mem-nag.sh /
 COPY ./repo/superset-frontend/ /app/superset-frontend/
 
 # Add our boxplot
-COPY ./box-plot-overrides* /app/superset-frontend/superset-frontend/plugins/plugin-chart-echarts/
+COPY ./box-plot-overrides /app/superset-frontend/plugins/plugin-chart-echarts/
 RUN rm -f /app/superset-frontend/plugins/plugin-chart-echarts/src/BoxPlot/controlPanel.ts
 
 RUN /frontend-mem-nag.sh \
