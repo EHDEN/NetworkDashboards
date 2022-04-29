@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-01-04" />
+<meta name="date" content="2022-04-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -391,7 +391,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li><p>By default Superset’s admin user credentials are admin/admin.
 It is recommended that you change the password if you will use this in a production environment.</p></li>
-<li><p>To any anonymous user view dashboards, add the following:</p>
+<li><p>To any anonymous user view dashboards, add the following permissions to the public role:</p>
 <ul>
 <li>all datasource access on all_datasource_access</li>
 <li>can csrf token on Superset</li>
@@ -401,6 +401,7 @@ It is recommended that you change the password if you will use this in a product
 <li>can read on CssTemplate</li>
 <li>can read on Dashboard</li>
 </ul></li>
+<li><p>For each dashboard you want anonymous users to be able to access, on the dashboard list page click edit (the pencil on the right) and add the “Admin” and “Public” roles to the “Roles with acess” field.</p></li>
 </ol>
 </div>
 <div id="dummy-data" class="section level3 unnumbered" number="">

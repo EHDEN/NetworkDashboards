@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-01-04" />
+<meta name="date" content="2022-04-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -350,47 +350,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="superset" class="section level3 unnumbered" number="">
 <h3>Superset</h3>
-<p>Currently, we have a custom chart plugin on our superset installation which doesn’t allow us to use superset’s pre-built images available on their docker hub, since we have to call npm’s build procedures on the front-end code.
-To build our custom docker image we used superset’s <a href="https://github.com/apache/superset/blob/1.0.1/Dockerfile">Dockerfile</a> as a base, where we removed the Dev section and added some code to install our chart plugins before building the front-end code.
-Also, to make Superset import our custom chart plugins, some changes have to be made to the <a href="https://github.com/apache/superset/blob/1.0.1/superset-frontend/src/visualizations/presets/MainPreset.js">superset-frontend/src/visualizations/presets/MainPreset.js</a> file.</p>
-<p>The changes made to the Dockerfile to install the chart plugins are in <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L44-L63">this</a> area:</p>
+<p>Currently, we have made some modifications to the box plot visualization on our superset installation which doesn’t allow us to use superset’s pre-built images available on their docker hub, since we have to call npm’s build procedures on the front-end code.
+To build our custom docker image we used superset’s <a href="https://github.com/apache/superset/blob/1.5.0/Dockerfile">Dockerfile</a> as a base, where we removed the Dev section and added some code to install our chart plugins before building the front-end code.</p>
+<p>The changes made to the Dockerfile to install the chart plugins are in <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L47-L49">this</a> area:</p>
 <ol style="list-style-type: decimal">
-<li>L44: First we copy the <code>superset/plugins</code> directory into the container, which contains all the extra and custom chart plugins.</li>
-<li>L48-51: Then we iterate over the chart plugins and execute <code>npm install ...</code> on each of them.
-This will make changes to both the package.json and package-lock.json files and for that, we copy them into a temporary directory <code>package_json_files</code>.</li>
-<li>L54: Then all superset’s front-end code is copied into the container, which will override the package*.json files.</li>
-<li>L56: After this, we copy our custom MainPresets.js file.</li>
-<li>L60-L63: Finally, we replace the package*.json files with the ones that we saved earlier and then run the npm build command.</li>
+<li>L46: Repalce some boxplot fiels with ours;</li>
+<li>L47: Superset’s original version of the controlPanel.ts file is a <code>.ts</code> versions however ours is a <code>.tsx</code>. For that, we have to remove the <code>.ts</code> version to properly override this file.</li>
 </ol>
 <div id="update-superset" class="section level4 unnumbered" number="">
 <h4>Update Superset</h4>
 <ol style="list-style-type: decimal">
 <li><p><code>cd</code> into superset’s submodule directory.</p></li>
-<li><p>Get the latest tags: <code>git fetch</code>.</p></li>
+<li><p>Get the latest tags: <code>git fetch -t</code>.</p></li>
 <li><p>Checkout to the new desired release tag.</p></li>
 <li><p>Check if there are any changes made to superset’s Dockerfile (on the root of the repository for the current latest release), adapt them, and insert them on our custom Dockerfile under the <code>docker/superset</code> directory.</p></li>
-<li><p>Check if there are any changes made to superset’s <code>superset-frontend/src/visualizations/presets/MainPreset.js</code> file.
-You can use the script <code>mainpreset_has_changes.py</code> under the <code>plugins</code> directory to check that.
-Apply the new changes, if any, and remember to keep our chart plugins imported and registered (Currently we only have the <em>Box plot</em> plugin).</p></li>
-<li><p>If the version of the frontend package <code>@superset-ui/plugin-chart-echarts</code> changed it’s necessary to update our box plot plugin.
-Follow the instructions present <a href="https://github.com/EHDEN/NetworkDashboards/tree/master/superset/plugins/plugins/plugin-chart-box-plot#how-to-update">here</a>, also take into account the instruction of the next section.</p></li>
+<li><p>If the version of the plugin package <code>plugin-chart-echarts</code> changed, it’s necessary to update our box plot plugin. If it is greater than 0.18.25, go to the history (<code>https://github.com/apache/superset/commits/[RELEASE-TAG]/superset-frontend/plugins/plugin-chart-echarts</code>) of commits done to the plugin-chart-echarts plugin update to the most recent commit, applying their changes to the files in the <code>superset/box-plot-overrides</code> directory. A fast way check the changes done between two commits: <code>git diff [old_commit_hash] [recent_commit_hash] -- superset-frontend/plugins/plugin-chart-echarts</code></p></li>
 </ol>
 </div>
 <div id="chart-plugin-development" class="section level4 unnumbered" number="">
 <h4>Chart Plugin Development</h4>
-<p>Instructions on how you can set up your development environment to develop on a custom superset chart plugin:</p>
 <ol style="list-style-type: decimal">
-<li><p>Clone the <a href="https://github.com/apache/superset">superset</a> repository.
-<strong>IMPORTANT NOTE</strong>: Since we build the superset’s docker image using the existing superset’s submodule, it’s better not to use it to develop the plugins.
-If you decide to use it anyways, remember <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L54">this</a> and <a href="https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L99">this</a> steps.
-They might override directories (<code>superset-frontend/node_modules</code> and <code>superset/static/assets</code>) that are generated during the build process, which can cause frontend compilation errors or the app can serve outdated static files.</p></li>
-<li><p>Clone the <a href="https://github.com/apache-superset/superset-ui">superset-ui</a> repository into the directory superset-frontend of superset’s repository.</p></li>
-<li><p>Follow the instructions of <a href="https://superset.apache.org/docs/installation/building-custom-viz-plugins">this tutorial</a> to create the necessary base files of your plugin.</p></li>
-<li><p>Copy the file <code>MainPreset.js</code> present on this directory into the superset repository into the <code>superset-frontend/src/visualizations/presets/</code> directory.</p></li>
-<li><p>Add the line <code>npm install -f --no-optional --save ./superset-frontend/superset-ui/plugins/plugin-chart-[your-chart-name]</code> into the file <code>docker/docker-frontend.sh</code> of the superset repository before the existing <code>npm install ...</code> commands.</p></li>
-<li><p>When the development is finished, on the root of the superset-ui repository run <code>yarn install</code> and then <code>yarn build [your-chart-name]</code>.</p></li>
-<li><p>Copy the directory of your plugin (including its sub-directory <code>esm</code>), within the superset-ui repository within the directory <code>plugins</code>, into the sub-directory <code>plugins</code> this directory.
-Make sure to run the command <code>yarn build [your-chart-name]</code> before doing this step.</p></li>
+<li><p>Follow the instructions of <a href="https://superset.apache.org/docs/contributing/creating-viz-plugins">this tutorial</a> to create the necessary base files of your plugin.</p></li>
+<li><p>To deploy you can either use the <code>DYNAMIC_PLUGINS</code> feature flag or you can add and build your plugins in <code>superset/Dockerfile</code>.</p></li>
 </ol>
 </div>
 <div id="important-features" class="section level4 unnumbered" number="">

@@ -105,7 +105,7 @@ The concepts table is not in the repository due to its dimension, therefore we u
 4. By default Superset's admin user credentials are admin/admin.
    It is recommended that you change the password if you will use this in a production environment.
 
-5. To any anonymous user view dashboards, add the following:
+5. To any anonymous user view dashboards, add the following permissions to the public role:
 
    - all datasource access on all_datasource_access
    - can csrf token on Superset
@@ -114,6 +114,8 @@ The concepts table is not in the repository due to its dimension, therefore we u
    - can read on Chart
    - can read on CssTemplate
    - can read on Dashboard
+
+6. For each dashboard you want anonymous users to be able to access, on the dashboard list page click edit (the pencil on the right) and add the "Admin" and "Public" roles to the "Roles with acess" field.
 
 ### Dummy data {-}
 
