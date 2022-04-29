@@ -17,7 +17,12 @@
  * under the License.
  */
 import React from 'react';
-import { QueryFormColumn, QueryMode, t } from '@superset-ui/core';
+import {
+  ensureIsArray,
+  QueryFormColumn,
+  QueryMode,
+  t,
+} from '@superset-ui/core';
 
 import {
   ColumnOption,
@@ -35,6 +40,7 @@ import {
   ControlPanelConfig,
 } from '@superset-ui/chart-controls';
 
+// all these functions and variables below were copied/adpated from plugin-chart-table/src/controlPanel.tsx
 function getQueryMode(controls: ControlStateMapping): QueryMode {
   const mode = controls?.query_mode?.value;
   if (mode === QueryMode.aggregate || mode === QueryMode.raw) {
@@ -51,7 +57,7 @@ function getQueryMode(controls: ControlStateMapping): QueryMode {
  * Visibility check
  */
 function isQueryMode(mode: QueryMode) {
-  return ({ controls }: ControlPanelsContainerProps) =>
+  return ({ controls }: Pick<ControlPanelsContainerProps, 'controls'>) =>
     getQueryMode(controls) === mode;
 }
 
@@ -67,26 +73,54 @@ const queryMode: ControlConfig<'RadioButtonControl'> = {
     [QueryMode.raw, QueryModeLabel[QueryMode.raw]],
   ],
   mapStateToProps: ({ controls }) => ({ value: getQueryMode(controls) }),
+  rerender: [
+    'minimum',
+    'p10',
+    'p25',
+    'median',
+    'p75',
+    'p90',
+    'maximum',
+    'outliers',
+    'whiskerOptions',
+    'columns',
+    'groupby',
+    'metrics',
+  ],
 };
 
-const all_columns: typeof sharedControls.groupby = {
-  type: 'SelectControl',
-  label: t('P90'),
-  description: t('Column holding the 90th percentile values'),
-  multi: false,
-  freeForm: false,
-  allowAll: true,
-  commaChoosesOption: false,
-  default: [],
-  optionRenderer: c => <ColumnOption showType column={c} />,
-  valueRenderer: c => <ColumnOption column={c} />,
-  valueKey: 'column_name',
-  mapStateToProps: ({ datasource, controls }) => ({
-    options: datasource?.columns || [],
-    queryMode: getQueryMode(controls),
-  }),
-  visibility: isRawMode,
-};
+function generate_all_columns_config(
+  label: string,
+  description: string,
+  validation = true,
+): typeof sharedControls.groupby {
+  // TODO dnd not implemented
+
+  return {
+    type: 'SelectControl',
+    label: t(label),
+    description: t(description),
+    multi: false,
+    freeForm: false,
+    allowAll: true,
+    commaChoosesOption: false,
+    default: [],
+    optionRenderer: c => <ColumnOption showType column={c} />,
+    valueRenderer: c => <ColumnOption column={c} />,
+    valueKey: 'column_name',
+    mapStateToProps: ({ datasource, controls }, controlState) => ({
+      options: datasource?.columns || [],
+      queryMode: getQueryMode(controls),
+      externalValidationErrors:
+        isRawMode({ controls }) &&
+        validation &&
+        ensureIsArray(controlState.value).length === 0
+          ? [t('must have a value')]
+          : [],
+    }),
+    visibility: isRawMode,
+  };
+}
 
 const config: ControlPanelConfig = {
   controlPanelSections: [
@@ -104,73 +138,70 @@ const config: ControlPanelConfig = {
         [
           {
             name: 'minimum',
-            config: {
-              ...all_columns,
-              label: t('Min'),
-              description: t('Column holding the minimum values'),
-            },
+            config: generate_all_columns_config(
+              'Min',
+              'Column holding the minimum values',
+            ),
           },
         ],
         [
           {
             name: 'p10',
-            config: {
-              ...all_columns,
-              label: t('P10'),
-              description: t('Column holding the 10th percentile values'),
-            },
+            config: generate_all_columns_config(
+              'P10',
+              'Column holding the 10th percentile values',
+            ),
           },
           {
             name: 'p25',
-            config: {
-              ...all_columns,
-              label: t('P25'),
-              description: t('Column holding the 25th percentile values'),
-            },
+            config: generate_all_columns_config(
+              'P10',
+              'Column holding the 25th percentile values',
+            ),
           },
         ],
         [
           {
             name: 'median',
-            config: {
-              ...all_columns,
-              label: t('Median/P50'),
-              description: t('Column holding the median values'),
-            },
+            config: generate_all_columns_config(
+              'Median/P50',
+              'Column holding the median values',
+            ),
           },
         ],
         [
           {
             name: 'p75',
-            config: {
-              ...all_columns,
-              label: t('P75'),
-              description: t('Column holding the 75th percentile values'),
-            },
+            config: generate_all_columns_config(
+              'P75',
+              'Column holding the 75th percentile values',
+            ),
           },
           {
             name: 'p90',
-            config: all_columns,
+            config: generate_all_columns_config(
+              'P90',
+              'Column holding the 90th percentile values',
+            ),
           },
         ],
         [
           {
             name: 'maximum',
-            config: {
-              ...all_columns,
-              label: t('Max'),
-              description: t('Column holding the maximum values'),
-            },
+            config: generate_all_columns_config(
+              'Max',
+              'Column holding the maximum values',
+            ),
           },
         ],
         [
           {
             name: 'outliers',
-            config: {
-              ...all_columns,
-              label: t('Outliers'),
-              description: t('Column holding outliers values'),
-            },
+            config: generate_all_columns_config(
+              'Outliers',
+              'Column holding outliers values',
+              false,
+            ),
           },
         ],
         ['metrics'],
