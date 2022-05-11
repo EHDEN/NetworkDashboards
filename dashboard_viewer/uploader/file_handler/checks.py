@@ -74,7 +74,10 @@ def _generate_file_reader(uploaded_file):
             )
         )
     elif len(first_row) != 7:
-        raise InvalidFileFormat("The provided file has an invalid number of columns.")
+        raise InvalidFileFormat(
+            "The provided file has an invalid number of columns. "
+            "Make sure you uploaded a valid comma-separated values (CSV) file."
+        )
 
     uploaded_file.seek(0)
 
