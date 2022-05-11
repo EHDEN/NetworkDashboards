@@ -29,43 +29,12 @@ class MissingFieldValue(FileChecksException):
     pass
 
 
-def _check_correct(names, values, check, transform=None):
+def _generate_file_reader(uploaded_file):
     """
-    Transforms the values of given fields from the uploaded file
-     and check if they end up in the desired format
-
-    :param names: names of the fields to check
-    :param values: values of the fields to transform and check if they are
-     in the right format
-    :param transform: callable to transform the values of the
-     provided fields
-    :param check: callable check if the transform processes generated
-     a valid output
-    :return: the transformed fields or an error string
+    Receives a python file pointer and returns a pandas csv file reader, along with the columns
+     present in the file
+    :param uploaded_file: python file pointer of the uploaded file
     """
-    assert len(names) == len(values)
-
-    transformed_elements = [None] * len(names)
-    bad_elements = []
-
-    for i, name in enumerate(names):
-        transformed = values[i] if not transform else transform(values[i])
-        if not check(transformed):
-            bad_elements.append(name)
-        else:
-            transformed_elements[i] = transformed
-
-    if bad_elements:
-        return (
-            f" {bad_elements[0]} is"
-            if len(bad_elements) == 1
-            else f"s {', '.join(bad_elements[:-1])} and {bad_elements[-1]} are"
-        )
-
-    return transformed_elements
-
-
-def extract_data_from_uploaded_file(uploaded_file):
     columns = [
         "analysis_id",
         "stratum_1",
@@ -125,6 +94,48 @@ def extract_data_from_uploaded_file(uploaded_file):
             "Uploaded files must be comma-separated values (CSV) files. "
             "If you think this is an error, please contact the system administrator."
         )
+    else:
+        return file_reader, columns
+
+
+def _check_correct(names, values, check, transform=None):
+    """
+    Transforms the values of given fields from the uploaded file
+     and check if they end up in the desired format
+
+    :param names: names of the fields to check
+    :param values: values of the fields to transform and check if they are
+     in the right format
+    :param transform: callable to transform the values of the
+     provided fields
+    :param check: callable check if the transform processes generated
+     a valid output
+    :return: the transformed fields or an error string
+    """
+    assert len(names) == len(values)
+
+    transformed_elements = [None] * len(names)
+    bad_elements = []
+
+    for i, name in enumerate(names):
+        transformed = values[i] if not transform else transform(values[i])
+        if not check(transformed):
+            bad_elements.append(name)
+        else:
+            transformed_elements[i] = transformed
+
+    if bad_elements:
+        return (
+            f" {bad_elements[0]} is"
+            if len(bad_elements) == 1
+            else f"s {', '.join(bad_elements[:-1])} and {bad_elements[-1]} are"
+        )
+
+    return transformed_elements
+
+
+def extract_data_from_uploaded_file(uploaded_file):
+    file_reader, columns = _generate_file_reader(uploaded_file)
 
     types = {
         "analysis_id": numpy.int64,
