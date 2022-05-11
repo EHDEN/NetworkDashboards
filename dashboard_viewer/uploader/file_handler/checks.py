@@ -9,6 +9,10 @@ class FileChecksException(Exception):
     pass
 
 
+class InvalidCSVFile(FileChecksException):
+    pass
+
+
 class InvalidFileFormat(FileChecksException):
     pass
 
@@ -75,7 +79,15 @@ def extract_data_from_uploaded_file(uploaded_file):
     wrapper = io.TextIOWrapper(uploaded_file)
     csv_reader = csv.reader(wrapper)
 
-    first_row = next(csv_reader)
+    try:
+        first_row = next(csv_reader)
+    except:  # noqa
+        raise InvalidCSVFile(
+            "There was an error parsing the provided file. "
+            "Uploaded files must be comma-separated values (CSV) files. "
+            "If you think this is an error, please contact the system administrator."
+        )
+
     wrapper.detach()
 
     if len(first_row) == 16:
@@ -97,15 +109,22 @@ def extract_data_from_uploaded_file(uploaded_file):
 
     uploaded_file.seek(0)
 
-    file_reader = pandas.read_csv(
-        uploaded_file,
-        header=0,
-        dtype=str,
-        skip_blank_lines=False,
-        index_col=False,
-        names=columns,
-        chunksize=100,
-    )
+    try:
+        file_reader = pandas.read_csv(
+            uploaded_file,
+            header=0,
+            dtype=str,
+            skip_blank_lines=False,
+            index_col=False,
+            names=columns,
+            chunksize=100,
+        )
+    except:  # noqa
+        raise InvalidCSVFile(
+            "There was an error parsing the provided file. "
+            "Uploaded files must be comma-separated values (CSV) files. "
+            "If you think this is an error, please contact the system administrator."
+        )
 
     types = {
         "analysis_id": numpy.int64,
@@ -144,6 +163,12 @@ def extract_data_from_uploaded_file(uploaded_file):
             )
         except StopIteration:
             break
+        except:  # noqa
+            raise InvalidCSVFile(
+                "There was an error parsing the provided file. "
+                "Uploaded files must be comma-separated values (CSV) files. "
+                "If you think this is an error, please contact the system administrator."
+            )
 
         if chunk[["analysis_id", "count_value"]].isna().values.any():
             raise InvalidFieldValue(
