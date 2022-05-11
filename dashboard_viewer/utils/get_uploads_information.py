@@ -1,8 +1,10 @@
 from uploader.models import DataSource, UploadHistory
+
 for db in DataSource.objects.all():
+    print(f"{db.acronym},{db.name},{db.hash}", end="")
     try:
         last_upload = db.uploadhistory_set.latest()
     except UploadHistory.DoesNotExist:
-        print("{},{},{}".format(db.acronym, db.name, db.hash))
+        print()
     else:
-        print("{},{},{},{},{}".format(db.acronym, db.name, db.hash, last_upload.upload_date, last_upload.generation_date))
+        print(f",{last_upload.upload_date},{last_upload.generation_date}")
