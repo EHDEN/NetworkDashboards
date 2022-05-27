@@ -33,7 +33,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "custom": {
-            "format": "%(asctime)s %(levelname)s %(name)s:%(lineno)s %(msg)s",
+            "format": "%(asctime)s %(levelname)s %(name)s:%(lineno)s %(message)s",
         },
     },
     "handlers": {
