@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+from collections import OrderedDict
 import os
 from distutils.util import strtobool
 
@@ -275,6 +276,21 @@ CONSTANCE_CONFIG = {
         "If a Data Source owner can change the draft status when editing its details",
         bool,
     ),
+    "SUPERSET_HOST": (
+        "https://superset.ehden.eu",
+        "Host of the target superset installation. Used to redirect to the dashboard of a database",
+        str,
+    ),
+    "DATABASE_DASHBOARD_IDENTIFIER": (
+        "database-level-dashboard",
+        "Identifier of the database dashboard on the Superset installation.",
+        str,
+    ),
+    "DATABASE_FILTER_ID": (
+        69,
+        "Id of the database filter present in the Database Dashboard",
+        int,
+    ),
     "TABS_LOGO_CONTAINER_CSS": (
         "padding: 5px 5px 5px 5px;\nheight: 100px;\nmargin-bottom: 10px;\n",
         "Css for the div container of the logo image",
@@ -294,6 +310,14 @@ CONSTANCE_CONFIG = {
         str,
     ),
 }
+
+CONSTANCE_CONFIG_FIELDSETS = OrderedDict([
+    ("Application Attributes", ("APP_LOGO_IMAGE", "APP_LOGO_URL", "APP_TITLE")),
+    ("Uploader Texts", ("UPLOADER_EXECUTE_EXPORT_PACKAGE", "UPLOADER_UPLOAD", "UPLOADER_AUTO_UPDATE")),
+    ("Uploader Settings", ("UPLOADER_ALLOW_EDIT_DRAFT_STATUS",)),
+    ("Superset", ("SUPERSET_HOST", "DATABASE_DASHBOARD_IDENTIFIER", "DATABASE_FILTER_ID")),
+    ("Tabs (Deprecated)", ("TABS_LOGO_CONTAINER_CSS", "TABS_LOGO_IMG_CSS")),
+])
 
 
 @receiver(config_updated)
