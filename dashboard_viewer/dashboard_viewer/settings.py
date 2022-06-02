@@ -10,8 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
-from collections import OrderedDict
 import os
+from collections import OrderedDict
 from distutils.util import strtobool
 
 from constance.signals import config_updated
@@ -311,13 +311,25 @@ CONSTANCE_CONFIG = {
     ),
 }
 
-CONSTANCE_CONFIG_FIELDSETS = OrderedDict([
-    ("Application Attributes", ("APP_LOGO_IMAGE", "APP_LOGO_URL", "APP_TITLE")),
-    ("Uploader Texts", ("UPLOADER_EXECUTE_EXPORT_PACKAGE", "UPLOADER_UPLOAD", "UPLOADER_AUTO_UPDATE")),
-    ("Uploader Settings", ("UPLOADER_ALLOW_EDIT_DRAFT_STATUS",)),
-    ("Superset", ("SUPERSET_HOST", "DATABASE_DASHBOARD_IDENTIFIER", "DATABASE_FILTER_ID")),
-    ("Tabs (Deprecated)", ("TABS_LOGO_CONTAINER_CSS", "TABS_LOGO_IMG_CSS")),
-])
+CONSTANCE_CONFIG_FIELDSETS = OrderedDict(
+    [
+        ("Application Attributes", ("APP_LOGO_IMAGE", "APP_LOGO_URL", "APP_TITLE")),
+        (
+            "Uploader Texts",
+            (
+                "UPLOADER_EXECUTE_EXPORT_PACKAGE",
+                "UPLOADER_UPLOAD",
+                "UPLOADER_AUTO_UPDATE",
+            ),
+        ),
+        ("Uploader Settings", ("UPLOADER_ALLOW_EDIT_DRAFT_STATUS",)),
+        (
+            "Superset",
+            ("SUPERSET_HOST", "DATABASE_DASHBOARD_IDENTIFIER", "DATABASE_FILTER_ID"),
+        ),
+        ("Tabs (Deprecated)", ("TABS_LOGO_CONTAINER_CSS", "TABS_LOGO_IMG_CSS")),
+    ]
+)
 
 
 @receiver(config_updated)

@@ -7,16 +7,16 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.clickjacking import xframe_options_exempt
-from rest_framework.response import Response
 from rest_framework import viewsets
+from rest_framework.response import Response
 
 from materialized_queries_manager.tasks import refresh_materialized_views_task
 from materialized_queries_manager.models import MaterializedQuery
+from . import serializers
 from .decorators import uploader_decorator
 from .forms import AchillesResultsForm, EditSourceForm, SourceForm
 from .models import Country, DataSource, PendingUpload, UploadHistory
 from .tasks import upload_results_file
-from . import serializers
 
 PAGE_TITLE = "Dashboard Data Upload"
 
@@ -301,8 +301,8 @@ def data_source_dashboard(request, data_source):
     if data_source.uploadhistory_set.exists():
         config = constance.config
         return HttpResponseRedirect(
-            f'{config.SUPERSET_HOST}/superset/dashboard/{config.DATABASE_DASHBOARD_IDENTIFIER}/'
-            '?standalone=1'
+            f"{config.SUPERSET_HOST}/superset/dashboard/{config.DATABASE_DASHBOARD_IDENTIFIER}/"
+            "?standalone=1"
             f'&preselect_filters={{"{config.DATABASE_FILTER_ID}":{{"acronym":["{data_source.acronym}"]}}}}'
         )
 
