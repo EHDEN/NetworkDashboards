@@ -3,19 +3,19 @@ import itertools
 import constance
 from django.contrib import messages
 from django.forms import fields
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html, mark_safe
 from django.views.decorators.clickjacking import xframe_options_exempt
+from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
 
 from materialized_queries_manager.tasks import refresh_materialized_views_task
 from materialized_queries_manager.models import MaterializedQuery
+from . import serializers
 from .decorators import uploader_decorator
 from .forms import AchillesResultsForm, EditSourceForm, SourceForm
 from .models import Country, DataSource, PendingUpload, UploadHistory
-from .serializers import DataSourceSerializer
 from .tasks import upload_results_file
 
 PAGE_TITLE = "Dashboard Data Upload"
@@ -291,14 +291,32 @@ def edit_data_source(request, *_, **kwargs):
     )
 
 
-class DataSourceUpdate(GenericViewSet):
-    # since the edit and upload views have not authentication, also disable
+@uploader_decorator
+def data_source_dashboard(request, data_source):
+    try:
+        data_source = DataSource.objects.get(hash=data_source)
+    except DataSource.DoesNotExist:
+        return render(request, "no_uploads_dashboard.html")
+
+    if data_source.uploadhistory_set.exists():
+        config = constance.config
+        return HttpResponseRedirect(
+            f"{config.SUPERSET_HOST}/superset/dashboard/{config.DATABASE_DASHBOARD_IDENTIFIER}/"
+            "?standalone=1"
+            f'&preselect_filters={{"{config.DATABASE_FILTER_ID}":{{"acronym":["{data_source.acronym}"]}}}}'
+        )
+
+    return render(request, "no_uploads_dashboard.html")
+
+
+class DataSourceUpdate(viewsets.GenericViewSet):
+    # since the edit and upload views don't have authentication, also disable
     #  authentication from this
     authentication_classes = ()
     permission_classes = ()
 
     lookup_field = "hash"
-    serializer_class = DataSourceSerializer
+    serializer_class = serializers.DataSourceSerializer
     queryset = DataSource.objects.all()
 
     def partial_update(self, request, *_, **__):
