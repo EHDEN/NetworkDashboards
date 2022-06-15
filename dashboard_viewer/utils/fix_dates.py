@@ -112,7 +112,7 @@ def apply_changes():
         ):
             year, month, day = new_date
             # old = ar.stratum_3
-            ar.stratum_3 = f"{year}{month}{day}"
+            ar.stratum_3 = f"{year}-{month}-{day}"
             # print("from", old, "to", ar.stratum_3)
             ar.save()
     for ar in AchillesResults.objects.filter(analysis_id=5000):
