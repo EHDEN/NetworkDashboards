@@ -108,7 +108,7 @@ def apply_changes():
         # print("upload", upload.pk)
         if (
             ar.stratum_3
-            and (new_date := _convert_value(no_hiphen, ar.stratum_3)) is not None
+            and (new_date := _convert_value(with_hiphen, ar.stratum_3)) is not None
         ):
             year, month, day = new_date
             # old = ar.stratum_3
