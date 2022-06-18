@@ -2,6 +2,7 @@ import itertools
 
 import constance
 from django.contrib import messages
+from django.db import router, transaction
 from django.forms import fields
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -301,11 +302,28 @@ class DataSourceUpdate(GenericViewSet):
     serializer_class = DataSourceSerializer
     queryset = DataSource.objects.all()
 
+    def get_object_for_patch(self):
+        # here we get the query set with select_for_update so it lock updates on that record
+        queryset = self.filter_queryset(self.get_queryset().select_for_update())
+
+        assert (
+            self.lookup_field and not self.lookup_url_kwarg
+        ), "Expected lookup_field to be defined and not lookup_url_kwarg."
+
+        filter_kwargs = {self.lookup_field: self.kwargs[self.lookup_field]}
+        obj = get_object_or_404(queryset, **filter_kwargs)
+
+        # May raise a permission denied
+        self.check_object_permissions(self.request, obj)
+
+        return obj
+
     def partial_update(self, request, *_, **__):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        with transaction.atomic(using=router.db_for_write(DataSource)):
+            instance = self.get_object_for_patch()
+            serializer = self.get_serializer(instance, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
 
         refresh_materialized_views_task.delay([obj.matviewname for obj in MaterializedQuery.objects.all()])
 
