@@ -9,7 +9,7 @@ python manage.py compilescss
 python manage.py collectstatic --noinput --ignore="*.scss"
 
 if [ "${DASHBOARD_VIEWER_ENV}" = "production" ]; then
-    exec gunicorn dashboard_viewer.wsgi:application --bind 0.0.0.0:8000 --workers 5
+    exec gunicorn dashboard_viewer.wsgi:application --bind 0.0.0.0:8000 --workers 1 --worker-class gthread --thread 16
 else
     python manage.py runserver 0.0.0.0:8000
 fi
