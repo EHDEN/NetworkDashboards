@@ -9,6 +9,10 @@ class FileChecksException(Exception):
     pass
 
 
+class InvalidCSVFile(FileChecksException):
+    pass
+
+
 class InvalidFileFormat(FileChecksException):
     pass
 
@@ -23,6 +27,78 @@ class DuplicatedMetadataRow(FileChecksException):
 
 class MissingFieldValue(FileChecksException):
     pass
+
+
+def _generate_file_reader(uploaded_file):
+    """
+    Receives a python file pointer and returns a pandas csv file reader, along with the columns
+     present in the file
+    :param uploaded_file: python file pointer of the uploaded file
+    """
+    columns = [
+        "analysis_id",
+        "stratum_1",
+        "stratum_2",
+        "stratum_3",
+        "stratum_4",
+        "stratum_5",
+        "count_value",
+    ]
+
+    wrapper = io.TextIOWrapper(uploaded_file)
+    csv_reader = csv.reader(wrapper)
+
+    try:
+        first_row = next(csv_reader)
+    except:  # noqa
+        raise InvalidCSVFile(
+            "There was an error parsing the provided file. "
+            "Uploaded files must be comma-separated values (CSV) files. "
+            "If you think this is an error, please contact the system administrator."
+        )
+
+    wrapper.detach()
+
+    if len(first_row) == 16:
+        columns.extend(
+            (
+                "min_value",
+                "max_value",
+                "avg_value",
+                "stdev_value",
+                "median_value",
+                "p10_value",
+                "p25_value",
+                "p75_value",
+                "p90_value",
+            )
+        )
+    elif len(first_row) != 7:
+        raise InvalidFileFormat(
+            "The provided file has an invalid number of columns. "
+            "Make sure you uploaded a valid comma-separated values (CSV) file."
+        )
+
+    uploaded_file.seek(0)
+
+    try:
+        file_reader = pandas.read_csv(
+            uploaded_file,
+            header=0,
+            dtype=str,
+            skip_blank_lines=False,
+            index_col=False,
+            names=columns,
+            chunksize=100,
+        )
+    except:  # noqa
+        raise InvalidCSVFile(
+            "There was an error parsing the provided file. "
+            "Uploaded files must be comma-separated values (CSV) files. "
+            "If you think this is an error, please contact the system administrator."
+        )
+    else:
+        return file_reader, columns
 
 
 def _check_correct(names, values, check, transform=None):
@@ -62,50 +138,7 @@ def _check_correct(names, values, check, transform=None):
 
 
 def extract_data_from_uploaded_file(uploaded_file):
-    columns = [
-        "analysis_id",
-        "stratum_1",
-        "stratum_2",
-        "stratum_3",
-        "stratum_4",
-        "stratum_5",
-        "count_value",
-    ]
-
-    wrapper = io.TextIOWrapper(uploaded_file)
-    csv_reader = csv.reader(wrapper)
-
-    first_row = next(csv_reader)
-    wrapper.detach()
-
-    if len(first_row) == 16:
-        columns.extend(
-            (
-                "min_value",
-                "max_value",
-                "avg_value",
-                "stdev_value",
-                "median_value",
-                "p10_value",
-                "p25_value",
-                "p75_value",
-                "p90_value",
-            )
-        )
-    elif len(first_row) != 7:
-        raise InvalidFileFormat("The provided file has an invalid number of columns.")
-
-    uploaded_file.seek(0)
-
-    file_reader = pandas.read_csv(
-        uploaded_file,
-        header=0,
-        dtype=str,
-        skip_blank_lines=False,
-        index_col=False,
-        names=columns,
-        chunksize=100,
-    )
+    file_reader, columns = _generate_file_reader(uploaded_file)
 
     types = {
         "analysis_id": numpy.int64,
@@ -144,6 +177,12 @@ def extract_data_from_uploaded_file(uploaded_file):
             )
         except StopIteration:
             break
+        except:  # noqa
+            raise InvalidCSVFile(
+                "There was an error parsing the provided file. "
+                "Uploaded files must be comma-separated values (CSV) files. "
+                "If you think this is an error, please contact the system administrator."
+            )
 
         if chunk[["analysis_id", "count_value"]].isna().values.any():
             raise InvalidFieldValue(

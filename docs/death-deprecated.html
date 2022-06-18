@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-04-29" />
+<meta name="date" content="2022-06-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,8 +162,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="backups.html"><a href="backups.html"><i class="fa fa-check"></i><b>5</b> Backups</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="restore.html"><a href="restore.html"><i class="fa fa-check"></i><b>5.1</b> Restore</a></li>
-<li class="chapter" data-level="5.2" data-path="useful-stuff.html"><a href="useful-stuff.html"><i class="fa fa-check"></i><b>5.2</b> Useful stuff</a></li>
+<li class="chapter" data-level="" data-path="backups.html"><a href="backups.html#restore"><i class="fa fa-check"></i>Restore</a></li>
+<li class="chapter" data-level="" data-path="backups.html"><a href="backups.html#useful-stuff"><i class="fa fa-check"></i>Useful stuff</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="customizations.html"><a href="customizations.html"><i class="fa fa-check"></i><b>6</b> Customizations</a>
 <ul>
@@ -268,7 +268,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#css-4"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#data-source-filter-2"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#number-of-patients-in-observation-period-numinobservationperiod"><i class="fa fa-check"></i>Number of Patients in Observation Period {#numInObservationPeriod}</a></li>
+<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#numInObservationPeriod"><i class="fa fa-check"></i>Number of Patients in Observation Period</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-start-dates"><i class="fa fa-check"></i>Observation Period Start Dates</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-end-dates"><i class="fa fa-check"></i>Observation Period End Dates</a></li>
 </ul></li>
@@ -276,7 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#css-5"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#data-source-filter-3"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-type-table-visittypetable"><i class="fa fa-check"></i>Visit Type Table {#visitTypeTable}</a></li>
+<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visitTypeTable"><i class="fa fa-check"></i>Visit Type Table</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-types-bars"><i class="fa fa-check"></i>Visit Types Bars</a></li>
 </ul></li>
 <li class="chapter" data-level="9.8" data-path="death-deprecated.html"><a href="death-deprecated.html"><i class="fa fa-check"></i><b>9.8</b> Death [Deprecated]</a>
@@ -303,7 +303,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#css-9"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#data-source-filter-6"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#average-number-of-records-per-person-avgrecordsperperson"><i class="fa fa-check"></i>Average Number of Records per Person {#avgRecordsPerPerson}</a></li>
+<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#avgRecordsPerPerson"><i class="fa fa-check"></i>Average Number of Records per Person</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -329,9 +329,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="css-6" class="section level3 unnumbered" number="">
 <h3>CSS</h3>
 <p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb62-1"><a href="death-deprecated.html#cb62-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
-<span id="cb62-2"><a href="death-deprecated.html#cb62-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb62-3"><a href="death-deprecated.html#cb62-3" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb61-1"><a href="death-deprecated.html#cb61-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
+<span id="cb61-2"><a href="death-deprecated.html#cb61-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb61-3"><a href="death-deprecated.html#cb61-3" aria-hidden="true"></a>}</span></code></pre></div>
 <p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
@@ -384,12 +384,13 @@ Figure 9.18: Settings for creating the Number of Records chart
 </div>
 <div id="sql-query-19" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb63"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb63-1"><a href="death-deprecated.html#cb63-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
-<span id="cb63-2"><a href="death-deprecated.html#cb63-2" aria-hidden="true"></a>    count_value,</span>
-<span id="cb63-3"><a href="death-deprecated.html#cb63-3" aria-hidden="true"></a>    <span class="kw">source</span>.acronym</span>
-<span id="cb63-4"><a href="death-deprecated.html#cb63-4" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb63-5"><a href="death-deprecated.html#cb63-5" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb63-6"><a href="death-deprecated.html#cb63-6" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">501</span></span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb62-1"><a href="death-deprecated.html#cb62-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb62-2"><a href="death-deprecated.html#cb62-2" aria-hidden="true"></a>    count_value,</span>
+<span id="cb62-3"><a href="death-deprecated.html#cb62-3" aria-hidden="true"></a>    <span class="kw">source</span>.acronym</span>
+<span id="cb62-4"><a href="death-deprecated.html#cb62-4" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb62-5"><a href="death-deprecated.html#cb62-5" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb62-6"><a href="death-deprecated.html#cb62-6" aria-hidden="true"></a>  <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb62-7"><a href="death-deprecated.html#cb62-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">501</span></span></code></pre></div>
 </div>
 <div id="chart-settings-20" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -435,13 +436,14 @@ Figure 9.19: Settings for creating the Death by Year per Thousand People chart
 </div>
 <div id="sql-query-20" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb64"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb64-1"><a href="death-deprecated.html#cb64-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
-<span id="cb64-2"><a href="death-deprecated.html#cb64-2" aria-hidden="true"></a>    <span class="kw">source</span>.acronym,</span>
-<span id="cb64-3"><a href="death-deprecated.html#cb64-3" aria-hidden="true"></a>    <span class="fu">EXTRACT</span>(<span class="dt">year</span> <span class="kw">FROM</span> <span class="fu">TO_DATE</span>(stratum_1, <span class="st">&#39;YYYYMM&#39;</span>)) <span class="kw">AS</span> <span class="dt">Date</span>,</span>
-<span id="cb64-4"><a href="death-deprecated.html#cb64-4" aria-hidden="true"></a>    count_value</span>
-<span id="cb64-5"><a href="death-deprecated.html#cb64-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">as</span> achilles</span>
-<span id="cb64-6"><a href="death-deprecated.html#cb64-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">as</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb64-7"><a href="death-deprecated.html#cb64-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">502</span></span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb63-1"><a href="death-deprecated.html#cb63-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb63-2"><a href="death-deprecated.html#cb63-2" aria-hidden="true"></a>    <span class="kw">source</span>.acronym,</span>
+<span id="cb63-3"><a href="death-deprecated.html#cb63-3" aria-hidden="true"></a>    <span class="fu">EXTRACT</span>(<span class="dt">year</span> <span class="kw">FROM</span> <span class="fu">TO_DATE</span>(stratum_1, <span class="st">&#39;YYYYMM&#39;</span>)) <span class="kw">AS</span> <span class="dt">Date</span>,</span>
+<span id="cb63-4"><a href="death-deprecated.html#cb63-4" aria-hidden="true"></a>    count_value</span>
+<span id="cb63-5"><a href="death-deprecated.html#cb63-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">as</span> achilles</span>
+<span id="cb63-6"><a href="death-deprecated.html#cb63-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">as</span> <span class="kw">source</span></span>
+<span id="cb63-7"><a href="death-deprecated.html#cb63-7" aria-hidden="true"></a>  <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb63-8"><a href="death-deprecated.html#cb63-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">502</span></span></code></pre></div>
 </div>
 <div id="chart-settings-21" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>

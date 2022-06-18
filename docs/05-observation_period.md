@@ -47,7 +47,7 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
     - Date Filter: off
     - Instant Filtering: on
 
-### Number of Patients in Observation Period {#numInObservationPeriod} {-}
+### Number of Patients in Observation Period {-#numInObservationPeriod}
 
 The Number of Patients in Observation Period plot shows the number of patients that contribute at least one day in a specific month.
 
@@ -64,7 +64,8 @@ SELECT source.name,
        to_date(stratum_1, 'YYYYMM') as Date,
        count_value
 FROM public.achilles_results AS achilles
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
 WHERE analysis_id = 110
 ```
 
@@ -103,7 +104,8 @@ SELECT source.name,
        to_date(stratum_1, 'YYYYMM') AS year_month,
        count_value
 FROM public.achilles_results AS achilles
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
 WHERE analysis_id = 111
 ```
 
@@ -142,7 +144,8 @@ SELECT source.name,
        to_date(stratum_1, 'YYYYMM') AS year_month,
        count_value
 FROM public.achilles_results AS achilles
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
 WHERE analysis_id = 112
 ```
 

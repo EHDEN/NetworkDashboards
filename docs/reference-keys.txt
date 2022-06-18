@@ -28,8 +28,6 @@ introduction
 installation
 processes
 backups
-restore
-useful-stuff
 customizations
 development-instructions
 code-documentation

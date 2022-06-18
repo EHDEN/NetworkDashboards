@@ -61,7 +61,8 @@ SELECT source.name,
     count_value,
     source.acronym
 FROM public.achilles_results AS achilles
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
 WHERE analysis_id = 501
 ```
 
@@ -97,7 +98,8 @@ SELECT source.name,
     EXTRACT(year FROM TO_DATE(stratum_1, 'YYYYMM')) AS Date,
     count_value
 FROM public.achilles_results as achilles
-INNER JOIN public.data_source as source ON achilles.data_source_id=source.id
+INNER JOIN public.data_source as source
+  ON achilles.data_source_id=source.id
 WHERE analysis_id = 502
 ```
 

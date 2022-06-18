@@ -113,8 +113,9 @@ While parsing the uploaded file, some data is extracted to then present on the U
 
 The next table is presented where the previous data is stored on the rows with analysis id 0 and 5000:
 
+
 | Analysis Id | Stratum 1 | Stratum 2           | Stratum 3        | Stratum 4   | Stratum 5          |
-| ----------- | --------- | ------------------- | ---------------- | ----------- | ------------------ |
+| -----------:|:--------- | ------------------- | ---------------- | ----------- | ------------------ |
 | 0           |           | R Package Version   | Generation Date  |             |                    |
 | 5000        |           | Source Release Date | CDM Release Date | CDM Version | Vocabulary Version |
 

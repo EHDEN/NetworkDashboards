@@ -49,7 +49,7 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
     - Date Filter: off
     - Instant Filtering: on
 
-### Visit Type Table {#visitTypeTable} {-}
+### Visit Type Table {-#visitTypeTable}
 
 <div class="figure">
 <img src="images/06-visit/02-visit_types_table.png" alt="Settings for creating the Visit Type Table chart" width="100%" />
@@ -64,8 +64,10 @@ SELECT source.name,
        concept_name AS "Type",
        MAX(count_value) AS "Count"
 FROM public.achilles_results AS achilles
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
-INNER JOIN public.concept ON CAST(stratum_1 AS BIGINT) = concept_id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
+INNER JOIN public.concept
+  ON CAST(stratum_1 AS BIGINT) = concept_id
 WHERE analysis_id = 201
 GROUP BY name, acronym, "Type"
 ORDER BY "Count" DESC
@@ -97,8 +99,10 @@ SELECT source.name,
        concept_name AS "Observation", 
        count_value
 FROM public.achilles_results AS achilles 
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
-INNER JOIN public.concept ON CAST(stratum_1 AS BIGINT) = concept_id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
+INNER JOIN public.concept
+  ON CAST(stratum_1 AS BIGINT) = concept_id
 WHERE analysis_id = 201
 ```
 

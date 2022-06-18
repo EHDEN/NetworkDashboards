@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-04-29" />
+<meta name="date" content="2022-06-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,8 +162,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="backups.html"><a href="backups.html"><i class="fa fa-check"></i><b>5</b> Backups</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="restore.html"><a href="restore.html"><i class="fa fa-check"></i><b>5.1</b> Restore</a></li>
-<li class="chapter" data-level="5.2" data-path="useful-stuff.html"><a href="useful-stuff.html"><i class="fa fa-check"></i><b>5.2</b> Useful stuff</a></li>
+<li class="chapter" data-level="" data-path="backups.html"><a href="backups.html#restore"><i class="fa fa-check"></i>Restore</a></li>
+<li class="chapter" data-level="" data-path="backups.html"><a href="backups.html#useful-stuff"><i class="fa fa-check"></i>Useful stuff</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="customizations.html"><a href="customizations.html"><i class="fa fa-check"></i><b>6</b> Customizations</a>
 <ul>
@@ -268,7 +268,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#css-4"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#data-source-filter-2"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#number-of-patients-in-observation-period-numinobservationperiod"><i class="fa fa-check"></i>Number of Patients in Observation Period {#numInObservationPeriod}</a></li>
+<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#numInObservationPeriod"><i class="fa fa-check"></i>Number of Patients in Observation Period</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-start-dates"><i class="fa fa-check"></i>Observation Period Start Dates</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-end-dates"><i class="fa fa-check"></i>Observation Period End Dates</a></li>
 </ul></li>
@@ -276,7 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#css-5"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#data-source-filter-3"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-type-table-visittypetable"><i class="fa fa-check"></i>Visit Type Table {#visitTypeTable}</a></li>
+<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visitTypeTable"><i class="fa fa-check"></i>Visit Type Table</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-types-bars"><i class="fa fa-check"></i>Visit Types Bars</a></li>
 </ul></li>
 <li class="chapter" data-level="9.8" data-path="death-deprecated.html"><a href="death-deprecated.html"><i class="fa fa-check"></i><b>9.8</b> Death [Deprecated]</a>
@@ -303,7 +303,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#css-9"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#data-source-filter-6"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#average-number-of-records-per-person-avgrecordsperperson"><i class="fa fa-check"></i>Average Number of Records per Person {#avgRecordsPerPerson}</a></li>
+<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#avgRecordsPerPerson"><i class="fa fa-check"></i>Average Number of Records per Person</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -329,17 +329,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>Label Colors</h3>
 <p>In order to obtain the colors blue and rose in the chart representing the gender distribution,
 add the following JSON entry to the JSON object of the <code>JSON Metadata</code> field on the edit dashboard page:</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb49-1"><a href="person-deprecated.html#cb49-1" aria-hidden="true"></a><span class="er">&quot;label_colors&quot;:</span> <span class="fu">{</span></span>
-<span id="cb49-2"><a href="person-deprecated.html#cb49-2" aria-hidden="true"></a>    <span class="dt">&quot;Male&quot;</span><span class="fu">:</span> <span class="st">&quot;#3366FF&quot;</span><span class="fu">,</span> </span>
-<span id="cb49-3"><a href="person-deprecated.html#cb49-3" aria-hidden="true"></a>    <span class="dt">&quot;Female&quot;</span><span class="fu">:</span> <span class="st">&quot;#FF3399&quot;</span></span>
-<span id="cb49-4"><a href="person-deprecated.html#cb49-4" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb48-1"><a href="person-deprecated.html#cb48-1" aria-hidden="true"></a><span class="er">&quot;label_colors&quot;:</span> <span class="fu">{</span></span>
+<span id="cb48-2"><a href="person-deprecated.html#cb48-2" aria-hidden="true"></a>    <span class="dt">&quot;Male&quot;</span><span class="fu">:</span> <span class="st">&quot;#3366FF&quot;</span><span class="fu">,</span> </span>
+<span id="cb48-3"><a href="person-deprecated.html#cb48-3" aria-hidden="true"></a>    <span class="dt">&quot;Female&quot;</span><span class="fu">:</span> <span class="st">&quot;#FF3399&quot;</span></span>
+<span id="cb48-4"><a href="person-deprecated.html#cb48-4" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
 </div>
 <div id="css-3" class="section level3 unnumbered" number="">
 <h3>CSS</h3>
 <p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb50-1"><a href="person-deprecated.html#cb50-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
-<span id="cb50-2"><a href="person-deprecated.html#cb50-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb50-3"><a href="person-deprecated.html#cb50-3" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb49-1"><a href="person-deprecated.html#cb49-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
+<span id="cb49-2"><a href="person-deprecated.html#cb49-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb49-3"><a href="person-deprecated.html#cb49-3" aria-hidden="true"></a>}</span></code></pre></div>
 <p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
@@ -392,23 +392,43 @@ Figure 9.9: Settings for creating the Age at First Observation Table chart
 </div>
 <div id="sql-query-7" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb51"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb51-1"><a href="person-deprecated.html#cb51-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
-<span id="cb51-2"><a href="person-deprecated.html#cb51-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
-<span id="cb51-3"><a href="person-deprecated.html#cb51-3" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">10</span> <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;0-10&quot;</span>,</span>
-<span id="cb51-4"><a href="person-deprecated.html#cb51-4" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">10</span> <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">20</span> <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;10-20&quot;</span>,</span>
-<span id="cb51-5"><a href="person-deprecated.html#cb51-5" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">20</span> <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">30</span> <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;20-30&quot;</span>,</span>
-<span id="cb51-6"><a href="person-deprecated.html#cb51-6" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">30</span> <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">40</span> <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;30-40&quot;</span>,</span>
-<span id="cb51-7"><a href="person-deprecated.html#cb51-7" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">40</span> <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">50</span> <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;40-50&quot;</span>,</span>
-<span id="cb51-8"><a href="person-deprecated.html#cb51-8" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">50</span> <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">60</span> <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;50-60&quot;</span>,</span>
-<span id="cb51-9"><a href="person-deprecated.html#cb51-9" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">60</span> <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">70</span> <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;60-70&quot;</span>,</span>
-<span id="cb51-10"><a href="person-deprecated.html#cb51-10" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">70</span> <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">80</span> <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;70-80&quot;</span>,</span>
-<span id="cb51-11"><a href="person-deprecated.html#cb51-11" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">80</span> <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">90</span> <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;80-90&quot;</span>,</span>
-<span id="cb51-12"><a href="person-deprecated.html#cb51-12" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">90</span> <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;90+&quot;</span></span>
-<span id="cb51-13"><a href="person-deprecated.html#cb51-13" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb51-14"><a href="person-deprecated.html#cb51-14" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb51-15"><a href="person-deprecated.html#cb51-15" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
-<span id="cb51-16"><a href="person-deprecated.html#cb51-16" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">102</span></span>
-<span id="cb51-17"><a href="person-deprecated.html#cb51-17" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> name, acronym</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb50-1"><a href="person-deprecated.html#cb50-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb50-2"><a href="person-deprecated.html#cb50-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
+<span id="cb50-3"><a href="person-deprecated.html#cb50-3" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">10</span></span>
+<span id="cb50-4"><a href="person-deprecated.html#cb50-4" aria-hidden="true"></a>         <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;0-10&quot;</span>,</span>
+<span id="cb50-5"><a href="person-deprecated.html#cb50-5" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">10</span></span>
+<span id="cb50-6"><a href="person-deprecated.html#cb50-6" aria-hidden="true"></a>         <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">20</span></span>
+<span id="cb50-7"><a href="person-deprecated.html#cb50-7" aria-hidden="true"></a>         <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;10-20&quot;</span>,</span>
+<span id="cb50-8"><a href="person-deprecated.html#cb50-8" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">20</span></span>
+<span id="cb50-9"><a href="person-deprecated.html#cb50-9" aria-hidden="true"></a>         <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">30</span></span>
+<span id="cb50-10"><a href="person-deprecated.html#cb50-10" aria-hidden="true"></a>         <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;20-30&quot;</span>,</span>
+<span id="cb50-11"><a href="person-deprecated.html#cb50-11" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">30</span></span>
+<span id="cb50-12"><a href="person-deprecated.html#cb50-12" aria-hidden="true"></a>         <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">40</span></span>
+<span id="cb50-13"><a href="person-deprecated.html#cb50-13" aria-hidden="true"></a>         <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;30-40&quot;</span>,</span>
+<span id="cb50-14"><a href="person-deprecated.html#cb50-14" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">40</span></span>
+<span id="cb50-15"><a href="person-deprecated.html#cb50-15" aria-hidden="true"></a>         <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">50</span></span>
+<span id="cb50-16"><a href="person-deprecated.html#cb50-16" aria-hidden="true"></a>         <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;40-50&quot;</span>,</span>
+<span id="cb50-17"><a href="person-deprecated.html#cb50-17" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">50</span></span>
+<span id="cb50-18"><a href="person-deprecated.html#cb50-18" aria-hidden="true"></a>         <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">60</span></span>
+<span id="cb50-19"><a href="person-deprecated.html#cb50-19" aria-hidden="true"></a>         <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;50-60&quot;</span>,</span>
+<span id="cb50-20"><a href="person-deprecated.html#cb50-20" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">60</span></span>
+<span id="cb50-21"><a href="person-deprecated.html#cb50-21" aria-hidden="true"></a>         <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">70</span></span>
+<span id="cb50-22"><a href="person-deprecated.html#cb50-22" aria-hidden="true"></a>         <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;60-70&quot;</span>,</span>
+<span id="cb50-23"><a href="person-deprecated.html#cb50-23" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">70</span></span>
+<span id="cb50-24"><a href="person-deprecated.html#cb50-24" aria-hidden="true"></a>         <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">80</span></span>
+<span id="cb50-25"><a href="person-deprecated.html#cb50-25" aria-hidden="true"></a>         <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;70-80&quot;</span>,</span>
+<span id="cb50-26"><a href="person-deprecated.html#cb50-26" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">80</span></span>
+<span id="cb50-27"><a href="person-deprecated.html#cb50-27" aria-hidden="true"></a>         <span class="kw">AND</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&lt;</span> <span class="dv">90</span></span>
+<span id="cb50-28"><a href="person-deprecated.html#cb50-28" aria-hidden="true"></a>         <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;80-90&quot;</span>,</span>
+<span id="cb50-29"><a href="person-deprecated.html#cb50-29" aria-hidden="true"></a>       <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">CAST</span>(stratum_2 <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="op">&gt;=</span> <span class="dv">90</span></span>
+<span id="cb50-30"><a href="person-deprecated.html#cb50-30" aria-hidden="true"></a>         <span class="cf">THEN</span> count_value <span class="cf">END</span>) <span class="kw">AS</span> <span class="ot">&quot;90+&quot;</span></span>
+<span id="cb50-31"><a href="person-deprecated.html#cb50-31" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb50-32"><a href="person-deprecated.html#cb50-32" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb50-33"><a href="person-deprecated.html#cb50-33" aria-hidden="true"></a>  <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb50-34"><a href="person-deprecated.html#cb50-34" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept</span>
+<span id="cb50-35"><a href="person-deprecated.html#cb50-35" aria-hidden="true"></a>  <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
+<span id="cb50-36"><a href="person-deprecated.html#cb50-36" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">102</span></span>
+<span id="cb50-37"><a href="person-deprecated.html#cb50-37" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> name, acronym</span></code></pre></div>
 </div>
 <div id="chart-settings-8" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -449,13 +469,14 @@ Figure 9.10: Settings for creating the Age at First Observation Bar chart
 </div>
 <div id="sql-query-8" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb52"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb52-1"><a href="person-deprecated.html#cb52-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
-<span id="cb52-2"><a href="person-deprecated.html#cb52-2" aria-hidden="true"></a>    <span class="fu">cast</span>(stratum_1 <span class="kw">AS</span> <span class="dt">int</span>) <span class="kw">AS</span> Age,</span>
-<span id="cb52-3"><a href="person-deprecated.html#cb52-3" aria-hidden="true"></a>    count_value <span class="kw">AS</span> <span class="fu">count</span>, </span>
-<span id="cb52-4"><a href="person-deprecated.html#cb52-4" aria-hidden="true"></a>    <span class="kw">source</span>.acronym</span>
-<span id="cb52-5"><a href="person-deprecated.html#cb52-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb52-6"><a href="person-deprecated.html#cb52-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb52-7"><a href="person-deprecated.html#cb52-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">101</span></span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb51-1"><a href="person-deprecated.html#cb51-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb51-2"><a href="person-deprecated.html#cb51-2" aria-hidden="true"></a>    <span class="fu">cast</span>(stratum_1 <span class="kw">AS</span> <span class="dt">int</span>) <span class="kw">AS</span> Age,</span>
+<span id="cb51-3"><a href="person-deprecated.html#cb51-3" aria-hidden="true"></a>    count_value <span class="kw">AS</span> <span class="fu">count</span>, </span>
+<span id="cb51-4"><a href="person-deprecated.html#cb51-4" aria-hidden="true"></a>    <span class="kw">source</span>.acronym</span>
+<span id="cb51-5"><a href="person-deprecated.html#cb51-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb51-6"><a href="person-deprecated.html#cb51-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb51-7"><a href="person-deprecated.html#cb51-7" aria-hidden="true"></a>  <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb51-8"><a href="person-deprecated.html#cb51-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">101</span></span></code></pre></div>
 </div>
 <div id="chart-settings-9" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -504,13 +525,14 @@ Figure 9.11: Settings for creating the Year of Birth chart
 </div>
 <div id="sql-query-9" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb53"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb53-1"><a href="person-deprecated.html#cb53-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
-<span id="cb53-2"><a href="person-deprecated.html#cb53-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
-<span id="cb53-3"><a href="person-deprecated.html#cb53-3" aria-hidden="true"></a>       stratum_1 <span class="kw">AS</span> <span class="ot">&quot;Birth_year&quot;</span>,</span>
-<span id="cb53-4"><a href="person-deprecated.html#cb53-4" aria-hidden="true"></a>       count_value <span class="kw">AS</span> <span class="fu">count</span></span>
-<span id="cb53-5"><a href="person-deprecated.html#cb53-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb53-6"><a href="person-deprecated.html#cb53-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb53-7"><a href="person-deprecated.html#cb53-7" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">3</span></span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb52-1"><a href="person-deprecated.html#cb52-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb52-2"><a href="person-deprecated.html#cb52-2" aria-hidden="true"></a>       <span class="kw">source</span>.acronym,</span>
+<span id="cb52-3"><a href="person-deprecated.html#cb52-3" aria-hidden="true"></a>       stratum_1 <span class="kw">AS</span> <span class="ot">&quot;Birth_year&quot;</span>,</span>
+<span id="cb52-4"><a href="person-deprecated.html#cb52-4" aria-hidden="true"></a>       count_value <span class="kw">AS</span> <span class="fu">count</span></span>
+<span id="cb52-5"><a href="person-deprecated.html#cb52-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb52-6"><a href="person-deprecated.html#cb52-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb52-7"><a href="person-deprecated.html#cb52-7" aria-hidden="true"></a>  <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb52-8"><a href="person-deprecated.html#cb52-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">3</span></span></code></pre></div>
 </div>
 <div id="chart-settings-10" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -560,18 +582,19 @@ Figure 9.12: Settings for creating the Gender chart
 </div>
 <div id="sql-query-10" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb54"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb54-1"><a href="person-deprecated.html#cb54-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
-<span id="cb54-2"><a href="person-deprecated.html#cb54-2" aria-hidden="true"></a>       concept_name <span class="kw">AS</span> Gender, </span>
-<span id="cb54-3"><a href="person-deprecated.html#cb54-3" aria-hidden="true"></a>       count_value <span class="kw">AS</span> Number_of_persons,</span>
-<span id="cb54-4"><a href="person-deprecated.html#cb54-4" aria-hidden="true"></a>       <span class="kw">source</span>.acronym</span>
-<span id="cb54-5"><a href="person-deprecated.html#cb54-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb54-6"><a href="person-deprecated.html#cb54-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb54-7"><a href="person-deprecated.html#cb54-7" aria-hidden="true"></a><span class="kw">JOIN</span> (</span>
-<span id="cb54-8"><a href="person-deprecated.html#cb54-8" aria-hidden="true"></a>  <span class="kw">SELECT</span> <span class="st">&#39;8507&#39;</span> <span class="kw">AS</span> concept_id, <span class="st">&#39;Male&#39;</span> <span class="kw">AS</span> concept_name</span>
-<span id="cb54-9"><a href="person-deprecated.html#cb54-9" aria-hidden="true"></a>  <span class="kw">UNION</span></span>
-<span id="cb54-10"><a href="person-deprecated.html#cb54-10" aria-hidden="true"></a>  <span class="kw">SELECT</span> <span class="st">&#39;8532&#39;</span> <span class="kw">AS</span> concept_id, <span class="st">&#39;Female&#39;</span> <span class="kw">AS</span> concept_name</span>
-<span id="cb54-11"><a href="person-deprecated.html#cb54-11" aria-hidden="true"></a>) <span class="kw">AS</span> concepts <span class="kw">ON</span> achilles.stratum_1 <span class="op">=</span> concept_id</span>
-<span id="cb54-12"><a href="person-deprecated.html#cb54-12" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">2</span></span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb53-1"><a href="person-deprecated.html#cb53-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="kw">source</span>.name,</span>
+<span id="cb53-2"><a href="person-deprecated.html#cb53-2" aria-hidden="true"></a>       concept_name <span class="kw">AS</span> Gender, </span>
+<span id="cb53-3"><a href="person-deprecated.html#cb53-3" aria-hidden="true"></a>       count_value <span class="kw">AS</span> Number_of_persons,</span>
+<span id="cb53-4"><a href="person-deprecated.html#cb53-4" aria-hidden="true"></a>       <span class="kw">source</span>.acronym</span>
+<span id="cb53-5"><a href="person-deprecated.html#cb53-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb53-6"><a href="person-deprecated.html#cb53-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb53-7"><a href="person-deprecated.html#cb53-7" aria-hidden="true"></a>  <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb53-8"><a href="person-deprecated.html#cb53-8" aria-hidden="true"></a><span class="kw">JOIN</span> (</span>
+<span id="cb53-9"><a href="person-deprecated.html#cb53-9" aria-hidden="true"></a>  <span class="kw">SELECT</span> <span class="st">&#39;8507&#39;</span> <span class="kw">AS</span> concept_id, <span class="st">&#39;Male&#39;</span> <span class="kw">AS</span> concept_name</span>
+<span id="cb53-10"><a href="person-deprecated.html#cb53-10" aria-hidden="true"></a>  <span class="kw">UNION</span></span>
+<span id="cb53-11"><a href="person-deprecated.html#cb53-11" aria-hidden="true"></a>  <span class="kw">SELECT</span> <span class="st">&#39;8532&#39;</span> <span class="kw">AS</span> concept_id, <span class="st">&#39;Female&#39;</span> <span class="kw">AS</span> concept_name</span>
+<span id="cb53-12"><a href="person-deprecated.html#cb53-12" aria-hidden="true"></a>) <span class="kw">AS</span> concepts <span class="kw">ON</span> achilles.stratum_1 <span class="op">=</span> concept_id</span>
+<span id="cb53-13"><a href="person-deprecated.html#cb53-13" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">2</span></span></code></pre></div>
 </div>
 <div id="chart-settings-11" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>

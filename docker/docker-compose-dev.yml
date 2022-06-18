@@ -44,7 +44,7 @@ x-dashboard-environment: &dashboard-environment
   REDIS_CELERY_DB: 1
   REDIS_CONSTANCE_DB: 2
   SECRET_KEY: ${DASHBOARD_VIEWER_SECRET_KEY}
-  DASHBOARD_VIEWER_ENV: ${INSTALLATION_ENV}
+  DASHBOARD_VIEWER_ENV: development
 
 version: "3.7"
 services:
@@ -111,11 +111,12 @@ services:
   dashboard_worker:
     build: *dashboard-build
     environment: *dashboard-environment
-    command: celery -A dashboard_viewer worker -Ofair -l INFO
+    command: celery -A dashboard_viewer worker -Ofair -l DEBUG
     restart: unless-stopped
     depends_on: *depends-on
     volumes:
       - ../dashboard_viewer/media:/app/media
+      - ../dashboard_viewer:/app
 
   dashboard:
     build: *dashboard-build

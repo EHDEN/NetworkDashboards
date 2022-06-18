@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-04-29" />
+<meta name="date" content="2022-06-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,8 +162,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="backups.html"><a href="backups.html"><i class="fa fa-check"></i><b>5</b> Backups</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="restore.html"><a href="restore.html"><i class="fa fa-check"></i><b>5.1</b> Restore</a></li>
-<li class="chapter" data-level="5.2" data-path="useful-stuff.html"><a href="useful-stuff.html"><i class="fa fa-check"></i><b>5.2</b> Useful stuff</a></li>
+<li class="chapter" data-level="" data-path="backups.html"><a href="backups.html#restore"><i class="fa fa-check"></i>Restore</a></li>
+<li class="chapter" data-level="" data-path="backups.html"><a href="backups.html#useful-stuff"><i class="fa fa-check"></i>Useful stuff</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="customizations.html"><a href="customizations.html"><i class="fa fa-check"></i><b>6</b> Customizations</a>
 <ul>
@@ -268,7 +268,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#css-4"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#data-source-filter-2"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#number-of-patients-in-observation-period-numinobservationperiod"><i class="fa fa-check"></i>Number of Patients in Observation Period {#numInObservationPeriod}</a></li>
+<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#numInObservationPeriod"><i class="fa fa-check"></i>Number of Patients in Observation Period</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-start-dates"><i class="fa fa-check"></i>Observation Period Start Dates</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-end-dates"><i class="fa fa-check"></i>Observation Period End Dates</a></li>
 </ul></li>
@@ -276,7 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#css-5"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#data-source-filter-3"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-type-table-visittypetable"><i class="fa fa-check"></i>Visit Type Table {#visitTypeTable}</a></li>
+<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visitTypeTable"><i class="fa fa-check"></i>Visit Type Table</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-types-bars"><i class="fa fa-check"></i>Visit Types Bars</a></li>
 </ul></li>
 <li class="chapter" data-level="9.8" data-path="death-deprecated.html"><a href="death-deprecated.html"><i class="fa fa-check"></i><b>9.8</b> Death [Deprecated]</a>
@@ -303,7 +303,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#css-9"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#data-source-filter-6"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#average-number-of-records-per-person-avgrecordsperperson"><i class="fa fa-check"></i>Average Number of Records per Person {#avgRecordsPerPerson}</a></li>
+<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#avgRecordsPerPerson"><i class="fa fa-check"></i>Average Number of Records per Person</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -329,9 +329,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="css-7" class="section level3 unnumbered" number="">
 <h3>CSS</h3>
 <p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb65-1"><a href="concepts-browser-deprecated.html#cb65-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
-<span id="cb65-2"><a href="concepts-browser-deprecated.html#cb65-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb65-3"><a href="concepts-browser-deprecated.html#cb65-3" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb64-1"><a href="concepts-browser-deprecated.html#cb64-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
+<span id="cb64-2"><a href="concepts-browser-deprecated.html#cb64-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb64-3"><a href="concepts-browser-deprecated.html#cb64-3" aria-hidden="true"></a>}</span></code></pre></div>
 <p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
@@ -346,14 +346,19 @@ Figure 9.1: Settings for creating the Data Source and Domain filter charts
 <p><strong>For the filters to work the name of the fields to filter should match in all tables used on the charts of this dashboard.</strong></p>
 <div id="sql-query-21" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb66"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb66-1"><a href="concepts-browser-deprecated.html#cb66-1" aria-hidden="true"></a><span class="kw">SELECT</span> concept_name,</span>
-<span id="cb66-2"><a href="concepts-browser-deprecated.html#cb66-2" aria-hidden="true"></a>     domain_id,</span>
-<span id="cb66-3"><a href="concepts-browser-deprecated.html#cb66-3" aria-hidden="true"></a>     <span class="kw">source</span>.name <span class="kw">AS</span> source_name,</span>
-<span id="cb66-4"><a href="concepts-browser-deprecated.html#cb66-4" aria-hidden="true"></a>     <span class="kw">source</span>.acronym</span>
-<span id="cb66-5"><a href="concepts-browser-deprecated.html#cb66-5" aria-hidden="true"></a><span class="kw">FROM</span> achilles_results</span>
-<span id="cb66-6"><a href="concepts-browser-deprecated.html#cb66-6" aria-hidden="true"></a><span class="kw">JOIN</span> concept <span class="kw">ON</span> <span class="fu">cast</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
-<span id="cb66-7"><a href="concepts-browser-deprecated.html#cb66-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb66-8"><a href="concepts-browser-deprecated.html#cb66-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="kw">in</span> (<span class="dv">201</span>, <span class="dv">401</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">901</span>, <span class="dv">1001</span>, <span class="dv">1801</span>, <span class="dv">200</span>, <span class="dv">400</span>, <span class="dv">600</span>, <span class="dv">700</span>, <span class="dv">800</span>, <span class="dv">1800</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb65-1"><a href="concepts-browser-deprecated.html#cb65-1" aria-hidden="true"></a><span class="kw">SELECT</span> concept_name,</span>
+<span id="cb65-2"><a href="concepts-browser-deprecated.html#cb65-2" aria-hidden="true"></a>     domain_id,</span>
+<span id="cb65-3"><a href="concepts-browser-deprecated.html#cb65-3" aria-hidden="true"></a>     <span class="kw">source</span>.name <span class="kw">AS</span> source_name,</span>
+<span id="cb65-4"><a href="concepts-browser-deprecated.html#cb65-4" aria-hidden="true"></a>     <span class="kw">source</span>.acronym</span>
+<span id="cb65-5"><a href="concepts-browser-deprecated.html#cb65-5" aria-hidden="true"></a><span class="kw">FROM</span> achilles_results <span class="kw">JOIN</span> concept</span>
+<span id="cb65-6"><a href="concepts-browser-deprecated.html#cb65-6" aria-hidden="true"></a>  <span class="kw">ON</span> <span class="fu">cast</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
+<span id="cb65-7"><a href="concepts-browser-deprecated.html#cb65-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb65-8"><a href="concepts-browser-deprecated.html#cb65-8" aria-hidden="true"></a>  <span class="kw">ON</span> data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb65-9"><a href="concepts-browser-deprecated.html#cb65-9" aria-hidden="true"></a><span class="kw">WHERE</span></span>
+<span id="cb65-10"><a href="concepts-browser-deprecated.html#cb65-10" aria-hidden="true"></a>  analysis_id <span class="kw">in</span> (</span>
+<span id="cb65-11"><a href="concepts-browser-deprecated.html#cb65-11" aria-hidden="true"></a>    <span class="dv">201</span>, <span class="dv">401</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">901</span>, <span class="dv">1001</span>, <span class="dv">1801</span>,</span>
+<span id="cb65-12"><a href="concepts-browser-deprecated.html#cb65-12" aria-hidden="true"></a>    <span class="dv">200</span>, <span class="dv">400</span>, <span class="dv">600</span>, <span class="dv">700</span>, <span class="dv">800</span>, <span class="dv">1800</span></span>
+<span id="cb65-13"><a href="concepts-browser-deprecated.html#cb65-13" aria-hidden="true"></a>  )</span></code></pre></div>
 </div>
 <div id="chart-settings-22" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -425,55 +430,88 @@ Time range: No filter</li>
 Figure 9.21: Settings for creating the Concepts Table chart
 </p>
 </div>
-<div class="sourceCode" id="cb67"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb67-1"><a href="concepts-browser-deprecated.html#cb67-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
-<span id="cb67-2"><a href="concepts-browser-deprecated.html#cb67-2" aria-hidden="true"></a>    q1.concept_id <span class="kw">AS</span> concept_id,</span>
-<span id="cb67-3"><a href="concepts-browser-deprecated.html#cb67-3" aria-hidden="true"></a>    q1.concept_name <span class="kw">AS</span> concept_name,</span>
-<span id="cb67-4"><a href="concepts-browser-deprecated.html#cb67-4" aria-hidden="true"></a>    q1.domain_id,</span>
-<span id="cb67-5"><a href="concepts-browser-deprecated.html#cb67-5" aria-hidden="true"></a>    <span class="kw">source</span>.name <span class="kw">AS</span> source_name,</span>
-<span id="cb67-6"><a href="concepts-browser-deprecated.html#cb67-6" aria-hidden="true"></a>    <span class="kw">source</span>.acronym,</span>
-<span id="cb67-7"><a href="concepts-browser-deprecated.html#cb67-7" aria-hidden="true"></a>    <span class="fu">sum</span>(q1.count_value) <span class="kw">as</span> <span class="ot">&quot;Occurrence_count&quot;</span>,</span>
-<span id="cb67-8"><a href="concepts-browser-deprecated.html#cb67-8" aria-hidden="true"></a>    <span class="fu">sum</span>(q1.count_person) <span class="kw">as</span> <span class="ot">&quot;Person_count&quot;</span>,</span>
-<span id="cb67-9"><a href="concepts-browser-deprecated.html#cb67-9" aria-hidden="true"></a>    <span class="cf">CASE</span> </span>
-<span id="cb67-10"><a href="concepts-browser-deprecated.html#cb67-10" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">10</span> <span class="cf">THEN</span> <span class="st">&#39;&lt;=10&#39;</span></span>
-<span id="cb67-11"><a href="concepts-browser-deprecated.html#cb67-11" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">100</span> <span class="cf">THEN</span> <span class="st">&#39;11-10ˆ2&#39;</span></span>
-<span id="cb67-12"><a href="concepts-browser-deprecated.html#cb67-12" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">1000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ2-10ˆ3&#39;</span></span>
-<span id="cb67-13"><a href="concepts-browser-deprecated.html#cb67-13" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">10000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ3-10ˆ4&#39;</span></span>
-<span id="cb67-14"><a href="concepts-browser-deprecated.html#cb67-14" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">100000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ4-10ˆ5&#39;</span></span>
-<span id="cb67-15"><a href="concepts-browser-deprecated.html#cb67-15" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">1000000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ5-10ˆ6&#39;</span></span>
-<span id="cb67-16"><a href="concepts-browser-deprecated.html#cb67-16" aria-hidden="true"></a>        <span class="cf">ELSE</span> <span class="st">&#39;&gt;10ˆ6&#39;</span></span>
-<span id="cb67-17"><a href="concepts-browser-deprecated.html#cb67-17" aria-hidden="true"></a>    <span class="cf">END</span> <span class="kw">as</span> <span class="ot">&quot;magnitude_occurrences&quot;</span>,</span>
-<span id="cb67-18"><a href="concepts-browser-deprecated.html#cb67-18" aria-hidden="true"></a>    <span class="cf">CASE</span> </span>
-<span id="cb67-19"><a href="concepts-browser-deprecated.html#cb67-19" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">10</span> <span class="cf">THEN</span> <span class="st">&#39;&lt;=10&#39;</span></span>
-<span id="cb67-20"><a href="concepts-browser-deprecated.html#cb67-20" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">100</span> <span class="cf">THEN</span> <span class="st">&#39;11-10ˆ2&#39;</span></span>
-<span id="cb67-21"><a href="concepts-browser-deprecated.html#cb67-21" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">1000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ2-10ˆ3&#39;</span></span>
-<span id="cb67-22"><a href="concepts-browser-deprecated.html#cb67-22" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">10000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ3-10ˆ4&#39;</span></span>
-<span id="cb67-23"><a href="concepts-browser-deprecated.html#cb67-23" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">100000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ4-10ˆ5&#39;</span></span>
-<span id="cb67-24"><a href="concepts-browser-deprecated.html#cb67-24" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">1000000</span> <span class="cf">THEN</span> <span class="st">&#39;10ˆ5-10ˆ6&#39;</span></span>
-<span id="cb67-25"><a href="concepts-browser-deprecated.html#cb67-25" aria-hidden="true"></a>        <span class="cf">ELSE</span> <span class="st">&#39;&gt;10ˆ6&#39;</span></span>
-<span id="cb67-26"><a href="concepts-browser-deprecated.html#cb67-26" aria-hidden="true"></a>    <span class="cf">END</span> <span class="kw">AS</span> <span class="ot">&quot;magnitude_persons&quot;</span></span>
-<span id="cb67-27"><a href="concepts-browser-deprecated.html#cb67-27" aria-hidden="true"></a><span class="kw">FROM</span> (<span class="kw">SELECT</span> analysis_id,</span>
-<span id="cb67-28"><a href="concepts-browser-deprecated.html#cb67-28" aria-hidden="true"></a>             stratum_1 concept_id,</span>
-<span id="cb67-29"><a href="concepts-browser-deprecated.html#cb67-29" aria-hidden="true"></a>             data_source_id,</span>
-<span id="cb67-30"><a href="concepts-browser-deprecated.html#cb67-30" aria-hidden="true"></a>             concept_name,</span>
-<span id="cb67-31"><a href="concepts-browser-deprecated.html#cb67-31" aria-hidden="true"></a>             domain_id,</span>
-<span id="cb67-32"><a href="concepts-browser-deprecated.html#cb67-32" aria-hidden="true"></a>             count_value, <span class="dv">0</span> <span class="kw">as</span> count_person</span>
-<span id="cb67-33"><a href="concepts-browser-deprecated.html#cb67-33" aria-hidden="true"></a>    <span class="kw">FROM</span> achilles_results</span>
-<span id="cb67-34"><a href="concepts-browser-deprecated.html#cb67-34" aria-hidden="true"></a>    <span class="kw">JOIN</span> concept <span class="kw">ON</span> <span class="fu">cast</span>(stratum_1 <span class="kw">AS</span> BIGINT)<span class="op">=</span>concept_id</span>
-<span id="cb67-35"><a href="concepts-browser-deprecated.html#cb67-35" aria-hidden="true"></a>    <span class="kw">WHERE</span> analysis_id <span class="kw">in</span> (<span class="dv">201</span>, <span class="dv">301</span>, <span class="dv">401</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">901</span>, <span class="dv">1001</span>, <span class="dv">1801</span>)</span>
-<span id="cb67-36"><a href="concepts-browser-deprecated.html#cb67-36" aria-hidden="true"></a>    <span class="kw">UNION</span> (<span class="kw">SELECT</span>  analysis_id,</span>
-<span id="cb67-37"><a href="concepts-browser-deprecated.html#cb67-37" aria-hidden="true"></a>                   stratum_1 concept_id,</span>
-<span id="cb67-38"><a href="concepts-browser-deprecated.html#cb67-38" aria-hidden="true"></a>                   data_source_id,</span>
-<span id="cb67-39"><a href="concepts-browser-deprecated.html#cb67-39" aria-hidden="true"></a>                   concept_name,</span>
-<span id="cb67-40"><a href="concepts-browser-deprecated.html#cb67-40" aria-hidden="true"></a>                   domain_id,</span>
-<span id="cb67-41"><a href="concepts-browser-deprecated.html#cb67-41" aria-hidden="true"></a>                   <span class="dv">0</span> <span class="kw">as</span> count_value,</span>
-<span id="cb67-42"><a href="concepts-browser-deprecated.html#cb67-42" aria-hidden="true"></a>                   <span class="fu">sum</span>(count_value) <span class="kw">as</span> count_person</span>
-<span id="cb67-43"><a href="concepts-browser-deprecated.html#cb67-43" aria-hidden="true"></a>            <span class="kw">FROM</span>  achilles_results</span>
-<span id="cb67-44"><a href="concepts-browser-deprecated.html#cb67-44" aria-hidden="true"></a>            <span class="kw">JOIN</span> concept <span class="kw">on</span> <span class="fu">cast</span>(stratum_1 <span class="kw">as</span> BIGINT)<span class="op">=</span>concept_id</span>
-<span id="cb67-45"><a href="concepts-browser-deprecated.html#cb67-45" aria-hidden="true"></a>            <span class="kw">WHERE</span> analysis_id <span class="kw">in</span> (<span class="dv">202</span>, <span class="dv">401</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">901</span>, <span class="dv">1001</span>, <span class="dv">1801</span>)</span>
-<span id="cb67-46"><a href="concepts-browser-deprecated.html#cb67-46" aria-hidden="true"></a>            <span class="kw">GROUP</span> <span class="kw">BY</span> analysis_id,stratum_1,data_source_id,concept_name,domain_id) ) <span class="kw">as</span> q1</span>
-<span id="cb67-47"><a href="concepts-browser-deprecated.html#cb67-47" aria-hidden="true"></a>    <span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> q1.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb67-48"><a href="concepts-browser-deprecated.html#cb67-48" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> q1.concept_id,q1.concept_name,q1.domain_id,<span class="kw">source</span>.name, acronym</span>
-<span id="cb67-49"><a href="concepts-browser-deprecated.html#cb67-49" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="ot">&quot;Person_count&quot;</span> <span class="kw">desc</span></span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb66-1"><a href="concepts-browser-deprecated.html#cb66-1" aria-hidden="true"></a><span class="kw">SELECT</span></span>
+<span id="cb66-2"><a href="concepts-browser-deprecated.html#cb66-2" aria-hidden="true"></a>    q1.concept_id <span class="kw">AS</span> concept_id,</span>
+<span id="cb66-3"><a href="concepts-browser-deprecated.html#cb66-3" aria-hidden="true"></a>    q1.concept_name <span class="kw">AS</span> concept_name,</span>
+<span id="cb66-4"><a href="concepts-browser-deprecated.html#cb66-4" aria-hidden="true"></a>    q1.domain_id,</span>
+<span id="cb66-5"><a href="concepts-browser-deprecated.html#cb66-5" aria-hidden="true"></a>    <span class="kw">source</span>.name <span class="kw">AS</span> source_name,</span>
+<span id="cb66-6"><a href="concepts-browser-deprecated.html#cb66-6" aria-hidden="true"></a>    <span class="kw">source</span>.acronym,</span>
+<span id="cb66-7"><a href="concepts-browser-deprecated.html#cb66-7" aria-hidden="true"></a>    <span class="fu">sum</span>(q1.count_value) <span class="kw">as</span> <span class="ot">&quot;Occurrence_count&quot;</span>,</span>
+<span id="cb66-8"><a href="concepts-browser-deprecated.html#cb66-8" aria-hidden="true"></a>    <span class="fu">sum</span>(q1.count_person) <span class="kw">as</span> <span class="ot">&quot;Person_count&quot;</span>,</span>
+<span id="cb66-9"><a href="concepts-browser-deprecated.html#cb66-9" aria-hidden="true"></a>    <span class="cf">CASE</span> </span>
+<span id="cb66-10"><a href="concepts-browser-deprecated.html#cb66-10" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">10</span></span>
+<span id="cb66-11"><a href="concepts-browser-deprecated.html#cb66-11" aria-hidden="true"></a>          <span class="cf">THEN</span> <span class="st">&#39;&lt;=10&#39;</span></span>
+<span id="cb66-12"><a href="concepts-browser-deprecated.html#cb66-12" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">100</span></span>
+<span id="cb66-13"><a href="concepts-browser-deprecated.html#cb66-13" aria-hidden="true"></a>          <span class="cf">THEN</span> <span class="st">&#39;11-10ˆ2&#39;</span></span>
+<span id="cb66-14"><a href="concepts-browser-deprecated.html#cb66-14" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">1000</span></span>
+<span id="cb66-15"><a href="concepts-browser-deprecated.html#cb66-15" aria-hidden="true"></a>          <span class="cf">THEN</span> <span class="st">&#39;10ˆ2-10ˆ3&#39;</span></span>
+<span id="cb66-16"><a href="concepts-browser-deprecated.html#cb66-16" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">10000</span></span>
+<span id="cb66-17"><a href="concepts-browser-deprecated.html#cb66-17" aria-hidden="true"></a>          <span class="cf">THEN</span> <span class="st">&#39;10ˆ3-10ˆ4&#39;</span></span>
+<span id="cb66-18"><a href="concepts-browser-deprecated.html#cb66-18" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">100000</span></span>
+<span id="cb66-19"><a href="concepts-browser-deprecated.html#cb66-19" aria-hidden="true"></a>          <span class="cf">THEN</span> <span class="st">&#39;10ˆ4-10ˆ5&#39;</span></span>
+<span id="cb66-20"><a href="concepts-browser-deprecated.html#cb66-20" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_value)<span class="op">&lt;=</span><span class="dv">1000000</span></span>
+<span id="cb66-21"><a href="concepts-browser-deprecated.html#cb66-21" aria-hidden="true"></a>          <span class="cf">THEN</span> <span class="st">&#39;10ˆ5-10ˆ6&#39;</span></span>
+<span id="cb66-22"><a href="concepts-browser-deprecated.html#cb66-22" aria-hidden="true"></a>        <span class="cf">ELSE</span> <span class="st">&#39;&gt;10ˆ6&#39;</span></span>
+<span id="cb66-23"><a href="concepts-browser-deprecated.html#cb66-23" aria-hidden="true"></a>    <span class="cf">END</span> <span class="kw">as</span> <span class="ot">&quot;magnitude_occurrences&quot;</span>,</span>
+<span id="cb66-24"><a href="concepts-browser-deprecated.html#cb66-24" aria-hidden="true"></a>    <span class="cf">CASE</span> </span>
+<span id="cb66-25"><a href="concepts-browser-deprecated.html#cb66-25" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">10</span></span>
+<span id="cb66-26"><a href="concepts-browser-deprecated.html#cb66-26" aria-hidden="true"></a>          <span class="cf">THEN</span> <span class="st">&#39;&lt;=10&#39;</span></span>
+<span id="cb66-27"><a href="concepts-browser-deprecated.html#cb66-27" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">100</span></span>
+<span id="cb66-28"><a href="concepts-browser-deprecated.html#cb66-28" aria-hidden="true"></a>          <span class="cf">THEN</span> <span class="st">&#39;11-10ˆ2&#39;</span></span>
+<span id="cb66-29"><a href="concepts-browser-deprecated.html#cb66-29" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">1000</span></span>
+<span id="cb66-30"><a href="concepts-browser-deprecated.html#cb66-30" aria-hidden="true"></a>          <span class="cf">THEN</span> <span class="st">&#39;10ˆ2-10ˆ3&#39;</span></span>
+<span id="cb66-31"><a href="concepts-browser-deprecated.html#cb66-31" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">10000</span></span>
+<span id="cb66-32"><a href="concepts-browser-deprecated.html#cb66-32" aria-hidden="true"></a>          <span class="cf">THEN</span> <span class="st">&#39;10ˆ3-10ˆ4&#39;</span></span>
+<span id="cb66-33"><a href="concepts-browser-deprecated.html#cb66-33" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">100000</span></span>
+<span id="cb66-34"><a href="concepts-browser-deprecated.html#cb66-34" aria-hidden="true"></a>          <span class="cf">THEN</span> <span class="st">&#39;10ˆ4-10ˆ5&#39;</span></span>
+<span id="cb66-35"><a href="concepts-browser-deprecated.html#cb66-35" aria-hidden="true"></a>        <span class="cf">WHEN</span> <span class="fu">sum</span>(q1.count_person)<span class="op">&lt;=</span><span class="dv">1000000</span></span>
+<span id="cb66-36"><a href="concepts-browser-deprecated.html#cb66-36" aria-hidden="true"></a>          <span class="cf">THEN</span> <span class="st">&#39;10ˆ5-10ˆ6&#39;</span></span>
+<span id="cb66-37"><a href="concepts-browser-deprecated.html#cb66-37" aria-hidden="true"></a>        <span class="cf">ELSE</span> <span class="st">&#39;&gt;10ˆ6&#39;</span></span>
+<span id="cb66-38"><a href="concepts-browser-deprecated.html#cb66-38" aria-hidden="true"></a>    <span class="cf">END</span> <span class="kw">AS</span> <span class="ot">&quot;magnitude_persons&quot;</span></span>
+<span id="cb66-39"><a href="concepts-browser-deprecated.html#cb66-39" aria-hidden="true"></a><span class="kw">FROM</span> (<span class="kw">SELECT</span> analysis_id,</span>
+<span id="cb66-40"><a href="concepts-browser-deprecated.html#cb66-40" aria-hidden="true"></a>             stratum_1 concept_id,</span>
+<span id="cb66-41"><a href="concepts-browser-deprecated.html#cb66-41" aria-hidden="true"></a>             data_source_id,</span>
+<span id="cb66-42"><a href="concepts-browser-deprecated.html#cb66-42" aria-hidden="true"></a>             concept_name,</span>
+<span id="cb66-43"><a href="concepts-browser-deprecated.html#cb66-43" aria-hidden="true"></a>             domain_id,</span>
+<span id="cb66-44"><a href="concepts-browser-deprecated.html#cb66-44" aria-hidden="true"></a>             count_value, <span class="dv">0</span> <span class="kw">as</span> count_person</span>
+<span id="cb66-45"><a href="concepts-browser-deprecated.html#cb66-45" aria-hidden="true"></a>    <span class="kw">FROM</span> achilles_results</span>
+<span id="cb66-46"><a href="concepts-browser-deprecated.html#cb66-46" aria-hidden="true"></a>    <span class="kw">JOIN</span> concept</span>
+<span id="cb66-47"><a href="concepts-browser-deprecated.html#cb66-47" aria-hidden="true"></a>      <span class="kw">ON</span> <span class="fu">cast</span>(stratum_1 <span class="kw">AS</span> BIGINT)<span class="op">=</span>concept_id</span>
+<span id="cb66-48"><a href="concepts-browser-deprecated.html#cb66-48" aria-hidden="true"></a>    <span class="kw">WHERE</span></span>
+<span id="cb66-49"><a href="concepts-browser-deprecated.html#cb66-49" aria-hidden="true"></a>      analysis_id <span class="kw">in</span> (</span>
+<span id="cb66-50"><a href="concepts-browser-deprecated.html#cb66-50" aria-hidden="true"></a>        <span class="dv">201</span>, <span class="dv">301</span>, <span class="dv">401</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">901</span>, <span class="dv">1001</span>,</span>
+<span id="cb66-51"><a href="concepts-browser-deprecated.html#cb66-51" aria-hidden="true"></a>        <span class="dv">1801</span></span>
+<span id="cb66-52"><a href="concepts-browser-deprecated.html#cb66-52" aria-hidden="true"></a>      )</span>
+<span id="cb66-53"><a href="concepts-browser-deprecated.html#cb66-53" aria-hidden="true"></a>    <span class="kw">UNION</span> (<span class="kw">SELECT</span>  analysis_id,</span>
+<span id="cb66-54"><a href="concepts-browser-deprecated.html#cb66-54" aria-hidden="true"></a>                   stratum_1 concept_id,</span>
+<span id="cb66-55"><a href="concepts-browser-deprecated.html#cb66-55" aria-hidden="true"></a>                   data_source_id,</span>
+<span id="cb66-56"><a href="concepts-browser-deprecated.html#cb66-56" aria-hidden="true"></a>                   concept_name,</span>
+<span id="cb66-57"><a href="concepts-browser-deprecated.html#cb66-57" aria-hidden="true"></a>                   domain_id,</span>
+<span id="cb66-58"><a href="concepts-browser-deprecated.html#cb66-58" aria-hidden="true"></a>                   <span class="dv">0</span> <span class="kw">as</span> count_value,</span>
+<span id="cb66-59"><a href="concepts-browser-deprecated.html#cb66-59" aria-hidden="true"></a>                   <span class="fu">sum</span>(count_value) <span class="kw">as</span> count_person</span>
+<span id="cb66-60"><a href="concepts-browser-deprecated.html#cb66-60" aria-hidden="true"></a>            <span class="kw">FROM</span>  achilles_results</span>
+<span id="cb66-61"><a href="concepts-browser-deprecated.html#cb66-61" aria-hidden="true"></a>            <span class="kw">JOIN</span> concept</span>
+<span id="cb66-62"><a href="concepts-browser-deprecated.html#cb66-62" aria-hidden="true"></a>              <span class="kw">ON</span> <span class="fu">cast</span>(stratum_1 <span class="kw">as</span> BIGINT)<span class="op">=</span>concept_id</span>
+<span id="cb66-63"><a href="concepts-browser-deprecated.html#cb66-63" aria-hidden="true"></a>            <span class="kw">WHERE</span></span>
+<span id="cb66-64"><a href="concepts-browser-deprecated.html#cb66-64" aria-hidden="true"></a>              analysis_id <span class="kw">in</span> (</span>
+<span id="cb66-65"><a href="concepts-browser-deprecated.html#cb66-65" aria-hidden="true"></a>                <span class="dv">202</span>, <span class="dv">401</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">901</span>, <span class="dv">1001</span>, <span class="dv">1801</span></span>
+<span id="cb66-66"><a href="concepts-browser-deprecated.html#cb66-66" aria-hidden="true"></a>              )</span>
+<span id="cb66-67"><a href="concepts-browser-deprecated.html#cb66-67" aria-hidden="true"></a>            <span class="kw">GROUP</span> <span class="kw">BY</span></span>
+<span id="cb66-68"><a href="concepts-browser-deprecated.html#cb66-68" aria-hidden="true"></a>              analysis_id,</span>
+<span id="cb66-69"><a href="concepts-browser-deprecated.html#cb66-69" aria-hidden="true"></a>              stratum_1,</span>
+<span id="cb66-70"><a href="concepts-browser-deprecated.html#cb66-70" aria-hidden="true"></a>              data_source_id,</span>
+<span id="cb66-71"><a href="concepts-browser-deprecated.html#cb66-71" aria-hidden="true"></a>              concept_name,</span>
+<span id="cb66-72"><a href="concepts-browser-deprecated.html#cb66-72" aria-hidden="true"></a>              domain_id</span>
+<span id="cb66-73"><a href="concepts-browser-deprecated.html#cb66-73" aria-hidden="true"></a>            )) <span class="kw">as</span> q1</span>
+<span id="cb66-74"><a href="concepts-browser-deprecated.html#cb66-74" aria-hidden="true"></a>    <span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb66-75"><a href="concepts-browser-deprecated.html#cb66-75" aria-hidden="true"></a>      <span class="kw">ON</span> q1.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb66-76"><a href="concepts-browser-deprecated.html#cb66-76" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
+<span id="cb66-77"><a href="concepts-browser-deprecated.html#cb66-77" aria-hidden="true"></a>  q1.concept_id,</span>
+<span id="cb66-78"><a href="concepts-browser-deprecated.html#cb66-78" aria-hidden="true"></a>  q1.concept_name,</span>
+<span id="cb66-79"><a href="concepts-browser-deprecated.html#cb66-79" aria-hidden="true"></a>  q1.domain_id,</span>
+<span id="cb66-80"><a href="concepts-browser-deprecated.html#cb66-80" aria-hidden="true"></a>  <span class="kw">source</span>.name,</span>
+<span id="cb66-81"><a href="concepts-browser-deprecated.html#cb66-81" aria-hidden="true"></a>  acronym</span>
+<span id="cb66-82"><a href="concepts-browser-deprecated.html#cb66-82" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="ot">&quot;Person_count&quot;</span> <span class="kw">desc</span></span></code></pre></div>
 <div id="chart-settings-24" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
 <ul>

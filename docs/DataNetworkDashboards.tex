@@ -120,7 +120,7 @@
 
 \title{Data Network Dashboards}
 \author{This document is currently under construction}
-\date{2022-04-29}
+\date{2022-06-18}
 
 \begin{document}
 \maketitle
@@ -244,9 +244,9 @@ Currently, we use docker to deploy our environment
 \item
   Clone the repository with the command \texttt{git\ clone\ -\/-recurse-submodules\ https://github.com/EHDEN/NetworkDashboards}. If you already cloned the repository without the \texttt{-\/-recurse-submodules} option, run \texttt{git\ submodule\ update\ -\/-init} to fetch the superset submodule.
 \item
-  Create a \texttt{.env} file on the \texttt{docker} directory, using \texttt{.env-example} as a reference, setting all necessary environment variables (\texttt{SUPERSET\textbackslash{}\_MAPBOX\textbackslash{}\_API\textbackslash{}\_KEY} and \texttt{DASHBOARD\textbackslash{}\_VIEWER\textbackslash{}\_SECRET\textbackslash{}\_KEY}).
+  Create a \texttt{.env} file on the \texttt{docker} directory, using \texttt{.env-example} as a reference, setting all necessary environment variables (\texttt{SUPERSET\_MAPBOX\_API\_KEY} and \texttt{DASHBOARD\_VIEWER\_SECRET\_KEY}).
 
-  2.1 If you will use this application as a third-party application and will iframe it, set the variable \texttt{SINGLE\textbackslash{}\_APPLICATION\textbackslash{}\_MODE} to \texttt{False} and define the host of the main application on the variable \texttt{MAIN\textbackslash{}\_APPLICATION\textbackslash{}\_HOST}. Also make sure to add this last host to the list of \texttt{ALLOWED\textbackslash{}\_HOSTS}.
+  2.1 If you will use this application as a third-party application and will iframe it, set the variable \texttt{SINGLE\_APPLICATION\_MODE} to \texttt{False} and define the host of the main application on the variable \texttt{MAIN\_APPLICATION\_HOST}. Also make sure to add this last host to the list of \texttt{ALLOWED\_HOSTS}.
 \end{enumerate}
 
 \hypertarget{dashboard-viewer-setup}{%
@@ -577,7 +577,7 @@ While parsing the uploaded file, some data is extracted to then present on the U
 
 The next table is presented where the previous data is stored on the rows with analysis id 0 and 5000:
 
-\begin{longtable}[]{@{}llllll@{}}
+\begin{longtable}[]{@{}rlllll@{}}
 \toprule
 Analysis Id & Stratum 1 & Stratum 2 & Stratum 3 & Stratum 4 & Stratum 5\tabularnewline
 \midrule
@@ -683,7 +683,7 @@ For example, if there is a tab called People, to make that tab selected at the s
 \item
   Create a credentials file (the structure of the file depends on the target cloud server)
 \item
-  Create a \texttt{.dashboards\_backups.conf} file under your home directory (variable \texttt{\$HOME}) using \texttt{dashboards\_backups.conf.example} as base, setting the appropriate value for the several variables.
+  Create a \texttt{backups.conf} under the \texttt{backups} directory using \texttt{backups.conf.example} as base, setting the appropriate value for the several variables.
 
   For variables associated with files and directories always use \emph{absolute} paths.
 
@@ -745,81 +745,23 @@ For example, if there is a tab called People, to make that tab selected at the s
 \end{enumerate}
 
 \hypertarget{restore}{%
-\section{Restore}\label{restore}}
+\subsection*{Restore}\label{restore}}
+\addcontentsline{toc}{subsection}{Restore}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  Select the compressed backup you want to restore and decompress it:
-
-  \texttt{tar\ -xJf\ BACKUP\_FILE.tar.xz}.
+  Select the compressed backup you want to restore.
 \item
-  \begin{enumerate}
-  \def\labelenumii{\arabic{enumii}.}
-  \item
-    \textbf{Redis}
-
-    \begin{enumerate}
-    \def\labelenumiii{\arabic{enumiii}.}
-    \item
-      Make sure the redis docker container is down.
-    \item
-      (Re)place the file \texttt{dump.rdb} on the redis volume by the file \texttt{redis.rdb}. By default the redis volume is located where this repository was cloned on the directory \texttt{docker/volumes/redis}.
-    \item
-      Change its permissions, owner and group:
-
-\begin{verbatim}
-chmod 0644 docker/volumes/redis/dump.rdb
-sudo chown -R 999:999 docker/volumes/redis
-\end{verbatim}
-    \end{enumerate}
-  \item
-    \textbf{Postgres}
-
-    \begin{enumerate}
-    \def\labelenumiii{\arabic{enumiii}.}
-    \item
-      Make sure all containers that make changes on the database are stopped.
-    \item
-      Copy the file \texttt{postgres\_backup.sql} into the postgres container
-
-      \texttt{docker\ cp\ postgres.sql\ {[}CONTAINER\_ID{]}:/tmp}.
-    \item
-      Execute the backup script:
-
-      \texttt{docker\ exec\ -u\ root\ dashboard\_viewer\_postgres\_1\ psql\ -f\ /tmp/postgres\_backup.sql\ -U\ \textbackslash{}\$POSTGRES\_USER\ -d\ \textbackslash{}\$POSTGRES\_DB}.
-    \end{enumerate}
-  \item
-    \textbf{Media Files} If you have a volume pointing to where the media files are stored, replace all files with the ones present on the downloaded backup file. Else:
-
-    \begin{enumerate}
-    \def\labelenumiii{\arabic{enumiii}.}
-    \item
-      Bring the dashoard container up \texttt{docker-compose\ up\ -d\ dashboard}
-    \item
-      Enter in the container \texttt{docker\ exec\ -it\ {[}CONTAINER\_ID{]}\ bash}
-    \item
-      If you don't know where the media files are stored you can check the value of the MEDIA\_ROOT variable
-
-      \begin{enumerate}
-      \def\labelenumiv{\arabic{enumiv}.}
-      \item
-        \texttt{python\ manage.py\ shell}
-      \item
-        \texttt{from\ django.conf\ import\ settings}
-      \item
-        \texttt{print(settings.MEDIA\_ROOT)}
-      \end{enumerate}
-    \item
-      Remove the entire MEDIA\_ROOT directory and exit the container
-    \item
-      Copy the media directory present on the backup file to the catalogue container \texttt{docker\ cp\ -a\ collected-media\ {[}CONTAINER\_ID{]}:{[}MEDIA\_ROOT\_PARENT\_PATH{]}}
-    \end{enumerate}
-  \end{enumerate}
+  Make sure that all the environment variables are the same as the ones that were used for the chosen backup file.
+  Additionally, the \texttt{backups.conf} file is also necessary to set up, since the \texttt{TMP\_DIRECTORY} variable will be used.
+\item
+  Run the \texttt{backups/restore.sh} script.
 \end{enumerate}
 
 \hypertarget{useful-stuff}{%
-\section{Useful stuff}\label{useful-stuff}}
+\subsection*{Useful stuff}\label{useful-stuff}}
+\addcontentsline{toc}{subsection}{Useful stuff}
 
 \begin{itemize}
 \item
@@ -838,8 +780,14 @@ sudo chown -R 999:999 docker/volumes/redis
 
 \CommentTok{\# create a shared link for a directory}
 \ImportTok{from}\NormalTok{ dropbox.sharing }\ImportTok{import}\NormalTok{ SharedLinkSettings}
-\NormalTok{sharing\_settings }\OperatorTok{=}\NormalTok{ SharedLinkSettings(require\_password}\OperatorTok{=}\VariableTok{True}\NormalTok{, link\_password}\OperatorTok{=}\NormalTok{DIRECTORY\_PASSWORD)}
-\NormalTok{d.sharing\_create\_shared\_link\_with\_settings(DIRECTORY\_PATH, sharing\_settings)}
+\NormalTok{sharing\_settings }\OperatorTok{=}\NormalTok{ SharedLinkSettings(}
+\NormalTok{    require\_password}\OperatorTok{=}\VariableTok{True}\NormalTok{,}
+\NormalTok{    link\_password}\OperatorTok{=}\NormalTok{DIRECTORY\_PASSWORD,}
+\NormalTok{)}
+\NormalTok{d.sharing\_create\_shared\_link\_with\_settings(}
+\NormalTok{    DIRECTORY\_PATH,}
+\NormalTok{    sharing\_settings,}
+\NormalTok{)}
 
 \CommentTok{\# get all links}
 \ControlFlowTok{for}\NormalTok{ link }\KeywordTok{in}\NormalTok{ d.sharing\_get\_shared\_links().links:}
@@ -1241,7 +1189,7 @@ Tabs Manager
 
 Currently, this app is not being used and the URL mapping was delete.
 To use it again uncomment the tabsManager \href{https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/dashboard_viewer/urls.py\#L29}{line} on the dashboard\_viewer/dashboard\_viewer/urls.py file.
-Then you can access the tabs page through the \texttt{{[}BASE\_RUL{]}/tabs/} URL.
+Then you can access the tabs page through the \texttt{{[}BASE\_URL{]}/tabs/} URL.
 
 Views
 
@@ -2170,11 +2118,12 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
     \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ ((a.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((data\_source.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.count\_value,}
-\NormalTok{           achilles\_results.data\_source\_id,}
-\NormalTok{           achilles\_results.stratum\_2,}
-\NormalTok{           achilles\_results.stratum\_3}
-          \KeywordTok{FROM}\NormalTok{ achilles\_results}
-         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{0}\NormalTok{)) p }\KeywordTok{ON}\NormalTok{ ((p.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)))}
+\NormalTok{            achilles\_results.data\_source\_id,}
+\NormalTok{            achilles\_results.stratum\_2,}
+\NormalTok{            achilles\_results.stratum\_3}
+           \KeywordTok{FROM}\NormalTok{ achilles\_results}
+           \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{0}\NormalTok{)) p}
+      \KeywordTok{ON}\NormalTok{ p.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)}
  \KeywordTok{WHERE}\NormalTok{ (a.analysis\_id }\OperatorTok{=} \DecValTok{5000}\NormalTok{);}
 \end{Highlighting}
 \end{Shaded}
@@ -2188,9 +2137,10 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \KeywordTok{SELECT}\NormalTok{ country.country,}
    \KeywordTok{source}\NormalTok{.database\_type,}
 \NormalTok{   achilles.count\_value}
-  \KeywordTok{FROM}\NormalTok{ ((achilles\_results achilles}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
-    \KeywordTok{JOIN}\NormalTok{ country country }\KeywordTok{ON}\NormalTok{ ((}\KeywordTok{source}\NormalTok{.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)))}
+  \KeywordTok{FROM}\NormalTok{ (}
+\NormalTok{    (achilles\_results achilles }\KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ (achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{))}
+    \KeywordTok{JOIN}\NormalTok{ country country }\KeywordTok{ON} \KeywordTok{source}\NormalTok{.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)}
  \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{);}
 \end{Highlighting}
 \end{Shaded}
@@ -2206,8 +2156,8 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{   data\_source.acronym,}
 \NormalTok{   data\_source.database\_type,}
 \NormalTok{   country.country}
-  \KeywordTok{FROM}\NormalTok{ ((achilles\_results}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ ((achilles\_results.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)))}
+  \KeywordTok{FROM}\NormalTok{ ((achilles\_results }\KeywordTok{JOIN}\NormalTok{ data\_source}
+      \KeywordTok{ON}\NormalTok{ ((achilles\_results.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((data\_source.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)))}
  \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{);}
 \end{Highlighting}
@@ -2226,9 +2176,11 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{   concept.concept\_name }\KeywordTok{AS}\NormalTok{ gender,}
 \NormalTok{   achilles.count\_value}
   \KeywordTok{FROM}\NormalTok{ (((achilles\_results achilles}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
-    \KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON}\NormalTok{ ((achilles.stratum\_1 }\OperatorTok{=}\NormalTok{ (concept.concept\_id):}\CharTok{:text}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ concept}
+      \KeywordTok{ON}\NormalTok{ ((achilles.stratum\_1 }\OperatorTok{=}\NormalTok{ (concept.concept\_id):}\CharTok{:text}\NormalTok{)))}
  \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2}\NormalTok{);}
 \end{Highlighting}
 \end{Shaded}
@@ -2244,61 +2196,107 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
    \KeywordTok{source}\NormalTok{.database\_type,}
 \NormalTok{   country.country,}
    \FunctionTok{sum}\NormalTok{(}
-       \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ ((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textless{}} \DecValTok{10}\NormalTok{) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value}
-           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:bigint}
-       \ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"0{-}10"}\NormalTok{,}
+     \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ (}
+\NormalTok{       (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textless{}} \DecValTok{10}
+\NormalTok{     ) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value }\ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{ :: bigint }\ControlFlowTok{END}
+\NormalTok{   ) }\KeywordTok{AS} \OtherTok{"0{-}10"}\NormalTok{, }
    \FunctionTok{sum}\NormalTok{(}
-       \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textgreater{}=} \DecValTok{10}\NormalTok{) }\KeywordTok{AND}\NormalTok{ ((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textless{}} \DecValTok{20}\NormalTok{)) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value}
-           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:bigint}
-       \ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"10{-}20"}\NormalTok{,}
+     \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ (}
+\NormalTok{       (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textgreater{}=} \DecValTok{10}
+\NormalTok{       ) }
+       \KeywordTok{AND}\NormalTok{ (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textless{}} \DecValTok{20}
+\NormalTok{       )}
+\NormalTok{     ) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value }\ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{ :: bigint }\ControlFlowTok{END}
+\NormalTok{   ) }\KeywordTok{AS} \OtherTok{"10{-}20"}\NormalTok{, }
    \FunctionTok{sum}\NormalTok{(}
-       \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textgreater{}=} \DecValTok{20}\NormalTok{) }\KeywordTok{AND}\NormalTok{ ((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textless{}} \DecValTok{30}\NormalTok{)) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value}
-           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:bigint}
-       \ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"20{-}30"}\NormalTok{,}
+     \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ (}
+\NormalTok{       (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textgreater{}=} \DecValTok{20}
+\NormalTok{       ) }
+       \KeywordTok{AND}\NormalTok{ (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textless{}} \DecValTok{30}
+\NormalTok{       )}
+\NormalTok{     ) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value }\ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{ :: bigint }\ControlFlowTok{END}
+\NormalTok{   ) }\KeywordTok{AS} \OtherTok{"20{-}30"}\NormalTok{, }
    \FunctionTok{sum}\NormalTok{(}
-       \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textgreater{}=} \DecValTok{30}\NormalTok{) }\KeywordTok{AND}\NormalTok{ ((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textless{}} \DecValTok{40}\NormalTok{)) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value}
-           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:bigint}
-       \ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"30{-}40"}\NormalTok{,}
+     \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ (}
+\NormalTok{       (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textgreater{}=} \DecValTok{30}
+\NormalTok{       ) }
+       \KeywordTok{AND}\NormalTok{ (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textless{}} \DecValTok{40}
+\NormalTok{       )}
+\NormalTok{     ) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value }\ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{ :: bigint }\ControlFlowTok{END}
+\NormalTok{   ) }\KeywordTok{AS} \OtherTok{"30{-}40"}\NormalTok{, }
    \FunctionTok{sum}\NormalTok{(}
-       \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textgreater{}=} \DecValTok{40}\NormalTok{) }\KeywordTok{AND}\NormalTok{ ((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textless{}} \DecValTok{50}\NormalTok{)) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value}
-           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:bigint}
-       \ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"40{-}50"}\NormalTok{,}
+     \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ (}
+\NormalTok{       (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textgreater{}=} \DecValTok{40}
+\NormalTok{       ) }
+       \KeywordTok{AND}\NormalTok{ (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textless{}} \DecValTok{50}
+\NormalTok{       )}
+\NormalTok{     ) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value }\ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{ :: bigint }\ControlFlowTok{END}
+\NormalTok{   ) }\KeywordTok{AS} \OtherTok{"40{-}50"}\NormalTok{, }
    \FunctionTok{sum}\NormalTok{(}
-       \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textgreater{}=} \DecValTok{50}\NormalTok{) }\KeywordTok{AND}\NormalTok{ ((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textless{}} \DecValTok{60}\NormalTok{)) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value}
-           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:bigint}
-       \ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"50{-}60"}\NormalTok{,}
+     \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ (}
+\NormalTok{       (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textgreater{}=} \DecValTok{50}
+\NormalTok{       ) }
+       \KeywordTok{AND}\NormalTok{ (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textless{}} \DecValTok{60}
+\NormalTok{       )}
+\NormalTok{     ) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value }\ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{ :: bigint }\ControlFlowTok{END}
+\NormalTok{   ) }\KeywordTok{AS} \OtherTok{"50{-}60"}\NormalTok{, }
    \FunctionTok{sum}\NormalTok{(}
-       \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textgreater{}=} \DecValTok{60}\NormalTok{) }\KeywordTok{AND}\NormalTok{ ((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textless{}} \DecValTok{70}\NormalTok{)) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value}
-           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:bigint}
-       \ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"60{-}70"}\NormalTok{,}
+     \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ (}
+\NormalTok{       (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textgreater{}=} \DecValTok{60}
+\NormalTok{       ) }
+       \KeywordTok{AND}\NormalTok{ (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textless{}} \DecValTok{70}
+\NormalTok{       )}
+\NormalTok{     ) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value }\ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{ :: bigint }\ControlFlowTok{END}
+\NormalTok{   ) }\KeywordTok{AS} \OtherTok{"60{-}70"}\NormalTok{, }
    \FunctionTok{sum}\NormalTok{(}
-       \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textgreater{}=} \DecValTok{70}\NormalTok{) }\KeywordTok{AND}\NormalTok{ ((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textless{}} \DecValTok{80}\NormalTok{)) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value}
-           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:bigint}
-       \ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"70{-}80"}\NormalTok{,}
+     \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ (}
+\NormalTok{       (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textgreater{}=} \DecValTok{70}
+\NormalTok{       ) }
+       \KeywordTok{AND}\NormalTok{ (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textless{}} \DecValTok{80}
+\NormalTok{       )}
+\NormalTok{     ) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value }\ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{ :: bigint }\ControlFlowTok{END}
+\NormalTok{   ) }\KeywordTok{AS} \OtherTok{"70{-}80"}\NormalTok{, }
    \FunctionTok{sum}\NormalTok{(}
-       \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textgreater{}=} \DecValTok{80}\NormalTok{) }\KeywordTok{AND}\NormalTok{ ((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textless{}} \DecValTok{90}\NormalTok{)) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value}
-           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:bigint}
-       \ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"80{-}90"}\NormalTok{,}
+     \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ (}
+\NormalTok{       (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textgreater{}=} \DecValTok{80}
+\NormalTok{       ) }
+       \KeywordTok{AND}\NormalTok{ (}
+\NormalTok{         (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textless{}} \DecValTok{90}
+\NormalTok{       )}
+\NormalTok{     ) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value }\ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{ :: bigint }\ControlFlowTok{END}
+\NormalTok{   ) }\KeywordTok{AS} \OtherTok{"80{-}90"}\NormalTok{, }
    \FunctionTok{sum}\NormalTok{(}
-       \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ ((achilles.stratum\_2):}\CharTok{:integer} \OperatorTok{\textgreater{}=} \DecValTok{90}\NormalTok{) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value}
-           \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:bigint}
-       \ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"90+"}
+     \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ (}
+\NormalTok{       (achilles.stratum\_2):: }\DataTypeTok{integer} \OperatorTok{\textgreater{}=} \DecValTok{90}
+\NormalTok{     ) }\ControlFlowTok{THEN}\NormalTok{ achilles.count\_value }\ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{ :: bigint }\ControlFlowTok{END}
+\NormalTok{   ) }\KeywordTok{AS} \OtherTok{"90+"} 
   \KeywordTok{FROM}\NormalTok{ (((achilles\_results achilles}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
-    \KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON}\NormalTok{ ((achilles.stratum\_1 }\OperatorTok{=}\NormalTok{ (concept.concept\_id):}\CharTok{:text}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ concept}
+      \KeywordTok{ON}\NormalTok{ ((achilles.stratum\_1 }\OperatorTok{=}\NormalTok{ (concept.concept\_id):}\CharTok{:text}\NormalTok{)))}
  \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{102}\NormalTok{)}
- \KeywordTok{GROUP} \KeywordTok{BY} \KeywordTok{source}\NormalTok{.name, }\KeywordTok{source}\NormalTok{.acronym, }\KeywordTok{source}\NormalTok{.database\_type, country.country;}
+ \KeywordTok{GROUP} \KeywordTok{BY} 
+   \KeywordTok{source}\NormalTok{.name, }
+   \KeywordTok{source}\NormalTok{.acronym, }
+   \KeywordTok{source}\NormalTok{.database\_type, }
+\NormalTok{   country.country;}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2315,7 +2313,8 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
    \KeywordTok{source}\NormalTok{.database\_type,}
 \NormalTok{   country.country}
   \KeywordTok{FROM}\NormalTok{ ((achilles\_results achilles}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
  \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{101}\NormalTok{);}
 \end{Highlighting}
@@ -2339,7 +2338,8 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{   achilles.max\_value,}
 \NormalTok{   achilles.min\_value}
   \KeywordTok{FROM}\NormalTok{ ((achilles\_results achilles}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((}\KeywordTok{source}\NormalTok{.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)))}
  \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{103}\NormalTok{)}
  \KeywordTok{ORDER} \KeywordTok{BY} \KeywordTok{source}\NormalTok{.name;}
@@ -2359,7 +2359,8 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{   achilles.stratum\_1 }\KeywordTok{AS} \OtherTok{"Birth\_year"}\NormalTok{,}
 \NormalTok{   achilles.count\_value }\KeywordTok{AS} \FunctionTok{count}
   \KeywordTok{FROM}\NormalTok{ ((achilles\_results achilles}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
  \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{3}\NormalTok{);}
 \end{Highlighting}
@@ -2376,27 +2377,57 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
    \KeywordTok{source}\NormalTok{.database\_type,}
 \NormalTok{   country.country,}
        \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{201}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Visit\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{401}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{501}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Death\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{601}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{701}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug Exposure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{801}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1801}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2101}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2201}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Note\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{201}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Visit\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{401}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{501}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Death\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{601}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{701}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug Exposure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{801}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1801}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2101}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2201}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Note\textquotesingle{}}\NormalTok{:}\CharTok{:text}
            \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:text}
        \ControlFlowTok{END} \KeywordTok{AS}\NormalTok{ data\_domain,}
-\NormalTok{   (}\FunctionTok{sum}\NormalTok{(achilles.count\_value) }\OperatorTok{/} \FunctionTok{avg}\NormalTok{(counts.num\_persons)) }\KeywordTok{AS}\NormalTok{ records\_per\_person}
+\NormalTok{   (}\FunctionTok{sum}\NormalTok{(achilles.count\_value) }\OperatorTok{/} \FunctionTok{avg}\NormalTok{(counts.num\_persons))}
+     \KeywordTok{AS}\NormalTok{ records\_per\_person}
   \KeywordTok{FROM}\NormalTok{ (((achilles\_results achilles}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
     \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.data\_source\_id,}
 \NormalTok{           achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ num\_persons}
           \KeywordTok{FROM}\NormalTok{ achilles\_results}
-         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{)) counts }\KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=}\NormalTok{ counts.data\_source\_id)))}
- \KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ achilles.analysis\_id, }\KeywordTok{source}\NormalTok{.name, }\KeywordTok{source}\NormalTok{.acronym, }\KeywordTok{source}\NormalTok{.database\_type, country.country}
-\KeywordTok{HAVING}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{201}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{401}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{501}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{601}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{701}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2101}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2201}\NormalTok{):}\CharTok{:bigint}\NormalTok{]));}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{)) counts}
+           \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id }\OperatorTok{=}\NormalTok{ counts.data\_source\_id)}
+ \KeywordTok{GROUP} \KeywordTok{BY}
+\NormalTok{   achilles.analysis\_id,}
+   \KeywordTok{source}\NormalTok{.name,}
+   \KeywordTok{source}\NormalTok{.acronym,}
+   \KeywordTok{source}\NormalTok{.database\_type,}
+\NormalTok{   country.country}
+\KeywordTok{HAVING}
+\NormalTok{  (}
+\NormalTok{    achilles.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}
+      \DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{201}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{401}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{501}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{601}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{701}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{801}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{1801}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{2101}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{2201}\NormalTok{):: bigint]}
+\NormalTok{    )}
+\NormalTok{  );}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2411,23 +2442,51 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{   data\_source.database\_type,}
 \NormalTok{   country.country,}
        \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{201}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Visit\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{401}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{501}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Death\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{601}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{701}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug Exposure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{801}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1801}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{2101}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{2201}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Note\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{201}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Visit\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{401}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{501}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Death\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{601}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{701}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug Exposure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{801}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1801}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{2101}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{2201}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Note\textquotesingle{}}\NormalTok{:}\CharTok{:text}
            \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:text}
        \ControlFlowTok{END} \KeywordTok{AS}\NormalTok{ data\_domain,}
    \FunctionTok{sum}\NormalTok{(achilles\_results.count\_value) }\KeywordTok{AS} \FunctionTok{count}
   \KeywordTok{FROM}\NormalTok{ ((achilles\_results}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ ((achilles\_results.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source}
+      \KeywordTok{ON}\NormalTok{ ((achilles\_results.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ data\_source.country\_id)))}
- \KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ data\_source.name, data\_source.acronym, data\_source.database\_type, country.country, achilles\_results.analysis\_id}
-\KeywordTok{HAVING}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{201}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{401}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{501}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{601}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{701}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2101}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2201}\NormalTok{):}\CharTok{:bigint}\NormalTok{]));}
+ \KeywordTok{GROUP} \KeywordTok{BY}
+\NormalTok{   data\_source.name,}
+\NormalTok{   data\_source.acronym,}
+\NormalTok{   data\_source.database\_type,}
+\NormalTok{   country.country,}
+\NormalTok{   achilles\_results.analysis\_id}
+\KeywordTok{HAVING}
+\NormalTok{  (}
+\NormalTok{    achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}
+      \DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{201}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{401}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{501}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{601}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{701}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{801}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{1801}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{2101}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{2201}\NormalTok{):: bigint]}
+\NormalTok{    )}
+\NormalTok{  );}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2442,12 +2501,18 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{   country.country,}
 \NormalTok{   achilles.analysis\_id,}
        \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{203}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Visit\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{403}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{603}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{703}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug Exposure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{803}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1803}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{203}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Visit\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{403}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{603}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{703}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug Exposure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{803}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1803}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
            \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:text}
        \ControlFlowTok{END} \KeywordTok{AS}\NormalTok{ data\_domain,}
 \NormalTok{   achilles.count\_value,}
@@ -2459,9 +2524,20 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{   achilles.p90\_value }\KeywordTok{AS}\NormalTok{ p90,}
 \NormalTok{   achilles.max\_value}
   \KeywordTok{FROM}\NormalTok{ ((achilles\_results achilles}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((}\KeywordTok{source}\NormalTok{.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)))}
- \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{203}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{403}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{603}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{703}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{803}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{183}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))}
+ \KeywordTok{WHERE}
+\NormalTok{   (}
+\NormalTok{     achilles.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}
+       \DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{203}\NormalTok{):: bigint,}
+\NormalTok{       (}\DecValTok{403}\NormalTok{):: bigint,}
+\NormalTok{       (}\DecValTok{603}\NormalTok{):: bigint,}
+\NormalTok{       (}\DecValTok{703}\NormalTok{):: bigint,}
+\NormalTok{       (}\DecValTok{803}\NormalTok{):: bigint,}
+\NormalTok{       (}\DecValTok{183}\NormalTok{):: bigint]}
+\NormalTok{     )}
+\NormalTok{   )}
  \KeywordTok{ORDER} \KeywordTok{BY} \KeywordTok{source}\NormalTok{.name;}
 \end{Highlighting}
 \end{Shaded}
@@ -2477,29 +2553,58 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
    \KeywordTok{source}\NormalTok{.database\_type,}
 \NormalTok{   country.country,}
        \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{405}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{605}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{705}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{805}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1805}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2105}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{405}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{605}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{705}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{805}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1805}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2105}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}\NormalTok{:}\CharTok{:text}
            \ControlFlowTok{ELSE} \StringTok{\textquotesingle{}Other\textquotesingle{}}\NormalTok{:}\CharTok{:text}
        \ControlFlowTok{END} \KeywordTok{AS}\NormalTok{ domain\_name,}
 \NormalTok{   c1.concept\_name,}
    \FunctionTok{sum}\NormalTok{(achilles.count\_value) }\KeywordTok{AS}\NormalTok{ num\_records}
   \KeywordTok{FROM}\NormalTok{ (((achilles\_results achilles}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
-    \KeywordTok{JOIN}\NormalTok{ concept c1 }\KeywordTok{ON}\NormalTok{ ((achilles.stratum\_2 }\OperatorTok{=}\NormalTok{ (c1.concept\_id):}\CharTok{:text}\NormalTok{)))}
- \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{405}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{605}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{705}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{805}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1805}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2105}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))}
- \KeywordTok{GROUP} \KeywordTok{BY} \KeywordTok{source}\NormalTok{.name, }\KeywordTok{source}\NormalTok{.acronym, }\KeywordTok{source}\NormalTok{.database\_type, country.country, c1.concept\_name,}
+    \KeywordTok{JOIN}\NormalTok{ concept c1}
+      \KeywordTok{ON}\NormalTok{ ((achilles.stratum\_2 }\OperatorTok{=}\NormalTok{ (c1.concept\_id):}\CharTok{:text}\NormalTok{)))}
+ \KeywordTok{WHERE}
+\NormalTok{   (}
+\NormalTok{     achilles.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}
+       \DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{405}\NormalTok{):: bigint,}
+\NormalTok{       (}\DecValTok{605}\NormalTok{):: bigint,}
+\NormalTok{       (}\DecValTok{705}\NormalTok{):: bigint,}
+\NormalTok{       (}\DecValTok{805}\NormalTok{):: bigint,}
+\NormalTok{       (}\DecValTok{1805}\NormalTok{):: bigint,}
+\NormalTok{       (}\DecValTok{2105}\NormalTok{):: bigint]}
+\NormalTok{     )}
+\NormalTok{   )}
+ \KeywordTok{GROUP} \KeywordTok{BY}
+   \KeywordTok{source}\NormalTok{.name,}
+   \KeywordTok{source}\NormalTok{.acronym,}
+   \KeywordTok{source}\NormalTok{.database\_type,}
+\NormalTok{   country.country,}
+\NormalTok{   c1.concept\_name,}
        \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{405}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{605}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{705}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{805}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1805}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
-           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2105}\NormalTok{) }\ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{405}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{605}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{705}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{805}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{1805}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}\NormalTok{:}\CharTok{:text}
+           \ControlFlowTok{WHEN}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{2105}\NormalTok{)}
+             \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}\NormalTok{:}\CharTok{:text}
            \ControlFlowTok{ELSE} \StringTok{\textquotesingle{}Other\textquotesingle{}}\NormalTok{:}\CharTok{:text}
        \ControlFlowTok{END}\NormalTok{;}
 \end{Highlighting}
@@ -2518,7 +2623,8 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
    \FunctionTok{to\_date}\NormalTok{(achilles.stratum\_1, }\StringTok{\textquotesingle{}YYYYMM\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\KeywordTok{AS} \DataTypeTok{date}\NormalTok{,}
 \NormalTok{   achilles.count\_value }\KeywordTok{AS} \OtherTok{"Nr\_patients"}
   \KeywordTok{FROM}\NormalTok{ ((achilles\_results achilles}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
  \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{110}\NormalTok{);}
 \end{Highlighting}
@@ -2530,24 +2636,60 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{SELECT}\NormalTok{ data\_source.name,}
-\NormalTok{   data\_source.acronym,}
-\NormalTok{   data\_source.database\_type,}
-\NormalTok{   country.country,}
-\NormalTok{   cumulative\_sums.xlengthofobservation,}
-   \FunctionTok{round}\NormalTok{((cumulative\_sums.cumulative\_sum }\OperatorTok{/}\NormalTok{ (totals.total):}\CharTok{:numeric}\NormalTok{), }\DecValTok{5}\NormalTok{) }\KeywordTok{AS}\NormalTok{ ypercentpersons}
-  \KeywordTok{FROM}\NormalTok{ (((( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.data\_source\_id,}
-\NormalTok{           ((achilles\_results.stratum\_1):}\CharTok{:integer} \OperatorTok{*} \DecValTok{30}\NormalTok{) }\KeywordTok{AS}\NormalTok{ xlengthofobservation,}
-           \FunctionTok{sum}\NormalTok{(achilles\_results.count\_value) }\KeywordTok{OVER}\NormalTok{ (}\KeywordTok{PARTITION} \KeywordTok{BY}\NormalTok{ achilles\_results.data\_source\_id }\KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ (achilles\_results.stratum\_1):}\CharTok{:integer} \KeywordTok{DESC}\NormalTok{) }\KeywordTok{AS}\NormalTok{ cumulative\_sum}
-          \KeywordTok{FROM}\NormalTok{ achilles\_results}
-         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{108}\NormalTok{)) cumulative\_sums}
-    \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.data\_source\_id,}
-\NormalTok{           achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ total}
-          \KeywordTok{FROM}\NormalTok{ achilles\_results}
-         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{)) totals }\KeywordTok{ON}\NormalTok{ ((cumulative\_sums.data\_source\_id }\OperatorTok{=}\NormalTok{ totals.data\_source\_id)))}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ ((cumulative\_sums.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)))}
-    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ data\_source.country\_id)))}
- \KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ data\_source.name, cumulative\_sums.xlengthofobservation;}
+\KeywordTok{SELECT}
+\NormalTok{  data\_source.name,}
+\NormalTok{  data\_source.acronym,}
+\NormalTok{  data\_source.database\_type,}
+\NormalTok{  country.country,}
+\NormalTok{  cumulative\_sums.xlengthofobservation,}
+  \FunctionTok{round}\NormalTok{(}
+\NormalTok{    (cumulative\_sums.cumulative\_sum }\OperatorTok{/}\NormalTok{ (totals.total):: }\DataTypeTok{numeric}\NormalTok{),}
+    \DecValTok{5}
+\NormalTok{  ) }\KeywordTok{AS}\NormalTok{ ypercentpersons}
+\KeywordTok{FROM}
+\NormalTok{  (}
+\NormalTok{    (}
+\NormalTok{      (}
+\NormalTok{        (}
+          \KeywordTok{SELECT}
+\NormalTok{            achilles\_results.data\_source\_id,}
+\NormalTok{            (}
+\NormalTok{              (achilles\_results.stratum\_1):: }\DataTypeTok{integer} \OperatorTok{*} \DecValTok{30}
+\NormalTok{            ) }\KeywordTok{AS}\NormalTok{ xlengthofobservation,}
+            \FunctionTok{sum}\NormalTok{(achilles\_results.count\_value) }\KeywordTok{OVER}\NormalTok{ (}
+              \KeywordTok{PARTITION} \KeywordTok{BY}\NormalTok{ achilles\_results.data\_source\_id}
+              \KeywordTok{ORDER} \KeywordTok{BY}
+\NormalTok{                (achilles\_results.stratum\_1):: }\DataTypeTok{integer} \KeywordTok{DESC}
+\NormalTok{            ) }\KeywordTok{AS}\NormalTok{ cumulative\_sum}
+          \KeywordTok{FROM}
+\NormalTok{            achilles\_results}
+          \KeywordTok{WHERE}
+\NormalTok{            (}
+\NormalTok{              achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{108}
+\NormalTok{            )}
+\NormalTok{        ) cumulative\_sums}
+        \KeywordTok{JOIN}\NormalTok{ (}
+          \KeywordTok{SELECT}
+\NormalTok{            achilles\_results.data\_source\_id,}
+\NormalTok{            achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ total}
+          \KeywordTok{FROM}
+\NormalTok{            achilles\_results}
+          \KeywordTok{WHERE}
+\NormalTok{            (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{)}
+\NormalTok{        ) totals }\KeywordTok{ON}\NormalTok{ (}
+\NormalTok{          (}
+\NormalTok{            cumulative\_sums.data\_source\_id }\OperatorTok{=}\NormalTok{ totals.data\_source\_id}
+\NormalTok{          )}
+\NormalTok{        )}
+\NormalTok{      )}
+      \KeywordTok{JOIN}\NormalTok{ data\_source}
+        \KeywordTok{ON}\NormalTok{ ((cumulative\_sums.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{))}
+\NormalTok{    )}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ data\_source.country\_id))}
+\NormalTok{  )}
+\KeywordTok{ORDER} \KeywordTok{BY}
+\NormalTok{  data\_source.name,}
+\NormalTok{  cumulative\_sums.xlengthofobservation;}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2564,14 +2706,22 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{   ar.stratum\_1,}
 \NormalTok{   ar.count\_value,}
 \NormalTok{   pa.nrpatients }\KeywordTok{AS}\NormalTok{ patients,}
-   \FunctionTok{round}\NormalTok{((((}\DecValTok{100}\NormalTok{):}\CharTok{:numeric} \OperatorTok{*}\NormalTok{ (ar.count\_value):}\CharTok{:numeric}\NormalTok{) }\OperatorTok{/}\NormalTok{ (pa.nrpatients):}\CharTok{:numeric}\NormalTok{), }\DecValTok{2}\NormalTok{) }\KeywordTok{AS}\NormalTok{ percentage}
+   \FunctionTok{round}\NormalTok{(}
+\NormalTok{     (}
+\NormalTok{       ((}\DecValTok{100}\NormalTok{):}\CharTok{:numeric} \OperatorTok{*}\NormalTok{ (ar.count\_value):}\CharTok{:numeric}\NormalTok{)}
+       \OperatorTok{/}
+\NormalTok{       (pa.nrpatients):}\CharTok{:numeric}
+\NormalTok{     ),}
+     \DecValTok{2}
+\NormalTok{   ) }\KeywordTok{AS}\NormalTok{ percentage}
   \KeywordTok{FROM}\NormalTok{ (((achilles\_results ar}
     \KeywordTok{JOIN}\NormalTok{ data\_source ds }\KeywordTok{ON}\NormalTok{ ((ds.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ ar.data\_source\_id)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((ds.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ nrpatients,}
 \NormalTok{           achilles\_results.data\_source\_id}
           \KeywordTok{FROM}\NormalTok{ achilles\_results}
-         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{0}\NormalTok{)) pa }\KeywordTok{ON}\NormalTok{ ((pa.data\_source\_id }\OperatorTok{=}\NormalTok{ ds.}\KeywordTok{id}\NormalTok{)))}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{0}\NormalTok{)) pa}
+           \KeywordTok{ON}\NormalTok{ ((pa.data\_source\_id }\OperatorTok{=}\NormalTok{ ds.}\KeywordTok{id}\NormalTok{)))}
  \KeywordTok{WHERE}\NormalTok{ (ar.analysis\_id }\OperatorTok{=} \DecValTok{113}\NormalTok{);}
 \end{Highlighting}
 \end{Shaded}
@@ -2594,7 +2744,8 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{   achilles.p90\_value }\KeywordTok{AS}\NormalTok{ p90,}
 \NormalTok{   achilles.max\_value}
   \KeywordTok{FROM}\NormalTok{ ((achilles\_results achilles}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((}\KeywordTok{source}\NormalTok{.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)))}
  \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{105}\NormalTok{)}
  \KeywordTok{ORDER} \KeywordTok{BY} \KeywordTok{source}\NormalTok{.name;}
@@ -2632,10 +2783,17 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{           achilles\_results\_1.p90\_value,}
 \NormalTok{           achilles\_results\_1.stdev\_value}
           \KeywordTok{FROM}\NormalTok{ achilles\_results achilles\_results\_1}
-         \KeywordTok{WHERE}\NormalTok{ (achilles\_results\_1.analysis\_id }\OperatorTok{=} \DecValTok{200}\NormalTok{)) achilles\_results}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ ((achilles\_results.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)))}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results\_1.analysis\_id }\OperatorTok{=} \DecValTok{200}\NormalTok{)}
+\NormalTok{         ) achilles\_results}
+    \KeywordTok{JOIN}\NormalTok{ data\_source}
+      \KeywordTok{ON}\NormalTok{ ((achilles\_results.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}\NormalTok{)))}
     \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ data\_source.country\_id)))}
-    \KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON}\NormalTok{ (((achilles\_results.stratum\_1):}\CharTok{:integer} \OperatorTok{=}\NormalTok{ concept.concept\_id)));}
+    \KeywordTok{JOIN}\NormalTok{ concept}
+      \KeywordTok{ON}
+\NormalTok{        (achilles\_results.stratum\_1):}\CharTok{:integer}
+        \OperatorTok{=}
+\NormalTok{        concept.concept\_id}
+\NormalTok{        );}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2651,8 +2809,22 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{   country.country,}
 \NormalTok{   concept.concept\_name,}
 \NormalTok{   ar1.count\_value }\KeywordTok{AS}\NormalTok{ num\_persons,}
-   \FunctionTok{round}\NormalTok{(((}\FloatTok{100.0} \OperatorTok{*}\NormalTok{ (ar1.count\_value):}\CharTok{:numeric}\NormalTok{) }\OperatorTok{/}\NormalTok{ (denom.count\_value):}\CharTok{:numeric}\NormalTok{), }\DecValTok{2}\NormalTok{) }\KeywordTok{AS}\NormalTok{ percent\_persons,}
-   \FunctionTok{round}\NormalTok{(((}\FloatTok{1.0} \OperatorTok{*}\NormalTok{ (ar2.count\_value):}\CharTok{:numeric}\NormalTok{) }\OperatorTok{/}\NormalTok{ (ar1.count\_value):}\CharTok{:numeric}\NormalTok{), }\DecValTok{2}\NormalTok{) }\KeywordTok{AS}\NormalTok{ records\_per\_person}
+   \FunctionTok{round}\NormalTok{(}
+\NormalTok{     (}
+\NormalTok{       (}\FloatTok{100.0} \OperatorTok{*}\NormalTok{ (ar1.count\_value):}\CharTok{:numeric}\NormalTok{)}
+       \OperatorTok{/}
+\NormalTok{       (denom.count\_value):}\CharTok{:numeric}
+\NormalTok{     ),}
+     \DecValTok{2}
+\NormalTok{   ) }\KeywordTok{AS}\NormalTok{ percent\_persons,}
+   \FunctionTok{round}\NormalTok{(}
+\NormalTok{     (}
+\NormalTok{       (}\FloatTok{1.0} \OperatorTok{*}\NormalTok{ (ar2.count\_value):}\CharTok{:numeric}\NormalTok{)}
+       \OperatorTok{/}
+\NormalTok{       (ar1.count\_value):}\CharTok{:numeric}
+\NormalTok{     ),}
+     \DecValTok{2}
+\NormalTok{   ) }\KeywordTok{AS}\NormalTok{ records\_per\_person}
   \KeywordTok{FROM}\NormalTok{ (((((( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.}\KeywordTok{id}\NormalTok{,}
 \NormalTok{           achilles\_results.analysis\_id,}
 \NormalTok{           achilles\_results.stratum\_1,}
@@ -2692,7 +2864,9 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{           achilles\_results.p90\_value,}
 \NormalTok{           achilles\_results.stdev\_value}
           \KeywordTok{FROM}\NormalTok{ achilles\_results}
-         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{201}\NormalTok{)) ar2 }\KeywordTok{ON}\NormalTok{ (((ar1.stratum\_1 }\OperatorTok{=}\NormalTok{ ar2.stratum\_1) }\KeywordTok{AND}\NormalTok{ (ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ ar2.data\_source\_id))))}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{201}\NormalTok{)) ar2}
+           \KeywordTok{ON}\NormalTok{ (((ar1.stratum\_1 }\OperatorTok{=}\NormalTok{ ar2.stratum\_1)}
+             \KeywordTok{AND}\NormalTok{ (ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ ar2.data\_source\_id))))}
     \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.}\KeywordTok{id}\NormalTok{,}
 \NormalTok{           achilles\_results.analysis\_id,}
 \NormalTok{           achilles\_results.stratum\_1,}
@@ -2712,10 +2886,13 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{           achilles\_results.p90\_value,}
 \NormalTok{           achilles\_results.stdev\_value}
           \KeywordTok{FROM}\NormalTok{ achilles\_results}
-         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{)) denom }\KeywordTok{ON}\NormalTok{ ((ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ denom.data\_source\_id)))}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{)) denom}
+           \KeywordTok{ON}\NormalTok{ ((ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ denom.data\_source\_id)))}
     \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ ((data\_source.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ ar1.data\_source\_id)))}
-    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ data\_source.country\_id)))}
-    \KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON}\NormalTok{ (((ar1.stratum\_1):}\CharTok{:integer} \OperatorTok{=}\NormalTok{ concept.concept\_id)))}
+    \KeywordTok{JOIN}\NormalTok{ country}
+      \KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ data\_source.country\_id)))}
+    \KeywordTok{JOIN}\NormalTok{ concept}
+      \KeywordTok{ON}\NormalTok{ (((ar1.stratum\_1):}\CharTok{:integer} \OperatorTok{=}\NormalTok{ concept.concept\_id)))}
  \KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ ar1.data\_source\_id, ar1.count\_value }\KeywordTok{DESC}\NormalTok{;}
 \end{Highlighting}
 \end{Shaded}
@@ -2726,17 +2903,55 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{SELECT}\NormalTok{ concept.concept\_name,}
-\NormalTok{   concept.domain\_id,}
-   \KeywordTok{source}\NormalTok{.name,}
-   \KeywordTok{source}\NormalTok{.acronym,}
-   \KeywordTok{source}\NormalTok{.database\_type,}
-\NormalTok{   country.country}
-  \KeywordTok{FROM}\NormalTok{ (((achilles\_results}
-    \KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON}\NormalTok{ (((achilles\_results.stratum\_1):}\CharTok{:bigint} \OperatorTok{=}\NormalTok{ concept.concept\_id)))}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles\_results.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
-    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
- \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{201}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{401}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{601}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{701}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{901}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1001}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{200}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{400}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{600}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{700}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{800}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1800}\NormalTok{):}\CharTok{:bigint}\NormalTok{]));}
+\KeywordTok{SELECT}
+\NormalTok{  concept.concept\_name,}
+\NormalTok{  concept.domain\_id,}
+  \KeywordTok{source}\NormalTok{.name,}
+  \KeywordTok{source}\NormalTok{.acronym,}
+  \KeywordTok{source}\NormalTok{.database\_type,}
+\NormalTok{  country.country}
+\KeywordTok{FROM}
+\NormalTok{  (}
+\NormalTok{    (}
+\NormalTok{      (}
+\NormalTok{        achilles\_results}
+        \KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON}\NormalTok{ (}
+\NormalTok{          (}
+\NormalTok{            (achilles\_results.stratum\_1):: bigint}
+            \OperatorTok{=}
+\NormalTok{            concept.concept\_id}
+\NormalTok{          )}
+\NormalTok{        )}
+\NormalTok{      )}
+      \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ (}
+\NormalTok{        (}
+\NormalTok{          achilles\_results.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\NormalTok{        )}
+\NormalTok{      )}
+\NormalTok{    )}
+    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ (}
+\NormalTok{      (country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)}
+\NormalTok{    )}
+\NormalTok{  )}
+\KeywordTok{WHERE}
+\NormalTok{  (}
+\NormalTok{    achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}
+      \DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{201}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{401}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{601}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{701}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{801}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{901}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{1001}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{1801}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{200}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{400}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{600}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{700}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{800}\NormalTok{):: bigint,}
+\NormalTok{      (}\DecValTok{1800}\NormalTok{):: bigint]}
+\NormalTok{    )}
+\NormalTok{  );}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2746,31 +2961,96 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{SELECT} \KeywordTok{source}\NormalTok{.name,}
-   \KeywordTok{source}\NormalTok{.acronym,}
-   \KeywordTok{source}\NormalTok{.database\_type,}
-\NormalTok{   country.country,}
-\NormalTok{   ((((}\StringTok{\textquotesingle{}\textless{}a href="https://athena.ohdsi.org/search{-}terms/terms/\textquotesingle{}}\NormalTok{:}\CharTok{:text} \OperatorTok{||}\NormalTok{ ar1.concept\_id) }\OperatorTok{||} \StringTok{\textquotesingle{}"target="\_blank"\textgreater{}\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\OperatorTok{||}\NormalTok{ ar1.concept\_id) }\OperatorTok{||} \StringTok{\textquotesingle{}\textless{}/a\textgreater{}\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\KeywordTok{AS}\NormalTok{ concept\_id,}
-\NormalTok{   concept.concept\_name,}
-\NormalTok{   concept.domain\_id,}
-\NormalTok{   (ar1.rc):}\CharTok{:integer} \KeywordTok{AS}\NormalTok{ rc,}
-\NormalTok{   (ar2.drc):}\CharTok{:integer} \KeywordTok{AS}\NormalTok{ drc}
-  \KeywordTok{FROM}\NormalTok{ ((((( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.data\_source\_id,}
-\NormalTok{           achilles\_results.analysis\_id,}
-\NormalTok{           achilles\_results.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
-\NormalTok{           achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ rc}
-          \KeywordTok{FROM}\NormalTok{ achilles\_results}
-         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{401}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{601}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{701}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2101}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))) ar1}
-    \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ ar.data\_source\_id,}
-\NormalTok{           ar.analysis\_id,}
-\NormalTok{           ar.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
-\NormalTok{           ar.count\_value }\KeywordTok{AS}\NormalTok{ drc}
-          \KeywordTok{FROM}\NormalTok{ achilles\_results ar}
-         \KeywordTok{WHERE}\NormalTok{ (ar.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{430}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{630}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{730}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{830}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1830}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2130}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))) ar2 }\KeywordTok{ON}\NormalTok{ (((ar1.concept\_id }\OperatorTok{=}\NormalTok{ ar2.concept\_id) }\KeywordTok{AND}\NormalTok{ (ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ ar2.data\_source\_id))))}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((ar1.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
-    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((}\KeywordTok{source}\NormalTok{.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)))}
-    \KeywordTok{JOIN}\NormalTok{ concept concept }\KeywordTok{ON}\NormalTok{ ((ar1.concept\_id }\OperatorTok{=}\NormalTok{ (concept.concept\_id):}\CharTok{:text}\NormalTok{)))}
- \KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ ((ar2.drc):}\CharTok{:integer}\NormalTok{) }\KeywordTok{DESC}\NormalTok{;}
+\KeywordTok{SELECT}
+  \KeywordTok{source}\NormalTok{.name,}
+  \KeywordTok{source}\NormalTok{.acronym,}
+  \KeywordTok{source}\NormalTok{.database\_type,}
+\NormalTok{  country.country,}
+\NormalTok{  (}
+\NormalTok{    (}
+\NormalTok{      (}
+\NormalTok{        (}
+\StringTok{\textquotesingle{}\textless{}a href="https://athena.ohdsi.org/search{-}terms/terms/\textquotesingle{}}\NormalTok{ :: text}
+          \OperatorTok{||}\NormalTok{ ar1.concept\_id}
+\NormalTok{        ) }\OperatorTok{||} \StringTok{\textquotesingle{}"target="\_blank"\textgreater{}\textquotesingle{}}\NormalTok{ :: text}
+\NormalTok{      ) }\OperatorTok{||}\NormalTok{ ar1.concept\_id}
+\NormalTok{    ) }\OperatorTok{||} \StringTok{\textquotesingle{}\textless{}/a\textgreater{}\textquotesingle{}}\NormalTok{ :: text}
+\NormalTok{  ) }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{  concept.concept\_name,}
+\NormalTok{  concept.domain\_id,}
+\NormalTok{  (ar1.rc):: }\DataTypeTok{integer} \KeywordTok{AS}\NormalTok{ rc,}
+\NormalTok{  (ar2.drc):: }\DataTypeTok{integer} \KeywordTok{AS}\NormalTok{ drc}
+\KeywordTok{FROM}
+\NormalTok{  (}
+\NormalTok{    (}
+\NormalTok{      (}
+\NormalTok{        (}
+\NormalTok{          (}
+            \KeywordTok{SELECT}
+\NormalTok{              achilles\_results.data\_source\_id,}
+\NormalTok{              achilles\_results.analysis\_id,}
+\NormalTok{              achilles\_results.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{              achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ rc}
+            \KeywordTok{FROM}
+\NormalTok{              achilles\_results}
+            \KeywordTok{WHERE}
+\NormalTok{              (}
+\NormalTok{                achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}
+                  \DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{401}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{601}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{701}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{801}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{1801}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{2101}\NormalTok{):: bigint]}
+\NormalTok{                )}
+\NormalTok{              )}
+\NormalTok{          ) ar1}
+          \KeywordTok{JOIN}\NormalTok{ (}
+            \KeywordTok{SELECT}
+\NormalTok{              ar.data\_source\_id,}
+\NormalTok{              ar.analysis\_id,}
+\NormalTok{              ar.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{              ar.count\_value }\KeywordTok{AS}\NormalTok{ drc}
+            \KeywordTok{FROM}
+\NormalTok{              achilles\_results ar}
+            \KeywordTok{WHERE}
+\NormalTok{              (}
+\NormalTok{                ar.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}
+                  \DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{430}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{630}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{730}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{830}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{1830}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{2130}\NormalTok{):: bigint]}
+\NormalTok{                )}
+\NormalTok{              )}
+\NormalTok{          ) ar2 }\KeywordTok{ON}\NormalTok{ (}
+\NormalTok{            (}
+\NormalTok{              (ar1.concept\_id }\OperatorTok{=}\NormalTok{ ar2.concept\_id)}
+              \KeywordTok{AND}\NormalTok{ (}
+\NormalTok{                ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ ar2.data\_source\_id}
+\NormalTok{              )}
+\NormalTok{            )}
+\NormalTok{          )}
+\NormalTok{        )}
+        \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ (}
+\NormalTok{          (ar1.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)}
+\NormalTok{        )}
+\NormalTok{      )}
+      \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ (}
+\NormalTok{        (}\KeywordTok{source}\NormalTok{.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}\NormalTok{)}
+\NormalTok{      )}
+\NormalTok{    )}
+    \KeywordTok{JOIN}\NormalTok{ concept concept }\KeywordTok{ON}\NormalTok{ (}
+\NormalTok{      (}
+\NormalTok{        ar1.concept\_id }\OperatorTok{=}\NormalTok{ (concept.concept\_id):: text}
+\NormalTok{      )}
+\NormalTok{    )}
+\NormalTok{  )}
+\KeywordTok{ORDER} \KeywordTok{BY}
+\NormalTok{  (}
+\NormalTok{    (ar2.drc):: }\DataTypeTok{integer}
+\NormalTok{  ) }\KeywordTok{DESC}\NormalTok{;}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2780,30 +3060,102 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{SELECT} \KeywordTok{source}\NormalTok{.name }\KeywordTok{AS}\NormalTok{ source\_name,}
-   \KeywordTok{source}\NormalTok{.database\_type,}
-\NormalTok{   country.country,}
-\NormalTok{   ((((}\StringTok{\textquotesingle{}\textless{}a href="https://athena.ohdsi.org/search{-}terms/terms/\textquotesingle{}}\NormalTok{:}\CharTok{:text} \OperatorTok{||}\NormalTok{ concept.concept\_id) }\OperatorTok{||} \StringTok{\textquotesingle{}" target="\_blank"\textgreater{}\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\OperatorTok{||}\NormalTok{ concept.concept\_id) }\OperatorTok{||} \StringTok{\textquotesingle{}\textless{}/a\textgreater{}\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\KeywordTok{AS}\NormalTok{ concept\_id,}
-\NormalTok{   concept.concept\_name,}
-\NormalTok{   concept.domain\_id,}
-   \FunctionTok{sum}\NormalTok{((ar1.rc):}\CharTok{:integer}\NormalTok{) }\KeywordTok{AS}\NormalTok{ rc,}
-   \FunctionTok{sum}\NormalTok{((ar2.drc):}\CharTok{:integer}\NormalTok{) }\KeywordTok{AS}\NormalTok{ drc}
-  \KeywordTok{FROM}\NormalTok{ ((((( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.data\_source\_id,}
-\NormalTok{           achilles\_results.analysis\_id,}
-\NormalTok{           achilles\_results.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
-\NormalTok{           achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ rc}
-          \KeywordTok{FROM}\NormalTok{ achilles\_results}
-         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{401}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{601}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{701}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2101}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))) ar1}
-    \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ ar.data\_source\_id,}
-\NormalTok{           ar.analysis\_id,}
-\NormalTok{           ar.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
-\NormalTok{           ar.count\_value }\KeywordTok{AS}\NormalTok{ drc}
-          \KeywordTok{FROM}\NormalTok{ achilles\_results ar}
-         \KeywordTok{WHERE}\NormalTok{ (ar.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{430}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{630}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{730}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{830}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1830}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2130}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))) ar2 }\KeywordTok{ON}\NormalTok{ (((ar1.concept\_id }\OperatorTok{=}\NormalTok{ ar2.concept\_id) }\KeywordTok{AND}\NormalTok{ (ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ ar2.data\_source\_id))))}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((ar1.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
-    \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ ((country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)))}
-    \KeywordTok{JOIN}\NormalTok{ concept concept }\KeywordTok{ON}\NormalTok{ ((ar1.concept\_id }\OperatorTok{=}\NormalTok{ (concept.concept\_id):}\CharTok{:text}\NormalTok{)))}
- \KeywordTok{GROUP} \KeywordTok{BY} \KeywordTok{source}\NormalTok{.name, }\KeywordTok{source}\NormalTok{.database\_type, country.country, concept.domain\_id, concept.concept\_id, concept.concept\_name;}
+\KeywordTok{SELECT}
+  \KeywordTok{source}\NormalTok{.name }\KeywordTok{AS}\NormalTok{ source\_name,}
+  \KeywordTok{source}\NormalTok{.database\_type,}
+\NormalTok{  country.country,}
+\NormalTok{  (}
+\NormalTok{    (}
+\NormalTok{      (}
+\NormalTok{        (}
+\StringTok{\textquotesingle{}\textless{}a href="https://athena.ohdsi.org/search{-}terms/terms/\textquotesingle{}}\NormalTok{ :: text}
+          \OperatorTok{||}\NormalTok{ concept.concept\_id}
+\NormalTok{        ) }\OperatorTok{||} \StringTok{\textquotesingle{}" target="\_blank"\textgreater{}\textquotesingle{}}\NormalTok{ :: text}
+\NormalTok{      ) }\OperatorTok{||}\NormalTok{ concept.concept\_id}
+\NormalTok{    ) }\OperatorTok{||} \StringTok{\textquotesingle{}\textless{}/a\textgreater{}\textquotesingle{}}\NormalTok{ :: text}
+\NormalTok{  ) }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{  concept.concept\_name,}
+\NormalTok{  concept.domain\_id,}
+  \FunctionTok{sum}\NormalTok{(}
+\NormalTok{    (ar1.rc):: }\DataTypeTok{integer}
+\NormalTok{  ) }\KeywordTok{AS}\NormalTok{ rc,}
+  \FunctionTok{sum}\NormalTok{(}
+\NormalTok{    (ar2.drc):: }\DataTypeTok{integer}
+\NormalTok{  ) }\KeywordTok{AS}\NormalTok{ drc}
+\KeywordTok{FROM}
+\NormalTok{  (}
+\NormalTok{    (}
+\NormalTok{      (}
+\NormalTok{        (}
+\NormalTok{          (}
+            \KeywordTok{SELECT}
+\NormalTok{              achilles\_results.data\_source\_id,}
+\NormalTok{              achilles\_results.analysis\_id,}
+\NormalTok{              achilles\_results.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{              achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ rc}
+            \KeywordTok{FROM}
+\NormalTok{              achilles\_results}
+            \KeywordTok{WHERE}
+\NormalTok{              (}
+\NormalTok{                achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}
+                  \DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{401}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{601}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{701}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{801}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{1801}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{2101}\NormalTok{):: bigint]}
+\NormalTok{                )}
+\NormalTok{              )}
+\NormalTok{          ) ar1}
+          \KeywordTok{JOIN}\NormalTok{ (}
+            \KeywordTok{SELECT}
+\NormalTok{              ar.data\_source\_id,}
+\NormalTok{              ar.analysis\_id,}
+\NormalTok{              ar.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{              ar.count\_value }\KeywordTok{AS}\NormalTok{ drc}
+            \KeywordTok{FROM}
+\NormalTok{              achilles\_results ar}
+            \KeywordTok{WHERE}
+\NormalTok{              (}
+\NormalTok{                ar.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}
+                  \DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{430}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{630}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{730}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{830}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{1830}\NormalTok{):: bigint,}
+\NormalTok{                  (}\DecValTok{2130}\NormalTok{):: bigint]}
+\NormalTok{                )}
+\NormalTok{              )}
+\NormalTok{          ) ar2 }\KeywordTok{ON}\NormalTok{ (}
+\NormalTok{            (}
+\NormalTok{              (ar1.concept\_id }\OperatorTok{=}\NormalTok{ ar2.concept\_id)}
+              \KeywordTok{AND}\NormalTok{ (}
+\NormalTok{                ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ ar2.data\_source\_id}
+\NormalTok{              )}
+\NormalTok{            )}
+\NormalTok{          )}
+\NormalTok{        )}
+        \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ (}
+\NormalTok{          (ar1.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)}
+\NormalTok{        )}
+\NormalTok{      )}
+      \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ (}
+\NormalTok{        (country.}\KeywordTok{id} \OperatorTok{=} \KeywordTok{source}\NormalTok{.country\_id)}
+\NormalTok{      )}
+\NormalTok{    )}
+    \KeywordTok{JOIN}\NormalTok{ concept concept }\KeywordTok{ON}\NormalTok{ (}
+\NormalTok{      (}
+\NormalTok{        ar1.concept\_id }\OperatorTok{=}\NormalTok{ (concept.concept\_id):: text}
+\NormalTok{      )}
+\NormalTok{    )}
+\NormalTok{  )}
+\KeywordTok{GROUP} \KeywordTok{BY}
+  \KeywordTok{source}\NormalTok{.name,}
+  \KeywordTok{source}\NormalTok{.database\_type,}
+\NormalTok{  country.country,}
+\NormalTok{  concept.domain\_id,}
+\NormalTok{  concept.concept\_id,}
+\NormalTok{  concept.concept\_name;}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2896,7 +3248,8 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
     \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((}\KeywordTok{source}\NormalTok{.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ t1.}\KeywordTok{id}\NormalTok{)))}
  \KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ t1.table\_name, (}
        \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (t1.stratum\_1 \textasciitilde{} }\StringTok{\textquotesingle{}\^{}\textbackslash{}d+\textbackslash{}.?\textbackslash{}d+$\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\ControlFlowTok{THEN}\NormalTok{ t1.stratum\_1}
+           \ControlFlowTok{WHEN}\NormalTok{ (t1.stratum\_1 \textasciitilde{} }\StringTok{\textquotesingle{}\^{}\textbackslash{}d+\textbackslash{}.?\textbackslash{}d+$\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{)}
+             \ControlFlowTok{THEN}\NormalTok{ t1.stratum\_1}
            \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:text}
        \ControlFlowTok{END}\NormalTok{):}\CharTok{:integer}\NormalTok{;}
 \end{Highlighting}
@@ -2911,7 +3264,14 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \KeywordTok{SELECT} \KeywordTok{source}\NormalTok{.acronym,}
 \NormalTok{   t1.table\_name }\KeywordTok{AS}\NormalTok{ series\_name,}
    \FunctionTok{to\_date}\NormalTok{(t1.stratum\_1, }\StringTok{\textquotesingle{}YYYYMM\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\KeywordTok{AS}\NormalTok{ x\_calendar\_month,}
-   \FunctionTok{round}\NormalTok{(((}\FloatTok{1.0} \OperatorTok{*}\NormalTok{ (t1.count\_value):}\CharTok{:numeric}\NormalTok{) }\OperatorTok{/}\NormalTok{ (denom.count\_value):}\CharTok{:numeric}\NormalTok{), }\DecValTok{5}\NormalTok{) }\KeywordTok{AS}\NormalTok{ y\_record\_count}
+   \FunctionTok{round}\NormalTok{(}
+\NormalTok{     (}
+\NormalTok{       (}\FloatTok{1.0} \OperatorTok{*}\NormalTok{ (t1.count\_value):}\CharTok{:numeric}\NormalTok{)}
+       \OperatorTok{/}
+\NormalTok{       (denom.count\_value):}\CharTok{:numeric}
+\NormalTok{     ),}
+     \DecValTok{5}
+\NormalTok{   ) }\KeywordTok{AS}\NormalTok{ y\_record\_count}
   \KeywordTok{FROM}\NormalTok{ ((( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.data\_source\_id }\KeywordTok{AS} \KeywordTok{id}\NormalTok{,}
            \StringTok{\textquotesingle{}Visit occurrence\textquotesingle{}}\NormalTok{:}\CharTok{:text} \KeywordTok{AS}\NormalTok{ table\_name,}
 \NormalTok{           achilles\_results.stratum\_1,}
@@ -3007,11 +3367,14 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{           achilles\_results.p90\_value,}
 \NormalTok{           achilles\_results.stdev\_value}
           \KeywordTok{FROM}\NormalTok{ achilles\_results}
-         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{117}\NormalTok{)) denom }\KeywordTok{ON}\NormalTok{ (((t1.stratum\_1 }\OperatorTok{=}\NormalTok{ denom.stratum\_1) }\KeywordTok{AND}\NormalTok{ (t1.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ denom.data\_source\_id))))}
+         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \DecValTok{117}\NormalTok{)) denom}
+           \KeywordTok{ON}\NormalTok{ (((t1.stratum\_1 }\OperatorTok{=}\NormalTok{ denom.stratum\_1)}
+             \KeywordTok{AND}\NormalTok{ (t1.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ denom.data\_source\_id))))}
     \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((}\KeywordTok{source}\NormalTok{.}\KeywordTok{id} \OperatorTok{=}\NormalTok{ t1.}\KeywordTok{id}\NormalTok{)))}
  \KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ t1.table\_name, (}
        \ControlFlowTok{CASE}
-           \ControlFlowTok{WHEN}\NormalTok{ (t1.stratum\_1 \textasciitilde{} }\StringTok{\textquotesingle{}\^{}\textbackslash{}d+\textbackslash{}.?\textbackslash{}d+$\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\ControlFlowTok{THEN}\NormalTok{ t1.stratum\_1}
+           \ControlFlowTok{WHEN}\NormalTok{ (t1.stratum\_1 \textasciitilde{} }\StringTok{\textquotesingle{}\^{}\textbackslash{}d+\textbackslash{}.?\textbackslash{}d+$\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{)}
+             \ControlFlowTok{THEN}\NormalTok{ t1.stratum\_1}
            \ControlFlowTok{ELSE} \KeywordTok{NULL}\NormalTok{:}\CharTok{:text}
        \ControlFlowTok{END}\NormalTok{):}\CharTok{:integer}\NormalTok{;}
 \end{Highlighting}
@@ -3034,9 +3397,12 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \NormalTok{   achilles.p75\_value }\KeywordTok{AS}\NormalTok{ p75,}
 \NormalTok{   achilles.p90\_value }\KeywordTok{AS}\NormalTok{ p90}
   \KeywordTok{FROM}\NormalTok{ (((achilles\_results achilles}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
-    \KeywordTok{JOIN}\NormalTok{ concept c1 }\KeywordTok{ON}\NormalTok{ ((achilles.stratum\_1 }\OperatorTok{=}\NormalTok{ (c1.concept\_id):}\CharTok{:text}\NormalTok{)))}
-    \KeywordTok{JOIN}\NormalTok{ concept c2 }\KeywordTok{ON}\NormalTok{ ((achilles.stratum\_2 }\OperatorTok{=}\NormalTok{ (c2.concept\_id):}\CharTok{:text}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ ((achilles.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ concept c1}
+      \KeywordTok{ON}\NormalTok{ ((achilles.stratum\_1 }\OperatorTok{=}\NormalTok{ (c1.concept\_id):}\CharTok{:text}\NormalTok{)))}
+    \KeywordTok{JOIN}\NormalTok{ concept c2}
+      \KeywordTok{ON}\NormalTok{ ((achilles.stratum\_2 }\OperatorTok{=}\NormalTok{ (c2.concept\_id):}\CharTok{:text}\NormalTok{)))}
  \KeywordTok{WHERE}\NormalTok{ (achilles.analysis\_id }\OperatorTok{=} \DecValTok{206}\NormalTok{)}
  \KeywordTok{ORDER} \KeywordTok{BY} \KeywordTok{source}\NormalTok{.name, c1.concept\_name, c2.concept\_name;}
 \end{Highlighting}
@@ -3049,27 +3415,84 @@ Dataset: Materialized View \href{materialized-views-1.html\#meta_data_table}{met
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{SELECT}
-   \KeywordTok{source}\NormalTok{.acronym,}
-\NormalTok{   ((((}\StringTok{\textquotesingle{}\textless{}a href="https://athena.ohdsi.org/search{-}terms/terms/\textquotesingle{}}\NormalTok{:}\CharTok{:text} \OperatorTok{||}\NormalTok{ ar1.concept\_id) }\OperatorTok{||} \StringTok{\textquotesingle{}"target="\_blank"\textgreater{}\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\OperatorTok{||}\NormalTok{ ar1.concept\_id) }\OperatorTok{||} \StringTok{\textquotesingle{}\textless{}/a\textgreater{}\textquotesingle{}}\NormalTok{:}\CharTok{:text}\NormalTok{) }\KeywordTok{AS}\NormalTok{ concept\_id,}
-\NormalTok{   concept.concept\_name,}
-\NormalTok{   concept.domain\_id,}
-\NormalTok{   (ar1.rc):}\CharTok{:integer} \KeywordTok{AS}\NormalTok{ rc,}
-\NormalTok{   (ar2.drc):}\CharTok{:integer} \KeywordTok{AS}\NormalTok{ drc}
-  \KeywordTok{FROM}\NormalTok{ (((( }\KeywordTok{SELECT}\NormalTok{ achilles\_results.data\_source\_id,}
-\NormalTok{           achilles\_results.analysis\_id,}
-\NormalTok{           achilles\_results.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
-\NormalTok{           achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ rc}
-          \KeywordTok{FROM}\NormalTok{ achilles\_results}
-         \KeywordTok{WHERE}\NormalTok{ (achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{401}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{601}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{701}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1801}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2101}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))) ar1}
-    \KeywordTok{JOIN}\NormalTok{ ( }\KeywordTok{SELECT}\NormalTok{ ar.data\_source\_id,}
-\NormalTok{           ar.analysis\_id,}
-\NormalTok{           ar.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
-\NormalTok{           ar.count\_value }\KeywordTok{AS}\NormalTok{ drc}
-          \KeywordTok{FROM}\NormalTok{ achilles\_results ar}
-         \KeywordTok{WHERE}\NormalTok{ (ar.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}\DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{430}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{630}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{730}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{830}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{1830}\NormalTok{):}\CharTok{:bigint}\NormalTok{, (}\DecValTok{2130}\NormalTok{):}\CharTok{:bigint}\NormalTok{]))) ar2 }\KeywordTok{ON}\NormalTok{ (((ar1.concept\_id }\OperatorTok{=}\NormalTok{ ar2.concept\_id) }\KeywordTok{AND}\NormalTok{ (ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ ar2.data\_source\_id))))}
-    \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ ((ar1.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)))}
-    \KeywordTok{JOIN}\NormalTok{ concept concept }\KeywordTok{ON}\NormalTok{ ((ar1.concept\_id }\OperatorTok{=}\NormalTok{ (concept.concept\_id):}\CharTok{:text}\NormalTok{)))}
- \KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ ((ar2.drc):}\CharTok{:integer}\NormalTok{) }\KeywordTok{DESC}\NormalTok{;}
+  \KeywordTok{source}\NormalTok{.acronym,}
+\NormalTok{  (}
+\NormalTok{    (}
+\NormalTok{      (}
+\NormalTok{        (}
+\StringTok{\textquotesingle{}\textless{}a href="https://athena.ohdsi.org/search{-}terms/terms/\textquotesingle{}}\NormalTok{ :: text}
+          \OperatorTok{||}\NormalTok{ ar1.concept\_id}
+\NormalTok{        ) }\OperatorTok{||} \StringTok{\textquotesingle{}"target="\_blank"\textgreater{}\textquotesingle{}}\NormalTok{ :: text}
+\NormalTok{      ) }\OperatorTok{||}\NormalTok{ ar1.concept\_id}
+\NormalTok{    ) }\OperatorTok{||} \StringTok{\textquotesingle{}\textless{}/a\textgreater{}\textquotesingle{}}\NormalTok{ :: text}
+\NormalTok{  ) }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{  concept.concept\_name,}
+\NormalTok{  concept.domain\_id,}
+\NormalTok{  (ar1.rc):: }\DataTypeTok{integer} \KeywordTok{AS}\NormalTok{ rc,}
+\NormalTok{  (ar2.drc):: }\DataTypeTok{integer} \KeywordTok{AS}\NormalTok{ drc}
+\KeywordTok{FROM}
+\NormalTok{  (}
+\NormalTok{    (}
+\NormalTok{      (}
+\NormalTok{        (}
+          \KeywordTok{SELECT}
+\NormalTok{            achilles\_results.data\_source\_id,}
+\NormalTok{            achilles\_results.analysis\_id,}
+\NormalTok{            achilles\_results.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{            achilles\_results.count\_value }\KeywordTok{AS}\NormalTok{ rc}
+          \KeywordTok{FROM}
+\NormalTok{            achilles\_results}
+          \KeywordTok{WHERE}
+\NormalTok{            (}
+\NormalTok{              achilles\_results.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}
+                \DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{401}\NormalTok{):: bigint,}
+\NormalTok{                (}\DecValTok{601}\NormalTok{):: bigint,}
+\NormalTok{                (}\DecValTok{701}\NormalTok{):: bigint,}
+\NormalTok{                (}\DecValTok{801}\NormalTok{):: bigint,}
+\NormalTok{                (}\DecValTok{1801}\NormalTok{):: bigint,}
+\NormalTok{                (}\DecValTok{2101}\NormalTok{):: bigint]}
+\NormalTok{              )}
+\NormalTok{            )}
+\NormalTok{        ) ar1}
+        \KeywordTok{JOIN}\NormalTok{ (}
+          \KeywordTok{SELECT}
+\NormalTok{            ar.data\_source\_id,}
+\NormalTok{            ar.analysis\_id,}
+\NormalTok{            ar.stratum\_1 }\KeywordTok{AS}\NormalTok{ concept\_id,}
+\NormalTok{            ar.count\_value }\KeywordTok{AS}\NormalTok{ drc}
+          \KeywordTok{FROM}
+\NormalTok{            achilles\_results ar}
+          \KeywordTok{WHERE}
+\NormalTok{            (}
+\NormalTok{              ar.analysis\_id }\OperatorTok{=} \KeywordTok{ANY}\NormalTok{ (}
+                \DataTypeTok{ARRAY}\NormalTok{[(}\DecValTok{430}\NormalTok{):: bigint,}
+\NormalTok{                (}\DecValTok{630}\NormalTok{):: bigint,}
+\NormalTok{                (}\DecValTok{730}\NormalTok{):: bigint,}
+\NormalTok{                (}\DecValTok{830}\NormalTok{):: bigint,}
+\NormalTok{                (}\DecValTok{1830}\NormalTok{):: bigint,}
+\NormalTok{                (}\DecValTok{2130}\NormalTok{):: bigint]}
+\NormalTok{              )}
+\NormalTok{            )}
+\NormalTok{        ) ar2 }\KeywordTok{ON}\NormalTok{ (}
+\NormalTok{          (}
+\NormalTok{            (ar1.concept\_id }\OperatorTok{=}\NormalTok{ ar2.concept\_id)}
+            \KeywordTok{AND}\NormalTok{ (}
+\NormalTok{              ar1.data\_source\_id }\OperatorTok{=}\NormalTok{ ar2.data\_source\_id}
+\NormalTok{            )}
+\NormalTok{          )}
+\NormalTok{        )}
+\NormalTok{      )}
+      \KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{source} \KeywordTok{ON}\NormalTok{ (}
+\NormalTok{        (ar1.data\_source\_id }\OperatorTok{=} \KeywordTok{source}\NormalTok{.}\KeywordTok{id}\NormalTok{)}
+\NormalTok{      )}
+\NormalTok{    )}
+    \KeywordTok{JOIN}\NormalTok{ concept concept }\KeywordTok{ON}\NormalTok{ (}
+\NormalTok{      (}
+\NormalTok{        ar1.concept\_id }\OperatorTok{=}\NormalTok{ (concept.concept\_id):: text}
+\NormalTok{      )}
+\NormalTok{    )}
+\NormalTok{  )}
+\KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ ((ar2.drc):: }\DataTypeTok{integer}\NormalTok{) }\KeywordTok{DESC}\NormalTok{;}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3116,7 +3539,8 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
        \KeywordTok{source}\NormalTok{.database\_type,}
        \KeywordTok{source}\NormalTok{.acronym}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.country }\KeywordTok{AS}\NormalTok{ country }\KeywordTok{ON} \KeywordTok{source}\NormalTok{.country\_id}\OperatorTok{=}\NormalTok{country.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.country }\KeywordTok{AS}\NormalTok{ country}
+  \KeywordTok{ON} \KeywordTok{source}\NormalTok{.country\_id}\OperatorTok{=}\NormalTok{country.}\KeywordTok{id}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3273,8 +3697,10 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \NormalTok{        concepts.concept\_name }\KeywordTok{AS}\NormalTok{ gender,}
 \NormalTok{        achilles.count\_value }\KeywordTok{as} \FunctionTok{count}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.country }\KeywordTok{AS}\NormalTok{ country }\KeywordTok{ON} \KeywordTok{source}\NormalTok{.country\_id}\OperatorTok{=}\NormalTok{country.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.country }\KeywordTok{AS}\NormalTok{ country}
+  \KeywordTok{ON} \KeywordTok{source}\NormalTok{.country\_id}\OperatorTok{=}\NormalTok{country.}\KeywordTok{id}
 \KeywordTok{JOIN}\NormalTok{ (}
   \KeywordTok{SELECT} \StringTok{\textquotesingle{}8507\textquotesingle{}} \KeywordTok{AS}\NormalTok{ concept\_id, }\StringTok{\textquotesingle{}Male\textquotesingle{}} \KeywordTok{AS}\NormalTok{ concept\_name}
   \KeywordTok{UNION}
@@ -3360,18 +3786,20 @@ Theses filter were designed to be used in the dashboard aiming the filtering of 
 \includegraphics[width=1\linewidth]{images/03-general/04-patients_per_country} \caption{Settings for creating the Patients per Country chart}\label{fig:patientsPerCountry}
 \end{figure}
 
-\hypertarget{sql-query-patientspercountryquery}{%
-\subsubsection*{SQL query \{\#patientsPerCountryQuery\}}\label{sql-query-patientspercountryquery}}
-\addcontentsline{toc}{subsubsection}{SQL query \{\#patientsPerCountryQuery\}}
+\hypertarget{patientsPerCountryQuery}{%
+\subsubsection*{SQL query}\label{patientsPerCountryQuery}}
+\addcontentsline{toc}{subsubsection}{SQL query}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{SELECT}\NormalTok{ country.country,}
        \KeywordTok{source}\NormalTok{.database\_type,}
 \NormalTok{       count\_value}
-\KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles }
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.country }\KeywordTok{AS}\NormalTok{ country }\KeywordTok{ON} \KeywordTok{source}\NormalTok{.country\_id}\OperatorTok{=}\NormalTok{country.}\KeywordTok{id}
+\KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.country }\KeywordTok{AS}\NormalTok{ country}
+  \KeywordTok{ON} \KeywordTok{source}\NormalTok{.country\_id}\OperatorTok{=}\NormalTok{country.}\KeywordTok{id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{1}
 \end{Highlighting}
 \end{Shaded}
@@ -3527,7 +3955,8 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \NormalTok{        longitude,}
 \NormalTok{        country}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.country }\KeywordTok{AS}\NormalTok{ country }\KeywordTok{ON} \KeywordTok{source}\NormalTok{.country\_id}\OperatorTok{=}\NormalTok{country.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.country }\KeywordTok{AS}\NormalTok{ country}
+  \KeywordTok{ON} \KeywordTok{source}\NormalTok{.country\_id}\OperatorTok{=}\NormalTok{country.}\KeywordTok{id}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3603,7 +4032,8 @@ Same as \protect\hyperlink{patientsPerCountryQuery}{Patients per Country} query
 \NormalTok{  stratum\_4 }\KeywordTok{as} \OtherTok{"cdm\_version"}\NormalTok{,}
 \NormalTok{  stratum\_5 }\KeywordTok{as} \OtherTok{"vocabulary\_version"}
 \KeywordTok{FROM}\NormalTok{ achilles\_results}
-\KeywordTok{JOIN}\NormalTok{ data\_source }\KeywordTok{ON}\NormalTok{ achilles\_results.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}
+\KeywordTok{JOIN}\NormalTok{ data\_source}
+  \KeywordTok{ON}\NormalTok{ achilles\_results.data\_source\_id }\OperatorTok{=}\NormalTok{ data\_source.}\KeywordTok{id}
 \KeywordTok{JOIN}\NormalTok{ country }\KeywordTok{ON}\NormalTok{ data\_source.country\_id }\OperatorTok{=}\NormalTok{ country.}\KeywordTok{id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id}\OperatorTok{=}\DecValTok{5000}
 \end{Highlighting}
@@ -3765,19 +4195,39 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \begin{Highlighting}[]
 \KeywordTok{SELECT} \KeywordTok{source}\NormalTok{.name,}
        \KeywordTok{source}\NormalTok{.acronym,}
-       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{10} \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"0{-}10"}\NormalTok{,}
-       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{10} \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{20} \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"10{-}20"}\NormalTok{,}
-       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{20} \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{30} \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"20{-}30"}\NormalTok{,}
-       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{30} \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{40} \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"30{-}40"}\NormalTok{,}
-       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{40} \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{50} \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"40{-}50"}\NormalTok{,}
-       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{50} \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{60} \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"50{-}60"}\NormalTok{,}
-       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{60} \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{70} \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"60{-}70"}\NormalTok{,}
-       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{70} \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{80} \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"70{-}80"}\NormalTok{,}
-       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{80} \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{90} \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"80{-}90"}\NormalTok{,}
-       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{90} \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"90+"}
+       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{10}
+         \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"0{-}10"}\NormalTok{,}
+       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{10}
+         \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{20}
+         \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"10{-}20"}\NormalTok{,}
+       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{20}
+         \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{30}
+         \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"20{-}30"}\NormalTok{,}
+       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{30}
+         \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{40}
+         \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"30{-}40"}\NormalTok{,}
+       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{40}
+         \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{50}
+         \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"40{-}50"}\NormalTok{,}
+       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{50}
+         \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{60}
+         \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"50{-}60"}\NormalTok{,}
+       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{60}
+         \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{70}
+         \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"60{-}70"}\NormalTok{,}
+       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{70}
+         \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{80}
+         \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"70{-}80"}\NormalTok{,}
+       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{80}
+         \KeywordTok{AND} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textless{}} \DecValTok{90}
+         \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"80{-}90"}\NormalTok{,}
+       \FunctionTok{SUM}\NormalTok{(}\ControlFlowTok{CASE} \ControlFlowTok{WHEN} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS} \DataTypeTok{INTEGER}\NormalTok{) }\OperatorTok{\textgreater{}=} \DecValTok{90}
+         \ControlFlowTok{THEN}\NormalTok{ count\_value }\ControlFlowTok{END}\NormalTok{) }\KeywordTok{AS} \OtherTok{"90+"}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.concept }\KeywordTok{ON} \FunctionTok{CAST}\NormalTok{(stratum\_1 }\KeywordTok{AS}\NormalTok{ BIGINT) }\OperatorTok{=}\NormalTok{ concept\_id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.concept}
+  \KeywordTok{ON} \FunctionTok{CAST}\NormalTok{(stratum\_1 }\KeywordTok{AS}\NormalTok{ BIGINT) }\OperatorTok{=}\NormalTok{ concept\_id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{102}
 \KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ name, acronym}
 \end{Highlighting}
@@ -3856,7 +4306,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \NormalTok{    count\_value }\KeywordTok{AS} \FunctionTok{count}\NormalTok{, }
     \KeywordTok{source}\NormalTok{.acronym}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{101}
 \end{Highlighting}
 \end{Shaded}
@@ -3950,7 +4401,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \NormalTok{       stratum\_1 }\KeywordTok{AS} \OtherTok{"Birth\_year"}\NormalTok{,}
 \NormalTok{       count\_value }\KeywordTok{AS} \FunctionTok{count}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{3}
 \end{Highlighting}
 \end{Shaded}
@@ -4046,7 +4498,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \NormalTok{       count\_value }\KeywordTok{AS}\NormalTok{ Number\_of\_persons,}
        \KeywordTok{source}\NormalTok{.acronym}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
 \KeywordTok{JOIN}\NormalTok{ (}
   \KeywordTok{SELECT} \StringTok{\textquotesingle{}8507\textquotesingle{}} \KeywordTok{AS}\NormalTok{ concept\_id, }\StringTok{\textquotesingle{}Male\textquotesingle{}} \KeywordTok{AS}\NormalTok{ concept\_name}
   \KeywordTok{UNION}
@@ -4210,9 +4663,9 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
   \end{itemize}
 \end{itemize}
 
-\hypertarget{number-of-patients-in-observation-period-numinobservationperiod}{%
-\subsection*{Number of Patients in Observation Period \{\#numInObservationPeriod\}}\label{number-of-patients-in-observation-period-numinobservationperiod}}
-\addcontentsline{toc}{subsection}{Number of Patients in Observation Period \{\#numInObservationPeriod\}}
+\hypertarget{numInObservationPeriod}{%
+\subsection*{Number of Patients in Observation Period}\label{numInObservationPeriod}}
+\addcontentsline{toc}{subsection}{Number of Patients in Observation Period}
 
 The Number of Patients in Observation Period plot shows the number of patients that contribute at least one day in a specific month.
 
@@ -4231,7 +4684,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
        \FunctionTok{to\_date}\NormalTok{(stratum\_1, }\StringTok{\textquotesingle{}YYYYMM\textquotesingle{}}\NormalTok{) }\KeywordTok{as} \DataTypeTok{Date}\NormalTok{,}
 \NormalTok{       count\_value}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{110}
 \end{Highlighting}
 \end{Shaded}
@@ -4325,7 +4779,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
        \FunctionTok{to\_date}\NormalTok{(stratum\_1, }\StringTok{\textquotesingle{}YYYYMM\textquotesingle{}}\NormalTok{) }\KeywordTok{AS}\NormalTok{ year\_month,}
 \NormalTok{       count\_value}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{111}
 \end{Highlighting}
 \end{Shaded}
@@ -4419,7 +4874,8 @@ The Number of Patients in Observation Period plot shows the number of patients t
        \FunctionTok{to\_date}\NormalTok{(stratum\_1, }\StringTok{\textquotesingle{}YYYYMM\textquotesingle{}}\NormalTok{) }\KeywordTok{AS}\NormalTok{ year\_month,}
 \NormalTok{       count\_value}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{112}
 \end{Highlighting}
 \end{Shaded}
@@ -4580,9 +5036,9 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
   \end{itemize}
 \end{itemize}
 
-\hypertarget{visit-type-table-visittypetable}{%
-\subsection*{Visit Type Table \{\#visitTypeTable\}}\label{visit-type-table-visittypetable}}
-\addcontentsline{toc}{subsection}{Visit Type Table \{\#visitTypeTable\}}
+\hypertarget{visitTypeTable}{%
+\subsection*{Visit Type Table}\label{visitTypeTable}}
+\addcontentsline{toc}{subsection}{Visit Type Table}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/06-visit/02-visit_types_table} \caption{Settings for creating the Visit Type Table chart}\label{fig:visitTypeTable}
@@ -4599,8 +5055,10 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \NormalTok{       concept\_name }\KeywordTok{AS} \OtherTok{"Type"}\NormalTok{,}
        \FunctionTok{MAX}\NormalTok{(count\_value) }\KeywordTok{AS} \OtherTok{"Count"}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.concept }\KeywordTok{ON} \FunctionTok{CAST}\NormalTok{(stratum\_1 }\KeywordTok{AS}\NormalTok{ BIGINT) }\OperatorTok{=}\NormalTok{ concept\_id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.concept}
+  \KeywordTok{ON} \FunctionTok{CAST}\NormalTok{(stratum\_1 }\KeywordTok{AS}\NormalTok{ BIGINT) }\OperatorTok{=}\NormalTok{ concept\_id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{201}
 \KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ name, acronym, }\OtherTok{"Type"}
 \KeywordTok{ORDER} \KeywordTok{BY} \OtherTok{"Count"} \KeywordTok{DESC}
@@ -4666,8 +5124,10 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \NormalTok{       concept\_name }\KeywordTok{AS} \OtherTok{"Observation"}\NormalTok{, }
 \NormalTok{       count\_value}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles }
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.concept }\KeywordTok{ON} \FunctionTok{CAST}\NormalTok{(stratum\_1 }\KeywordTok{AS}\NormalTok{ BIGINT) }\OperatorTok{=}\NormalTok{ concept\_id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.concept}
+  \KeywordTok{ON} \FunctionTok{CAST}\NormalTok{(stratum\_1 }\KeywordTok{AS}\NormalTok{ BIGINT) }\OperatorTok{=}\NormalTok{ concept\_id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{201}
 \end{Highlighting}
 \end{Shaded}
@@ -4844,7 +5304,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
 \NormalTok{    count\_value,}
     \KeywordTok{source}\NormalTok{.acronym}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{501}
 \end{Highlighting}
 \end{Shaded}
@@ -4932,7 +5393,8 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
     \FunctionTok{EXTRACT}\NormalTok{(}\DataTypeTok{year} \KeywordTok{FROM} \FunctionTok{TO\_DATE}\NormalTok{(stratum\_1, }\StringTok{\textquotesingle{}YYYYMM\textquotesingle{}}\NormalTok{)) }\KeywordTok{AS} \DataTypeTok{Date}\NormalTok{,}
 \NormalTok{    count\_value}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{as}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{as} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{as} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{502}
 \end{Highlighting}
 \end{Shaded}
@@ -5049,10 +5511,15 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \NormalTok{     domain\_id,}
      \KeywordTok{source}\NormalTok{.name }\KeywordTok{AS}\NormalTok{ source\_name,}
      \KeywordTok{source}\NormalTok{.acronym}
-\KeywordTok{FROM}\NormalTok{ achilles\_results}
-\KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON} \FunctionTok{cast}\NormalTok{(stratum\_1 }\KeywordTok{AS}\NormalTok{ BIGINT) }\OperatorTok{=}\NormalTok{ concept\_id}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
-\KeywordTok{WHERE}\NormalTok{ analysis\_id }\KeywordTok{in}\NormalTok{ (}\DecValTok{201}\NormalTok{, }\DecValTok{401}\NormalTok{, }\DecValTok{601}\NormalTok{, }\DecValTok{701}\NormalTok{, }\DecValTok{801}\NormalTok{, }\DecValTok{901}\NormalTok{, }\DecValTok{1001}\NormalTok{, }\DecValTok{1801}\NormalTok{, }\DecValTok{200}\NormalTok{, }\DecValTok{400}\NormalTok{, }\DecValTok{600}\NormalTok{, }\DecValTok{700}\NormalTok{, }\DecValTok{800}\NormalTok{, }\DecValTok{1800}\NormalTok{)}
+\KeywordTok{FROM}\NormalTok{ achilles\_results }\KeywordTok{JOIN}\NormalTok{ concept}
+  \KeywordTok{ON} \FunctionTok{cast}\NormalTok{(stratum\_1 }\KeywordTok{AS}\NormalTok{ BIGINT) }\OperatorTok{=}\NormalTok{ concept\_id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{WHERE}
+\NormalTok{  analysis\_id }\KeywordTok{in}\NormalTok{ (}
+    \DecValTok{201}\NormalTok{, }\DecValTok{401}\NormalTok{, }\DecValTok{601}\NormalTok{, }\DecValTok{701}\NormalTok{, }\DecValTok{801}\NormalTok{, }\DecValTok{901}\NormalTok{, }\DecValTok{1001}\NormalTok{, }\DecValTok{1801}\NormalTok{,}
+    \DecValTok{200}\NormalTok{, }\DecValTok{400}\NormalTok{, }\DecValTok{600}\NormalTok{, }\DecValTok{700}\NormalTok{, }\DecValTok{800}\NormalTok{, }\DecValTok{1800}
+\NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
 
@@ -5180,21 +5647,33 @@ Same as \protect\hyperlink{Dataux5cux2520Sourceux5cux2520andux5cux2520Domainux5c
     \FunctionTok{sum}\NormalTok{(q1.count\_value) }\KeywordTok{as} \OtherTok{"Occurrence\_count"}\NormalTok{,}
     \FunctionTok{sum}\NormalTok{(q1.count\_person) }\KeywordTok{as} \OtherTok{"Person\_count"}\NormalTok{,}
     \ControlFlowTok{CASE} 
-        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_value)}\OperatorTok{\textless{}=}\DecValTok{10} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}\textless{}=10\textquotesingle{}}
-        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_value)}\OperatorTok{\textless{}=}\DecValTok{100} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}11{-}10ˆ2\textquotesingle{}}
-        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_value)}\OperatorTok{\textless{}=}\DecValTok{1000} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ2{-}10ˆ3\textquotesingle{}}
-        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_value)}\OperatorTok{\textless{}=}\DecValTok{10000} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ3{-}10ˆ4\textquotesingle{}}
-        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_value)}\OperatorTok{\textless{}=}\DecValTok{100000} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ4{-}10ˆ5\textquotesingle{}}
-        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_value)}\OperatorTok{\textless{}=}\DecValTok{1000000} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ5{-}10ˆ6\textquotesingle{}}
+        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_value)}\OperatorTok{\textless{}=}\DecValTok{10}
+          \ControlFlowTok{THEN} \StringTok{\textquotesingle{}\textless{}=10\textquotesingle{}}
+        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_value)}\OperatorTok{\textless{}=}\DecValTok{100}
+          \ControlFlowTok{THEN} \StringTok{\textquotesingle{}11{-}10ˆ2\textquotesingle{}}
+        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_value)}\OperatorTok{\textless{}=}\DecValTok{1000}
+          \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ2{-}10ˆ3\textquotesingle{}}
+        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_value)}\OperatorTok{\textless{}=}\DecValTok{10000}
+          \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ3{-}10ˆ4\textquotesingle{}}
+        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_value)}\OperatorTok{\textless{}=}\DecValTok{100000}
+          \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ4{-}10ˆ5\textquotesingle{}}
+        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_value)}\OperatorTok{\textless{}=}\DecValTok{1000000}
+          \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ5{-}10ˆ6\textquotesingle{}}
         \ControlFlowTok{ELSE} \StringTok{\textquotesingle{}\textgreater{}10ˆ6\textquotesingle{}}
     \ControlFlowTok{END} \KeywordTok{as} \OtherTok{"magnitude\_occurrences"}\NormalTok{,}
     \ControlFlowTok{CASE} 
-        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_person)}\OperatorTok{\textless{}=}\DecValTok{10} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}\textless{}=10\textquotesingle{}}
-        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_person)}\OperatorTok{\textless{}=}\DecValTok{100} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}11{-}10ˆ2\textquotesingle{}}
-        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_person)}\OperatorTok{\textless{}=}\DecValTok{1000} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ2{-}10ˆ3\textquotesingle{}}
-        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_person)}\OperatorTok{\textless{}=}\DecValTok{10000} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ3{-}10ˆ4\textquotesingle{}}
-        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_person)}\OperatorTok{\textless{}=}\DecValTok{100000} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ4{-}10ˆ5\textquotesingle{}}
-        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_person)}\OperatorTok{\textless{}=}\DecValTok{1000000} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ5{-}10ˆ6\textquotesingle{}}
+        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_person)}\OperatorTok{\textless{}=}\DecValTok{10}
+          \ControlFlowTok{THEN} \StringTok{\textquotesingle{}\textless{}=10\textquotesingle{}}
+        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_person)}\OperatorTok{\textless{}=}\DecValTok{100}
+          \ControlFlowTok{THEN} \StringTok{\textquotesingle{}11{-}10ˆ2\textquotesingle{}}
+        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_person)}\OperatorTok{\textless{}=}\DecValTok{1000}
+          \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ2{-}10ˆ3\textquotesingle{}}
+        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_person)}\OperatorTok{\textless{}=}\DecValTok{10000}
+          \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ3{-}10ˆ4\textquotesingle{}}
+        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_person)}\OperatorTok{\textless{}=}\DecValTok{100000}
+          \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ4{-}10ˆ5\textquotesingle{}}
+        \ControlFlowTok{WHEN} \FunctionTok{sum}\NormalTok{(q1.count\_person)}\OperatorTok{\textless{}=}\DecValTok{1000000}
+          \ControlFlowTok{THEN} \StringTok{\textquotesingle{}10ˆ5{-}10ˆ6\textquotesingle{}}
         \ControlFlowTok{ELSE} \StringTok{\textquotesingle{}\textgreater{}10ˆ6\textquotesingle{}}
     \ControlFlowTok{END} \KeywordTok{AS} \OtherTok{"magnitude\_persons"}
 \KeywordTok{FROM}\NormalTok{ (}\KeywordTok{SELECT}\NormalTok{ analysis\_id,}
@@ -5204,8 +5683,13 @@ Same as \protect\hyperlink{Dataux5cux2520Sourceux5cux2520andux5cux2520Domainux5c
 \NormalTok{             domain\_id,}
 \NormalTok{             count\_value, }\DecValTok{0} \KeywordTok{as}\NormalTok{ count\_person}
     \KeywordTok{FROM}\NormalTok{ achilles\_results}
-    \KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{ON} \FunctionTok{cast}\NormalTok{(stratum\_1 }\KeywordTok{AS}\NormalTok{ BIGINT)}\OperatorTok{=}\NormalTok{concept\_id}
-    \KeywordTok{WHERE}\NormalTok{ analysis\_id }\KeywordTok{in}\NormalTok{ (}\DecValTok{201}\NormalTok{, }\DecValTok{301}\NormalTok{, }\DecValTok{401}\NormalTok{, }\DecValTok{601}\NormalTok{, }\DecValTok{701}\NormalTok{, }\DecValTok{801}\NormalTok{, }\DecValTok{901}\NormalTok{, }\DecValTok{1001}\NormalTok{, }\DecValTok{1801}\NormalTok{)}
+    \KeywordTok{JOIN}\NormalTok{ concept}
+      \KeywordTok{ON} \FunctionTok{cast}\NormalTok{(stratum\_1 }\KeywordTok{AS}\NormalTok{ BIGINT)}\OperatorTok{=}\NormalTok{concept\_id}
+    \KeywordTok{WHERE}
+\NormalTok{      analysis\_id }\KeywordTok{in}\NormalTok{ (}
+        \DecValTok{201}\NormalTok{, }\DecValTok{301}\NormalTok{, }\DecValTok{401}\NormalTok{, }\DecValTok{601}\NormalTok{, }\DecValTok{701}\NormalTok{, }\DecValTok{801}\NormalTok{, }\DecValTok{901}\NormalTok{, }\DecValTok{1001}\NormalTok{,}
+        \DecValTok{1801}
+\NormalTok{      )}
     \KeywordTok{UNION}\NormalTok{ (}\KeywordTok{SELECT}\NormalTok{  analysis\_id,}
 \NormalTok{                   stratum\_1 concept\_id,}
 \NormalTok{                   data\_source\_id,}
@@ -5214,11 +5698,27 @@ Same as \protect\hyperlink{Dataux5cux2520Sourceux5cux2520andux5cux2520Domainux5c
                    \DecValTok{0} \KeywordTok{as}\NormalTok{ count\_value,}
                    \FunctionTok{sum}\NormalTok{(count\_value) }\KeywordTok{as}\NormalTok{ count\_person}
             \KeywordTok{FROM}\NormalTok{  achilles\_results}
-            \KeywordTok{JOIN}\NormalTok{ concept }\KeywordTok{on} \FunctionTok{cast}\NormalTok{(stratum\_1 }\KeywordTok{as}\NormalTok{ BIGINT)}\OperatorTok{=}\NormalTok{concept\_id}
-            \KeywordTok{WHERE}\NormalTok{ analysis\_id }\KeywordTok{in}\NormalTok{ (}\DecValTok{202}\NormalTok{, }\DecValTok{401}\NormalTok{, }\DecValTok{601}\NormalTok{, }\DecValTok{701}\NormalTok{, }\DecValTok{801}\NormalTok{, }\DecValTok{901}\NormalTok{, }\DecValTok{1001}\NormalTok{, }\DecValTok{1801}\NormalTok{)}
-            \KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ analysis\_id,stratum\_1,data\_source\_id,concept\_name,domain\_id) ) }\KeywordTok{as}\NormalTok{ q1}
-    \KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ q1.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
-\KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ q1.concept\_id,q1.concept\_name,q1.domain\_id,}\KeywordTok{source}\NormalTok{.name, acronym}
+            \KeywordTok{JOIN}\NormalTok{ concept}
+              \KeywordTok{ON} \FunctionTok{cast}\NormalTok{(stratum\_1 }\KeywordTok{as}\NormalTok{ BIGINT)}\OperatorTok{=}\NormalTok{concept\_id}
+            \KeywordTok{WHERE}
+\NormalTok{              analysis\_id }\KeywordTok{in}\NormalTok{ (}
+                \DecValTok{202}\NormalTok{, }\DecValTok{401}\NormalTok{, }\DecValTok{601}\NormalTok{, }\DecValTok{701}\NormalTok{, }\DecValTok{801}\NormalTok{, }\DecValTok{901}\NormalTok{, }\DecValTok{1001}\NormalTok{, }\DecValTok{1801}
+\NormalTok{              )}
+            \KeywordTok{GROUP} \KeywordTok{BY}
+\NormalTok{              analysis\_id,}
+\NormalTok{              stratum\_1,}
+\NormalTok{              data\_source\_id,}
+\NormalTok{              concept\_name,}
+\NormalTok{              domain\_id}
+\NormalTok{            )) }\KeywordTok{as}\NormalTok{ q1}
+    \KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+      \KeywordTok{ON}\NormalTok{ q1.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{GROUP} \KeywordTok{BY}
+\NormalTok{  q1.concept\_id,}
+\NormalTok{  q1.concept\_name,}
+\NormalTok{  q1.domain\_id,}
+  \KeywordTok{source}\NormalTok{.name,}
+\NormalTok{  acronym}
 \KeywordTok{ORDER} \KeywordTok{BY} \OtherTok{"Person\_count"} \KeywordTok{desc}
 \end{Highlighting}
 \end{Shaded}
@@ -5387,18 +5887,26 @@ All 6 charts use the same sql query.
 \begin{Highlighting}[]
 \KeywordTok{SELECT} \KeywordTok{source}\NormalTok{.name,}
     \KeywordTok{source}\NormalTok{.acronym,}
-    \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{405} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{605} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{705} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{805} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{1805} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{2105} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}
+    \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{405}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{605}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{705}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{805}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{1805}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{2105}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}
     \ControlFlowTok{ELSE} \StringTok{\textquotesingle{}Other\textquotesingle{}} \ControlFlowTok{END} \KeywordTok{AS}\NormalTok{ domain\_name,}
 \NormalTok{    concept\_name,}
     \FunctionTok{SUM}\NormalTok{(count\_value) }\KeywordTok{AS}\NormalTok{ num\_records}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.concept }\KeywordTok{AS}\NormalTok{ c1 }\KeywordTok{ON} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS}\NormalTok{ BIGINT) }\OperatorTok{=}\NormalTok{ concept\_id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.concept }\KeywordTok{AS}\NormalTok{ c1}
+  \KeywordTok{ON} \FunctionTok{CAST}\NormalTok{(stratum\_2 }\KeywordTok{AS}\NormalTok{ BIGINT) }\OperatorTok{=}\NormalTok{ concept\_id}
 \KeywordTok{WHERE}\NormalTok{ analysis\_id }\KeywordTok{IN}\NormalTok{ (}\DecValTok{405}\NormalTok{,}\DecValTok{605}\NormalTok{,}\DecValTok{705}\NormalTok{,}\DecValTok{805}\NormalTok{,}\DecValTok{1805}\NormalTok{,}\DecValTok{2105}\NormalTok{)}
 \KeywordTok{GROUP} \KeywordTok{BY} \KeywordTok{source}\NormalTok{.name, }\KeywordTok{source}\NormalTok{.acronym, concept\_name, }
     \ControlFlowTok{CASE} \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{405} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}
@@ -5555,9 +6063,9 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
   \end{itemize}
 \end{itemize}
 
-\hypertarget{average-number-of-records-per-person-avgrecordsperperson}{%
-\subsection*{Average Number of Records per Person \{\#avgRecordsPerPerson\}}\label{average-number-of-records-per-person-avgrecordsperperson}}
-\addcontentsline{toc}{subsection}{Average Number of Records per Person \{\#avgRecordsPerPerson\}}
+\hypertarget{avgRecordsPerPerson}{%
+\subsection*{Average Number of Records per Person}\label{avgRecordsPerPerson}}
+\addcontentsline{toc}{subsection}{Average Number of Records per Person}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/10-data_domain/02-avg_records_per_person} \caption{Settings for creating the Data Source filter chart}\label{fig:unnamed-chunk-1}
@@ -5573,25 +6081,41 @@ No SQL query, use the sql table \texttt{data\_source} of the \texttt{achilles} d
     \KeywordTok{source}\NormalTok{.name,}
     \KeywordTok{source}\NormalTok{.acronym,}
     \ControlFlowTok{CASE} 
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{201} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Visit\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{401} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{501} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Death\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{601} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{701} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug Exposure\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{801} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{1801} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{2101} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}
-    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{2201} \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Note\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{201}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Visit\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{401}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Condition\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{501}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Death\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{601}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Procedure\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{701}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Drug Exposure\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{801}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Observation\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{1801}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Measurement\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{2101}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Device\textquotesingle{}}
+    \ControlFlowTok{WHEN}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{2201}
+      \ControlFlowTok{THEN} \StringTok{\textquotesingle{}Note\textquotesingle{}}
     \ControlFlowTok{END} \KeywordTok{AS}\NormalTok{ Data\_Domain,}
-    \FunctionTok{SUM}\NormalTok{(count\_value) }\OperatorTok{/}\FunctionTok{AVG}\NormalTok{(num\_persons) }\KeywordTok{AS} \OtherTok{"records\_per\_person"}
+    \FunctionTok{SUM}\NormalTok{(count\_value) }\OperatorTok{/}\FunctionTok{AVG}\NormalTok{(num\_persons)}
+      \KeywordTok{AS} \OtherTok{"records\_per\_person"}
 \KeywordTok{FROM} \KeywordTok{public}\NormalTok{.achilles\_results }\KeywordTok{AS}\NormalTok{ achilles}
-\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source} \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
+\KeywordTok{INNER} \KeywordTok{JOIN} \KeywordTok{public}\NormalTok{.data\_source }\KeywordTok{AS} \KeywordTok{source}
+  \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id}\OperatorTok{=}\KeywordTok{source}\NormalTok{.}\KeywordTok{id}
 \KeywordTok{INNER} \KeywordTok{JOIN}\NormalTok{ (}
   \KeywordTok{SELECT}\NormalTok{ data\_source\_id , count\_value }\KeywordTok{as}\NormalTok{ num\_persons}
   \KeywordTok{FROM}\NormalTok{ achilles\_results}
-  \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{) counts }\KeywordTok{ON}\NormalTok{ achilles.data\_source\_id }\OperatorTok{=}\NormalTok{ counts.data\_source\_id }
+  \KeywordTok{WHERE}\NormalTok{ analysis\_id }\OperatorTok{=} \DecValTok{1}\NormalTok{) counts}
+    \KeywordTok{ON}\NormalTok{ achilles.data\_source\_id }\OperatorTok{=}\NormalTok{ counts.data\_source\_id}
 \KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ analysis\_id, }\KeywordTok{source}\NormalTok{.name, }\KeywordTok{source}\NormalTok{.acronym}
-\KeywordTok{HAVING}\NormalTok{ analysis\_id }\KeywordTok{IN}\NormalTok{ (}\DecValTok{201}\NormalTok{, }\DecValTok{401}\NormalTok{, }\DecValTok{501}\NormalTok{, }\DecValTok{601}\NormalTok{, }\DecValTok{701}\NormalTok{, }\DecValTok{801}\NormalTok{, }\DecValTok{1801}\NormalTok{, }\DecValTok{2101}\NormalTok{, }\DecValTok{2201}\NormalTok{)}
+\KeywordTok{HAVING}
+\NormalTok{  analysis\_id }\KeywordTok{IN}\NormalTok{ (}
+    \DecValTok{201}\NormalTok{, }\DecValTok{401}\NormalTok{, }\DecValTok{501}\NormalTok{, }\DecValTok{601}\NormalTok{, }\DecValTok{701}\NormalTok{, }\DecValTok{801}\NormalTok{, }\DecValTok{1801}\NormalTok{, }\DecValTok{2101}\NormalTok{,}
+    \DecValTok{2201}
+\NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
 

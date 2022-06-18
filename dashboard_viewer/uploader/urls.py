@@ -18,4 +18,9 @@ urlpatterns = [
         "<str:data_source>/upload/<int:upload_id>/status/", views.get_upload_task_status
     ),
     path("", views.create_data_source, name="create_data_source"),
+    path(
+        "<str:data_source>/dashboard/",
+        views.data_source_dashboard,
+        name="data_source_dashboard",
+    ),
 ]
