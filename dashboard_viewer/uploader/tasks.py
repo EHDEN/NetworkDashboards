@@ -3,9 +3,9 @@ from celery.utils.log import get_task_logger
 from django.core import serializers
 from django.core.cache import cache
 from django.db import router, transaction
-from materialized_queries_manager.utils import refresh
 from redis_rw_lock import RWLock
 
+from materialized_queries_manager.utils import refresh
 from .file_handler.checks import extract_data_from_uploaded_file
 from .file_handler.updates import update_achilles_results_data
 from .models import AchillesResults, PendingUpload, UploadHistory
