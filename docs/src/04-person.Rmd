@@ -69,19 +69,39 @@ knitr::include_graphics("images/04-person/02-age_at_first_observation_table.png"
 ```sql
 SELECT source.name,
        source.acronym,
-       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) < 10 THEN count_value END) AS "0-10",
-       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 10 AND CAST(stratum_2 AS INTEGER) < 20 THEN count_value END) AS "10-20",
-       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 20 AND CAST(stratum_2 AS INTEGER) < 30 THEN count_value END) AS "20-30",
-       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 30 AND CAST(stratum_2 AS INTEGER) < 40 THEN count_value END) AS "30-40",
-       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 40 AND CAST(stratum_2 AS INTEGER) < 50 THEN count_value END) AS "40-50",
-       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 50 AND CAST(stratum_2 AS INTEGER) < 60 THEN count_value END) AS "50-60",
-       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 60 AND CAST(stratum_2 AS INTEGER) < 70 THEN count_value END) AS "60-70",
-       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 70 AND CAST(stratum_2 AS INTEGER) < 80 THEN count_value END) AS "70-80",
-       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 80 AND CAST(stratum_2 AS INTEGER) < 90 THEN count_value END) AS "80-90",
-       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 90 THEN count_value END) AS "90+"
+       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) < 10
+         THEN count_value END) AS "0-10",
+       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 10
+         AND CAST(stratum_2 AS INTEGER) < 20
+         THEN count_value END) AS "10-20",
+       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 20
+         AND CAST(stratum_2 AS INTEGER) < 30
+         THEN count_value END) AS "20-30",
+       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 30
+         AND CAST(stratum_2 AS INTEGER) < 40
+         THEN count_value END) AS "30-40",
+       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 40
+         AND CAST(stratum_2 AS INTEGER) < 50
+         THEN count_value END) AS "40-50",
+       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 50
+         AND CAST(stratum_2 AS INTEGER) < 60
+         THEN count_value END) AS "50-60",
+       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 60
+         AND CAST(stratum_2 AS INTEGER) < 70
+         THEN count_value END) AS "60-70",
+       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 70
+         AND CAST(stratum_2 AS INTEGER) < 80
+         THEN count_value END) AS "70-80",
+       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 80
+         AND CAST(stratum_2 AS INTEGER) < 90
+         THEN count_value END) AS "80-90",
+       SUM(CASE WHEN CAST(stratum_2 AS INTEGER) >= 90
+         THEN count_value END) AS "90+"
 FROM public.achilles_results AS achilles
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
-INNER JOIN public.concept ON CAST(stratum_1 AS BIGINT) = concept_id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
+INNER JOIN public.concept
+  ON CAST(stratum_1 AS BIGINT) = concept_id
 WHERE analysis_id = 102
 GROUP BY name, acronym
 ```
@@ -114,7 +134,8 @@ SELECT source.name,
     count_value AS count, 
     source.acronym
 FROM public.achilles_results AS achilles
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
 WHERE analysis_id = 101
 ```
 
@@ -152,7 +173,8 @@ SELECT source.name,
        stratum_1 AS "Birth_year",
        count_value AS count
 FROM public.achilles_results AS achilles
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
 WHERE analysis_id = 3
 ```
 
@@ -192,7 +214,8 @@ SELECT source.name,
        count_value AS Number_of_persons,
        source.acronym
 FROM public.achilles_results AS achilles
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
 JOIN (
   SELECT '8507' AS concept_id, 'Male' AS concept_name
   UNION

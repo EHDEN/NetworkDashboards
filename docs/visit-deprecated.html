@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-01-04" />
+<meta name="date" content="2022-04-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,8 +162,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="backups.html"><a href="backups.html"><i class="fa fa-check"></i><b>5</b> Backups</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="restore.html"><a href="restore.html"><i class="fa fa-check"></i><b>5.1</b> Restore</a></li>
-<li class="chapter" data-level="5.2" data-path="useful-stuff.html"><a href="useful-stuff.html"><i class="fa fa-check"></i><b>5.2</b> Useful stuff</a></li>
+<li class="chapter" data-level="" data-path="backups.html"><a href="backups.html#restore"><i class="fa fa-check"></i>Restore</a></li>
+<li class="chapter" data-level="" data-path="backups.html"><a href="backups.html#useful-stuff"><i class="fa fa-check"></i>Useful stuff</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="customizations.html"><a href="customizations.html"><i class="fa fa-check"></i><b>6</b> Customizations</a>
 <ul>
@@ -268,7 +268,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#css-4"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#data-source-filter-2"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#number-of-patients-in-observation-period-numinobservationperiod"><i class="fa fa-check"></i>Number of Patients in Observation Period {#numInObservationPeriod}</a></li>
+<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#numInObservationPeriod"><i class="fa fa-check"></i>Number of Patients in Observation Period</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-start-dates"><i class="fa fa-check"></i>Observation Period Start Dates</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-end-dates"><i class="fa fa-check"></i>Observation Period End Dates</a></li>
 </ul></li>
@@ -276,7 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#css-5"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#data-source-filter-3"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-type-table-visittypetable"><i class="fa fa-check"></i>Visit Type Table {#visitTypeTable}</a></li>
+<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visitTypeTable"><i class="fa fa-check"></i>Visit Type Table</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-types-bars"><i class="fa fa-check"></i>Visit Types Bars</a></li>
 </ul></li>
 <li class="chapter" data-level="9.8" data-path="death-deprecated.html"><a href="death-deprecated.html"><i class="fa fa-check"></i><b>9.8</b> Death [Deprecated]</a>
@@ -303,7 +303,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#css-9"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#data-source-filter-6"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#average-number-of-records-per-person-avgrecordsperperson"><i class="fa fa-check"></i>Average Number of Records per Person {#avgRecordsPerPerson}</a></li>
+<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#avgRecordsPerPerson"><i class="fa fa-check"></i>Average Number of Records per Person</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -375,8 +375,8 @@ Figure 9.8: Settings for creating the Data Source filter chart
 </ul>
 </div>
 </div>
-<div id="visit-type-table-visittypetable" class="section level3 unnumbered" number="">
-<h3>Visit Type Table {#visitTypeTable}</h3>
+<div id="visitTypeTable" class="section level3 unnumbered" number="">
+<h3>Visit Type Table</h3>
 <div class="figure"><span style="display:block;" id="fig:visitTypeTable"></span>
 <img src="images/06-visit/02-visit_types_table.png" alt="Settings for creating the Visit Type Table chart" width="100%" />
 <p class="caption">
@@ -390,11 +390,13 @@ Figure 9.16: Settings for creating the Visit Type Table chart
 <span id="cb60-3"><a href="visit-deprecated.html#cb60-3" aria-hidden="true"></a>       concept_name <span class="kw">AS</span> <span class="ot">&quot;Type&quot;</span>,</span>
 <span id="cb60-4"><a href="visit-deprecated.html#cb60-4" aria-hidden="true"></a>       <span class="fu">MAX</span>(count_value) <span class="kw">AS</span> <span class="ot">&quot;Count&quot;</span></span>
 <span id="cb60-5"><a href="visit-deprecated.html#cb60-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb60-6"><a href="visit-deprecated.html#cb60-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb60-7"><a href="visit-deprecated.html#cb60-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
-<span id="cb60-8"><a href="visit-deprecated.html#cb60-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span>
-<span id="cb60-9"><a href="visit-deprecated.html#cb60-9" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> name, acronym, <span class="ot">&quot;Type&quot;</span></span>
-<span id="cb60-10"><a href="visit-deprecated.html#cb60-10" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="ot">&quot;Count&quot;</span> <span class="kw">DESC</span></span></code></pre></div>
+<span id="cb60-6"><a href="visit-deprecated.html#cb60-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb60-7"><a href="visit-deprecated.html#cb60-7" aria-hidden="true"></a>  <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb60-8"><a href="visit-deprecated.html#cb60-8" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept</span>
+<span id="cb60-9"><a href="visit-deprecated.html#cb60-9" aria-hidden="true"></a>  <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
+<span id="cb60-10"><a href="visit-deprecated.html#cb60-10" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span>
+<span id="cb60-11"><a href="visit-deprecated.html#cb60-11" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> name, acronym, <span class="ot">&quot;Type&quot;</span></span>
+<span id="cb60-12"><a href="visit-deprecated.html#cb60-12" aria-hidden="true"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="ot">&quot;Count&quot;</span> <span class="kw">DESC</span></span></code></pre></div>
 </div>
 <div id="chart-settings-17" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
@@ -433,9 +435,11 @@ Figure 9.17: Settings for creating the Visit Types bar chart
 <span id="cb61-3"><a href="visit-deprecated.html#cb61-3" aria-hidden="true"></a>       concept_name <span class="kw">AS</span> <span class="ot">&quot;Observation&quot;</span>, </span>
 <span id="cb61-4"><a href="visit-deprecated.html#cb61-4" aria-hidden="true"></a>       count_value</span>
 <span id="cb61-5"><a href="visit-deprecated.html#cb61-5" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles </span>
-<span id="cb61-6"><a href="visit-deprecated.html#cb61-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb61-7"><a href="visit-deprecated.html#cb61-7" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
-<span id="cb61-8"><a href="visit-deprecated.html#cb61-8" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span></code></pre></div>
+<span id="cb61-6"><a href="visit-deprecated.html#cb61-6" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb61-7"><a href="visit-deprecated.html#cb61-7" aria-hidden="true"></a>  <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb61-8"><a href="visit-deprecated.html#cb61-8" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.concept</span>
+<span id="cb61-9"><a href="visit-deprecated.html#cb61-9" aria-hidden="true"></a>  <span class="kw">ON</span> <span class="fu">CAST</span>(stratum_1 <span class="kw">AS</span> BIGINT) <span class="op">=</span> concept_id</span>
+<span id="cb61-10"><a href="visit-deprecated.html#cb61-10" aria-hidden="true"></a><span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span></code></pre></div>
 </div>
 <div id="chart-settings-18" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>
