@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-
+import logging
 import os
 from collections import OrderedDict
 from distutils.util import strtobool
@@ -25,42 +25,42 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ["SECRET_KEY"]
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DASHBOARD_VIEWER_ENV", "development") == "development"
 
 
-_LOGS_DIR = os.path.join(BASE_DIR, "logs")
-if not os.path.exists(_LOGS_DIR):
-    os.makedirs(_LOGS_DIR, exist_ok=True)
-elif not os.path.isdir(_LOGS_DIR):
-    raise TypeError('file "logs" is not a directory.')
-
 LOGGING = {
     "version": 1,
-    "filters": {
-        "require_debug_true": {
-            "()": "django.utils.log.RequireDebugTrue",
+    "disable_existing_loggers": False,
+    "formatters": {
+        "custom": {
+            "format": "%(asctime)s %(levelname)s %(name)s:%(lineno)s %(message)s",
         },
     },
     "handlers": {
-        "file": {
-            "level": "ERROR",
-            "filters": ["require_debug_true"],
-            "class": "logging.FileHandler",
-            "filename": os.path.join(_LOGS_DIR, "errors.log"),
-        }
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "custom",
+        },
     },
     "loggers": {
-        "django": {
-            "handlers": ["file"],
-            "level": "ERROR",
-            "propagate": True,
+        "root": {
+            "handlers": ["console"],
+            "level": "DEBUG" if DEBUG else "INFO",
         },
     },
 }
+
+
+_DEFAULT_SECRET_KEY = "CHANGE_ME"  # noqa
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get("SECRET_KEY", _DEFAULT_SECRET_KEY)
+if not DEBUG and SECRET_KEY == _DEFAULT_SECRET_KEY:
+    logging.getLogger(__name__).warning(
+        "Using the default secret key. If this is a production environment please change it.",
+    )
+
 
 ALLOWED_HOSTS = ["*"]
 
