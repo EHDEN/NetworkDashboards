@@ -86,5 +86,4 @@ jobs:
         pip install --upgrade pip
         pip install -r requirements-dev/requirements-prospector.txt -r dashboard_viewer/requirements.txt
     - name: prospector
-      run: |
-        prospector dashboard_viewer
+      run: DJANGO_SETTINGS_MODULE=dashboard_viewer.settings prospector dashboard_viewer

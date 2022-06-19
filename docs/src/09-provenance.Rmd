@@ -61,18 +61,26 @@ All 6 charts use the same sql query.
 ```sql
 SELECT source.name,
     source.acronym,
-    CASE WHEN analysis_id = 405 THEN 'Condition'
-    WHEN analysis_id = 605 THEN 'Procedure'
-    WHEN analysis_id = 705 THEN 'Drug'
-    WHEN analysis_id = 805 THEN 'Observation'
-    WHEN analysis_id = 1805 THEN 'Measurement'
-    WHEN analysis_id = 2105 THEN 'Device'
+    CASE WHEN analysis_id = 405
+      THEN 'Condition'
+    WHEN analysis_id = 605
+      THEN 'Procedure'
+    WHEN analysis_id = 705
+      THEN 'Drug'
+    WHEN analysis_id = 805
+      THEN 'Observation'
+    WHEN analysis_id = 1805
+      THEN 'Measurement'
+    WHEN analysis_id = 2105
+      THEN 'Device'
     ELSE 'Other' END AS domain_name,
     concept_name,
     SUM(count_value) AS num_records
 FROM public.achilles_results AS achilles
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
-INNER JOIN public.concept AS c1 ON CAST(stratum_2 AS BIGINT) = concept_id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
+INNER JOIN public.concept AS c1
+  ON CAST(stratum_2 AS BIGINT) = concept_id
 WHERE analysis_id IN (405,605,705,805,1805,2105)
 GROUP BY source.name, source.acronym, concept_name, 
     CASE WHEN analysis_id = 405 THEN 'Condition'

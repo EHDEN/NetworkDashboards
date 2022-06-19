@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-01-04" />
+<meta name="date" content="2022-06-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="processes.html"/>
-<link rel="next" href="restore.html"/>
+<link rel="next" href="customizations.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -162,8 +162,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="backups.html"><a href="backups.html"><i class="fa fa-check"></i><b>5</b> Backups</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="restore.html"><a href="restore.html"><i class="fa fa-check"></i><b>5.1</b> Restore</a></li>
-<li class="chapter" data-level="5.2" data-path="useful-stuff.html"><a href="useful-stuff.html"><i class="fa fa-check"></i><b>5.2</b> Useful stuff</a></li>
+<li class="chapter" data-level="" data-path="backups.html"><a href="backups.html#restore"><i class="fa fa-check"></i>Restore</a></li>
+<li class="chapter" data-level="" data-path="backups.html"><a href="backups.html#useful-stuff"><i class="fa fa-check"></i>Useful stuff</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="customizations.html"><a href="customizations.html"><i class="fa fa-check"></i><b>6</b> Customizations</a>
 <ul>
@@ -268,7 +268,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#css-4"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#data-source-filter-2"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#number-of-patients-in-observation-period-numinobservationperiod"><i class="fa fa-check"></i>Number of Patients in Observation Period {#numInObservationPeriod}</a></li>
+<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#numInObservationPeriod"><i class="fa fa-check"></i>Number of Patients in Observation Period</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-start-dates"><i class="fa fa-check"></i>Observation Period Start Dates</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-end-dates"><i class="fa fa-check"></i>Observation Period End Dates</a></li>
 </ul></li>
@@ -276,7 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#css-5"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#data-source-filter-3"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-type-table-visittypetable"><i class="fa fa-check"></i>Visit Type Table {#visitTypeTable}</a></li>
+<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visitTypeTable"><i class="fa fa-check"></i>Visit Type Table</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-types-bars"><i class="fa fa-check"></i>Visit Types Bars</a></li>
 </ul></li>
 <li class="chapter" data-level="9.8" data-path="death-deprecated.html"><a href="death-deprecated.html"><i class="fa fa-check"></i><b>9.8</b> Death [Deprecated]</a>
@@ -303,7 +303,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#css-9"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#data-source-filter-6"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#average-number-of-records-per-person-avgrecordsperperson"><i class="fa fa-check"></i>Average Number of Records per Person {#avgRecordsPerPerson}</a></li>
+<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#avgRecordsPerPerson"><i class="fa fa-check"></i>Average Number of Records per Person</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -327,7 +327,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 5</span> Backups</h1>
 <ol style="list-style-type: decimal">
 <li><p>Create a credentials file (the structure of the file depends on the target cloud server)</p></li>
-<li><p>Create a <code>.dashboards_backups.conf</code> file under your home directory (variable <code>$HOME</code>) using <code>dashboards_backups.conf.example</code> as base, setting the appropriate value for the several variables.</p>
+<li><p>Create a <code>backups.conf</code> under the <code>backups</code> directory using <code>backups.conf.example</code> as base, setting the appropriate value for the several variables.</p>
 <p>For variables associated with files and directories always use <em>absolute</em> paths.</p>
 <p>Variables:</p>
 <ul>
@@ -362,6 +362,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>Add entry <code>0 3 * * * $HOME/NetworkDashboards/backups/backup.sh</code> (The path to the backup script might be different)</p></li>
 </ol></li>
 </ol>
+<div id="restore" class="section level3 unnumbered" number="">
+<h3>Restore</h3>
+<ol style="list-style-type: decimal">
+<li><p>Select the compressed backup you want to restore.</p></li>
+<li><p>Make sure that all the environment variables are the same as the ones that were used for the chosen backup file.
+Additionally, the <code>backups.conf</code> file is also necessary to set up, since the <code>TMP_DIRECTORY</code> variable will be used.</p></li>
+<li><p>Run the <code>backups/restore.sh</code> script.</p></li>
+</ol>
+</div>
+<div id="useful-stuff" class="section level3 unnumbered" number="">
+<h3>Useful stuff</h3>
+<ul>
+<li><p>How to create a shared link to a dropbox directory using its python’s API:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="backups.html#cb9-1" aria-hidden="true"></a><span class="ex">pip</span> install dropbox</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="backups.html#cb10-1" aria-hidden="true"></a><span class="im">import</span> dropbox</span>
+<span id="cb10-2"><a href="backups.html#cb10-2" aria-hidden="true"></a>d <span class="op">=</span> dropbox.Dropbox(API_TOKEN)</span>
+<span id="cb10-3"><a href="backups.html#cb10-3" aria-hidden="true"></a></span>
+<span id="cb10-4"><a href="backups.html#cb10-4" aria-hidden="true"></a><span class="co"># create a shared link for a directory</span></span>
+<span id="cb10-5"><a href="backups.html#cb10-5" aria-hidden="true"></a><span class="im">from</span> dropbox.sharing <span class="im">import</span> SharedLinkSettings</span>
+<span id="cb10-6"><a href="backups.html#cb10-6" aria-hidden="true"></a>sharing_settings <span class="op">=</span> SharedLinkSettings(</span>
+<span id="cb10-7"><a href="backups.html#cb10-7" aria-hidden="true"></a>    require_password<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-8"><a href="backups.html#cb10-8" aria-hidden="true"></a>    link_password<span class="op">=</span>DIRECTORY_PASSWORD,</span>
+<span id="cb10-9"><a href="backups.html#cb10-9" aria-hidden="true"></a>)</span>
+<span id="cb10-10"><a href="backups.html#cb10-10" aria-hidden="true"></a>d.sharing_create_shared_link_with_settings(</span>
+<span id="cb10-11"><a href="backups.html#cb10-11" aria-hidden="true"></a>    DIRECTORY_PATH,</span>
+<span id="cb10-12"><a href="backups.html#cb10-12" aria-hidden="true"></a>    sharing_settings,</span>
+<span id="cb10-13"><a href="backups.html#cb10-13" aria-hidden="true"></a>)</span>
+<span id="cb10-14"><a href="backups.html#cb10-14" aria-hidden="true"></a></span>
+<span id="cb10-15"><a href="backups.html#cb10-15" aria-hidden="true"></a><span class="co"># get all links</span></span>
+<span id="cb10-16"><a href="backups.html#cb10-16" aria-hidden="true"></a><span class="cf">for</span> link <span class="kw">in</span> d.sharing_get_shared_links().links:</span>
+<span id="cb10-17"><a href="backups.html#cb10-17" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span>link<span class="sc">.</span>path<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>link<span class="sc">.</span>url<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div></li>
+</ul>
+
+</div>
 </div>
             </section>
 
@@ -369,7 +403,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="processes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="restore.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="customizations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

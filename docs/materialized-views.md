@@ -17,11 +17,12 @@ SELECT data_source.acronym,
     JOIN data_source ON ((a.data_source_id = data_source.id)))
     JOIN country ON ((data_source.country_id = country.id)))
     JOIN ( SELECT achilles_results.count_value,
-           achilles_results.data_source_id,
-           achilles_results.stratum_2,
-           achilles_results.stratum_3
-          FROM achilles_results
-         WHERE (achilles_results.analysis_id = 0)) p ON ((p.data_source_id = data_source.id)))
+            achilles_results.data_source_id,
+            achilles_results.stratum_2,
+            achilles_results.stratum_3
+           FROM achilles_results
+           WHERE (achilles_results.analysis_id = 0)) p
+      ON p.data_source_id = data_source.id)
  WHERE (a.analysis_id = 5000);
 ```
 
@@ -31,9 +32,10 @@ SELECT data_source.acronym,
 SELECT country.country,
    source.database_type,
    achilles.count_value
-  FROM ((achilles_results achilles
-    JOIN data_source source ON ((achilles.data_source_id = source.id)))
-    JOIN country country ON ((source.country_id = country.id)))
+  FROM (
+    (achilles_results achilles JOIN data_source source
+      ON (achilles.data_source_id = source.id))
+    JOIN country country ON source.country_id = country.id)
  WHERE (achilles.analysis_id = 1);
 ```
 
@@ -45,8 +47,8 @@ SELECT achilles_results.count_value,
    data_source.acronym,
    data_source.database_type,
    country.country
-  FROM ((achilles_results
-    JOIN data_source ON ((achilles_results.data_source_id = data_source.id)))
+  FROM ((achilles_results JOIN data_source
+      ON ((achilles_results.data_source_id = data_source.id)))
     JOIN country ON ((data_source.country_id = country.id)))
  WHERE (achilles_results.analysis_id = 1);
 ```
@@ -61,9 +63,11 @@ SELECT source.name,
    concept.concept_name AS gender,
    achilles.count_value
   FROM (((achilles_results achilles
-    JOIN data_source source ON ((achilles.data_source_id = source.id)))
+    JOIN data_source source
+      ON ((achilles.data_source_id = source.id)))
     JOIN country ON ((country.id = source.country_id)))
-    JOIN concept ON ((achilles.stratum_1 = (concept.concept_id)::text)))
+    JOIN concept
+      ON ((achilles.stratum_1 = (concept.concept_id)::text)))
  WHERE (achilles.analysis_id = 2);
 ```
 
@@ -75,61 +79,107 @@ SELECT source.name,
    source.database_type,
    country.country,
    sum(
-       CASE
-           WHEN ((achilles.stratum_2)::integer < 10) THEN achilles.count_value
-           ELSE NULL::bigint
-       END) AS "0-10",
+     CASE WHEN (
+       (achilles.stratum_2):: integer < 10
+     ) THEN achilles.count_value ELSE NULL :: bigint END
+   ) AS "0-10", 
    sum(
-       CASE
-           WHEN (((achilles.stratum_2)::integer >= 10) AND ((achilles.stratum_2)::integer < 20)) THEN achilles.count_value
-           ELSE NULL::bigint
-       END) AS "10-20",
+     CASE WHEN (
+       (
+         (achilles.stratum_2):: integer >= 10
+       ) 
+       AND (
+         (achilles.stratum_2):: integer < 20
+       )
+     ) THEN achilles.count_value ELSE NULL :: bigint END
+   ) AS "10-20", 
    sum(
-       CASE
-           WHEN (((achilles.stratum_2)::integer >= 20) AND ((achilles.stratum_2)::integer < 30)) THEN achilles.count_value
-           ELSE NULL::bigint
-       END) AS "20-30",
+     CASE WHEN (
+       (
+         (achilles.stratum_2):: integer >= 20
+       ) 
+       AND (
+         (achilles.stratum_2):: integer < 30
+       )
+     ) THEN achilles.count_value ELSE NULL :: bigint END
+   ) AS "20-30", 
    sum(
-       CASE
-           WHEN (((achilles.stratum_2)::integer >= 30) AND ((achilles.stratum_2)::integer < 40)) THEN achilles.count_value
-           ELSE NULL::bigint
-       END) AS "30-40",
+     CASE WHEN (
+       (
+         (achilles.stratum_2):: integer >= 30
+       ) 
+       AND (
+         (achilles.stratum_2):: integer < 40
+       )
+     ) THEN achilles.count_value ELSE NULL :: bigint END
+   ) AS "30-40", 
    sum(
-       CASE
-           WHEN (((achilles.stratum_2)::integer >= 40) AND ((achilles.stratum_2)::integer < 50)) THEN achilles.count_value
-           ELSE NULL::bigint
-       END) AS "40-50",
+     CASE WHEN (
+       (
+         (achilles.stratum_2):: integer >= 40
+       ) 
+       AND (
+         (achilles.stratum_2):: integer < 50
+       )
+     ) THEN achilles.count_value ELSE NULL :: bigint END
+   ) AS "40-50", 
    sum(
-       CASE
-           WHEN (((achilles.stratum_2)::integer >= 50) AND ((achilles.stratum_2)::integer < 60)) THEN achilles.count_value
-           ELSE NULL::bigint
-       END) AS "50-60",
+     CASE WHEN (
+       (
+         (achilles.stratum_2):: integer >= 50
+       ) 
+       AND (
+         (achilles.stratum_2):: integer < 60
+       )
+     ) THEN achilles.count_value ELSE NULL :: bigint END
+   ) AS "50-60", 
    sum(
-       CASE
-           WHEN (((achilles.stratum_2)::integer >= 60) AND ((achilles.stratum_2)::integer < 70)) THEN achilles.count_value
-           ELSE NULL::bigint
-       END) AS "60-70",
+     CASE WHEN (
+       (
+         (achilles.stratum_2):: integer >= 60
+       ) 
+       AND (
+         (achilles.stratum_2):: integer < 70
+       )
+     ) THEN achilles.count_value ELSE NULL :: bigint END
+   ) AS "60-70", 
    sum(
-       CASE
-           WHEN (((achilles.stratum_2)::integer >= 70) AND ((achilles.stratum_2)::integer < 80)) THEN achilles.count_value
-           ELSE NULL::bigint
-       END) AS "70-80",
+     CASE WHEN (
+       (
+         (achilles.stratum_2):: integer >= 70
+       ) 
+       AND (
+         (achilles.stratum_2):: integer < 80
+       )
+     ) THEN achilles.count_value ELSE NULL :: bigint END
+   ) AS "70-80", 
    sum(
-       CASE
-           WHEN (((achilles.stratum_2)::integer >= 80) AND ((achilles.stratum_2)::integer < 90)) THEN achilles.count_value
-           ELSE NULL::bigint
-       END) AS "80-90",
+     CASE WHEN (
+       (
+         (achilles.stratum_2):: integer >= 80
+       ) 
+       AND (
+         (achilles.stratum_2):: integer < 90
+       )
+     ) THEN achilles.count_value ELSE NULL :: bigint END
+   ) AS "80-90", 
    sum(
-       CASE
-           WHEN ((achilles.stratum_2)::integer >= 90) THEN achilles.count_value
-           ELSE NULL::bigint
-       END) AS "90+"
+     CASE WHEN (
+       (achilles.stratum_2):: integer >= 90
+     ) THEN achilles.count_value ELSE NULL :: bigint END
+   ) AS "90+" 
   FROM (((achilles_results achilles
-    JOIN data_source source ON ((achilles.data_source_id = source.id)))
+    JOIN data_source source
+      ON ((achilles.data_source_id = source.id)))
     JOIN country ON ((country.id = source.country_id)))
-    JOIN concept ON ((achilles.stratum_1 = (concept.concept_id)::text)))
+    JOIN concept
+      ON ((achilles.stratum_1 = (concept.concept_id)::text)))
  WHERE (achilles.analysis_id = 102)
- GROUP BY source.name, source.acronym, source.database_type, country.country;
+ GROUP BY 
+   source.name, 
+   source.acronym, 
+   source.database_type, 
+   country.country;
 ```
 
 ### age1observation_bar_chart {-}
@@ -142,7 +192,8 @@ SELECT source.name,
    source.database_type,
    country.country
   FROM ((achilles_results achilles
-    JOIN data_source source ON ((achilles.data_source_id = source.id)))
+    JOIN data_source source
+      ON achilles.data_source_id = source.id)
     JOIN country ON ((country.id = source.country_id)))
  WHERE (achilles.analysis_id = 101);
 ```
@@ -162,7 +213,8 @@ SELECT source.name,
    achilles.max_value,
    achilles.min_value
   FROM ((achilles_results achilles
-    JOIN data_source source ON ((achilles.data_source_id = source.id)))
+    JOIN data_source source
+      ON ((achilles.data_source_id = source.id)))
     JOIN country ON ((source.country_id = country.id)))
  WHERE (achilles.analysis_id = 103)
  ORDER BY source.name;
@@ -178,7 +230,8 @@ SELECT source.name,
    achilles.stratum_1 AS "Birth_year",
    achilles.count_value AS count
   FROM ((achilles_results achilles
-    JOIN data_source source ON ((achilles.data_source_id = source.id)))
+    JOIN data_source source
+      ON ((achilles.data_source_id = source.id)))
     JOIN country ON ((country.id = source.country_id)))
  WHERE (achilles.analysis_id = 3);
 ```
@@ -191,27 +244,58 @@ SELECT source.name,
    source.database_type,
    country.country,
        CASE
-           WHEN (achilles.analysis_id = 201) THEN 'Visit'::text
-           WHEN (achilles.analysis_id = 401) THEN 'Condition'::text
-           WHEN (achilles.analysis_id = 501) THEN 'Death'::text
-           WHEN (achilles.analysis_id = 601) THEN 'Procedure'::text
-           WHEN (achilles.analysis_id = 701) THEN 'Drug Exposure'::text
-           WHEN (achilles.analysis_id = 801) THEN 'Observation'::text
-           WHEN (achilles.analysis_id = 1801) THEN 'Measurement'::text
-           WHEN (achilles.analysis_id = 2101) THEN 'Device'::text
-           WHEN (achilles.analysis_id = 2201) THEN 'Note'::text
+           WHEN (achilles.analysis_id = 201)
+             THEN 'Visit'::text
+           WHEN (achilles.analysis_id = 401)
+             THEN 'Condition'::text
+           WHEN (achilles.analysis_id = 501)
+             THEN 'Death'::text
+           WHEN (achilles.analysis_id = 601)
+             THEN 'Procedure'::text
+           WHEN (achilles.analysis_id = 701)
+             THEN 'Drug Exposure'::text
+           WHEN (achilles.analysis_id = 801)
+             THEN 'Observation'::text
+           WHEN (achilles.analysis_id = 1801)
+             THEN 'Measurement'::text
+           WHEN (achilles.analysis_id = 2101)
+             THEN 'Device'::text
+           WHEN (achilles.analysis_id = 2201)
+             THEN 'Note'::text
            ELSE NULL::text
        END AS data_domain,
-   (sum(achilles.count_value) / avg(counts.num_persons)) AS records_per_person
+   (sum(achilles.count_value) / avg(counts.num_persons))
+     AS records_per_person
   FROM (((achilles_results achilles
-    JOIN data_source source ON ((achilles.data_source_id = source.id)))
+    JOIN data_source source
+      ON ((achilles.data_source_id = source.id)))
     JOIN country ON ((country.id = source.country_id)))
     JOIN ( SELECT achilles_results.data_source_id,
            achilles_results.count_value AS num_persons
           FROM achilles_results
-         WHERE (achilles_results.analysis_id = 1)) counts ON ((achilles.data_source_id = counts.data_source_id)))
- GROUP BY achilles.analysis_id, source.name, source.acronym, source.database_type, country.country
-HAVING (achilles.analysis_id = ANY (ARRAY[(201)::bigint, (401)::bigint, (501)::bigint, (601)::bigint, (701)::bigint, (801)::bigint, (1801)::bigint, (2101)::bigint, (2201)::bigint]));
+         WHERE (achilles_results.analysis_id = 1)) counts
+           ON achilles.data_source_id = counts.data_source_id)
+ GROUP BY
+   achilles.analysis_id,
+   source.name,
+   source.acronym,
+   source.database_type,
+   country.country
+HAVING
+  (
+    achilles.analysis_id = ANY (
+      ARRAY[(201):: bigint,
+      (401):: bigint,
+      (501):: bigint,
+      (601):: bigint,
+      (701):: bigint,
+      (801):: bigint,
+      (1801):: bigint,
+      (2101):: bigint,
+      (2201):: bigint]
+    )
+  );
+
 ```
 
 ### data_domain_total_num_of_records {-}
@@ -222,23 +306,51 @@ SELECT data_source.name,
    data_source.database_type,
    country.country,
        CASE
-           WHEN (achilles_results.analysis_id = 201) THEN 'Visit'::text
-           WHEN (achilles_results.analysis_id = 401) THEN 'Condition'::text
-           WHEN (achilles_results.analysis_id = 501) THEN 'Death'::text
-           WHEN (achilles_results.analysis_id = 601) THEN 'Procedure'::text
-           WHEN (achilles_results.analysis_id = 701) THEN 'Drug Exposure'::text
-           WHEN (achilles_results.analysis_id = 801) THEN 'Observation'::text
-           WHEN (achilles_results.analysis_id = 1801) THEN 'Measurement'::text
-           WHEN (achilles_results.analysis_id = 2101) THEN 'Device'::text
-           WHEN (achilles_results.analysis_id = 2201) THEN 'Note'::text
+           WHEN (achilles_results.analysis_id = 201)
+             THEN 'Visit'::text
+           WHEN (achilles_results.analysis_id = 401)
+             THEN 'Condition'::text
+           WHEN (achilles_results.analysis_id = 501)
+             THEN 'Death'::text
+           WHEN (achilles_results.analysis_id = 601)
+             THEN 'Procedure'::text
+           WHEN (achilles_results.analysis_id = 701)
+             THEN 'Drug Exposure'::text
+           WHEN (achilles_results.analysis_id = 801)
+             THEN 'Observation'::text
+           WHEN (achilles_results.analysis_id = 1801)
+             THEN 'Measurement'::text
+           WHEN (achilles_results.analysis_id = 2101)
+             THEN 'Device'::text
+           WHEN (achilles_results.analysis_id = 2201)
+             THEN 'Note'::text
            ELSE NULL::text
        END AS data_domain,
    sum(achilles_results.count_value) AS count
   FROM ((achilles_results
-    JOIN data_source ON ((achilles_results.data_source_id = data_source.id)))
+    JOIN data_source
+      ON ((achilles_results.data_source_id = data_source.id)))
     JOIN country ON ((country.id = data_source.country_id)))
- GROUP BY data_source.name, data_source.acronym, data_source.database_type, country.country, achilles_results.analysis_id
-HAVING (achilles_results.analysis_id = ANY (ARRAY[(201)::bigint, (401)::bigint, (501)::bigint, (601)::bigint, (701)::bigint, (801)::bigint, (1801)::bigint, (2101)::bigint, (2201)::bigint]));
+ GROUP BY
+   data_source.name,
+   data_source.acronym,
+   data_source.database_type,
+   country.country,
+   achilles_results.analysis_id
+HAVING
+  (
+    achilles_results.analysis_id = ANY (
+      ARRAY[(201):: bigint,
+      (401):: bigint,
+      (501):: bigint,
+      (601):: bigint,
+      (701):: bigint,
+      (801):: bigint,
+      (1801):: bigint,
+      (2101):: bigint,
+      (2201):: bigint]
+    )
+  );
 ```
 
 ### number_of_distinct_per_person {-}
@@ -249,12 +361,18 @@ SELECT source.name,
    country.country,
    achilles.analysis_id,
        CASE
-           WHEN (achilles.analysis_id = 203) THEN 'Visit'::text
-           WHEN (achilles.analysis_id = 403) THEN 'Condition'::text
-           WHEN (achilles.analysis_id = 603) THEN 'Procedure'::text
-           WHEN (achilles.analysis_id = 703) THEN 'Drug Exposure'::text
-           WHEN (achilles.analysis_id = 803) THEN 'Observation'::text
-           WHEN (achilles.analysis_id = 1803) THEN 'Measurement'::text
+           WHEN (achilles.analysis_id = 203)
+             THEN 'Visit'::text
+           WHEN (achilles.analysis_id = 403)
+             THEN 'Condition'::text
+           WHEN (achilles.analysis_id = 603)
+             THEN 'Procedure'::text
+           WHEN (achilles.analysis_id = 703)
+             THEN 'Drug Exposure'::text
+           WHEN (achilles.analysis_id = 803)
+             THEN 'Observation'::text
+           WHEN (achilles.analysis_id = 1803)
+             THEN 'Measurement'::text
            ELSE NULL::text
        END AS data_domain,
    achilles.count_value,
@@ -266,9 +384,20 @@ SELECT source.name,
    achilles.p90_value AS p90,
    achilles.max_value
   FROM ((achilles_results achilles
-    JOIN data_source source ON ((achilles.data_source_id = source.id)))
+    JOIN data_source source
+      ON ((achilles.data_source_id = source.id)))
     JOIN country ON ((source.country_id = country.id)))
- WHERE (achilles.analysis_id = ANY (ARRAY[(203)::bigint, (403)::bigint, (603)::bigint, (703)::bigint, (803)::bigint, (183)::bigint]))
+ WHERE
+   (
+     achilles.analysis_id = ANY (
+       ARRAY[(203):: bigint,
+       (403):: bigint,
+       (603):: bigint,
+       (703):: bigint,
+       (803):: bigint,
+       (183):: bigint]
+     )
+   )
  ORDER BY source.name;
 ```
 
@@ -280,29 +409,58 @@ SELECT source.name,
    source.database_type,
    country.country,
        CASE
-           WHEN (achilles.analysis_id = 405) THEN 'Condition'::text
-           WHEN (achilles.analysis_id = 605) THEN 'Procedure'::text
-           WHEN (achilles.analysis_id = 705) THEN 'Drug'::text
-           WHEN (achilles.analysis_id = 805) THEN 'Observation'::text
-           WHEN (achilles.analysis_id = 1805) THEN 'Measurement'::text
-           WHEN (achilles.analysis_id = 2105) THEN 'Device'::text
+           WHEN (achilles.analysis_id = 405)
+             THEN 'Condition'::text
+           WHEN (achilles.analysis_id = 605)
+             THEN 'Procedure'::text
+           WHEN (achilles.analysis_id = 705)
+             THEN 'Drug'::text
+           WHEN (achilles.analysis_id = 805)
+             THEN 'Observation'::text
+           WHEN (achilles.analysis_id = 1805)
+             THEN 'Measurement'::text
+           WHEN (achilles.analysis_id = 2105)
+             THEN 'Device'::text
            ELSE 'Other'::text
        END AS domain_name,
    c1.concept_name,
    sum(achilles.count_value) AS num_records
   FROM (((achilles_results achilles
-    JOIN data_source source ON ((achilles.data_source_id = source.id)))
+    JOIN data_source source
+      ON ((achilles.data_source_id = source.id)))
     JOIN country ON ((country.id = source.country_id)))
-    JOIN concept c1 ON ((achilles.stratum_2 = (c1.concept_id)::text)))
- WHERE (achilles.analysis_id = ANY (ARRAY[(405)::bigint, (605)::bigint, (705)::bigint, (805)::bigint, (1805)::bigint, (2105)::bigint]))
- GROUP BY source.name, source.acronym, source.database_type, country.country, c1.concept_name,
+    JOIN concept c1
+      ON ((achilles.stratum_2 = (c1.concept_id)::text)))
+ WHERE
+   (
+     achilles.analysis_id = ANY (
+       ARRAY[(405):: bigint,
+       (605):: bigint,
+       (705):: bigint,
+       (805):: bigint,
+       (1805):: bigint,
+       (2105):: bigint]
+     )
+   )
+ GROUP BY
+   source.name,
+   source.acronym,
+   source.database_type,
+   country.country,
+   c1.concept_name,
        CASE
-           WHEN (achilles.analysis_id = 405) THEN 'Condition'::text
-           WHEN (achilles.analysis_id = 605) THEN 'Procedure'::text
-           WHEN (achilles.analysis_id = 705) THEN 'Drug'::text
-           WHEN (achilles.analysis_id = 805) THEN 'Observation'::text
-           WHEN (achilles.analysis_id = 1805) THEN 'Measurement'::text
-           WHEN (achilles.analysis_id = 2105) THEN 'Device'::text
+           WHEN (achilles.analysis_id = 405)
+             THEN 'Condition'::text
+           WHEN (achilles.analysis_id = 605)
+             THEN 'Procedure'::text
+           WHEN (achilles.analysis_id = 705)
+             THEN 'Drug'::text
+           WHEN (achilles.analysis_id = 805)
+             THEN 'Observation'::text
+           WHEN (achilles.analysis_id = 1805)
+             THEN 'Measurement'::text
+           WHEN (achilles.analysis_id = 2105)
+             THEN 'Device'::text
            ELSE 'Other'::text
        END;
 ```
@@ -317,7 +475,8 @@ SELECT source.name,
    to_date(achilles.stratum_1, 'YYYYMM'::text) AS date,
    achilles.count_value AS "Nr_patients"
   FROM ((achilles_results achilles
-    JOIN data_source source ON ((achilles.data_source_id = source.id)))
+    JOIN data_source source
+      ON ((achilles.data_source_id = source.id)))
     JOIN country ON ((country.id = source.country_id)))
  WHERE (achilles.analysis_id = 110);
 ```
@@ -325,24 +484,60 @@ SELECT source.name,
 ### cumulative_observation_time {-}
 
 ```sql
-SELECT data_source.name,
-   data_source.acronym,
-   data_source.database_type,
-   country.country,
-   cumulative_sums.xlengthofobservation,
-   round((cumulative_sums.cumulative_sum / (totals.total)::numeric), 5) AS ypercentpersons
-  FROM (((( SELECT achilles_results.data_source_id,
-           ((achilles_results.stratum_1)::integer * 30) AS xlengthofobservation,
-           sum(achilles_results.count_value) OVER (PARTITION BY achilles_results.data_source_id ORDER BY (achilles_results.stratum_1)::integer DESC) AS cumulative_sum
-          FROM achilles_results
-         WHERE (achilles_results.analysis_id = 108)) cumulative_sums
-    JOIN ( SELECT achilles_results.data_source_id,
-           achilles_results.count_value AS total
-          FROM achilles_results
-         WHERE (achilles_results.analysis_id = 1)) totals ON ((cumulative_sums.data_source_id = totals.data_source_id)))
-    JOIN data_source ON ((cumulative_sums.data_source_id = data_source.id)))
-    JOIN country ON ((country.id = data_source.country_id)))
- ORDER BY data_source.name, cumulative_sums.xlengthofobservation;
+SELECT
+  data_source.name,
+  data_source.acronym,
+  data_source.database_type,
+  country.country,
+  cumulative_sums.xlengthofobservation,
+  round(
+    (cumulative_sums.cumulative_sum / (totals.total):: numeric),
+    5
+  ) AS ypercentpersons
+FROM
+  (
+    (
+      (
+        (
+          SELECT
+            achilles_results.data_source_id,
+            (
+              (achilles_results.stratum_1):: integer * 30
+            ) AS xlengthofobservation,
+            sum(achilles_results.count_value) OVER (
+              PARTITION BY achilles_results.data_source_id
+              ORDER BY
+                (achilles_results.stratum_1):: integer DESC
+            ) AS cumulative_sum
+          FROM
+            achilles_results
+          WHERE
+            (
+              achilles_results.analysis_id = 108
+            )
+        ) cumulative_sums
+        JOIN (
+          SELECT
+            achilles_results.data_source_id,
+            achilles_results.count_value AS total
+          FROM
+            achilles_results
+          WHERE
+            (achilles_results.analysis_id = 1)
+        ) totals ON (
+          (
+            cumulative_sums.data_source_id = totals.data_source_id
+          )
+        )
+      )
+      JOIN data_source
+        ON ((cumulative_sums.data_source_id = data_source.id))
+    )
+    JOIN country ON ((country.id = data_source.country_id))
+  )
+ORDER BY
+  data_source.name,
+  cumulative_sums.xlengthofobservation;
 ```
 
 ### number_of_observation_periods {-}
@@ -355,14 +550,22 @@ SELECT ar.data_source_id AS id,
    ar.stratum_1,
    ar.count_value,
    pa.nrpatients AS patients,
-   round((((100)::numeric * (ar.count_value)::numeric) / (pa.nrpatients)::numeric), 2) AS percentage
+   round(
+     (
+       ((100)::numeric * (ar.count_value)::numeric)
+       /
+       (pa.nrpatients)::numeric
+     ),
+     2
+   ) AS percentage
   FROM (((achilles_results ar
     JOIN data_source ds ON ((ds.id = ar.data_source_id)))
     JOIN country ON ((ds.country_id = country.id)))
     JOIN ( SELECT achilles_results.count_value AS nrpatients,
            achilles_results.data_source_id
           FROM achilles_results
-         WHERE (achilles_results.analysis_id = 0)) pa ON ((pa.data_source_id = ds.id)))
+         WHERE (achilles_results.analysis_id = 0)) pa
+           ON ((pa.data_source_id = ds.id)))
  WHERE (ar.analysis_id = 113);
 ```
 
@@ -381,7 +584,8 @@ SELECT source.name,
    achilles.p90_value AS p90,
    achilles.max_value
   FROM ((achilles_results achilles
-    JOIN data_source source ON ((achilles.data_source_id = source.id)))
+    JOIN data_source source
+      ON ((achilles.data_source_id = source.id)))
     JOIN country ON ((source.country_id = country.id)))
  WHERE (achilles.analysis_id = 105)
  ORDER BY source.name;
@@ -415,10 +619,17 @@ SELECT data_source.name,
            achilles_results_1.p90_value,
            achilles_results_1.stdev_value
           FROM achilles_results achilles_results_1
-         WHERE (achilles_results_1.analysis_id = 200)) achilles_results
-    JOIN data_source ON ((achilles_results.data_source_id = data_source.id)))
+         WHERE (achilles_results_1.analysis_id = 200)
+         ) achilles_results
+    JOIN data_source
+      ON ((achilles_results.data_source_id = data_source.id)))
     JOIN country ON ((country.id = data_source.country_id)))
-    JOIN concept ON (((achilles_results.stratum_1)::integer = concept.concept_id)));
+    JOIN concept
+      ON
+        (achilles_results.stratum_1)::integer
+        =
+        concept.concept_id
+        );
 ```
 
 ### visit_type_table {-}
@@ -430,8 +641,22 @@ SELECT data_source.name,
    country.country,
    concept.concept_name,
    ar1.count_value AS num_persons,
-   round(((100.0 * (ar1.count_value)::numeric) / (denom.count_value)::numeric), 2) AS percent_persons,
-   round(((1.0 * (ar2.count_value)::numeric) / (ar1.count_value)::numeric), 2) AS records_per_person
+   round(
+     (
+       (100.0 * (ar1.count_value)::numeric)
+       /
+       (denom.count_value)::numeric
+     ),
+     2
+   ) AS percent_persons,
+   round(
+     (
+       (1.0 * (ar2.count_value)::numeric)
+       /
+       (ar1.count_value)::numeric
+     ),
+     2
+   ) AS records_per_person
   FROM (((((( SELECT achilles_results.id,
            achilles_results.analysis_id,
            achilles_results.stratum_1,
@@ -471,7 +696,9 @@ SELECT data_source.name,
            achilles_results.p90_value,
            achilles_results.stdev_value
           FROM achilles_results
-         WHERE (achilles_results.analysis_id = 201)) ar2 ON (((ar1.stratum_1 = ar2.stratum_1) AND (ar1.data_source_id = ar2.data_source_id))))
+         WHERE (achilles_results.analysis_id = 201)) ar2
+           ON (((ar1.stratum_1 = ar2.stratum_1)
+             AND (ar1.data_source_id = ar2.data_source_id))))
     JOIN ( SELECT achilles_results.id,
            achilles_results.analysis_id,
            achilles_results.stratum_1,
@@ -491,86 +718,264 @@ SELECT data_source.name,
            achilles_results.p90_value,
            achilles_results.stdev_value
           FROM achilles_results
-         WHERE (achilles_results.analysis_id = 1)) denom ON ((ar1.data_source_id = denom.data_source_id)))
+         WHERE (achilles_results.analysis_id = 1)) denom
+           ON ((ar1.data_source_id = denom.data_source_id)))
     JOIN data_source ON ((data_source.id = ar1.data_source_id)))
-    JOIN country ON ((country.id = data_source.country_id)))
-    JOIN concept ON (((ar1.stratum_1)::integer = concept.concept_id)))
+    JOIN country
+      ON ((country.id = data_source.country_id)))
+    JOIN concept
+      ON (((ar1.stratum_1)::integer = concept.concept_id)))
  ORDER BY ar1.data_source_id, ar1.count_value DESC;
 ```
 
 ### domain_filter {-}
 
 ```sql
-SELECT concept.concept_name,
-   concept.domain_id,
-   source.name,
-   source.acronym,
-   source.database_type,
-   country.country
-  FROM (((achilles_results
-    JOIN concept ON (((achilles_results.stratum_1)::bigint = concept.concept_id)))
-    JOIN data_source source ON ((achilles_results.data_source_id = source.id)))
-    JOIN country ON ((country.id = source.country_id)))
- WHERE (achilles_results.analysis_id = ANY (ARRAY[(201)::bigint, (401)::bigint, (601)::bigint, (701)::bigint, (801)::bigint, (901)::bigint, (1001)::bigint, (1801)::bigint, (200)::bigint, (400)::bigint, (600)::bigint, (700)::bigint, (800)::bigint, (1800)::bigint]));
+SELECT
+  concept.concept_name,
+  concept.domain_id,
+  source.name,
+  source.acronym,
+  source.database_type,
+  country.country
+FROM
+  (
+    (
+      (
+        achilles_results
+        JOIN concept ON (
+          (
+            (achilles_results.stratum_1):: bigint
+            =
+            concept.concept_id
+          )
+        )
+      )
+      JOIN data_source source ON (
+        (
+          achilles_results.data_source_id = source.id
+        )
+      )
+    )
+    JOIN country ON (
+      (country.id = source.country_id)
+    )
+  )
+WHERE
+  (
+    achilles_results.analysis_id = ANY (
+      ARRAY[(201):: bigint,
+      (401):: bigint,
+      (601):: bigint,
+      (701):: bigint,
+      (801):: bigint,
+      (901):: bigint,
+      (1001):: bigint,
+      (1801):: bigint,
+      (200):: bigint,
+      (400):: bigint,
+      (600):: bigint,
+      (700):: bigint,
+      (800):: bigint,
+      (1800):: bigint]
+    )
+  );
 ```
 
 ### concept_browser_table3 {-}
 
 ```sql
-SELECT source.name,
-   source.acronym,
-   source.database_type,
-   country.country,
-   (((('<a href="https://athena.ohdsi.org/search-terms/terms/'::text || ar1.concept_id) || '"target="_blank">'::text) || ar1.concept_id) || '</a>'::text) AS concept_id,
-   concept.concept_name,
-   concept.domain_id,
-   (ar1.rc)::integer AS rc,
-   (ar2.drc)::integer AS drc
-  FROM ((((( SELECT achilles_results.data_source_id,
-           achilles_results.analysis_id,
-           achilles_results.stratum_1 AS concept_id,
-           achilles_results.count_value AS rc
-          FROM achilles_results
-         WHERE (achilles_results.analysis_id = ANY (ARRAY[(401)::bigint, (601)::bigint, (701)::bigint, (801)::bigint, (1801)::bigint, (2101)::bigint]))) ar1
-    JOIN ( SELECT ar.data_source_id,
-           ar.analysis_id,
-           ar.stratum_1 AS concept_id,
-           ar.count_value AS drc
-          FROM achilles_results ar
-         WHERE (ar.analysis_id = ANY (ARRAY[(430)::bigint, (630)::bigint, (730)::bigint, (830)::bigint, (1830)::bigint, (2130)::bigint]))) ar2 ON (((ar1.concept_id = ar2.concept_id) AND (ar1.data_source_id = ar2.data_source_id))))
-    JOIN data_source source ON ((ar1.data_source_id = source.id)))
-    JOIN country ON ((source.country_id = country.id)))
-    JOIN concept concept ON ((ar1.concept_id = (concept.concept_id)::text)))
- ORDER BY ((ar2.drc)::integer) DESC;
+SELECT
+  source.name,
+  source.acronym,
+  source.database_type,
+  country.country,
+  (
+    (
+      (
+        (
+'<a href="https://athena.ohdsi.org/search-terms/terms/' :: text
+          || ar1.concept_id
+        ) || '"target="_blank">' :: text
+      ) || ar1.concept_id
+    ) || '</a>' :: text
+  ) AS concept_id,
+  concept.concept_name,
+  concept.domain_id,
+  (ar1.rc):: integer AS rc,
+  (ar2.drc):: integer AS drc
+FROM
+  (
+    (
+      (
+        (
+          (
+            SELECT
+              achilles_results.data_source_id,
+              achilles_results.analysis_id,
+              achilles_results.stratum_1 AS concept_id,
+              achilles_results.count_value AS rc
+            FROM
+              achilles_results
+            WHERE
+              (
+                achilles_results.analysis_id = ANY (
+                  ARRAY[(401):: bigint,
+                  (601):: bigint,
+                  (701):: bigint,
+                  (801):: bigint,
+                  (1801):: bigint,
+                  (2101):: bigint]
+                )
+              )
+          ) ar1
+          JOIN (
+            SELECT
+              ar.data_source_id,
+              ar.analysis_id,
+              ar.stratum_1 AS concept_id,
+              ar.count_value AS drc
+            FROM
+              achilles_results ar
+            WHERE
+              (
+                ar.analysis_id = ANY (
+                  ARRAY[(430):: bigint,
+                  (630):: bigint,
+                  (730):: bigint,
+                  (830):: bigint,
+                  (1830):: bigint,
+                  (2130):: bigint]
+                )
+              )
+          ) ar2 ON (
+            (
+              (ar1.concept_id = ar2.concept_id)
+              AND (
+                ar1.data_source_id = ar2.data_source_id
+              )
+            )
+          )
+        )
+        JOIN data_source source ON (
+          (ar1.data_source_id = source.id)
+        )
+      )
+      JOIN country ON (
+        (source.country_id = country.id)
+      )
+    )
+    JOIN concept concept ON (
+      (
+        ar1.concept_id = (concept.concept_id):: text
+      )
+    )
+  )
+ORDER BY
+  (
+    (ar2.drc):: integer
+  ) DESC;
 ```
 
 ### concept_coverage2 {-}
 
 ```sql
-SELECT source.name AS source_name,
-   source.database_type,
-   country.country,
-   (((('<a href="https://athena.ohdsi.org/search-terms/terms/'::text || concept.concept_id) || '" target="_blank">'::text) || concept.concept_id) || '</a>'::text) AS concept_id,
-   concept.concept_name,
-   concept.domain_id,
-   sum((ar1.rc)::integer) AS rc,
-   sum((ar2.drc)::integer) AS drc
-  FROM ((((( SELECT achilles_results.data_source_id,
-           achilles_results.analysis_id,
-           achilles_results.stratum_1 AS concept_id,
-           achilles_results.count_value AS rc
-          FROM achilles_results
-         WHERE (achilles_results.analysis_id = ANY (ARRAY[(401)::bigint, (601)::bigint, (701)::bigint, (801)::bigint, (1801)::bigint, (2101)::bigint]))) ar1
-    JOIN ( SELECT ar.data_source_id,
-           ar.analysis_id,
-           ar.stratum_1 AS concept_id,
-           ar.count_value AS drc
-          FROM achilles_results ar
-         WHERE (ar.analysis_id = ANY (ARRAY[(430)::bigint, (630)::bigint, (730)::bigint, (830)::bigint, (1830)::bigint, (2130)::bigint]))) ar2 ON (((ar1.concept_id = ar2.concept_id) AND (ar1.data_source_id = ar2.data_source_id))))
-    JOIN data_source source ON ((ar1.data_source_id = source.id)))
-    JOIN country ON ((country.id = source.country_id)))
-    JOIN concept concept ON ((ar1.concept_id = (concept.concept_id)::text)))
- GROUP BY source.name, source.database_type, country.country, concept.domain_id, concept.concept_id, concept.concept_name;
+SELECT
+  source.name AS source_name,
+  source.database_type,
+  country.country,
+  (
+    (
+      (
+        (
+'<a href="https://athena.ohdsi.org/search-terms/terms/' :: text
+          || concept.concept_id
+        ) || '" target="_blank">' :: text
+      ) || concept.concept_id
+    ) || '</a>' :: text
+  ) AS concept_id,
+  concept.concept_name,
+  concept.domain_id,
+  sum(
+    (ar1.rc):: integer
+  ) AS rc,
+  sum(
+    (ar2.drc):: integer
+  ) AS drc
+FROM
+  (
+    (
+      (
+        (
+          (
+            SELECT
+              achilles_results.data_source_id,
+              achilles_results.analysis_id,
+              achilles_results.stratum_1 AS concept_id,
+              achilles_results.count_value AS rc
+            FROM
+              achilles_results
+            WHERE
+              (
+                achilles_results.analysis_id = ANY (
+                  ARRAY[(401):: bigint,
+                  (601):: bigint,
+                  (701):: bigint,
+                  (801):: bigint,
+                  (1801):: bigint,
+                  (2101):: bigint]
+                )
+              )
+          ) ar1
+          JOIN (
+            SELECT
+              ar.data_source_id,
+              ar.analysis_id,
+              ar.stratum_1 AS concept_id,
+              ar.count_value AS drc
+            FROM
+              achilles_results ar
+            WHERE
+              (
+                ar.analysis_id = ANY (
+                  ARRAY[(430):: bigint,
+                  (630):: bigint,
+                  (730):: bigint,
+                  (830):: bigint,
+                  (1830):: bigint,
+                  (2130):: bigint]
+                )
+              )
+          ) ar2 ON (
+            (
+              (ar1.concept_id = ar2.concept_id)
+              AND (
+                ar1.data_source_id = ar2.data_source_id
+              )
+            )
+          )
+        )
+        JOIN data_source source ON (
+          (ar1.data_source_id = source.id)
+        )
+      )
+      JOIN country ON (
+        (country.id = source.country_id)
+      )
+    )
+    JOIN concept concept ON (
+      (
+        ar1.concept_id = (concept.concept_id):: text
+      )
+    )
+  )
+GROUP BY
+  source.name,
+  source.database_type,
+  country.country,
+  concept.domain_id,
+  concept.concept_id,
+  concept.concept_name;
 ```
 
 ### data_density {-}
@@ -659,7 +1064,8 @@ SELECT source.acronym,
     JOIN data_source source ON ((source.id = t1.id)))
  ORDER BY t1.table_name, (
        CASE
-           WHEN (t1.stratum_1 ~ '^\d+\.?\d+$'::text) THEN t1.stratum_1
+           WHEN (t1.stratum_1 ~ '^\d+\.?\d+$'::text)
+             THEN t1.stratum_1
            ELSE NULL::text
        END)::integer;
 ```
@@ -670,7 +1076,14 @@ SELECT source.acronym,
 SELECT source.acronym,
    t1.table_name AS series_name,
    to_date(t1.stratum_1, 'YYYYMM'::text) AS x_calendar_month,
-   round(((1.0 * (t1.count_value)::numeric) / (denom.count_value)::numeric), 5) AS y_record_count
+   round(
+     (
+       (1.0 * (t1.count_value)::numeric)
+       /
+       (denom.count_value)::numeric
+     ),
+     5
+   ) AS y_record_count
   FROM ((( SELECT achilles_results.data_source_id AS id,
            'Visit occurrence'::text AS table_name,
            achilles_results.stratum_1,
@@ -766,11 +1179,14 @@ SELECT source.acronym,
            achilles_results.p90_value,
            achilles_results.stdev_value
           FROM achilles_results
-         WHERE (achilles_results.analysis_id = 117)) denom ON (((t1.stratum_1 = denom.stratum_1) AND (t1.id = denom.data_source_id))))
+         WHERE (achilles_results.analysis_id = 117)) denom
+           ON (((t1.stratum_1 = denom.stratum_1)
+             AND (t1.id = denom.data_source_id))))
     JOIN data_source source ON ((source.id = t1.id)))
  ORDER BY t1.table_name, (
        CASE
-           WHEN (t1.stratum_1 ~ '^\d+\.?\d+$'::text) THEN t1.stratum_1
+           WHEN (t1.stratum_1 ~ '^\d+\.?\d+$'::text)
+             THEN t1.stratum_1
            ELSE NULL::text
        END)::integer;
 ```
@@ -789,9 +1205,12 @@ SELECT source.name,
    achilles.p75_value AS p75,
    achilles.p90_value AS p90
   FROM (((achilles_results achilles
-    JOIN data_source source ON ((achilles.data_source_id = source.id)))
-    JOIN concept c1 ON ((achilles.stratum_1 = (c1.concept_id)::text)))
-    JOIN concept c2 ON ((achilles.stratum_2 = (c2.concept_id)::text)))
+    JOIN data_source source
+      ON ((achilles.data_source_id = source.id)))
+    JOIN concept c1
+      ON ((achilles.stratum_1 = (c1.concept_id)::text)))
+    JOIN concept c2
+      ON ((achilles.stratum_2 = (c2.concept_id)::text)))
  WHERE (achilles.analysis_id = 206)
  ORDER BY source.name, c1.concept_name, c2.concept_name;
 ```
@@ -800,25 +1219,82 @@ SELECT source.name,
 
 ```sql
 SELECT
-   source.acronym,
-   (((('<a href="https://athena.ohdsi.org/search-terms/terms/'::text || ar1.concept_id) || '"target="_blank">'::text) || ar1.concept_id) || '</a>'::text) AS concept_id,
-   concept.concept_name,
-   concept.domain_id,
-   (ar1.rc)::integer AS rc,
-   (ar2.drc)::integer AS drc
-  FROM (((( SELECT achilles_results.data_source_id,
-           achilles_results.analysis_id,
-           achilles_results.stratum_1 AS concept_id,
-           achilles_results.count_value AS rc
-          FROM achilles_results
-         WHERE (achilles_results.analysis_id = ANY (ARRAY[(401)::bigint, (601)::bigint, (701)::bigint, (801)::bigint, (1801)::bigint, (2101)::bigint]))) ar1
-    JOIN ( SELECT ar.data_source_id,
-           ar.analysis_id,
-           ar.stratum_1 AS concept_id,
-           ar.count_value AS drc
-          FROM achilles_results ar
-         WHERE (ar.analysis_id = ANY (ARRAY[(430)::bigint, (630)::bigint, (730)::bigint, (830)::bigint, (1830)::bigint, (2130)::bigint]))) ar2 ON (((ar1.concept_id = ar2.concept_id) AND (ar1.data_source_id = ar2.data_source_id))))
-    JOIN data_source source ON ((ar1.data_source_id = source.id)))
-    JOIN concept concept ON ((ar1.concept_id = (concept.concept_id)::text)))
- ORDER BY ((ar2.drc)::integer) DESC;
+  source.acronym,
+  (
+    (
+      (
+        (
+'<a href="https://athena.ohdsi.org/search-terms/terms/' :: text
+          || ar1.concept_id
+        ) || '"target="_blank">' :: text
+      ) || ar1.concept_id
+    ) || '</a>' :: text
+  ) AS concept_id,
+  concept.concept_name,
+  concept.domain_id,
+  (ar1.rc):: integer AS rc,
+  (ar2.drc):: integer AS drc
+FROM
+  (
+    (
+      (
+        (
+          SELECT
+            achilles_results.data_source_id,
+            achilles_results.analysis_id,
+            achilles_results.stratum_1 AS concept_id,
+            achilles_results.count_value AS rc
+          FROM
+            achilles_results
+          WHERE
+            (
+              achilles_results.analysis_id = ANY (
+                ARRAY[(401):: bigint,
+                (601):: bigint,
+                (701):: bigint,
+                (801):: bigint,
+                (1801):: bigint,
+                (2101):: bigint]
+              )
+            )
+        ) ar1
+        JOIN (
+          SELECT
+            ar.data_source_id,
+            ar.analysis_id,
+            ar.stratum_1 AS concept_id,
+            ar.count_value AS drc
+          FROM
+            achilles_results ar
+          WHERE
+            (
+              ar.analysis_id = ANY (
+                ARRAY[(430):: bigint,
+                (630):: bigint,
+                (730):: bigint,
+                (830):: bigint,
+                (1830):: bigint,
+                (2130):: bigint]
+              )
+            )
+        ) ar2 ON (
+          (
+            (ar1.concept_id = ar2.concept_id)
+            AND (
+              ar1.data_source_id = ar2.data_source_id
+            )
+          )
+        )
+      )
+      JOIN data_source source ON (
+        (ar1.data_source_id = source.id)
+      )
+    )
+    JOIN concept concept ON (
+      (
+        ar1.concept_id = (concept.concept_id):: text
+      )
+    )
+  )
+ORDER BY ((ar2.drc):: integer) DESC;
 ```

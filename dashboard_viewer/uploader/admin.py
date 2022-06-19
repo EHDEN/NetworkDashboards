@@ -46,7 +46,8 @@ class PendingUploadAdmin(admin.ModelAdmin):
 
 @admin.register(DataSource)
 class DataSourceAdmin(admin.ModelAdmin):
-    list_display = ("name", "acronym", "database_type", "country")
+    list_display = ("acronym", "name", "draft", "database_type", "country")
+    list_filter = ("draft",)
 
     actions = [custom_delete_selected]
 

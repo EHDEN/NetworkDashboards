@@ -1,9 +1,9 @@
-# Based on https://github.com/apache/superset/blob/1.3.1/Dockerfile
+# Based on https://github.com/apache/superset/blob/1.5.0/Dockerfile
 
 ######################################################################
 # PY stage that simply does a pip install on our requirements
 ######################################################################
-ARG PY_VER=3.7.9
+ARG PY_VER=3.8.12
 FROM python:${PY_VER} AS superset-py
 
 RUN mkdir /app \
@@ -30,7 +30,7 @@ RUN cd /app \
 ######################################################################
 # Node stage to deal with static asset construction
 ######################################################################
-FROM node:14 AS superset-node
+FROM node:16 AS superset-node
 
 ARG NPM_VER=7
 RUN npm install -g npm@${NPM_VER}
@@ -42,35 +42,26 @@ ENV BUILD_CMD=${NPM_BUILD_CMD}
 RUN mkdir -p /app/superset-frontend
 RUN mkdir -p /app/superset/assets
 COPY ./repo/docker/frontend-mem-nag.sh /
-COPY ./repo/superset-frontend/package* /app/superset-frontend/
+COPY ./repo/superset-frontend/ /app/superset-frontend/
 
-COPY ./plugins/plugins /app/superset-frontend/plugins
+# Add our boxplot
+COPY ./box-plot-overrides /app/superset-frontend/plugins/plugin-chart-echarts/
+RUN rm -f /app/superset-frontend/plugins/plugin-chart-echarts/src/BoxPlot/controlPanel.ts
 
 RUN /frontend-mem-nag.sh \
         && cd /app/superset-frontend \
-        && for f in $(ls /app/superset-frontend/plugins) ; do npm install --save ./plugins/$f ; done \
-        && npm ci \
-        && mkdir -p package_json_files \
-        && cp package*.json package_json_files
+        && npm ci
 
-# Next, copy in the rest and let webpack do its thing
-COPY ./repo/superset-frontend /app/superset-frontend
-
-#COPY ./plugins/setupPluginsExtra.ts /app/superset-frontend/src/setup/setupPluginsExtra.ts
-COPY ./plugins/MainPreset.js /app/superset-frontend/src/visualizations/presets/MainPreset.js
-
-# This is BY FAR the most expensive step (thanks Terser!)
+# This seems to be the most expensive step
 RUN cd /app/superset-frontend \
-        && mv package_json_files/* . \
         && npm run ${BUILD_CMD} \
-        && rm -rf node_modules \
-        && rmdir package_json_files
+        && rm -rf node_modules
 
 
 ######################################################################
 # Final lean image...
 ######################################################################
-ARG PY_VER=3.7.9
+ARG PY_VER=3.8.12
 FROM python:${PY_VER} AS lean
 
 ENV LANG=C.UTF-8 \
@@ -89,12 +80,13 @@ RUN mkdir -p ${PYTHONPATH} \
             default-libmysqlclient-dev \
             libsasl2-modules-gssapi-mit \
             libpq-dev \
+            libecpg-dev \
         && rm -rf /var/lib/apt/lists/*
 
 # Copying configs. No need for a volume
 COPY ./repo/docker/pythonpath_dev/superset_config.py ./superset_config_docker.py /app/pythonpath_docker/
 
-COPY --from=superset-py /usr/local/lib/python3.7/site-packages/ /usr/local/lib/python3.7/site-packages/
+COPY --from=superset-py /usr/local/lib/python3.8/site-packages/ /usr/local/lib/python3.8/site-packages/
 # Copying site-packages doesn't move the CLIs, so let's copy them one by one
 COPY --from=superset-py /usr/local/bin/gunicorn /usr/local/bin/celery /usr/local/bin/flask /usr/bin/
 COPY --from=superset-node /app/superset/static/assets /app/superset/static/assets
@@ -105,11 +97,14 @@ COPY repo/superset /app/superset
 COPY repo/setup.py repo/MANIFEST.in repo/README.md /app/
 RUN cd /app \
         && chown -R superset:superset * \
-        && pip install -e .
+        && pip install -e . \
+        && flask fab babel-compile --target superset/translations
 
-COPY ./repo/docker/docker-entrypoint.sh /usr/bin/
+COPY ./repo/docker/run-server.sh /usr/bin/
 # copy scripts to start containers to avoid volumes
-COPY ./repo/docker/docker-bootstrap.sh ./repo/docker/docker-init.sh ./repo/docker/docker-entrypoint.sh /app/docker/
+COPY ./repo/docker/docker-bootstrap.sh ./repo/docker/docker-init.sh /app/docker/
+
+RUN chmod a+x /usr/bin/run-server.sh
 
 WORKDIR /app
 
@@ -119,4 +114,4 @@ HEALTHCHECK CMD curl -f "http://localhost:$SUPERSET_PORT/health"
 
 EXPOSE ${SUPERSET_PORT}
 
-ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
+CMD /usr/bin/run-server.sh

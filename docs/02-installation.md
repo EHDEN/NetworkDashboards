@@ -12,9 +12,9 @@ Currently, we use docker to deploy our environment
 
 1. Clone the repository with the command `git clone --recurse-submodules https://github.com/EHDEN/NetworkDashboards`. If you already cloned the repository without the `--recurse-submodules` option, run `git submodule update --init` to fetch the superset submodule.
 
-2. Create a `.env` file on the `docker` directory, using `.env-example` as a reference, setting all necessary environment variables (`SUPERSET\_MAPBOX\_API\_KEY` and `DASHBOARD\_VIEWER\_SECRET\_KEY`).
+2. Create a `.env` file on the `docker` directory, using `.env-example` as a reference, setting all necessary environment variables (`SUPERSET_MAPBOX_API_KEY` and `DASHBOARD_VIEWER_SECRET_KEY`).
 
-   2.1 If you will use this application as a third-party application and will iframe it, set the variable `SINGLE\_APPLICATION\_MODE` to `False` and define the host of the main application on the variable `MAIN\_APPLICATION\_HOST`. Also make sure to add this last host to the list of `ALLOWED\_HOSTS`.
+   2.1 If you will use this application as a third-party application and will iframe it, set the variable `SINGLE_APPLICATION_MODE` to `False` and define the host of the main application on the variable `MAIN_APPLICATION_HOST`. Also make sure to add this last host to the list of `ALLOWED_HOSTS`.
 
 ### Dashboard Viewer setup {-}
 
@@ -105,7 +105,7 @@ The concepts table is not in the repository due to its dimension, therefore we u
 4. By default Superset's admin user credentials are admin/admin.
    It is recommended that you change the password if you will use this in a production environment.
 
-5. To any anonymous user view dashboards, add the following:
+5. To any anonymous user view dashboards, add the following permissions to the public role:
 
    - all datasource access on all_datasource_access
    - can csrf token on Superset
@@ -114,6 +114,8 @@ The concepts table is not in the repository due to its dimension, therefore we u
    - can read on Chart
    - can read on CssTemplate
    - can read on Dashboard
+
+6. For each dashboard you want anonymous users to be able to access, on the dashboard list page click edit (the pencil on the right) and add the "Admin" and "Public" roles to the "Roles with acess" field.
 
 ### Dummy data {-}
 

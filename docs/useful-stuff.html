@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-01-04" />
+<meta name="date" content="2022-04-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -327,18 +327,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">5.2</span> Useful stuff</h2>
 <ul>
 <li><p>How to create a shared link to a dropbox directory using its python’s API:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="useful-stuff.html#cb10-1" aria-hidden="true"></a><span class="ex">pip</span> install dropbox</span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="useful-stuff.html#cb11-1" aria-hidden="true"></a><span class="im">import</span> dropbox</span>
-<span id="cb11-2"><a href="useful-stuff.html#cb11-2" aria-hidden="true"></a>d <span class="op">=</span> dropbox.Dropbox(API_TOKEN)</span>
-<span id="cb11-3"><a href="useful-stuff.html#cb11-3" aria-hidden="true"></a></span>
-<span id="cb11-4"><a href="useful-stuff.html#cb11-4" aria-hidden="true"></a><span class="co"># create a shared link for a directory</span></span>
-<span id="cb11-5"><a href="useful-stuff.html#cb11-5" aria-hidden="true"></a><span class="im">from</span> dropbox.sharing <span class="im">import</span> SharedLinkSettings</span>
-<span id="cb11-6"><a href="useful-stuff.html#cb11-6" aria-hidden="true"></a>sharing_settings <span class="op">=</span> SharedLinkSettings(require_password<span class="op">=</span><span class="va">True</span>, link_password<span class="op">=</span>DIRECTORY_PASSWORD)</span>
-<span id="cb11-7"><a href="useful-stuff.html#cb11-7" aria-hidden="true"></a>d.sharing_create_shared_link_with_settings(DIRECTORY_PATH, sharing_settings)</span>
-<span id="cb11-8"><a href="useful-stuff.html#cb11-8" aria-hidden="true"></a></span>
-<span id="cb11-9"><a href="useful-stuff.html#cb11-9" aria-hidden="true"></a><span class="co"># get all links</span></span>
-<span id="cb11-10"><a href="useful-stuff.html#cb11-10" aria-hidden="true"></a><span class="cf">for</span> link <span class="kw">in</span> d.sharing_get_shared_links().links:</span>
-<span id="cb11-11"><a href="useful-stuff.html#cb11-11" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span>link<span class="sc">.</span>path<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>link<span class="sc">.</span>url<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div></li>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="useful-stuff.html#cb9-1" aria-hidden="true"></a><span class="ex">pip</span> install dropbox</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="useful-stuff.html#cb10-1" aria-hidden="true"></a><span class="im">import</span> dropbox</span>
+<span id="cb10-2"><a href="useful-stuff.html#cb10-2" aria-hidden="true"></a>d <span class="op">=</span> dropbox.Dropbox(API_TOKEN)</span>
+<span id="cb10-3"><a href="useful-stuff.html#cb10-3" aria-hidden="true"></a></span>
+<span id="cb10-4"><a href="useful-stuff.html#cb10-4" aria-hidden="true"></a><span class="co"># create a shared link for a directory</span></span>
+<span id="cb10-5"><a href="useful-stuff.html#cb10-5" aria-hidden="true"></a><span class="im">from</span> dropbox.sharing <span class="im">import</span> SharedLinkSettings</span>
+<span id="cb10-6"><a href="useful-stuff.html#cb10-6" aria-hidden="true"></a>sharing_settings <span class="op">=</span> SharedLinkSettings(require_password<span class="op">=</span><span class="va">True</span>, link_password<span class="op">=</span>DIRECTORY_PASSWORD)</span>
+<span id="cb10-7"><a href="useful-stuff.html#cb10-7" aria-hidden="true"></a>d.sharing_create_shared_link_with_settings(DIRECTORY_PATH, sharing_settings)</span>
+<span id="cb10-8"><a href="useful-stuff.html#cb10-8" aria-hidden="true"></a></span>
+<span id="cb10-9"><a href="useful-stuff.html#cb10-9" aria-hidden="true"></a><span class="co"># get all links</span></span>
+<span id="cb10-10"><a href="useful-stuff.html#cb10-10" aria-hidden="true"></a><span class="cf">for</span> link <span class="kw">in</span> d.sharing_get_shared_links().links:</span>
+<span id="cb10-11"><a href="useful-stuff.html#cb10-11" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span>link<span class="sc">.</span>path<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>link<span class="sc">.</span>url<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div></li>
 </ul>
 
 </div>

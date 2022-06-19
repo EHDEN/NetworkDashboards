@@ -48,7 +48,7 @@ No SQL query, use the sql table `data_source` of the `achilles` database.
     - Date Filter: off
     - Instant Filtering: on
 
-### Average Number of Records per Person {#avgRecordsPerPerson} {-}
+### Average Number of Records per Person {-#avgRecordsPerPerson}
 
 ```{r , fig.cap="Settings for creating the Data Source filter chart",echo=FALSE, out.width="100%"}
 knitr::include_graphics("images/10-data_domain/02-avg_records_per_person.png")
@@ -61,25 +61,41 @@ SELECT
     source.name,
     source.acronym,
     CASE 
-    WHEN analysis_id = 201 THEN 'Visit'
-    WHEN analysis_id = 401 THEN 'Condition'
-    WHEN analysis_id = 501 THEN 'Death'
-    WHEN analysis_id = 601 THEN 'Procedure'
-    WHEN analysis_id = 701 THEN 'Drug Exposure'
-    WHEN analysis_id = 801 THEN 'Observation'
-    WHEN analysis_id = 1801 THEN 'Measurement'
-    WHEN analysis_id = 2101 THEN 'Device'
-    WHEN analysis_id = 2201 THEN 'Note'
+    WHEN analysis_id = 201
+      THEN 'Visit'
+    WHEN analysis_id = 401
+      THEN 'Condition'
+    WHEN analysis_id = 501
+      THEN 'Death'
+    WHEN analysis_id = 601
+      THEN 'Procedure'
+    WHEN analysis_id = 701
+      THEN 'Drug Exposure'
+    WHEN analysis_id = 801
+      THEN 'Observation'
+    WHEN analysis_id = 1801
+      THEN 'Measurement'
+    WHEN analysis_id = 2101
+      THEN 'Device'
+    WHEN analysis_id = 2201
+      THEN 'Note'
     END AS Data_Domain,
-    SUM(count_value) /AVG(num_persons) AS "records_per_person"
+    SUM(count_value) /AVG(num_persons)
+      AS "records_per_person"
 FROM public.achilles_results AS achilles
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
 INNER JOIN (
   SELECT data_source_id , count_value as num_persons
   FROM achilles_results
-  WHERE analysis_id = 1) counts ON achilles.data_source_id = counts.data_source_id 
+  WHERE analysis_id = 1) counts
+    ON achilles.data_source_id = counts.data_source_id
 GROUP BY analysis_id, source.name, source.acronym
-HAVING analysis_id IN (201, 401, 501, 601, 701, 801, 1801, 2101, 2201)
+HAVING
+  analysis_id IN (
+    201, 401, 501, 601, 701, 801, 1801, 2101,
+    2201
+  )
 ```
 
 #### Chart settings {-}

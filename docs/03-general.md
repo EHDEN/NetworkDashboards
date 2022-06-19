@@ -40,7 +40,8 @@ SELECT source.name,
        source.database_type,
        source.acronym
 FROM public.data_source AS source
-INNER JOIN public.country AS country ON source.country_id=country.id
+INNER JOIN public.country AS country
+  ON source.country_id=country.id
 ```
 
 #### Chart settings {-}
@@ -110,8 +111,10 @@ SELECT  source.name AS source,
         concepts.concept_name AS gender,
         achilles.count_value as count
 FROM public.achilles_results AS achilles
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
-INNER JOIN public.country AS country ON source.country_id=country.id
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
+INNER JOIN public.country AS country
+  ON source.country_id=country.id
 JOIN (
   SELECT '8507' AS concept_id, 'Male' AS concept_name
   UNION
@@ -147,15 +150,17 @@ WHERE analysis_id = 2
 <p class="caption">(\#fig:patientsPerCountry)Settings for creating the Patients per Country chart</p>
 </div>
 
-#### SQL query {#patientsPerCountryQuery} {-}
+#### SQL query {-#patientsPerCountryQuery}
 
 ```sql
 SELECT country.country,
        source.database_type,
        count_value
-FROM public.achilles_results AS achilles 
-INNER JOIN public.data_source AS source ON achilles.data_source_id=source.id
-INNER JOIN public.country AS country ON source.country_id=country.id
+FROM public.achilles_results AS achilles
+INNER JOIN public.data_source AS source
+  ON achilles.data_source_id=source.id
+INNER JOIN public.country AS country
+  ON source.country_id=country.id
 WHERE analysis_id = 1
 ```
 
@@ -221,7 +226,8 @@ SELECT  name,
         longitude,
         country
 FROM public.data_source AS source
-INNER JOIN public.country AS country ON source.country_id=country.id
+INNER JOIN public.country AS country
+  ON source.country_id=country.id
 ```
 
 #### Chart settings {-}
@@ -257,7 +263,8 @@ SELECT
   stratum_4 as "cdm_version",
   stratum_5 as "vocabulary_version"
 FROM achilles_results
-JOIN data_source ON achilles_results.data_source_id = data_source.id
+JOIN data_source
+  ON achilles_results.data_source_id = data_source.id
 JOIN country ON data_source.country_id = country.id
 WHERE analysis_id=5000
 ```

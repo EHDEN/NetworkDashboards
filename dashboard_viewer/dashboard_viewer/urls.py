@@ -39,7 +39,7 @@ urlpatterns = [
     path("martor/", include("martor.urls")),
     path("uploader/", include("uploader.urls")),
     re_path(
-        fr'^{re.escape(settings.MEDIA_URL.lstrip("/"))}(?P<path>.*)$',
+        rf'^{re.escape(settings.MEDIA_URL.lstrip("/"))}(?P<path>.*)$',
         serve,
         kwargs={"document_root": settings.MEDIA_ROOT},
     )

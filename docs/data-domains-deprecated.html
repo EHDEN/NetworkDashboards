@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-01-04" />
+<meta name="date" content="2022-06-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,8 +162,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="backups.html"><a href="backups.html"><i class="fa fa-check"></i><b>5</b> Backups</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="restore.html"><a href="restore.html"><i class="fa fa-check"></i><b>5.1</b> Restore</a></li>
-<li class="chapter" data-level="5.2" data-path="useful-stuff.html"><a href="useful-stuff.html"><i class="fa fa-check"></i><b>5.2</b> Useful stuff</a></li>
+<li class="chapter" data-level="" data-path="backups.html"><a href="backups.html#restore"><i class="fa fa-check"></i>Restore</a></li>
+<li class="chapter" data-level="" data-path="backups.html"><a href="backups.html#useful-stuff"><i class="fa fa-check"></i>Useful stuff</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="customizations.html"><a href="customizations.html"><i class="fa fa-check"></i><b>6</b> Customizations</a>
 <ul>
@@ -268,7 +268,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#css-4"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#data-source-filter-2"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#number-of-patients-in-observation-period-numinobservationperiod"><i class="fa fa-check"></i>Number of Patients in Observation Period {#numInObservationPeriod}</a></li>
+<li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#numInObservationPeriod"><i class="fa fa-check"></i>Number of Patients in Observation Period</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-start-dates"><i class="fa fa-check"></i>Observation Period Start Dates</a></li>
 <li class="chapter" data-level="" data-path="observation-period-deprecated.html"><a href="observation-period-deprecated.html#observation-period-end-dates"><i class="fa fa-check"></i>Observation Period End Dates</a></li>
 </ul></li>
@@ -276,7 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#css-5"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#data-source-filter-3"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-type-table-visittypetable"><i class="fa fa-check"></i>Visit Type Table {#visitTypeTable}</a></li>
+<li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visitTypeTable"><i class="fa fa-check"></i>Visit Type Table</a></li>
 <li class="chapter" data-level="" data-path="visit-deprecated.html"><a href="visit-deprecated.html#visit-types-bars"><i class="fa fa-check"></i>Visit Types Bars</a></li>
 </ul></li>
 <li class="chapter" data-level="9.8" data-path="death-deprecated.html"><a href="death-deprecated.html"><i class="fa fa-check"></i><b>9.8</b> Death [Deprecated]</a>
@@ -303,7 +303,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#css-9"><i class="fa fa-check"></i>CSS</a></li>
 <li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#data-source-filter-6"><i class="fa fa-check"></i>Data Source Filter</a></li>
-<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#average-number-of-records-per-person-avgrecordsperperson"><i class="fa fa-check"></i>Average Number of Records per Person {#avgRecordsPerPerson}</a></li>
+<li class="chapter" data-level="" data-path="data-domains-deprecated.html"><a href="data-domains-deprecated.html#avgRecordsPerPerson"><i class="fa fa-check"></i>Average Number of Records per Person</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -329,9 +329,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="css-9" class="section level3 unnumbered" number="">
 <h3>CSS</h3>
 <p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
-<div class="sourceCode" id="cb70"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb70-1"><a href="data-domains-deprecated.html#cb70-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
-<span id="cb70-2"><a href="data-domains-deprecated.html#cb70-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
-<span id="cb70-3"><a href="data-domains-deprecated.html#cb70-3" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb69-1"><a href="data-domains-deprecated.html#cb69-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
+<span id="cb69-2"><a href="data-domains-deprecated.html#cb69-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
+<span id="cb69-3"><a href="data-domains-deprecated.html#cb69-3" aria-hidden="true"></a>}</span></code></pre></div>
 <p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
 or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
@@ -374,8 +374,8 @@ Figure 9.8: Settings for creating the Data Source filter chart
 </ul>
 </div>
 </div>
-<div id="average-number-of-records-per-person-avgrecordsperperson" class="section level3 unnumbered" number="">
-<h3>Average Number of Records per Person {#avgRecordsPerPerson}</h3>
+<div id="avgRecordsPerPerson" class="section level3 unnumbered" number="">
+<h3>Average Number of Records per Person</h3>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
 <img src="images/10-data_domain/02-avg_records_per_person.png" alt="Settings for creating the Data Source filter chart" width="100%" />
 <p class="caption">
@@ -384,29 +384,45 @@ Figure 9.23: Settings for creating the Data Source filter chart
 </div>
 <div id="sql-query-26" class="section level4 unnumbered" number="">
 <h4>SQL query</h4>
-<div class="sourceCode" id="cb71"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb71-1"><a href="data-domains-deprecated.html#cb71-1" aria-hidden="true"></a><span class="kw">SELECT</span> </span>
-<span id="cb71-2"><a href="data-domains-deprecated.html#cb71-2" aria-hidden="true"></a>    <span class="kw">source</span>.name,</span>
-<span id="cb71-3"><a href="data-domains-deprecated.html#cb71-3" aria-hidden="true"></a>    <span class="kw">source</span>.acronym,</span>
-<span id="cb71-4"><a href="data-domains-deprecated.html#cb71-4" aria-hidden="true"></a>    <span class="cf">CASE</span> </span>
-<span id="cb71-5"><a href="data-domains-deprecated.html#cb71-5" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">201</span> <span class="cf">THEN</span> <span class="st">&#39;Visit&#39;</span></span>
-<span id="cb71-6"><a href="data-domains-deprecated.html#cb71-6" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">401</span> <span class="cf">THEN</span> <span class="st">&#39;Condition&#39;</span></span>
-<span id="cb71-7"><a href="data-domains-deprecated.html#cb71-7" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">501</span> <span class="cf">THEN</span> <span class="st">&#39;Death&#39;</span></span>
-<span id="cb71-8"><a href="data-domains-deprecated.html#cb71-8" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">601</span> <span class="cf">THEN</span> <span class="st">&#39;Procedure&#39;</span></span>
-<span id="cb71-9"><a href="data-domains-deprecated.html#cb71-9" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">701</span> <span class="cf">THEN</span> <span class="st">&#39;Drug Exposure&#39;</span></span>
-<span id="cb71-10"><a href="data-domains-deprecated.html#cb71-10" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">801</span> <span class="cf">THEN</span> <span class="st">&#39;Observation&#39;</span></span>
-<span id="cb71-11"><a href="data-domains-deprecated.html#cb71-11" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">1801</span> <span class="cf">THEN</span> <span class="st">&#39;Measurement&#39;</span></span>
-<span id="cb71-12"><a href="data-domains-deprecated.html#cb71-12" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">2101</span> <span class="cf">THEN</span> <span class="st">&#39;Device&#39;</span></span>
-<span id="cb71-13"><a href="data-domains-deprecated.html#cb71-13" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">2201</span> <span class="cf">THEN</span> <span class="st">&#39;Note&#39;</span></span>
-<span id="cb71-14"><a href="data-domains-deprecated.html#cb71-14" aria-hidden="true"></a>    <span class="cf">END</span> <span class="kw">AS</span> Data_Domain,</span>
-<span id="cb71-15"><a href="data-domains-deprecated.html#cb71-15" aria-hidden="true"></a>    <span class="fu">SUM</span>(count_value) <span class="op">/</span><span class="fu">AVG</span>(num_persons) <span class="kw">AS</span> <span class="ot">&quot;records_per_person&quot;</span></span>
-<span id="cb71-16"><a href="data-domains-deprecated.html#cb71-16" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
-<span id="cb71-17"><a href="data-domains-deprecated.html#cb71-17" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span> <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
-<span id="cb71-18"><a href="data-domains-deprecated.html#cb71-18" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> (</span>
-<span id="cb71-19"><a href="data-domains-deprecated.html#cb71-19" aria-hidden="true"></a>  <span class="kw">SELECT</span> data_source_id , count_value <span class="kw">as</span> num_persons</span>
-<span id="cb71-20"><a href="data-domains-deprecated.html#cb71-20" aria-hidden="true"></a>  <span class="kw">FROM</span> achilles_results</span>
-<span id="cb71-21"><a href="data-domains-deprecated.html#cb71-21" aria-hidden="true"></a>  <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">1</span>) counts <span class="kw">ON</span> achilles.data_source_id <span class="op">=</span> counts.data_source_id </span>
-<span id="cb71-22"><a href="data-domains-deprecated.html#cb71-22" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> analysis_id, <span class="kw">source</span>.name, <span class="kw">source</span>.acronym</span>
-<span id="cb71-23"><a href="data-domains-deprecated.html#cb71-23" aria-hidden="true"></a><span class="kw">HAVING</span> analysis_id <span class="kw">IN</span> (<span class="dv">201</span>, <span class="dv">401</span>, <span class="dv">501</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">1801</span>, <span class="dv">2101</span>, <span class="dv">2201</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb70-1"><a href="data-domains-deprecated.html#cb70-1" aria-hidden="true"></a><span class="kw">SELECT</span> </span>
+<span id="cb70-2"><a href="data-domains-deprecated.html#cb70-2" aria-hidden="true"></a>    <span class="kw">source</span>.name,</span>
+<span id="cb70-3"><a href="data-domains-deprecated.html#cb70-3" aria-hidden="true"></a>    <span class="kw">source</span>.acronym,</span>
+<span id="cb70-4"><a href="data-domains-deprecated.html#cb70-4" aria-hidden="true"></a>    <span class="cf">CASE</span> </span>
+<span id="cb70-5"><a href="data-domains-deprecated.html#cb70-5" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">201</span></span>
+<span id="cb70-6"><a href="data-domains-deprecated.html#cb70-6" aria-hidden="true"></a>      <span class="cf">THEN</span> <span class="st">&#39;Visit&#39;</span></span>
+<span id="cb70-7"><a href="data-domains-deprecated.html#cb70-7" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">401</span></span>
+<span id="cb70-8"><a href="data-domains-deprecated.html#cb70-8" aria-hidden="true"></a>      <span class="cf">THEN</span> <span class="st">&#39;Condition&#39;</span></span>
+<span id="cb70-9"><a href="data-domains-deprecated.html#cb70-9" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">501</span></span>
+<span id="cb70-10"><a href="data-domains-deprecated.html#cb70-10" aria-hidden="true"></a>      <span class="cf">THEN</span> <span class="st">&#39;Death&#39;</span></span>
+<span id="cb70-11"><a href="data-domains-deprecated.html#cb70-11" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">601</span></span>
+<span id="cb70-12"><a href="data-domains-deprecated.html#cb70-12" aria-hidden="true"></a>      <span class="cf">THEN</span> <span class="st">&#39;Procedure&#39;</span></span>
+<span id="cb70-13"><a href="data-domains-deprecated.html#cb70-13" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">701</span></span>
+<span id="cb70-14"><a href="data-domains-deprecated.html#cb70-14" aria-hidden="true"></a>      <span class="cf">THEN</span> <span class="st">&#39;Drug Exposure&#39;</span></span>
+<span id="cb70-15"><a href="data-domains-deprecated.html#cb70-15" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">801</span></span>
+<span id="cb70-16"><a href="data-domains-deprecated.html#cb70-16" aria-hidden="true"></a>      <span class="cf">THEN</span> <span class="st">&#39;Observation&#39;</span></span>
+<span id="cb70-17"><a href="data-domains-deprecated.html#cb70-17" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">1801</span></span>
+<span id="cb70-18"><a href="data-domains-deprecated.html#cb70-18" aria-hidden="true"></a>      <span class="cf">THEN</span> <span class="st">&#39;Measurement&#39;</span></span>
+<span id="cb70-19"><a href="data-domains-deprecated.html#cb70-19" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">2101</span></span>
+<span id="cb70-20"><a href="data-domains-deprecated.html#cb70-20" aria-hidden="true"></a>      <span class="cf">THEN</span> <span class="st">&#39;Device&#39;</span></span>
+<span id="cb70-21"><a href="data-domains-deprecated.html#cb70-21" aria-hidden="true"></a>    <span class="cf">WHEN</span> analysis_id <span class="op">=</span> <span class="dv">2201</span></span>
+<span id="cb70-22"><a href="data-domains-deprecated.html#cb70-22" aria-hidden="true"></a>      <span class="cf">THEN</span> <span class="st">&#39;Note&#39;</span></span>
+<span id="cb70-23"><a href="data-domains-deprecated.html#cb70-23" aria-hidden="true"></a>    <span class="cf">END</span> <span class="kw">AS</span> Data_Domain,</span>
+<span id="cb70-24"><a href="data-domains-deprecated.html#cb70-24" aria-hidden="true"></a>    <span class="fu">SUM</span>(count_value) <span class="op">/</span><span class="fu">AVG</span>(num_persons)</span>
+<span id="cb70-25"><a href="data-domains-deprecated.html#cb70-25" aria-hidden="true"></a>      <span class="kw">AS</span> <span class="ot">&quot;records_per_person&quot;</span></span>
+<span id="cb70-26"><a href="data-domains-deprecated.html#cb70-26" aria-hidden="true"></a><span class="kw">FROM</span> <span class="kw">public</span>.achilles_results <span class="kw">AS</span> achilles</span>
+<span id="cb70-27"><a href="data-domains-deprecated.html#cb70-27" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> <span class="kw">public</span>.data_source <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb70-28"><a href="data-domains-deprecated.html#cb70-28" aria-hidden="true"></a>  <span class="kw">ON</span> achilles.data_source_id<span class="op">=</span><span class="kw">source</span>.<span class="kw">id</span></span>
+<span id="cb70-29"><a href="data-domains-deprecated.html#cb70-29" aria-hidden="true"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> (</span>
+<span id="cb70-30"><a href="data-domains-deprecated.html#cb70-30" aria-hidden="true"></a>  <span class="kw">SELECT</span> data_source_id , count_value <span class="kw">as</span> num_persons</span>
+<span id="cb70-31"><a href="data-domains-deprecated.html#cb70-31" aria-hidden="true"></a>  <span class="kw">FROM</span> achilles_results</span>
+<span id="cb70-32"><a href="data-domains-deprecated.html#cb70-32" aria-hidden="true"></a>  <span class="kw">WHERE</span> analysis_id <span class="op">=</span> <span class="dv">1</span>) counts</span>
+<span id="cb70-33"><a href="data-domains-deprecated.html#cb70-33" aria-hidden="true"></a>    <span class="kw">ON</span> achilles.data_source_id <span class="op">=</span> counts.data_source_id</span>
+<span id="cb70-34"><a href="data-domains-deprecated.html#cb70-34" aria-hidden="true"></a><span class="kw">GROUP</span> <span class="kw">BY</span> analysis_id, <span class="kw">source</span>.name, <span class="kw">source</span>.acronym</span>
+<span id="cb70-35"><a href="data-domains-deprecated.html#cb70-35" aria-hidden="true"></a><span class="kw">HAVING</span></span>
+<span id="cb70-36"><a href="data-domains-deprecated.html#cb70-36" aria-hidden="true"></a>  analysis_id <span class="kw">IN</span> (</span>
+<span id="cb70-37"><a href="data-domains-deprecated.html#cb70-37" aria-hidden="true"></a>    <span class="dv">201</span>, <span class="dv">401</span>, <span class="dv">501</span>, <span class="dv">601</span>, <span class="dv">701</span>, <span class="dv">801</span>, <span class="dv">1801</span>, <span class="dv">2101</span>,</span>
+<span id="cb70-38"><a href="data-domains-deprecated.html#cb70-38" aria-hidden="true"></a>    <span class="dv">2201</span></span>
+<span id="cb70-39"><a href="data-domains-deprecated.html#cb70-39" aria-hidden="true"></a>  )</span></code></pre></div>
 </div>
 <div id="chart-settings-28" class="section level4 unnumbered" number="">
 <h4>Chart settings</h4>

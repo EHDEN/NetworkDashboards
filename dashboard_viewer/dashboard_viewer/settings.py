@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-
+import logging
 import os
+from collections import OrderedDict
 from distutils.util import strtobool
 
 from constance.signals import config_updated
@@ -24,42 +25,42 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ["SECRET_KEY"]
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DASHBOARD_VIEWER_ENV", "development") == "development"
 
 
-_LOGS_DIR = os.path.join(BASE_DIR, "logs")
-if not os.path.exists(_LOGS_DIR):
-    os.makedirs(_LOGS_DIR, exist_ok=True)
-elif not os.path.isdir(_LOGS_DIR):
-    raise TypeError('file "logs" is not a directory.')
-
 LOGGING = {
     "version": 1,
-    "filters": {
-        "require_debug_true": {
-            "()": "django.utils.log.RequireDebugTrue",
+    "disable_existing_loggers": False,
+    "formatters": {
+        "custom": {
+            "format": "%(asctime)s %(levelname)s %(name)s:%(lineno)s %(message)s",
         },
     },
     "handlers": {
-        "file": {
-            "level": "ERROR",
-            "filters": ["require_debug_true"],
-            "class": "logging.FileHandler",
-            "filename": os.path.join(_LOGS_DIR, "errors.log"),
-        }
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "custom",
+        },
     },
     "loggers": {
-        "django": {
-            "handlers": ["file"],
-            "level": "ERROR",
-            "propagate": True,
+        "root": {
+            "handlers": ["console"],
+            "level": "DEBUG" if DEBUG else "INFO",
         },
     },
 }
+
+
+_DEFAULT_SECRET_KEY = "CHANGE_ME"  # noqa
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get("SECRET_KEY", _DEFAULT_SECRET_KEY)
+if not DEBUG and SECRET_KEY == _DEFAULT_SECRET_KEY:
+    logging.getLogger(__name__).warning(
+        "Using the default secret key. If this is a production environment please change it.",
+    )
+
 
 ALLOWED_HOSTS = ["*"]
 
@@ -275,6 +276,21 @@ CONSTANCE_CONFIG = {
         "If a Data Source owner can change the draft status when editing its details",
         bool,
     ),
+    "SUPERSET_HOST": (
+        "https://superset.ehden.eu",
+        "Host of the target superset installation. Used to redirect to the dashboard of a database",
+        str,
+    ),
+    "DATABASE_DASHBOARD_IDENTIFIER": (
+        "database-level-dashboard",
+        "Identifier of the database dashboard on the Superset installation.",
+        str,
+    ),
+    "DATABASE_FILTER_ID": (
+        69,
+        "Id of the database filter present in the Database Dashboard",
+        int,
+    ),
     "TABS_LOGO_CONTAINER_CSS": (
         "padding: 5px 5px 5px 5px;\nheight: 100px;\nmargin-bottom: 10px;\n",
         "Css for the div container of the logo image",
@@ -294,6 +310,26 @@ CONSTANCE_CONFIG = {
         str,
     ),
 }
+
+CONSTANCE_CONFIG_FIELDSETS = OrderedDict(
+    [
+        ("Application Attributes", ("APP_LOGO_IMAGE", "APP_LOGO_URL", "APP_TITLE")),
+        (
+            "Uploader Texts",
+            (
+                "UPLOADER_EXECUTE_EXPORT_PACKAGE",
+                "UPLOADER_UPLOAD",
+                "UPLOADER_AUTO_UPDATE",
+            ),
+        ),
+        ("Uploader Settings", ("UPLOADER_ALLOW_EDIT_DRAFT_STATUS",)),
+        (
+            "Superset",
+            ("SUPERSET_HOST", "DATABASE_DASHBOARD_IDENTIFIER", "DATABASE_FILTER_ID"),
+        ),
+        ("Tabs (Deprecated)", ("TABS_LOGO_CONTAINER_CSS", "TABS_LOGO_IMG_CSS")),
+    ]
+)
 
 
 @receiver(config_updated)

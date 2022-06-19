@@ -1,14 +1,14 @@
 # documentation temporary files
 docs/src/_book
 
-# dashboard_viewer django app ERRORs logs
-logs
-
 # custom file created at docker/superset
 docker-init.sh
 
 # Docker volumes
 volumes/
+
+# backups configurations
+backups.conf
 
 # Retrived from https://github.com/github/gitignore/blob/21419e391a78f2487340b3b1240b988aaf15b54f/Node.gitignore
 # Logs

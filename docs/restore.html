@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-01-04" />
+<meta name="date" content="2022-04-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -326,39 +326,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="restore" class="section level2" number="5.1">
 <h2><span class="header-section-number">5.1</span> Restore</h2>
 <ol style="list-style-type: decimal">
-<li><p>Select the compressed backup you want to restore and decompress it:</p>
-<p><code>tar -xJf BACKUP_FILE.tar.xz</code>.</p></li>
-<li><ol style="list-style-type: decimal">
-<li><p><strong>Redis</strong></p>
-<ol style="list-style-type: decimal">
-<li><p>Make sure the redis docker container is down.</p></li>
-<li><p>(Re)place the file <code>dump.rdb</code> on the redis volume by the file <code>redis.rdb</code>. By default the redis volume is located where this repository was cloned on the directory <code>docker/volumes/redis</code>.</p></li>
-<li><p>Change its permissions, owner and group:</p>
-<pre class="shell"><code>chmod 0644 docker/volumes/redis/dump.rdb
-sudo chown -R 999:999 docker/volumes/redis</code></pre></li>
-</ol></li>
-<li><p><strong>Postgres</strong></p>
-<ol style="list-style-type: decimal">
-<li><p>Make sure all containers that make changes on the database are stopped.</p></li>
-<li><p>Copy the file <code>postgres_backup.sql</code> into the postgres container</p>
-<p><code>docker cp postgres.sql [CONTAINER_ID]:/tmp</code>.</p></li>
-<li><p>Execute the backup script:</p>
-<p><code>docker exec -u root dashboard_viewer_postgres_1 psql -f /tmp/postgres_backup.sql -U \$POSTGRES_USER -d \$POSTGRES_DB</code>.</p></li>
-</ol></li>
-<li><p><strong>Media Files</strong> If you have a volume pointing to where the media files are stored, replace all files with the ones present on the downloaded backup file. Else:</p>
-<ol style="list-style-type: decimal">
-<li><p>Bring the dashoard container up <code>docker-compose up -d dashboard</code></p></li>
-<li><p>Enter in the container <code>docker exec -it [CONTAINER_ID] bash</code></p></li>
-<li><p>If you don’t know where the media files are stored you can check the value of the MEDIA_ROOT variable</p>
-<ol style="list-style-type: decimal">
-<li><p><code>python manage.py shell</code></p></li>
-<li><p><code>from django.conf import settings</code></p></li>
-<li><p><code>print(settings.MEDIA_ROOT)</code></p></li>
-</ol></li>
-<li><p>Remove the entire MEDIA_ROOT directory and exit the container</p></li>
-<li><p>Copy the media directory present on the backup file to the catalogue container <code>docker cp -a collected-media [CONTAINER_ID]:[MEDIA_ROOT_PARENT_PATH]</code></p></li>
-</ol></li>
-</ol></li>
+<li><p>Select the compressed backup you want to restore.</p></li>
+<li><p>Make sure that all the environment variables are the same as the ones that were used for the chosen backup file.
+Additionally, the <code>.dashboards_backups.conf</code> file is also necessary to set up, since the <code>TMP_DIRECTORY</code> variable will be used.</p></li>
+<li><p>Run the <code>backups/restore.sh</code> script.</p></li>
 </ol>
 </div>
             </section>
