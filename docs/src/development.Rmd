@@ -33,65 +33,31 @@
 
 ### Superset {-}
 
-Currently, we have a custom chart plugin on our superset installation which doesn't allow us to use superset's pre-built images available on their docker hub, since we have to call npm's build procedures on the front-end code.
-To build our custom docker image we used superset's [Dockerfile](https://github.com/apache/superset/blob/1.0.1/Dockerfile) as a base, where we removed the Dev section and added some code to install our chart plugins before building the front-end code.
-Also, to make Superset import our custom chart plugins, some changes have to be made to the [superset-frontend/src/visualizations/presets/MainPreset.js](https://github.com/apache/superset/blob/1.0.1/superset-frontend/src/visualizations/presets/MainPreset.js) file.
+Currently, we have made some modifications to the box plot visualization on our superset installation which doesn't allow us to use superset's pre-built images available on their docker hub, since we have to call npm's build procedures on the front-end code.
+To build our custom docker image we used superset's [Dockerfile](https://github.com/apache/superset/blob/1.5.0/Dockerfile) as a base, where we removed the Dev section and added some code to install our chart plugins before building the front-end code.
 
-The changes made to the Dockerfile to install the chart plugins are in [this](https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L44-L63) area:
+The changes made to the Dockerfile to install the chart plugins are in [this](https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L47-L49) area:
 
-1. L44: First we copy the `superset/plugins` directory into the container, which contains all the extra and custom chart plugins.
-2. L48-51: Then we iterate over the chart plugins and execute `npm install ...` on each of them.
-   This will make changes to both the package.json and package-lock.json files and for that, we copy them into a temporary directory `package_json_files`.
-3. L54: Then all superset's front-end code is copied into the container, which will override the package*.json files.
-4. L56: After this, we copy our custom MainPresets.js file.
-5. L60-L63: Finally, we replace the package*.json files with the ones that we saved earlier and then run the npm build command.
+1. L46: Repalce some boxplot fiels with ours;
+2. L47: Superset's original version of the controlPanel.ts file is a `.ts` versions however ours is a `.tsx`. For that, we have to remove the `.ts` version to properly override this file.
 
 #### Update Superset {-}
 
 1. `cd` into superset's submodule directory.
 
-2. Get the latest tags: `git fetch`.
+2. Get the latest tags: `git fetch -t`.
 
 3. Checkout to the new desired release tag.
 
 4. Check if there are any changes made to superset's Dockerfile (on the root of the repository for the current latest release), adapt them, and insert them on our custom Dockerfile under the `docker/superset` directory.
 
-5. Check if there are any changes made to superset's `superset-frontend/src/visualizations/presets/MainPreset.js` file.
-   You can use the script `mainpreset_has_changes.py` under the `plugins` directory to check that.
-   Apply the new changes, if any, and remember to keep our chart plugins imported and registered (Currently we only have the *Box plot* plugin).
-
-6. If the version of the frontend package `@superset-ui/plugin-chart-echarts` changed it's necessary to update our box plot plugin.
-   Follow the instructions present [here](https://github.com/EHDEN/NetworkDashboards/tree/master/superset/plugins/plugins/plugin-chart-box-plot#how-to-update), also take into account the instruction of the next section.
+6. If the version of the plugin package `plugin-chart-echarts` changed, it's necessary to update our box plot plugin. If it is greater than 0.18.25, go to the history (`https://github.com/apache/superset/commits/[RELEASE-TAG]/superset-frontend/plugins/plugin-chart-echarts`) of commits done to the plugin-chart-echarts plugin update to the most recent commit, applying their changes to the files in the `superset/box-plot-overrides` directory. A fast way check the changes done between two commits: `git diff [old_commit_hash] [recent_commit_hash] -- superset-frontend/plugins/plugin-chart-echarts`
 
 #### Chart Plugin Development {-}
 
-Instructions on how you can set up your development environment to develop on a custom superset chart plugin:
+1. Follow the instructions of [this tutorial](https://superset.apache.org/docs/contributing/creating-viz-plugins) to create the necessary base files of your plugin.
 
-1. Clone the [superset](https://github.com/apache/superset) repository.
-   **IMPORTANT NOTE**: Since we build the superset's docker image using the existing superset's submodule, it's better not to use it to develop the plugins.
-   If you decide to use it anyways, remember [this](https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L54) and [this](https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile#L99) steps.
-   They might override directories (`superset-frontend/node_modules` and `superset/static/assets`) that are generated during the build process, which can cause frontend compilation errors or the app can serve outdated static files.
-
-2. Clone the [superset-ui](https://github.com/apache-superset/superset-ui) repository into the directory superset-frontend of superset's repository.
-
-1. Follow the instructions of [this tutorial](https://superset.apache.org/docs/installation/building-custom-viz-plugins) to create the necessary base files of your plugin.
-
-2. Copy the file `MainPreset.js` present on this directory into the superset repository into the `superset-frontend/src/visualizations/presets/` directory.
-
-3. Add the line
-
-   ```sh
-   npm install
-     -f --no-optional --save
-     ./superset-frontend/superset-ui/plugins/plugin-chart-[your-chart-name]
-   ```
-
-   into the file `docker/docker-frontend.sh` of the superset repository before the existing `npm install ...` commands.
-
-4. When the development is finished, on the root of the superset-ui repository run `yarn install` and then `yarn build [your-chart-name]`.
-
-5. Copy the directory of your plugin (including its sub-directory `esm`), within the superset-ui repository within the directory `plugins`, into the sub-directory `plugins` this directory.
-   Make sure to run the command `yarn build [your-chart-name]` before doing this step.
+2. To deploy you can either use the `DYNAMIC_PLUGINS` feature flag or you can add and build your plugins in `superset/Dockerfile`.
 
 #### Important features {-}
 
@@ -101,6 +67,7 @@ Instructions on how you can set up your development environment to develop on a 
 2. Filters:
   - check [this](https://superset.apache.org/docs/frequently-asked-questions#how-to-add-dynamic-filters-to-a-dashboard) faq entry
   - Append `?preselect_filters={"chartId":{"columnToFilterBy":["value1", "value2"]}}` to the dashboard URL to apply a filter once the dashboard is loaded. E.g. `?preselect_filters={"13":{"name":["Demo University of Aveiro"]}}`
+
 3. Custom label colors: check [this](https://superset.apache.org/docs/frequently-asked-questions#is-there-a-way-to-force-the-use-specific-colors) faq entry
 
 ### Github Actions {-}

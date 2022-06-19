@@ -120,7 +120,7 @@
 
 \title{Data Network Dashboards}
 \author{This document is currently under construction}
-\date{2022-04-07}
+\date{2022-06-18}
 
 \begin{document}
 \maketitle
@@ -370,7 +370,7 @@ ALTER TABLE concept OWNER TO achiller
   By default Superset's admin user credentials are admin/admin.
   It is recommended that you change the password if you will use this in a production environment.
 \item
-  To any anonymous user view dashboards, add the following:
+  To any anonymous user view dashboards, add the following permissions to the public role:
 
   \begin{itemize}
   \tightlist
@@ -389,6 +389,8 @@ ALTER TABLE concept OWNER TO achiller
   \item
     can read on Dashboard
   \end{itemize}
+\item
+  For each dashboard you want anonymous users to be able to access, on the dashboard list page click edit (the pencil on the right) and add the ``Admin'' and ``Public'' roles to the ``Roles with acess'' field.
 \end{enumerate}
 
 \hypertarget{dummy-data}{%
@@ -910,26 +912,18 @@ Them an additional draft field will be available on the edit data source form.
 \subsection*{Superset}\label{superset}}
 \addcontentsline{toc}{subsection}{Superset}
 
-Currently, we have a custom chart plugin on our superset installation which doesn't allow us to use superset's pre-built images available on their docker hub, since we have to call npm's build procedures on the front-end code.
-To build our custom docker image we used superset's \href{https://github.com/apache/superset/blob/1.0.1/Dockerfile}{Dockerfile} as a base, where we removed the Dev section and added some code to install our chart plugins before building the front-end code.
-Also, to make Superset import our custom chart plugins, some changes have to be made to the \href{https://github.com/apache/superset/blob/1.0.1/superset-frontend/src/visualizations/presets/MainPreset.js}{superset-frontend/src/visualizations/presets/MainPreset.js} file.
+Currently, we have made some modifications to the box plot visualization on our superset installation which doesn't allow us to use superset's pre-built images available on their docker hub, since we have to call npm's build procedures on the front-end code.
+To build our custom docker image we used superset's \href{https://github.com/apache/superset/blob/1.5.0/Dockerfile}{Dockerfile} as a base, where we removed the Dev section and added some code to install our chart plugins before building the front-end code.
 
-The changes made to the Dockerfile to install the chart plugins are in \href{https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile\#L44-L63}{this} area:
+The changes made to the Dockerfile to install the chart plugins are in \href{https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile\#L47-L49}{this} area:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  L44: First we copy the \texttt{superset/plugins} directory into the container, which contains all the extra and custom chart plugins.
+  L46: Repalce some boxplot fiels with ours;
 \item
-  L48-51: Then we iterate over the chart plugins and execute \texttt{npm\ install\ ...} on each of them.
-  This will make changes to both the package.json and package-lock.json files and for that, we copy them into a temporary directory \texttt{package\_json\_files}.
-\item
-  L54: Then all superset's front-end code is copied into the container, which will override the package*.json files.
-\item
-  L56: After this, we copy our custom MainPresets.js file.
-\item
-  L60-L63: Finally, we replace the package*.json files with the ones that we saved earlier and then run the npm build command.
+  L47: Superset's original version of the controlPanel.ts file is a \texttt{.ts} versions however ours is a \texttt{.tsx}. For that, we have to remove the \texttt{.ts} version to properly override this file.
 \end{enumerate}
 
 \hypertarget{update-superset}{%
@@ -941,56 +935,25 @@ The changes made to the Dockerfile to install the chart plugins are in \href{htt
 \item
   \texttt{cd} into superset's submodule directory.
 \item
-  Get the latest tags: \texttt{git\ fetch}.
+  Get the latest tags: \texttt{git\ fetch\ -t}.
 \item
   Checkout to the new desired release tag.
 \item
   Check if there are any changes made to superset's Dockerfile (on the root of the repository for the current latest release), adapt them, and insert them on our custom Dockerfile under the \texttt{docker/superset} directory.
 \item
-  Check if there are any changes made to superset's \texttt{superset-frontend/src/visualizations/presets/MainPreset.js} file.
-  You can use the script \texttt{mainpreset\_has\_changes.py} under the \texttt{plugins} directory to check that.
-  Apply the new changes, if any, and remember to keep our chart plugins imported and registered (Currently we only have the \emph{Box plot} plugin).
-\item
-  If the version of the frontend package \texttt{@superset-ui/plugin-chart-echarts} changed it's necessary to update our box plot plugin.
-  Follow the instructions present \href{https://github.com/EHDEN/NetworkDashboards/tree/master/superset/plugins/plugins/plugin-chart-box-plot\#how-to-update}{here}, also take into account the instruction of the next section.
+  If the version of the plugin package \texttt{plugin-chart-echarts} changed, it's necessary to update our box plot plugin. If it is greater than 0.18.25, go to the history (\texttt{https://github.com/apache/superset/commits/{[}RELEASE-TAG{]}/superset-frontend/plugins/plugin-chart-echarts}) of commits done to the plugin-chart-echarts plugin update to the most recent commit, applying their changes to the files in the \texttt{superset/box-plot-overrides} directory. A fast way check the changes done between two commits: \texttt{git\ diff\ {[}old\_commit\_hash{]}\ {[}recent\_commit\_hash{]}\ -\/-\ superset-frontend/plugins/plugin-chart-echarts}
 \end{enumerate}
 
 \hypertarget{chart-plugin-development}{%
 \subsubsection*{Chart Plugin Development}\label{chart-plugin-development}}
 \addcontentsline{toc}{subsubsection}{Chart Plugin Development}
 
-Instructions on how you can set up your development environment to develop on a custom superset chart plugin:
-
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  Clone the \href{https://github.com/apache/superset}{superset} repository.
-  \textbf{IMPORTANT NOTE}: Since we build the superset's docker image using the existing superset's submodule, it's better not to use it to develop the plugins.
-  If you decide to use it anyways, remember \href{https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile\#L54}{this} and \href{https://github.com/EHDEN/NetworkDashboards/blob/master/docker/superset/Dockerfile\#L99}{this} steps.
-  They might override directories (\texttt{superset-frontend/node\_modules} and \texttt{superset/static/assets}) that are generated during the build process, which can cause frontend compilation errors or the app can serve outdated static files.
+  Follow the instructions of \href{https://superset.apache.org/docs/contributing/creating-viz-plugins}{this tutorial} to create the necessary base files of your plugin.
 \item
-  Clone the \href{https://github.com/apache-superset/superset-ui}{superset-ui} repository into the directory superset-frontend of superset's repository.
-\item
-  Follow the instructions of \href{https://superset.apache.org/docs/installation/building-custom-viz-plugins}{this tutorial} to create the necessary base files of your plugin.
-\item
-  Copy the file \texttt{MainPreset.js} present on this directory into the superset repository into the \texttt{superset-frontend/src/visualizations/presets/} directory.
-\item
-  Add the line
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ExtensionTok{npm}\NormalTok{ install}
-  \ExtensionTok{{-}f}\NormalTok{ {-}{-}no{-}optional {-}{-}save}
-  \ExtensionTok{./superset{-}frontend/superset{-}ui/plugins}\NormalTok{/}\ExtensionTok{plugin{-}chart{-}}\NormalTok{[your{-}chart{-}name]}
-\end{Highlighting}
-\end{Shaded}
-
-  into the file \texttt{docker/docker-frontend.sh} of the superset repository before the existing \texttt{npm\ install\ ...} commands.
-\item
-  When the development is finished, on the root of the superset-ui repository run \texttt{yarn\ install} and then \texttt{yarn\ build\ {[}your-chart-name{]}}.
-\item
-  Copy the directory of your plugin (including its sub-directory \texttt{esm}), within the superset-ui repository within the directory \texttt{plugins}, into the sub-directory \texttt{plugins} this directory.
-  Make sure to run the command \texttt{yarn\ build\ {[}your-chart-name{]}} before doing this step.
+  To deploy you can either use the \texttt{DYNAMIC\_PLUGINS} feature flag or you can add and build your plugins in \texttt{superset/Dockerfile}.
 \end{enumerate}
 
 \hypertarget{important-features}{%

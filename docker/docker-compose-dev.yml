@@ -22,6 +22,7 @@ x-superset-environment: &superset-environment
   REDIS_HOST: redis
   REDIS_PORT: 6379
   REDIS_RESULTS_DB: 3
+  SECRET_KEY: $SUPERSET_SECRET_KEY
   SUPERSET_ENV: production
 
 x-dashboard-build: &dashboard-build
