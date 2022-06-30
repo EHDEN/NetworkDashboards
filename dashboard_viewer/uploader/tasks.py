@@ -1,7 +1,7 @@
 from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.core import serializers
-from django.core.cache import cache
+from django.core.cache import caches
 from django.db import router, transaction
 from redis_rw_lock import RWLock
 
@@ -37,6 +37,8 @@ def upload_results_file(pending_upload_id: int):
         file_metadata, data = extract_data_from_uploaded_file(
             pending_upload.uploaded_file
         )
+
+        cache = caches["workers_locks"]
 
         try:
             cache.incr("celery_workers_updating", ignore_key_check=True)
@@ -99,21 +101,22 @@ def upload_results_file(pending_upload_id: int):
 
 @shared_task
 def delete_datasource(objs):
+    cache = caches["workers_locks"]
+
     cache.incr("celery_workers_updating", ignore_key_check=True)
 
-    read_lock = RWLock(
-        cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
-    )
-    read_lock.acquire()
+    try:
+        with RWLock(
+            cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
+        ):
+            objs = serializers.deserialize("json", objs)
 
-    objs = serializers.deserialize("json", objs)
+            for obj in objs:
+                obj = obj.object
+                with cache.lock(f"celery_worker_lock_db_{obj.pk}"):
+                    obj.delete()
+    finally:
+        workers_updating = cache.decr("celery_workers_updating")
 
-    for obj in objs:
-        obj = obj.object
-        with cache.lock(f"celery_worker_lock_db_{obj.pk}"):
-            obj.delete()
-
-    read_lock.release()
-
-    if not cache.decr("celery_workers_updating"):
+    if not workers_updating:
         refresh(logger)

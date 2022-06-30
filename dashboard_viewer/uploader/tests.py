@@ -2,7 +2,7 @@ import io
 import logging
 
 import numpy
-from django.core.cache import cache
+from django.core.cache import caches
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings, tag, TestCase, TransactionTestCase
 
@@ -361,7 +361,7 @@ class UploadResultsFileTestCase(TransactionTestCase):
         self.assertRaises(
             PendingUpload.DoesNotExist, PendingUpload.objects.get, id=pending_upload_id
         )
-        self.assertEqual(0, cache.get("celery_workers_updating"))
+        self.assertEqual(0, caches["workers_locks"].get("celery_workers_updating"))
 
         try:
             UploadHistory.objects.get(pending_upload_id=pending_upload_id)

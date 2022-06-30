@@ -208,6 +208,7 @@ REDIS_PORT = os.environ.get("REDIS_PORT", 6379)
 REDIS_CACHE_DB = os.environ.get("REDIS_CACHE_DB", 0)
 REDIS_CELERY_DB = os.environ.get("REDIS_CELERY_DB", 1)
 REDIS_CONSTANCE_DB = os.environ.get("REDIS_CONSTANCE_DB", 2)
+REDIS_CELERY_WORKERS_LOCKS_DB = os.environ.get("REDIS_CELERY_WORKERS_LOCKS_DB", 5)
 
 # Celery
 CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_DB}"
@@ -221,7 +222,14 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
-    }
+    },
+    "workers_locks": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_WORKERS_LOCKS_DB}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
 }
 
 # Constance

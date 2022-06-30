@@ -1,4 +1,4 @@
-from django.core.cache import cache
+from django.core.cache import caches
 from django.db import connections
 from redis_rw_lock import RWLock
 
@@ -6,6 +6,8 @@ from materialized_queries_manager.models import MaterializedQuery
 
 
 def refresh(logger, db_id=None, query_set=None):
+    cache = caches["workers_locks"]
+
     # Only one worker can update the materialized views at the same time -> same as -> only one thread
     #  can write to a file at the same time
     with RWLock(
