@@ -214,7 +214,13 @@ REDIS_CELERY_WORKERS_LOCKS_DB = os.environ.get("REDIS_CELERY_WORKERS_LOCKS_DB", 
 CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_DB}"
 CELERY_RESULT_BACKEND = "django-db"
 
+
 # Cache
+def locks_make_key(key, key_prefix, version):  # noqa
+    # since locks and stuff don't require versioning, ignore those fields when building the key store name
+    return key
+
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -226,6 +232,7 @@ CACHES = {
     "workers_locks": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_WORKERS_LOCKS_DB}",
+        "KEY_FUNCTION": locks_make_key,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
