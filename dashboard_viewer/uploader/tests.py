@@ -2,6 +2,7 @@ import io
 import logging
 
 import numpy
+from django.conf import settings
 from django.core.cache import caches
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings, tag, TestCase, TransactionTestCase
@@ -135,6 +136,7 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
             id=1,
             uploaded_file=self.file,
         )
+        self._pandas_connection = settings.ACHILLES_DB_SQLALCHEMY_ENGINE.connect()
 
     def setUp(self) -> None:
         self._pending_upload.data_source = DataSource.objects.get(acronym="test1")
@@ -145,6 +147,7 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
             self._logger,
             self._pending_upload,
             self.file_metadata,
+            self._pandas_connection,
         )
         UploadHistory.objects.create(
             data_source=DataSource.objects.get(acronym="test1")
@@ -161,7 +164,10 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
     def test_move_records_of_only_one_db(self):
         self._pending_upload.uploaded_file.seek(0)
         update_achilles_results_data(
-            self._logger, self._pending_upload, self.file_metadata
+            self._logger,
+            self._pending_upload,
+            self.file_metadata,
+            self._pandas_connection,
         )
         UploadHistory.objects.create(
             data_source=DataSource.objects.get(acronym="test1")
@@ -170,7 +176,10 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
         self._pending_upload.uploaded_file.seek(0)
         self._pending_upload.data_source = DataSource.objects.get(acronym="test2")
         update_achilles_results_data(
-            self._logger, self._pending_upload, self.file_metadata
+            self._logger,
+            self._pending_upload,
+            self.file_metadata,
+            self._pandas_connection,
         )
         UploadHistory.objects.create(
             data_source=DataSource.objects.get(acronym="test2")

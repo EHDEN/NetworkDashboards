@@ -17,6 +17,7 @@ from distutils.util import strtobool
 from constance.signals import config_updated
 from django.core.validators import _lazy_re_compile, URLValidator
 from django.dispatch import receiver
+from sqlalchemy import create_engine
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -138,6 +139,13 @@ DATABASES = {
         "PASSWORD": os.environ.get("POSTGRES_ACHILLES_PASSWORD", "achilles"),
     },
 }
+
+ACHILLES_DB_SQLALCHEMY_ENGINE = create_engine(
+    "postgresql"
+    f"://{DATABASES['achilles']['USER']}:{DATABASES['achilles']['PASSWORD']}"
+    f"@{DATABASES['achilles']['HOST']}:{DATABASES['achilles']['PORT']}"
+    f"/{DATABASES['achilles']['NAME']}"
+)
 
 DATABASE_ROUTERS = ["dashboard_viewer.routers.AchillesRouter"]
 

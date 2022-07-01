@@ -1,5 +1,6 @@
 from celery import shared_task
 from celery.utils.log import get_task_logger
+from django.conf import settings
 from django.core import serializers
 from django.core.cache import caches
 from django.db import router, transaction
@@ -52,7 +53,7 @@ def upload_results_file(pending_upload_id: int):
                 f"celery_worker_lock_db_{data_source.id}"
             ), transaction.atomic(
                 using=router.db_for_write(AchillesResults)
-            ):
+            ), settings.ACHILLES_DB_SQLALCHEMY_ENGINE.connect() as pandas_connection, pandas_connection.begin():
                 logger.info(
                     "Updating results data [datasource %d, pending upload %d]",
                     data_source.id,
@@ -60,7 +61,12 @@ def upload_results_file(pending_upload_id: int):
                 )
 
                 pending_upload.uploaded_file.seek(0)
-                update_achilles_results_data(logger, pending_upload, file_metadata)
+                update_achilles_results_data(
+                    logger,
+                    pending_upload,
+                    file_metadata,
+                    pandas_connection,
+                )
 
                 logger.info(
                     "Creating an upload history record [datasource %d, pending upload %d]",
@@ -85,8 +91,10 @@ def upload_results_file(pending_upload_id: int):
 
                 pending_upload.uploaded_file.delete()
                 pending_upload.delete()
+
         finally:
             workers_updating = cache.decr("celery_workers_updating")
+
     except Exception as e:
         pending_upload.status = PendingUpload.STATE_FAILED
         pending_upload.save()
@@ -107,7 +115,10 @@ def delete_datasource(objs):
 
     try:
         with RWLock(
-            cache.client.get_client(), "celery_worker_updating", RWLock.READ, expire=None
+            cache.client.get_client(),
+            "celery_worker_updating",
+            RWLock.READ,
+            expire=None,
         ):
             objs = serializers.deserialize("json", objs)
 
