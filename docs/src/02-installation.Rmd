@@ -116,6 +116,7 @@ The concepts table is not in the repository due to its dimension, therefore we u
    - can read on Chart
    - can read on CssTemplate
    - can read on Dashboard
+   - can time range on Api
 
 6. For each dashboard you want anonymous users to be able to access, on the dashboard list page click edit (the pencil on the right) and add the "Admin" and "Public" roles to the "Roles with acess" field.
 
