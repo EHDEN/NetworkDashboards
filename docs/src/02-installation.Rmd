@@ -22,7 +22,7 @@ Currently, we use docker to deploy our environment
 
 1. If you wish to expose the dashboard viewer app through a specific domain(s) you must add it/them to the `ALLOWED_HOSTS` list on file `dashboard_viewer/dashboard_viewer/settings.py` and remove the `'*'` entry.
 
-2. Build containers' images: `docker-compose build`. This might take several minutes.
+2. In production, all of our docker services use prebuilt images present in DockerHub, however, if you are in development mode and are using the `docker-compose-dev.yml`, you should build the images for the dashboard containers with `docker-compose build`.
 
 3. Set up the database and create an admin account for the dashboard viewer app: `docker-compose run --rm dashboard ./docker-init.sh`.
 
