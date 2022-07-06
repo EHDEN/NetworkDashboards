@@ -138,14 +138,23 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
             uploaded_file=self.file,
         )
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
         # we can use the variable settings.ACHILLES_DB_SQLALCHEMY_ENGINE because that won't use
         #  the achilles test database (test_achilles)
-        self._pandas_connection_engine = create_engine(  # we can't use settings
-           "postgresql"
-           f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
-           f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
-           f"/test_{settings.DATABASES['achilles']['NAME']}"
+        cls._pandas_connection_engine = create_engine(
+            "postgresql"
+            f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
+            f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
+            f"/{settings.DATABASES['achilles']['NAME']}"
         )
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._pandas_connection_engine.dispose()
+        super().tearDownClass()
 
     def setUp(self) -> None:
         self._pending_upload.data_source = DataSource.objects.get(acronym="test1")
