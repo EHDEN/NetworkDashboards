@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.cache import caches
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings, tag, TestCase, TransactionTestCase
+from sqlalchemy import create_engine
 
 from .file_handler.checks import (
     DuplicatedMetadataRow,
@@ -136,10 +137,22 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
             id=1,
             uploaded_file=self.file,
         )
-        self._pandas_connection = settings.ACHILLES_DB_SQLALCHEMY_ENGINE.connect()
+
+        # we can use the variable settings.ACHILLES_DB_SQLALCHEMY_ENGINE because that won't use
+        #  the achilles test database (test_achilles)
+        self._pandas_connection_engine = create_engine(  # we can't use settings
+           "postgresql"
+           f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
+           f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
+           f"/test_{settings.DATABASES['achilles']['NAME']}"
+        )
 
     def setUp(self) -> None:
         self._pending_upload.data_source = DataSource.objects.get(acronym="test1")
+        self._pandas_connection = self._pandas_connection_engine.connect()
+
+    def tearDown(self):
+        self._pandas_connection.close()
 
     def _update_and_check(self, count, archive_count):
         self._pending_upload.uploaded_file.seek(0)
