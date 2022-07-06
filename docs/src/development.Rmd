@@ -118,15 +118,21 @@ You can apply the changes automatically by executing the tools manually without 
 Sometimes prospector can be a pain in the boot, complaining about too much stuff.
 You can make prospector ignore some bad stuff by adding the comment, ` # noqa`, to the end of the specific line where it is complaining.
 
+To run only a single tool with tox you have to set the `TOX_ENV` enviroment variable. For example, to run just black with tox you can run `TOX_ENV=black tox`.
+
 ### Tests {-}
 
 Our tests use Django's building testing features, which uses unittest under the hood.
 Not all featured have tests associated, however, there are already [some tests scenarios](https://github.com/EHDEN/NetworkDashboards/issues?q=is%3Aissue+is%3Aopen+label%3A%22Test+Use+Case%22) in mind written as issues on the repository, which have the tag **Test Use Case**.
 
-To run the tests we set up a docker-compose stack, under the [test](https://github.com/EHDEN/NetworkDashboards/tree/master/tests) directory which has just the necessary data containers (Redis and Postgres) to avoid having to make changes on the development/production docker-compose stack.
-Once the stack is up it only necessary to run `SECRET_KEY=secret python manage.py test` to execute the tests.
+To run the tests we set up a docker-compose stack, under the [test](https://github.com/EHDEN/NetworkDashboards/tree/master/tests) directory which has just the necessary data containers (Redis and Postgres) with open ports and with no volumes, to avoid having to make changes on the development/production docker-compose stack to run the tests.
+Once the stack is up it only necessary to run `python manage.py test` to execute the tests.
 If you are developing any tests that involve [celery](https://github.com/celery/celery), there is no need to have a celery process running, since on Django's settings.py we [set the test runner](https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/dashboard_viewer/settings.py#L316) to the celery one.
 This way the `python manage.py test` is enough to test the whole application.
+
+tox is an alternative and a good way to run all test commands without having to install the test requirements for each test case (code style checks, unit tests, ...). tox will create a tox environment, install the necessary dependencies run the test command.
+
+tox and its dependencies are in the file `requirements-dev/requirements-dev.txt`. After installing them you just need to execute `TOX_ENV=tests tox` or `TOX_ENV=tests-third-party tox` to run all the test cases.
 
 ### Python Requirements {-}
 
