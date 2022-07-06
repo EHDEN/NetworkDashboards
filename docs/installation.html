@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-06-18" />
+<meta name="date" content="2022-07-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -338,7 +338,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>Dashboard Viewer setup</h3>
 <ol style="list-style-type: decimal">
 <li><p>If you wish to expose the dashboard viewer app through a specific domain(s) you must add it/them to the <code>ALLOWED_HOSTS</code> list on file <code>dashboard_viewer/dashboard_viewer/settings.py</code> and remove the <code>'*'</code> entry.</p></li>
-<li><p>Build containers’ images: <code>docker-compose build</code>. This might take several minutes.</p></li>
+<li><p>In production, all of our docker services use prebuilt images present in DockerHub, however, if you are in development mode and are using the <code>docker-compose-dev.yml</code>, you should build the images for the dashboard containers with <code>docker-compose build</code>.</p></li>
 <li><p>Set up the database and create an admin account for the dashboard viewer app: <code>docker-compose run --rm dashboard ./docker-init.sh</code>.</p></li>
 </ol>
 </div>
@@ -400,6 +400,7 @@ It is recommended that you change the password if you will use this in a product
 <li>can read on Chart</li>
 <li>can read on CssTemplate</li>
 <li>can read on Dashboard</li>
+<li>can time range on Api</li>
 </ul></li>
 <li><p>For each dashboard you want anonymous users to be able to access, on the dashboard list page click edit (the pencil on the right) and add the “Admin” and “Public” roles to the “Roles with acess” field.</p></li>
 </ol>

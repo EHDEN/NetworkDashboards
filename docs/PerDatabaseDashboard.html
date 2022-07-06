@@ -24,7 +24,7 @@
 <meta name="author" content="This document is currently under construction" />
 
 
-<meta name="date" content="2022-06-18" />
+<meta name="date" content="2022-07-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -337,8 +337,11 @@ add the following JSON entry to the JSON object of the <code>JSON Metadata</code
 </div>
 <div id="css" class="section level3 unnumbered" number="">
 <h3>CSS</h3>
-<p>To hide the dashboard header insert the following css code to the <code>CSS</code> field on the edit page:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb13-1"><a href="PerDatabaseDashboard.html#cb13-1" aria-hidden="true"></a><span class="fu">.dashboard</span> <span class="op">&gt;</span> div<span class="in">:not(</span><span class="fu">.dashboard-content</span><span class="in">)</span> {  <span class="co">/* dashboard header */</span></span>
+<p>Whenever a user types some texts on superset’s filters the avaiable options on it are filtered.
+Whenever no option matches the text inserted a ‘Create option “[inserted text]”’.
+Since Superset filters do exact match, this option will for sure return no results.
+Because of that, this option is being hidden with the following CSS:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb13-1"><a href="PerDatabaseDashboard.html#cb13-1" aria-hidden="true"></a><span class="fu">.css-0.Select__option</span> {</span>
 <span id="cb13-2"><a href="PerDatabaseDashboard.html#cb13-2" aria-hidden="true"></a>  <span class="kw">display</span>: <span class="dv">none</span><span class="op">;</span></span>
 <span id="cb13-3"><a href="PerDatabaseDashboard.html#cb13-3" aria-hidden="true"></a>}</span></code></pre></div>
 <p>With this every time you want to edit the dashboard layout you have to either comment the CSS inserted
@@ -346,6 +349,26 @@ or remove it so the “Edit Dashboard” button can show again.</p>
 </div>
 <div id="filters" class="section level3 unnumbered" number="">
 <h3>Filters</h3>
+<div id="mappings" class="section level4 unnumbered" number="">
+<h4>Mappings</h4>
+<p>This defines which charts specific filters will affect.
+This can be edited by entering in edit mode, click the three dots near the “Save” and then go to “Set filter mappings”.
+To apply a mapping you have to select a set of filters on the left, choose on the right which charts it affects and finally hit save.
+You have to do this procedure for the different sets of filters that have different mappings.</p>
+<p>This is done mainly to not confuse the user.
+Let’s say you choose “Portugal” on the country filter and that databases from Portugal only have records of the Dug domain.
+After this, if the user clicks on the domain filter dropdown, only the Drug domain option will appear.
+With this, the user might get the idea that the system only has records of the Drug domain.
+If all options appear on the domain filter, the charts will show “No results” and with this, the users should conclude that for the set of filters defined there is no data.</p>
+<p>Global filters: note that it does not affect the other filters mentioned below.<br />
+<img src="images/11-network-dashboard/01-filters/filter-mappings/global-filters.png" /></p>
+<p>Domain Filter<br />
+<img src="images/11-network-dashboard/01-filters/filter-mappings/domain-filter.png" /></p>
+<p>Concept Filter: Note that it does not affect the Domain filter<br />
+<img src="images/11-network-dashboard/01-filters/filter-mappings/domain-filter.png" /></p>
+<p>Number of patitents in observation period time range<br />
+<img src="images/11-network-dashboard/01-filters/filter-mappings/number-of-patients-in-obs-period-time-range.png" /></p>
+</div>
 <div id="country-filter" class="section level4 unnumbered" number="">
 <h4>Country Filter</h4>
 <p>Dataset: Materialized View <a href="materialized-views-1.html#meta_data_table">meta_data_table</a></p>
