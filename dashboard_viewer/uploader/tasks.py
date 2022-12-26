@@ -6,7 +6,7 @@ from django.db import router, transaction
 from redis_rw_lock import RWLock
 
 from materialized_queries_manager.utils import refresh
-from .file_handler.checks import extract_data_from_uploaded_file
+from .file_handler.checks import extract_data_from_uploaded_file, check_for_duplicated_files
 from .file_handler.updates import update_achilles_results_data
 from .models import AchillesResults, PendingUpload, UploadHistory
 
@@ -29,6 +29,19 @@ def upload_results_file(pending_upload_id: int):
     )
 
     try:
+
+        ### Added for checksum 
+        # To prevent the database owner from uploading the same data to the datasource
+
+        logger.info("Verifying Checksum of the upload file with recent data [datasource %d, pending upload %d]", 
+            data_source.id,
+            pending_upload.id,
+        )
+
+        check_for_duplicated_files(pending_upload.uploaded_file, data_source.id)
+        
+        ##### 
+
         logger.info(
             "Checking file format and data [datasource %d, pending upload %d]",
             data_source.id,
