@@ -308,6 +308,26 @@ def data_source_dashboard(request, data_source):
             f'&preselect_filters={{"{config.DATABASE_FILTER_ID}":{{"acronym":["{data_source.acronym}"]}}}}'
         )
 
+    # This way if there is at least one successfull upload it will redirect to the dashboards
+    # We could only check if the last upload for the data source was sucessfull 
+        # -> This will not show data but it can bring a more useful message since the new data may not be processed and the graphics will contain old data
+        # -> Perhaps this is the best option has the user will expect the new data to be published and may think the graphics already
+        # contain that information
+        
+    if not data_source.uploadhistory_set.exists():
+
+        # Check last pending upload for the data source, it may have started but not completed
+        try:
+            status_of_pd = PendingUpload.objects.filter(data_source_id= data_source.id).values_list('status', flat = True).latest('id')
+
+            if status_of_pd == 2:
+
+                return render(request, "still_processing_achilles.html")
+
+        except PendingUpload.DoesNotExist:
+
+            return render(request, "no_uploads_dashboard.html")
+
     return render(request, "no_uploads_dashboard.html")
 
 
