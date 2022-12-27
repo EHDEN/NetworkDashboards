@@ -5,10 +5,9 @@ import os
 
 import numpy
 import pandas
+from django.conf import settings
 
 from uploader.models import DataSource, UploadHistory
-
-from django.conf import settings
 
 
 class FileChecksException(Exception):
@@ -264,49 +263,51 @@ def _get_upload_attr(analysis, stratum):
 
 
 def check_for_duplicated_files(uploaded_file, data_source_id):
-
     #### Added For Checksum ##########################
 
     try:
-        
-        # Upload History only stores the succesded files 
+        # Upload History only stores the succesded files
 
         pd = UploadHistory.objects.filter(data_source_id=data_source_id).latest()
 
-        data_source_hash = DataSource.objects.filter(id=data_source_id).values_list('hash', flat=True).first()
-        
-        if data_source_hash is not None:
+        data_source_hash = (
+            DataSource.objects.filter(id=data_source_id)
+            .values_list("hash", flat=True)
+            .first()
+        )
 
-            # Go to the path where sucess filea are stored 
+        if data_source_hash is not None:
+            # Go to the path where sucess filea are stored
 
             latest_file_path = os.path.join(settings.MEDIA_ROOT, pd.uploaded_file.path)
 
             if os.path.exists(latest_file_path) and os.path.exists(uploaded_file.path):
-
                 with open(latest_file_path, "rb") as previous_upload_file:
-                    
-                    try: 
-                        checksum_previous = hashlib.sha256(previous_upload_file.read()).hexdigest()
+                    try:
+                        checksum_previous = hashlib.sha256(
+                            previous_upload_file.read()
+                        ).hexdigest()
 
                     except IOError:
-                        
                         checksum_previous = None
 
                 with open(uploaded_file.path, "rb") as new_upload_file:
-                    
                     try:
-                        checksum_new = hashlib.sha256(new_upload_file.read()).hexdigest()
+                        checksum_new = hashlib.sha256(
+                            new_upload_file.read()
+                        ).hexdigest()
 
                     except IOError:
-                        
                         checksum_new = None
-        
-                if (checksum_previous is not None and checksum_new is not None and checksum_previous == checksum_new):
 
+                if (
+                    checksum_previous is not None
+                    and checksum_new is not None
+                    and checksum_previous == checksum_new
+                ):
                     raise EqualFileAlreadyUploaded("File is already in the database")
 
     except UploadHistory.DoesNotExist:
         pass
 
-    
     #### Added For Checksum ##########################

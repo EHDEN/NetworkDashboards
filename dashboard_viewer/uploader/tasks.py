@@ -32,18 +32,15 @@ def upload_results_file(pending_upload_id: int):
     )
 
     try:
-
-        ### Added for checksum 
         # To prevent the database owner from uploading the same data to the datasource
 
-        logger.info("Verifying Checksum of the upload file with recent data [datasource %d, pending upload %d]", 
+        logger.info(
+            "Verifying Checksum of the upload file with recent data [datasource %d, pending upload %d]",
             data_source.id,
             pending_upload.id,
         )
 
         check_for_duplicated_files(pending_upload.uploaded_file, data_source.id)
-        
-        ##### 
 
         logger.info(
             "Checking file format and data [datasource %d, pending upload %d]",
