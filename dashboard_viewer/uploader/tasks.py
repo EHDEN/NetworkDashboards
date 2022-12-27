@@ -6,7 +6,10 @@ from django.db import router, transaction
 from redis_rw_lock import RWLock
 
 from materialized_queries_manager.utils import refresh
-from .file_handler.checks import extract_data_from_uploaded_file, check_for_duplicated_files
+from .file_handler.checks import (
+    check_for_duplicated_files,
+    extract_data_from_uploaded_file,
+)
 from .file_handler.updates import update_achilles_results_data
 from .models import AchillesResults, PendingUpload, UploadHistory
 

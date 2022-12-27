@@ -8,6 +8,7 @@ from django.test import override_settings, tag, TestCase, TransactionTestCase
 
 from .file_handler.checks import (
     DuplicatedMetadataRow,
+    EqualFileAlreadyUploaded,
     extract_data_from_uploaded_file,
     FileChecksException,
     InvalidFieldValue,
@@ -365,6 +366,90 @@ class UploadResultsFileTestCase(TransactionTestCase):
 
         try:
             UploadHistory.objects.get(pending_upload_id=pending_upload_id)
+        except UploadHistory.DoesNotExist:
+            self.fail(
+                "No upload history record with the associated pending upload id created"
+            )
+
+    def test_invalid_file_due_to_checksum(self):
+
+        ExtractDataFromUploadedFileTestCase.file_7.seek(0)
+
+        pending_upload_1 = PendingUpload.objects.create(
+            data_source=DataSource.objects.get(acronym="test1"),
+            uploaded_file=SimpleUploadedFile(
+                "dummy", ExtractDataFromUploadedFileTestCase.file_7.read()
+            ),
+        )
+
+        upload_results_file.delay(pending_upload_1.id)
+        
+        # Upload the second file, with equal data
+
+        ExtractDataFromUploadedFileTestCase.file_7.seek(0)
+
+        new_pending_upload = PendingUpload.objects.create(
+            data_source=DataSource.objects.get(acronym="test1"),
+            uploaded_file=SimpleUploadedFile(
+                "dummy", ExtractDataFromUploadedFileTestCase.file_7.read()
+            ),
+        )
+
+        try:
+            upload_results_file.delay(new_pending_upload.id)
+        except EqualFileAlreadyUploaded:
+            pass
+
+        self.assertEqual(
+            PendingUpload.objects.get(id=new_pending_upload.id).status,
+            PendingUpload.STATE_FAILED,
+        )
+    
+    def test_valid_file_checksum(self):
+
+        ExtractDataFromUploadedFileTestCase.file_7.seek(0)
+
+        pending_upload_1 = PendingUpload.objects.create(
+            data_source=DataSource.objects.get(acronym="test1"),
+            uploaded_file=SimpleUploadedFile(
+                "dummy", ExtractDataFromUploadedFileTestCase.file_7.read()
+            ),
+        )
+
+        upload_results_file.delay(pending_upload_1.id)
+        
+        # Upload the second file, with different data
+
+        new_file = io.BytesIO(
+            bytes(
+                "analysis_id,stratum_1,stratum_2,stratum_3,stratum_4,stratum_5,count_value\n"
+                "0,,5,0,,,2000\n"
+                "5000,,1,,2,4,1001\n",
+                "utf8",
+            )
+        )
+
+        new_pending_upload = PendingUpload.objects.create(
+            data_source=DataSource.objects.get(acronym="test1"),
+            uploaded_file=SimpleUploadedFile(
+                "dummy", new_file.read()
+            ),
+        )
+
+        try:
+            upload_results_file.delay(new_pending_upload.id)
+        except EqualFileAlreadyUploaded:
+            self.fail(
+                "File is already in database"
+            )
+
+        self.assertRaises(
+            PendingUpload.DoesNotExist, PendingUpload.objects.get, id=new_pending_upload.id
+        )
+        self.assertEqual(0, cache.get("celery_workers_updating"))
+
+        try:
+            UploadHistory.objects.get(pending_upload_id=new_pending_upload.id)
         except UploadHistory.DoesNotExist:
             self.fail(
                 "No upload history record with the associated pending upload id created"
