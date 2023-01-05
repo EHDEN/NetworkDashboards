@@ -2,9 +2,11 @@ import io
 import logging
 
 import numpy
-from django.core.cache import cache
+from django.conf import settings
+from django.core.cache import caches
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings, tag, TestCase, TransactionTestCase
+from sqlalchemy import create_engine
 
 from .file_handler.checks import (
     DuplicatedMetadataRow,
@@ -136,8 +138,30 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
             uploaded_file=self.file,
         )
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # we can use the variable settings.ACHILLES_DB_SQLALCHEMY_ENGINE because that won't use
+        #  the achilles test database (test_achilles)
+        cls._pandas_connection_engine = create_engine(
+            "postgresql"
+            f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
+            f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
+            f"/{settings.DATABASES['achilles']['NAME']}"
+        )
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._pandas_connection_engine.dispose()
+        super().tearDownClass()
+
     def setUp(self) -> None:
         self._pending_upload.data_source = DataSource.objects.get(acronym="test1")
+        self._pandas_connection = self._pandas_connection_engine.connect()
+
+    def tearDown(self):
+        self._pandas_connection.close()
 
     def _update_and_check(self, count, archive_count):
         self._pending_upload.uploaded_file.seek(0)
@@ -145,6 +169,7 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
             self._logger,
             self._pending_upload,
             self.file_metadata,
+            self._pandas_connection,
         )
         UploadHistory.objects.create(
             data_source=DataSource.objects.get(acronym="test1")
@@ -161,7 +186,10 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
     def test_move_records_of_only_one_db(self):
         self._pending_upload.uploaded_file.seek(0)
         update_achilles_results_data(
-            self._logger, self._pending_upload, self.file_metadata
+            self._logger,
+            self._pending_upload,
+            self.file_metadata,
+            self._pandas_connection,
         )
         UploadHistory.objects.create(
             data_source=DataSource.objects.get(acronym="test1")
@@ -170,7 +198,10 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
         self._pending_upload.uploaded_file.seek(0)
         self._pending_upload.data_source = DataSource.objects.get(acronym="test2")
         update_achilles_results_data(
-            self._logger, self._pending_upload, self.file_metadata
+            self._logger,
+            self._pending_upload,
+            self.file_metadata,
+            self._pandas_connection,
         )
         UploadHistory.objects.create(
             data_source=DataSource.objects.get(acronym="test2")
@@ -361,7 +392,7 @@ class UploadResultsFileTestCase(TransactionTestCase):
         self.assertRaises(
             PendingUpload.DoesNotExist, PendingUpload.objects.get, id=pending_upload_id
         )
-        self.assertEqual(0, cache.get("celery_workers_updating"))
+        self.assertEqual(0, caches["workers_locks"].get("celery_workers_updating"))
 
         try:
             UploadHistory.objects.get(pending_upload_id=pending_upload_id)

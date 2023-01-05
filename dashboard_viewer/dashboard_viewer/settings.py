@@ -17,6 +17,7 @@ from distutils.util import strtobool
 from constance.signals import config_updated
 from django.core.validators import _lazy_re_compile, URLValidator
 from django.dispatch import receiver
+from sqlalchemy import create_engine
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -139,6 +140,13 @@ DATABASES = {
     },
 }
 
+ACHILLES_DB_SQLALCHEMY_ENGINE = create_engine(
+    "postgresql"
+    f"://{DATABASES['achilles']['USER']}:{DATABASES['achilles']['PASSWORD']}"
+    f"@{DATABASES['achilles']['HOST']}:{DATABASES['achilles']['PORT']}"
+    f"/{DATABASES['achilles']['NAME']}"
+)
+
 DATABASE_ROUTERS = ["dashboard_viewer.routers.AchillesRouter"]
 
 
@@ -208,12 +216,19 @@ REDIS_PORT = os.environ.get("REDIS_PORT", 6379)
 REDIS_CACHE_DB = os.environ.get("REDIS_CACHE_DB", 0)
 REDIS_CELERY_DB = os.environ.get("REDIS_CELERY_DB", 1)
 REDIS_CONSTANCE_DB = os.environ.get("REDIS_CONSTANCE_DB", 2)
+REDIS_CELERY_WORKERS_LOCKS_DB = os.environ.get("REDIS_CELERY_WORKERS_LOCKS_DB", 5)
 
 # Celery
 CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_DB}"
 CELERY_RESULT_BACKEND = "django-db"
 
+
 # Cache
+def locks_make_key(key, key_prefix, version):  # noqa
+    # since locks and stuff don't require versioning, ignore those fields when building the key store name
+    return key
+
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -221,7 +236,15 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
-    }
+    },
+    "workers_locks": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_WORKERS_LOCKS_DB}",
+        "KEY_FUNCTION": locks_make_key,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
 }
 
 # Constance
