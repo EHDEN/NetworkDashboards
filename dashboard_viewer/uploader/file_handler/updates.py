@@ -49,6 +49,9 @@ def update_achilles_results_data(
 
     for chunk in reader:
         chunk = chunk.assign(data_source_id=data_source_id)
+
+        chunk = chunk.loc[chunk["stratum_1"] != "0"]
+
         chunk.to_sql(
             AchillesResults._meta.db_table,
             pandas_connection,

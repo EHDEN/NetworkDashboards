@@ -16,9 +16,7 @@ from .file_handler.checks import (
     InvalidFieldValue,
     InvalidFileFormat,
     MissingFieldValue,
-    MutipleConceptIdsEqualToZeroSameAnalysis,
 )
-
 from .file_handler.updates import update_achilles_results_data
 from .models import (
     AchillesResults,
@@ -482,31 +480,3 @@ class UploadResultsFileTestCase(TransactionTestCase):
             self.fail(
                 "No upload history record with the associated pending upload id created"
             )
-
-    def test_file_with_multiple_concept_ids_equal_to_zero(self):
-        invalid_file = io.BytesIO(
-            bytes(
-                "analysis_id,stratum_1,stratum_2,stratum_3,stratum_4,stratum_5,count_value\n"
-                "0,,,,,,1000\n"
-                "1,,,,,,1000\n"
-                "401,0,,,,,1000\n"
-                "401,0,,,,,2000\n",
-                "utf8",
-            )
-        )
-        pending_upload = PendingUpload.objects.create(
-            data_source=DataSource.objects.get(acronym="test1"),
-            uploaded_file=SimpleUploadedFile("dummy", invalid_file.read()),
-        )
-
-        # Upload the file with multiple concept ids equal to zero
-
-        try:
-            upload_results_file.delay(pending_upload.id)
-        except MutipleConceptIdsEqualToZeroSameAnalysis:
-            pass
-
-        self.assertEqual(
-            PendingUpload.objects.get(id=pending_upload.id).status,
-            PendingUpload.STATE_FAILED,
-        )
