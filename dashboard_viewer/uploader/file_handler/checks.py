@@ -271,7 +271,7 @@ def extract_data_from_uploaded_file(uploaded_file):
 
                 if repeated_counts[analysis_id] > 1:
                     raise MutipleConceptIdsEqualToZeroSameAnalysis(
-                        f"Concept Id of 0 duplicated for the same analysis. Try (re)running the plugin "
+                        f"Field Stratum 1 with the value of 0 duplicated for the same analysis. Try (re)running the plugin "
                         "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                         " on your database. If you think this is an error, please contact the system administrator."
                     )
