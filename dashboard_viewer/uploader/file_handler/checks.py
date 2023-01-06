@@ -38,6 +38,10 @@ class EqualFileAlreadyUploaded(FileChecksException):
     pass
 
 
+class MutipleConceptIdsEqualToZeroSameAnalysis(FileChecksException):
+    pass
+
+
 def _generate_file_reader(uploaded_file):
     """
     Receives a python file pointer and returns a pandas csv file reader, along with the columns
@@ -175,6 +179,12 @@ def extract_data_from_uploaded_file(uploaded_file):
 
     metadata = None
 
+    # To check for repeated concept ids equal to zero for the same analysis
+
+    repeated_counts = (
+        {}
+    )  # to store the counts of the concept_ids equal to zero for all chunks of the file being processed
+
     while True:
         try:
             chunk = next(file_reader)
@@ -229,6 +239,42 @@ def extract_data_from_uploaded_file(uploaded_file):
                 "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
                 " on your database."
             )
+
+        # Verify for multiple concept ids equal to 0 on the same analysis
+
+        analysis_rows = chunk.loc[
+            (chunk["stratum_1"] == "0")
+            & (
+                chunk[
+                    chunk.columns.symmetric_difference(
+                        ["analysis_id", "stratum_1", "count_value"]
+                    )
+                ]
+                .isnull()
+                .all(axis=1)
+            )
+        ]
+
+        analysis = analysis_rows["analysis_id"].unique()
+
+        if analysis_rows.empty == False:
+            for analysis_id in analysis:
+                duplicate_counts = analysis_rows.loc[
+                    (analysis_rows["analysis_id"] == analysis_id)
+                ].shape[0]
+
+                if analysis_id in repeated_counts:
+                    repeated_counts[analysis_id] += duplicate_counts
+
+                else:
+                    repeated_counts[analysis_id] = duplicate_counts
+
+                if repeated_counts[analysis_id] > 1:
+                    raise MutipleConceptIdsEqualToZeroSameAnalysis(
+                        f"Concept Id of 0 duplicated for the same analysis. Try (re)running the plugin "
+                        "<a href='https://github.com/EHDEN/CatalogueExport'>CatalogueExport</a>"
+                        " on your database. If you think this is an error, please contact the system administrator."
+                    )
 
     analysis_0 = metadata[metadata.analysis_id == 0]
     if analysis_0.empty:
