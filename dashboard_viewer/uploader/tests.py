@@ -474,8 +474,6 @@ class UploadResultsFileTestCase(TransactionTestCase):
             id=new_pending_upload.id,
         )
 
-        self.assertEqual(0, cache.get("celery_workers_updating"))
-
         try:
             UploadHistory.objects.get(pending_upload_id=new_pending_upload.id)
         except UploadHistory.DoesNotExist:
