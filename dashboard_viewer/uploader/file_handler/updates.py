@@ -48,7 +48,7 @@ def update_achilles_results_data(
     )
 
     for chunk in reader:
-        chunk = chunk[chunk["stratum_1"].isin(["0"]) == False]
+        chunk = chunk[chunk["stratum_1"].isin(["0"]) == False] # noqa
         chunk = chunk.assign(data_source_id=data_source_id)
         chunk.to_sql(
             AchillesResults._meta.db_table,
