@@ -39,6 +39,7 @@ x-dashboard-environment: &dashboard-environment
   REDIS_CACHE_DB: 0
   REDIS_CELERY_DB: 1
   REDIS_CONSTANCE_DB: 2
+  REDIS_CELERY_WORKERS_LOCKS_DB: 5
   SECRET_KEY: ${DASHBOARD_VIEWER_SECRET_KEY}
   DASHBOARD_VIEWER_ENV: ${INSTALLATION_ENV}
   SINGLE_APPLICATION_MODE: ${SINGLE_APPLICATION_MODE}
@@ -122,7 +123,7 @@ services:
   dashboard_worker:
     image: ehdenavr/networkdashboards
     environment: *dashboard-environment
-    command: celery -A dashboard_viewer worker -Ofair -l INFO
+    command: /app/docker-entrypoint-worker.sh
     restart: unless-stopped
     depends_on: *depends-on
     volumes:

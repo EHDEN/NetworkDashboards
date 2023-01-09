@@ -120,7 +120,7 @@
 
 \title{Data Network Dashboards}
 \author{This document is currently under construction}
-\date{2022-06-18}
+\date{2022-07-06}
 
 \begin{document}
 \maketitle
@@ -258,7 +258,7 @@ Currently, we use docker to deploy our environment
 \item
   If you wish to expose the dashboard viewer app through a specific domain(s) you must add it/them to the \texttt{ALLOWED\_HOSTS} list on file \texttt{dashboard\_viewer/dashboard\_viewer/settings.py} and remove the \texttt{\textquotesingle{}*\textquotesingle{}} entry.
 \item
-  Build containers' images: \texttt{docker-compose\ build}. This might take several minutes.
+  In production, all of our docker services use prebuilt images present in DockerHub, however, if you are in development mode and are using the \texttt{docker-compose-dev.yml}, you should build the images for the dashboard containers with \texttt{docker-compose\ build}.
 \item
   Set up the database and create an admin account for the dashboard viewer app: \texttt{docker-compose\ run\ -\/-rm\ dashboard\ ./docker-init.sh}.
 \end{enumerate}
@@ -388,6 +388,8 @@ ALTER TABLE concept OWNER TO achiller
     can read on CssTemplate
   \item
     can read on Dashboard
+  \item
+    can time range on Api
   \end{itemize}
 \item
   For each dashboard you want anonymous users to be able to access, on the dashboard list page click edit (the pencil on the right) and add the ``Admin'' and ``Public'' roles to the ``Roles with acess'' field.
@@ -1050,6 +1052,8 @@ You can apply the changes automatically by executing the tools manually without 
 Sometimes prospector can be a pain in the boot, complaining about too much stuff.
 You can make prospector ignore some bad stuff by adding the comment, \texttt{\#\ noqa}, to the end of the specific line where it is complaining.
 
+To run only a single tool with tox you have to set the \texttt{TOX\_ENV} enviroment variable. For example, to run just black with tox you can run \texttt{TOX\_ENV=black\ tox}.
+
 \hypertarget{tests}{%
 \subsection*{Tests}\label{tests}}
 \addcontentsline{toc}{subsection}{Tests}
@@ -1057,10 +1061,14 @@ You can make prospector ignore some bad stuff by adding the comment, \texttt{\#\
 Our tests use Django's building testing features, which uses unittest under the hood.
 Not all featured have tests associated, however, there are already \href{https://github.com/EHDEN/NetworkDashboards/issues?q=is\%3Aissue+is\%3Aopen+label\%3A\%22Test+Use+Case\%22}{some tests scenarios} in mind written as issues on the repository, which have the tag \textbf{Test Use Case}.
 
-To run the tests we set up a docker-compose stack, under the \href{https://github.com/EHDEN/NetworkDashboards/tree/master/tests}{test} directory which has just the necessary data containers (Redis and Postgres) to avoid having to make changes on the development/production docker-compose stack.
-Once the stack is up it only necessary to run \texttt{SECRET\_KEY=secret\ python\ manage.py\ test} to execute the tests.
+To run the tests we set up a docker-compose stack, under the \href{https://github.com/EHDEN/NetworkDashboards/tree/master/tests}{test} directory which has just the necessary data containers (Redis and Postgres) with open ports and with no volumes, to avoid having to make changes on the development/production docker-compose stack to run the tests.
+Once the stack is up it only necessary to run \texttt{python\ manage.py\ test} to execute the tests.
 If you are developing any tests that involve \href{https://github.com/celery/celery}{celery}, there is no need to have a celery process running, since on Django's settings.py we \href{https://github.com/EHDEN/NetworkDashboards/blob/master/dashboard_viewer/dashboard_viewer/settings.py\#L316}{set the test runner} to the celery one.
 This way the \texttt{python\ manage.py\ test} is enough to test the whole application.
+
+tox is an alternative and a good way to run all test commands without having to install the test requirements for each test case (code style checks, unit tests, \ldots). tox will create a tox environment, install the necessary dependencies run the test command.
+
+tox and its dependencies are in the file \texttt{requirements-dev/requirements-dev.txt}. After installing them you just need to execute \texttt{TOX\_ENV=tests\ tox} or \texttt{TOX\_ENV=tests-third-party\ tox} to run all the test cases.
 
 \hypertarget{python-requirements}{%
 \subsection*{Python Requirements}\label{python-requirements}}
@@ -1403,11 +1411,14 @@ add the following JSON entry to the JSON object of the \texttt{JSON\ Metadata} f
 \subsection*{CSS}\label{css}}
 \addcontentsline{toc}{subsection}{CSS}
 
-To hide the dashboard header insert the following css code to the \texttt{CSS} field on the edit page:
+Whenever a user types some texts on superset's filters the avaiable options on it are filtered.
+Whenever no option matches the text inserted a `Create option ``{[}inserted text{]}''\,'.
+Since Superset filters do exact match, this option will for sure return no results.
+Because of that, this option is being hidden with the following CSS:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{.dashboard} \OperatorTok{\textgreater{}}\NormalTok{ div}\InformationTok{:not(}\FunctionTok{.dashboard{-}content}\InformationTok{)}\NormalTok{ \{  }\CommentTok{/* dashboard header */}
+\FunctionTok{.css{-}0.Select\_\_option}\NormalTok{ \{}
   \KeywordTok{display}\NormalTok{: }\DecValTok{none}\OperatorTok{;}
 \NormalTok{\}}
 \end{Highlighting}
@@ -1419,6 +1430,33 @@ or remove it so the ``Edit Dashboard'' button can show again.
 \hypertarget{filters}{%
 \subsection*{Filters}\label{filters}}
 \addcontentsline{toc}{subsection}{Filters}
+
+\hypertarget{mappings}{%
+\subsubsection*{Mappings}\label{mappings}}
+\addcontentsline{toc}{subsubsection}{Mappings}
+
+This defines which charts specific filters will affect.
+This can be edited by entering in edit mode, click the three dots near the ``Save'' and then go to ``Set filter mappings''.
+To apply a mapping you have to select a set of filters on the left, choose on the right which charts it affects and finally hit save.
+You have to do this procedure for the different sets of filters that have different mappings.
+
+This is done mainly to not confuse the user.
+Let's say you choose ``Portugal'' on the country filter and that databases from Portugal only have records of the Dug domain.
+After this, if the user clicks on the domain filter dropdown, only the Drug domain option will appear.
+With this, the user might get the idea that the system only has records of the Drug domain.
+If all options appear on the domain filter, the charts will show ``No results'' and with this, the users should conclude that for the set of filters defined there is no data.
+
+Global filters: note that it does not affect the other filters mentioned below.\\
+\includegraphics{images/11-network-dashboard/01-filters/filter-mappings/global-filters.png}
+
+Domain Filter\\
+\includegraphics{images/11-network-dashboard/01-filters/filter-mappings/domain-filter.png}
+
+Concept Filter: Note that it does not affect the Domain filter\\
+\includegraphics{images/11-network-dashboard/01-filters/filter-mappings/domain-filter.png}
+
+Number of patitents in observation period time range\\
+\includegraphics{images/11-network-dashboard/01-filters/filter-mappings/number-of-patients-in-obs-period-time-range.png}
 
 \hypertarget{country-filter}{%
 \subsubsection*{Country Filter}\label{country-filter}}

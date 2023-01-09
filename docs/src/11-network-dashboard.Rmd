@@ -26,10 +26,13 @@ add the following JSON entry to the JSON object of the `JSON Metadata` field on 
 
 ### CSS {-}
 
-To hide the dashboard header insert the following css code to the `CSS` field on the edit page:
+Whenever a user types some texts on superset's filters the avaiable options on it are filtered.
+Whenever no option matches the text inserted a 'Create option "[inserted text]"'.
+Since Superset filters do exact match, this option will for sure return no results.
+Because of that, this option is being hidden with the following CSS:
 
 ```css
-.dashboard > div:not(.dashboard-content) {  /* dashboard header */
+.css-0.Select__option {
   display: none;
 }
 ```
@@ -38,6 +41,31 @@ With this every time you want to edit the dashboard layout you have to either co
 or remove it so the "Edit Dashboard" button can show again.
 
 ### Filters {-}
+
+#### Mappings {-}
+
+This defines which charts specific filters will affect.
+This can be edited by entering in edit mode, click the three dots near the "Save" and then go to "Set filter mappings".
+To apply a mapping you have to select a set of filters on the left, choose on the right which charts it affects and finally hit save.
+You have to do this procedure for the different sets of filters that have different mappings.
+
+This is done mainly to not confuse the user.
+Let's say you choose "Portugal" on the country filter and that databases from Portugal only have records of the Dug domain.
+After this, if the user clicks on the domain filter dropdown, only the Drug domain option will appear.
+With this, the user might get the idea that the system only has records of the Drug domain.
+If all options appear on the domain filter, the charts will show "No results" and with this, the users should conclude that for the set of filters defined there is no data.
+
+Global filters: note that it does not affect the other filters mentioned below.  
+![](images/11-network-dashboard/01-filters/filter-mappings/global-filters.png)
+
+Domain Filter  
+![](images/11-network-dashboard/01-filters/filter-mappings/domain-filter.png)
+
+Concept Filter: Note that it does not affect the Domain filter  
+![](images/11-network-dashboard/01-filters/filter-mappings/domain-filter.png)
+
+Number of patitents in observation period time range  
+![](images/11-network-dashboard/01-filters/filter-mappings/number-of-patients-in-obs-period-time-range.png)
 
 #### Country Filter {-}
 

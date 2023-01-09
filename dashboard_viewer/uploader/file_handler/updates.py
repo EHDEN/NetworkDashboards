@@ -1,7 +1,5 @@
 import pandas
-from django.conf import settings
 from django.db import connections
-from sqlalchemy import create_engine
 
 from uploader.models import (
     AchillesResults,
@@ -12,7 +10,12 @@ from uploader.models import (
 )
 
 
-def update_achilles_results_data(logger, pending_upload: PendingUpload, file_metadata):
+def update_achilles_results_data(
+    logger,
+    pending_upload: PendingUpload,
+    file_metadata,
+    pandas_connection,
+):
     data_source_id = pending_upload.data_source.id
 
     logger.info(
@@ -44,26 +47,15 @@ def update_achilles_results_data(logger, pending_upload: PendingUpload, file_met
         pending_upload.id,
     )
 
-    engine = None
-    try:
-        engine = create_engine(
-            "postgresql"
-            f"://{settings.DATABASES['achilles']['USER']}:{settings.DATABASES['achilles']['PASSWORD']}"
-            f"@{settings.DATABASES['achilles']['HOST']}:{settings.DATABASES['achilles']['PORT']}"
-            f"/{settings.DATABASES['achilles']['NAME']}"
+    for chunk in reader:
+        chunk = chunk[chunk["stratum_1"].isin(["0"]) == False]  # noqa
+        chunk = chunk.assign(data_source_id=data_source_id)
+        chunk.to_sql(
+            AchillesResults._meta.db_table,
+            pandas_connection,
+            if_exists="append",
+            index=False,
         )
-
-        for chunk in reader:
-            chunk = chunk.assign(data_source_id=data_source_id)
-            chunk.to_sql(
-                AchillesResults._meta.db_table,
-                engine,
-                if_exists="append",
-                index=False,
-            )
-    finally:
-        if engine is not None:
-            engine.dispose()
 
 
 def move_achilles_results_records(
