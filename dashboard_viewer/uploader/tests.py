@@ -244,7 +244,7 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
         )
 
         self.assertEqual(2, AchillesResults.objects.count())
-        self.assertEqual(0, AchillesResults.objects.filter(stratum_1='0').count())
+        self.assertEqual(0, AchillesResults.objects.filter(stratum_1="0").count())
 
 
 class ExtractDataFromUploadedFileTestCase(TestCase):
