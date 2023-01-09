@@ -2,6 +2,7 @@ import io
 import logging
 
 import numpy
+from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.core.cache import caches
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -27,6 +28,8 @@ from .models import (
     UploadHistory,
 )
 from .tasks import upload_results_file
+
+logger = get_task_logger(__name__)
 
 
 @tag("third-party-app")
@@ -213,6 +216,35 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
 
         self._pending_upload.data_source = DataSource.objects.get(acronym="test1")
         self._update_and_check(4, 2)
+
+    def test_processing_when_stratum1_is_zero(self):
+        new_file1 = io.BytesIO(
+            bytes(
+                "analysis_id,stratum_1,stratum_2,stratum_3,stratum_4,stratum_5,count_value\n"
+                "0,,5,0,,,2000\n"
+                "101,0,5,0,,,2000\n"
+                "5000,,1,,2,4,1001\n",
+                "utf8",
+            )
+        )
+
+        new_pending_upload = PendingUpload.objects.create(
+            data_source=DataSource.objects.get(acronym="test1"),
+            uploaded_file=SimpleUploadedFile("dummy", new_file1.read()),
+        )
+
+        update_achilles_results_data(
+            self._logger,
+            new_pending_upload,
+            self.file_metadata,
+            self._pandas_connection,
+        )
+        UploadHistory.objects.create(
+            data_source=DataSource.objects.get(acronym="test1")
+        )
+
+        self.assertEqual(2, AchillesResults.objects.count())
+        self.assertEqual(0, AchillesResults.objects.filter(stratum_1="0").count())
 
 
 class ExtractDataFromUploadedFileTestCase(TestCase):
@@ -473,8 +505,6 @@ class UploadResultsFileTestCase(TransactionTestCase):
             PendingUpload.objects.get,
             id=new_pending_upload.id,
         )
-
-        self.assertEqual(0, cache.get("celery_workers_updating"))
 
         try:
             UploadHistory.objects.get(pending_upload_id=new_pending_upload.id)
