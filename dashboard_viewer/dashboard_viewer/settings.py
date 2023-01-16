@@ -86,9 +86,11 @@ INSTALLED_APPS = [
     "materialized_queries_manager",
     "tabsManager",
     "uploader",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -119,6 +121,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "dashboard_viewer.wsgi.application"
 
+
+CORS_ALLOWED_ORIGINS = [
+    "https://example_server.example.com",
+]
 
 # Database
 DATABASES = {
