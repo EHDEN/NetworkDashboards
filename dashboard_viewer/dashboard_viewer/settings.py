@@ -121,10 +121,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "dashboard_viewer.wsgi.application"
 
+# CORS ALLOWED ORIGINS - Separate each allowed domain by comma
 
-CORS_ALLOWED_ORIGINS = [
-    "https://example_server.example.com",
-]
+if os.environ.get("CORS_ALLOWED_ORIGINS"):
+    CORS_ALLOWED_ORIGINS = [
+        e
+        for e in os.environ.get("CORS_ALLOWED_ORIGINS").split(",")
+        if e != None and e != ""
+    ]
+
+else:
+    CORS_ALLOWED_ORIGINS = []
 
 # Database
 DATABASES = {
