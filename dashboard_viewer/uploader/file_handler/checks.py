@@ -6,8 +6,10 @@ import os
 import numpy
 import pandas
 from django.conf import settings
+from django.db import connections, transaction, utils
 
-from uploader.models import DataSource, UploadHistory
+from materialized_queries_manager.models import MaterializedQuery
+from uploader.models import AchillesResults, DataSource, UploadHistory
 
 
 class FileChecksException(Exception):
@@ -35,6 +37,10 @@ class MissingFieldValue(FileChecksException):
 
 
 class EqualFileAlreadyUploaded(FileChecksException):
+    pass
+
+
+class FileDataCorrupted(FileChecksException):
     pass
 
 
@@ -311,3 +317,93 @@ def check_for_duplicated_files(uploaded_file, data_source_id):
         pass
 
     #### Added For Checksum ##########################
+
+
+def upload_data_to_tmp_table(data_source_id, file_metadata, pending_upload):
+    # Upload New Data to a "temporary" table
+    pending_upload.uploaded_file.seek(0)
+
+    reader = pandas.read_csv(
+        pending_upload.uploaded_file,
+        header=0,
+        dtype=file_metadata["types"],
+        skip_blank_lines=False,
+        index_col=False,
+        names=file_metadata["columns"],
+        chunksize=500,
+    )
+
+    all_mat_views = MaterializedQuery.objects.exclude(matviewname__contains="tmp")
+
+    mat_views = {}
+
+    for mat_view in all_mat_views:
+        tmp_mat_view_name = mat_view.to_dict()["matviewname"] + "_tmp"
+
+        # To run the mat views (with data) against the "temporary table"
+        # To run for all mat views, as the data source can become with draft equal to true
+
+        tmp_definition = mat_view.to_dict()["definition"].replace(
+            "achilles_results", "achilles_results_tmp"
+        )
+
+        # since draft can change with time, we must run the queries for all types of draft, namely with draft = true and draft = false
+        mat_views[tmp_mat_view_name] = [
+            tmp_definition,
+            tmp_definition.replace("draft = false", "draft = true"),
+        ]
+
+    # Create "Temporary Upload" table, to store the data being uploaded
+    # Refresh of Materialized views does not allow the refresh in Temporary Tables
+
+    with transaction.atomic(), connections[
+        "achilles"
+    ].cursor() as cursor, settings.ACHILLES_DB_SQLALCHEMY_ENGINE.connect() as pandas_connection, pandas_connection.begin():
+        try:
+            cursor.execute("DROP TABLE IF EXISTS achilles_results_tmp CASCADE")
+            cursor.execute(
+                "CREATE TABLE IF NOT EXISTS achilles_results_tmp AS SELECT * FROM "
+                + AchillesResults._meta.db_table
+                + " WHERE FALSE"
+            )
+            cursor.execute("CREATE SEQUENCE IF NOT EXISTS seq_id")
+            cursor.execute(
+                "ALTER TABLE achilles_results_tmp ALTER COLUMN id SET DEFAULT nextval('seq_id')"
+            )
+            cursor.execute(
+                "ALTER TABLE achilles_results_tmp ALTER COLUMN id SET NOT NULL"
+            )
+            cursor.execute("SELECT setval('seq_id', 1)")
+
+            # Upload data into "Temporary Table", similar structure to the actual upload process
+            for chunk in reader:
+                chunk = chunk[chunk["stratum_1"].isin(["0"]) == False]  # noqa
+                chunk = chunk.assign(data_source_id=data_source_id)
+                chunk.to_sql(
+                    "achilles_results_tmp",
+                    pandas_connection,
+                    if_exists="append",
+                    index=False,
+                )
+        except Exception:
+            raise InvalidCSVFile("Error processing the file")
+
+    # Fetch Materialized Views
+    # The option here is to change the definitions of the original mat views and replace
+    # the achilles_results references to achilles_results_tmp
+
+    with transaction.atomic(), connections["achilles"].cursor() as cursor:
+        try:
+            for tmp_mat_view_name in mat_views:  # noqa
+                for tmp_definition in mat_views[tmp_mat_view_name]:
+                    cursor.execute(
+                        f"CREATE MATERIALIZED VIEW {tmp_mat_view_name} AS {tmp_definition}"
+                    )
+                    cursor.execute(f"DROP MATERIALIZED VIEW {tmp_mat_view_name}")
+        except utils.DataError:
+            cursor.execute("DROP TABLE IF EXISTS achilles_results_tmp CASCADE")
+            raise FileDataCorrupted("Uploaded file is not valid")
+
+    # Delete Temprary Upload data and its dependent (Materialzied Views)
+    with transaction.atomic(), connections["achilles"].cursor() as cursor:
+        cursor.execute("DROP TABLE IF EXISTS achilles_results_tmp CASCADE")
