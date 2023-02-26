@@ -50,7 +50,6 @@ def fill_apha2(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("uploader", "0010_auto_20210507_1500"),
     ]
