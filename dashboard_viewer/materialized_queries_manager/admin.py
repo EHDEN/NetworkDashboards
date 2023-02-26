@@ -226,7 +226,7 @@ class MaterializedQueryAdmin(admin.ModelAdmin):
         """
         if hasattr(self, "background_task"):
             background_task_id = getattr(self, "background_task").id
-            try:
+            try:  # noqa
                 task_url = reverse(
                     f"admin:{TaskResult._meta.app_label}_{TaskResult._meta.model_name}_change",
                     args=(

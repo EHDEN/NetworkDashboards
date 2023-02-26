@@ -9,7 +9,7 @@ from django.conf import settings
 from django.db import migrations, models
 
 
-def set_hash(apps, schema_editor):
+def set_hash(apps, schema_editor):  # noqa
     DataSource = apps.get_model("uploader", "DataSource")
     data_sources = DataSource.objects.all()
     if data_sources.exists():
@@ -18,7 +18,7 @@ def set_hash(apps, schema_editor):
         )
 
         try:
-            with open("acronym2hash_mappings.json") as mappings_file:
+            with open("acronym2hash_mappings.json") as mappings_file:  # noqa
                 mappings = json.load(mappings_file)
 
                 for data_source in data_sources:

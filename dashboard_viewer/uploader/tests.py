@@ -135,7 +135,7 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
     fixtures = ("countries", "two_data_sources")
 
     def __init__(self, *args, **kwargs):
-        super(UpdateAchillesResultsDataTestCase, self).__init__(*args, **kwargs)
+        super(UpdateAchillesResultsDataTestCase, self).__init__(*args, **kwargs)  # noqa
         self._logger = logging.getLogger(UpdateAchillesResultsDataTestCase.__name__)
         self._pending_upload = PendingUpload(
             id=1,
@@ -359,7 +359,7 @@ class ExtractDataFromUploadedFileTestCase(TestCase):
 
         file_metadata, metadata = extract_data_from_uploaded_file(self.file_7)
 
-        self.assertEquals(
+        self.assertEquals(  # noqa
             metadata,
             {
                 "generation_date": "0",
@@ -371,7 +371,7 @@ class ExtractDataFromUploadedFileTestCase(TestCase):
             },
         )
 
-        self.assertEquals(
+        self.assertEquals(  # noqa
             file_metadata, UpdateAchillesResultsDataTestCase.file_metadata
         )
 
