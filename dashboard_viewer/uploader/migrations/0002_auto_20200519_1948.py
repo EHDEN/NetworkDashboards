@@ -12,7 +12,6 @@ def fill_acronym(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("uploader", "0001_initial"),
     ]
