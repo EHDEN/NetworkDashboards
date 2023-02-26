@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("uploader", "0002_auto_20200803_1352"),
         ("uploader", "0002_auto_20200519_1948"),
