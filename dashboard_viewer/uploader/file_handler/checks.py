@@ -90,7 +90,7 @@ def _generate_file_reader(uploaded_file):
 
     uploaded_file.seek(0)
 
-    try:
+    try:  # noqa
         file_reader = pandas.read_csv(
             uploaded_file,
             header=0,

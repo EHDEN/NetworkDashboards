@@ -135,7 +135,7 @@ class UpdateAchillesResultsDataTestCase(TransactionTestCase):
     fixtures = ("countries", "two_data_sources")
 
     def __init__(self, *args, **kwargs):
-        super(UpdateAchillesResultsDataTestCase, self).__init__(*args, **kwargs)
+        super(UpdateAchillesResultsDataTestCase, self).__init__(*args, **kwargs)  # noqa
         self._logger = logging.getLogger(UpdateAchillesResultsDataTestCase.__name__)
         self._pending_upload = PendingUpload(
             id=1,
@@ -369,11 +369,11 @@ class ExtractDataFromUploadedFileTestCase(TestCase):
                 "r_package_version": "3",
                 "vocabulary_version": "4",
             },
-        )
+        )  # noqa
 
         self.assertEquals(
             file_metadata, UpdateAchillesResultsDataTestCase.file_metadata
-        )
+        )  # noqa
 
 
 class UploadResultsFileTestCase(TransactionTestCase):
