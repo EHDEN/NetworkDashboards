@@ -283,6 +283,11 @@ CONSTANCE_CONFIG = {
         "Text for the 'Execute CatalogueExport Package' section on the uploader app",
         "markdown",
     ),
+    "DARWIN_EU_DASHBOARD_EXPORT_PACKAGE": (
+        "DARWIN-EU DashboardExport package: https://github.com/darwin-eu/DashboardExport",
+        "Text for the DARWIN-EU DashboardExport package",
+        "markdown",
+    ),
     "UPLOADER_UPLOAD": (
         "Upload the catalogue_results.csv results file in this tool to populate the visualisations. To update "
         "an existing database, just upload the new data. A history of uploads is shown on the page.",
@@ -343,6 +348,7 @@ CONSTANCE_CONFIG_FIELDSETS = OrderedDict(
                 "UPLOADER_EXECUTE_EXPORT_PACKAGE",
                 "UPLOADER_UPLOAD",
                 "UPLOADER_AUTO_UPDATE",
+                "DARWIN_EU_DASHBOARD_EXPORT_PACKAGE",
             ),
         ),
         ("Uploader Settings", ("UPLOADER_ALLOW_EDIT_DRAFT_STATUS",)),
