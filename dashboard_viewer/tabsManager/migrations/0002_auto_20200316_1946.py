@@ -4,7 +4,7 @@ import django.db.models.deletion
 from django.db import migrations, models
 
 
-def move_tabs_to_buttons(apps, schema_editor):
+def move_tabs_to_buttons(apps, schema_editor):  # noqa
     Button = apps.get_model("tabsManager", "Button")
     Tab = apps.get_model("tabsManager", "Tab")
 
@@ -17,7 +17,7 @@ def move_tabs_to_buttons(apps, schema_editor):
         ).save()
 
 
-def associate_tab_and_button(apps, schema_editor):
+def associate_tab_and_button(apps, schema_editor):  # noqa
     Button = apps.get_model("tabsManager", "Button")
     Tab = apps.get_model("tabsManager", "Tab")
 
@@ -28,7 +28,6 @@ def associate_tab_and_button(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("tabsManager", "0002_auto_20200214_1128"),
     ]

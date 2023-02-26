@@ -7,7 +7,7 @@ from django.conf import settings
 from django.db import migrations, models
 
 
-def fill_apha2(apps, schema_editor):
+def fill_apha2(apps, schema_editor):  # noqa
     changes = {
         "Aland Islands": "Åland Islands",
         "Bolivia (Plurinational State of)": "Bolivia, Plurinational State of",
@@ -27,12 +27,12 @@ def fill_apha2(apps, schema_editor):
         "Virgin Islands (U.S.)": "Virgin Islands, U.S.",
     }
 
-    with open(
+    with open(  # noqa
         path.join(settings.BASE_DIR, "uploader", "fixtures", "countries.json")
     ) as countries_file:
         countries_records = json.load(countries_file)
 
-    countries_data = dict()
+    countries_data = dict()  # noqa
     for record in countries_records:
         fields = record["fields"]
         countries_data[fields["country"]] = fields["alpha2"]
@@ -50,7 +50,6 @@ def fill_apha2(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("uploader", "0010_auto_20210507_1500"),
     ]
