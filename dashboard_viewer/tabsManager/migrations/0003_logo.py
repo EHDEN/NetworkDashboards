@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                     "imageCss",
                     models.TextField(
                         blank=True,
-                        default="background: #fff;\nobject-fit: contain;\nwidth: 90px;\nheight: 100%;\nborder-radius: 30px;\npadding: 0 5px 0 5px;\ntransition: width 400ms, height 400ms;\nposition: relative;\nz-index: 5;\n",
+                        default="background: #fff;\nobject-fit: contain;\nwidth: 90px;\nheight: 100%;\nborder-radius: 30px;\npadding: 0 5px 0 5px;\ntransition: width 400ms, height 400ms;\nposition: relative;\nz-index: 5;\n",  # noqa
                     ),
                 ),
                 (
