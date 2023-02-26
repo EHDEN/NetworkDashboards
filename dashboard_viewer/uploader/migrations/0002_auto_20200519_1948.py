@@ -3,7 +3,7 @@
 from django.db import migrations, models
 
 
-def fill_acronym(apps, schema_editor):
+def fill_acronym(apps, schema_editor):  # noqa
     DataSource = apps.get_model("uploader", "DataSource")
 
     for data_source in DataSource.objects.all():

@@ -359,7 +359,7 @@ class ExtractDataFromUploadedFileTestCase(TestCase):
 
         file_metadata, metadata = extract_data_from_uploaded_file(self.file_7)
 
-        self.assertEquals(
+        self.assertEquals(  # noqa
             metadata,
             {
                 "generation_date": "0",
@@ -369,11 +369,11 @@ class ExtractDataFromUploadedFileTestCase(TestCase):
                 "r_package_version": "3",
                 "vocabulary_version": "4",
             },
-        )  # noqa
+        )
 
-        self.assertEquals(
+        self.assertEquals(  # noqa
             file_metadata, UpdateAchillesResultsDataTestCase.file_metadata
-        )  # noqa
+        )
 
 
 class UploadResultsFileTestCase(TransactionTestCase):
