@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User  # noqa
 from django.core import serializers
 from django.test import Client, TestCase, TransactionTestCase
 from django_celery_results.models import TaskResult
@@ -42,7 +42,7 @@ class MaterializedQueryTestCase(TestCase):
     def test_single_delete(self):
         client = _login_admin(self)
         client.post(
-            "/admin/%s/%s/outlier/delete/"
+            "/admin/%s/%s/outlier/delete/"  # noqa
             % (MaterializedQuery._meta.app_label, MaterializedQuery._meta.model_name),
             data={"post": "yes"},
         )
@@ -54,7 +54,7 @@ class MaterializedQueryTestCase(TestCase):
     def test_multiple_delete(self):
         client = _login_admin(self)
         client.post(
-            "/admin/%s/%s/"
+            "/admin/%s/%s/"  # noqa
             % (MaterializedQuery._meta.app_label, MaterializedQuery._meta.model_name),
             data={
                 "post": "yes",
@@ -73,7 +73,7 @@ class MaterializedQueryTestCase(TestCase):
     def test_add_view(self, create_task):
         client = _login_admin(self)
         client.post(
-            "/admin/%s/%s/add/"
+            "/admin/%s/%s/add/"  # noqa
             % (MaterializedQuery._meta.app_label, MaterializedQuery._meta.model_name),
             data={"matviewname": "test", "definition": "SELECT"},
         )
@@ -97,7 +97,7 @@ class MaterializedQueryTestCase(TestCase):
         """
         client = _login_admin(self)
         client.post(
-            "/admin/%s/%s/outlier/change/"
+            "/admin/%s/%s/outlier/change/"  # noqa
             % (MaterializedQuery._meta.app_label, MaterializedQuery._meta.model_name),
             data={"matviewname": "outlier", "definition": "SELECT 2"},
         )
@@ -133,7 +133,7 @@ class CeleryTasksTestCase(TransactionTestCase):
         task.wait()
 
         self.assertEqual(3, MaterializedQuery.objects.count())
-        self.assertEquals(
+        self.assertEquals(  # noqa
             " SELECT 2;",
             MaterializedQuery.objects.get(matviewname="outlier").definition,
         )
@@ -158,7 +158,7 @@ class CeleryTasksTestCase(TransactionTestCase):
             in task_results.result
         )
         self.assertEqual(3, MaterializedQuery.objects.count())
-        self.assertEquals(
+        self.assertEquals(  # noqa
             " SELECT 1;",
             MaterializedQuery.objects.get(matviewname="outlier").definition,
         )
@@ -191,7 +191,7 @@ class CeleryTasksTestCase(TransactionTestCase):
             from django.db import connections  # noqa
 
             with connections["achilles"].cursor() as cursor:
-                cursor.execute(f"DROP MATERIALIZED VIEW IF EXISTS outlier2")
+                cursor.execute(f"DROP MATERIALIZED VIEW IF EXISTS outlier2")  # noqa
 
     def test_valid_create(self):
         task = create_materialized_view.delay(
@@ -219,7 +219,7 @@ class CeleryTasksTestCase(TransactionTestCase):
             from django.db import connections  # noqa
 
             with connections["achilles"].cursor() as cursor:
-                cursor.execute(f"DROP MATERIALIZED VIEW IF EXISTS outlier2")
+                cursor.execute(f"DROP MATERIALIZED VIEW IF EXISTS outlier2")  # noqa
 
     def test_invalid_create(self):
         task = create_materialized_view.delay(

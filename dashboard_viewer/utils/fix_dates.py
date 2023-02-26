@@ -97,7 +97,7 @@ def _convert_value(valid_pattern: re.Pattern, value: str):
         return None
     # print(f"unexpected date format -{value}-")
     # return None
-    raise Exception(f"unexpected date format -{value}-")
+    raise Exception(f"unexpected date format -{value}-")  # noqa
 
 
 @transaction.atomic
