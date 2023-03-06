@@ -375,14 +375,14 @@ def upload_data_to_tmp_table(data_source_id, file_metadata, pending_upload):
                     + AchillesResults._meta.db_table
                     + " WHERE FALSE"
                 )
-                cursor.execute("CREATE SEQUENCE IF NOT EXISTS seq_id")
+                cursor.execute("CREATE SEQUENCE IF NOT EXISTS achilles_results_tmp_seq_id")
                 cursor.execute(
-                    "ALTER TABLE achilles_results_tmp ALTER COLUMN id SET DEFAULT nextval('seq_id')"
+                    "ALTER TABLE achilles_results_tmp ALTER COLUMN id SET DEFAULT nextval('achilles_results_tmp_seq_id')"
                 )
                 cursor.execute(
                     "ALTER TABLE achilles_results_tmp ALTER COLUMN id SET NOT NULL"
                 )
-                cursor.execute("SELECT setval('seq_id', 1)")
+                cursor.execute("SELECT setval('achilles_results_tmp_seq_id', 1)")
 
                 # Upload data into "Temporary Table", similar structure to the actual upload process
                 for chunk in reader:
