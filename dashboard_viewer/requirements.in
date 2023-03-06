@@ -4,6 +4,7 @@ django-bootstrap4==3.0.1                  # forms beautifier
 django-celery-results==2.2.0              # reports results from workers
 django-compressor==2.4.1                  # combines and minifies linked and inline Javascript or CSS in a Django template into cacheable static files
 django-constance==2.8.0                   # to implement settings that can change at runtime
+django-cors-headers==3.13.0               # used to receive cross domain requests and allow them
 django-markdownify==0.9.0                 # markdown to html
 django-model-utils==4.2.0                 # get specific type of subclasses after requesting buttons on tabsManager app
 django-sass-processor==1.1                # automate scss devolopment

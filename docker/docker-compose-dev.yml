@@ -46,6 +46,7 @@ x-dashboard-environment: &dashboard-environment
   REDIS_CELERY_WORKERS_LOCKS_DB: 5
   SECRET_KEY: ${DASHBOARD_VIEWER_SECRET_KEY}
   DASHBOARD_VIEWER_ENV: development
+  CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
 
 version: "3.7"
 services:
