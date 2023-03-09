@@ -320,51 +320,53 @@ def check_for_duplicated_files(uploaded_file, data_source_id):
     #### Added For Checksum ##########################
 
 def upload_data_to_tmp_table(data_source_id, file_metadata, pending_upload):
-    # Upload New Data to a "temporary" table
-    pending_upload.uploaded_file.seek(0)
 
-    reader = pandas.read_csv(
-        pending_upload.uploaded_file,
-        header=0,
-        dtype=file_metadata["types"],
-        skip_blank_lines=False,
-        index_col=False,
-        names=file_metadata["columns"],
-        chunksize=500,
-    )
-
-    all_mat_views = MaterializedQuery.objects.exclude(matviewname__contains="tmp")
-
-    mat_views = {}
-
-    for mat_view in all_mat_views:
-        tmp_mat_view_name = mat_view.to_dict()["matviewname"] + "_tmp"
-
-        # To run the mat views (with data) against the "temporary table"
-        # To run for all mat views, as the data source can become with draft equal to true
-
-        tmp_definition = mat_view.to_dict()["definition"].replace(
-            "achilles_results", "achilles_results_tmp"
-        )
-
-        mat_views[tmp_mat_view_name] = [
-            tmp_definition,
-        ]
-
-        # since draft can change with time, we must run the queries for all types of draft, namely with draft = true and draft = false
-        if "draft = false" in tmp_definition:
-            mat_views[tmp_mat_view_name].append(
-                tmp_definition.replace("draft = false", "draft = true")
-            )
-
-    # Create "Temporary Upload" table, to store the data being uploaded
-    # Refresh of Materialized views does not allow the refresh in Temporary Tables
-
-    cache = caches["workers_locks"]  # To lock
+    cache = caches["workers_locks"]
 
     with RWLock(
         cache.client.get_client(), "celery_worker_updating", RWLock.WRITE, expire=None
-    ):
+        ):
+    
+        # Upload New Data to a "temporary" table
+        pending_upload.uploaded_file.seek(0)
+
+        reader = pandas.read_csv(
+            pending_upload.uploaded_file,
+            header=0,
+            dtype=file_metadata["types"],
+            skip_blank_lines=False,
+            index_col=False,
+            names=file_metadata["columns"],
+            chunksize=500,
+        )
+
+        all_mat_views = MaterializedQuery.objects.exclude(matviewname__contains="tmp")
+
+        mat_views = {}
+
+        for mat_view in all_mat_views:
+            tmp_mat_view_name = mat_view.to_dict()["matviewname"] + "_tmp"
+
+            # To run the mat views (with data) against the "temporary table"
+            # To run for all mat views, as the data source can become with draft equal to true
+
+            tmp_definition = mat_view.to_dict()["definition"].replace(
+                "achilles_results", "achilles_results_tmp"
+            )
+
+            mat_views[tmp_mat_view_name] = [
+                tmp_definition,
+            ]
+
+            # since draft can change with time, we must run the queries for all types of draft, namely with draft = true and draft = false
+            if "draft = false" in tmp_definition:
+                mat_views[tmp_mat_view_name].append(
+                    tmp_definition.replace("draft = false", "draft = true")
+                )
+
+        # Create "Temporary Upload" table, to store the data being uploaded
+        # Refresh of Materialized views does not allow the refresh in Temporary Tables
+
         with transaction.atomic(), connections[
             "achilles"
         ].cursor() as cursor, settings.ACHILLES_DB_SQLALCHEMY_ENGINE.connect() as pandas_connection, pandas_connection.begin():
@@ -385,7 +387,7 @@ def upload_data_to_tmp_table(data_source_id, file_metadata, pending_upload):
 
                 # Upload data into "Temporary Table", similar structure to the actual upload process
                 for chunk in reader:
-                    chunk = chunk[chunk["stratum_1"].isin(["0"]) == False]  # noqa
+                    chunk = chunk[chunk["stratum_1"].isin(["0"]) == False]
                     chunk = chunk.assign(data_source_id=data_source_id)
                     chunk.to_sql(
                         "achilles_results_tmp",
