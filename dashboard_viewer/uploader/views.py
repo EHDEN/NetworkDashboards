@@ -302,11 +302,13 @@ def data_source_dashboard(request, data_source):
 
     if data_source.uploadhistory_set.exists():
         config = constance.config
-        return HttpResponseRedirect(
+        resp = str(
             f"{config.SUPERSET_HOST}/superset/dashboard/{config.DATABASE_DASHBOARD_IDENTIFIER}/"
             "?standalone=1"
             f'&preselect_filters={{"{config.DATABASE_FILTER_ID}":{{"acronym":["{data_source.acronym}"]}}}}'
         )
+
+        return JsonResponse({"link": resp})
 
     # This way if there is at least one successfull upload it will redirect to the dashboards
     # We could only check if the last upload for the data source was sucessfull
