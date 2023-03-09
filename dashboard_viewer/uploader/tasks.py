@@ -10,6 +10,7 @@ from materialized_queries_manager.utils import refresh
 from .file_handler.checks import (
     check_for_duplicated_files,
     extract_data_from_uploaded_file,
+    upload_data_to_tmp_table,
 )
 from .file_handler.updates import update_achilles_results_data
 from .models import AchillesResults, PendingUpload, UploadHistory
@@ -51,6 +52,14 @@ def upload_results_file(pending_upload_id: int):
         file_metadata, data = extract_data_from_uploaded_file(
             pending_upload.uploaded_file
         )
+
+        logger.info(
+            "Validating if data is not corrupted [datasource %d, pending upload %d]",
+            data_source.id,
+            pending_upload_id,
+        )
+
+        upload_data_to_tmp_table(data_source.id, file_metadata, pending_upload)
 
         cache = caches["workers_locks"]
 
