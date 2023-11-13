@@ -48,11 +48,10 @@ rm /tmp/postgres.sql
     echo_step 4 "Restoring redis"
     docker-compose up -d redis >/dev/null 2>&1
     CONTAINER_ID=$(docker-compose ps -q redis)
-    docker cp "$BACKUP_ROOT_DIRECTORY/redis.rdb" $CONTAINER_ID:/
-    docker-compose exec -T redis sh -c """
-mv /redis.rdb /data
-"""
-    docker-compose restart redis >/dev/null 2>&1
+    docker cp "$BACKUP_ROOT_DIRECTORY/redis.rdb" $CONTAINER_ID:/data
+    docker-compose stop redis >/dev/null 2>&1
+    docker-compose run --rm redis sh -c "mv /data/redis.rdb /data/dump.rdb"
+    docker-compose up -d redis >/dev/null 2>&1
 
     echo_step 5 "Restoring Dashboards' media files"
     docker-compose up -d dashboard >/dev/null 2>&1
