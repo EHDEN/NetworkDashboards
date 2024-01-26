@@ -270,10 +270,8 @@ def _get_upload_attr(analysis, stratum):
 
 
 def check_for_duplicated_files(uploaded_file, data_source_id):
-    #### Added For Checksum ##########################
-
     try:
-        # Upload History only stores the succesded files
+        # Upload History only stores the succeded files
 
         pd = UploadHistory.objects.filter(data_source_id=data_source_id).latest()
 
@@ -283,8 +281,8 @@ def check_for_duplicated_files(uploaded_file, data_source_id):
             .first()
         )
 
-        if data_source_hash is not None:
-            # Go to the path where sucess filea are stored
+        if data_source_hash is not None and bool(pd.uploaded_file):
+            # Go to the path where success files are stored
 
             latest_file_path = os.path.join(settings.MEDIA_ROOT, pd.uploaded_file.path)
 
@@ -317,7 +315,6 @@ def check_for_duplicated_files(uploaded_file, data_source_id):
     except UploadHistory.DoesNotExist:
         pass
 
-    #### Added For Checksum ##########################
 
 def upload_data_to_tmp_table(data_source_id, file_metadata, pending_upload):
 
