@@ -23,4 +23,9 @@ urlpatterns = [
         views.data_source_dashboard,
         name="data_source_dashboard",
     ),
+    path(
+        "<str:data_source>/OnboardingReport/",
+        views.show_onboarding_csv,
+        name="show_onboarding_csv"
+    )
 ]

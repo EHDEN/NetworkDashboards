@@ -15,12 +15,12 @@ from materialized_queries_manager.models import MaterializedQuery
 from materialized_queries_manager.tasks import refresh_materialized_views_task
 from . import serializers
 from .decorators import uploader_decorator
-from .forms import AchillesResultsForm, EditSourceForm, SourceForm
-from .models import Country, DataSource, PendingUpload, UploadHistory
+from .forms import AchillesResultsForm, EditSourceForm, SourceForm, OnboardingReportForm
+from .models import Country, DataSource, PendingUpload, UploadHistory, OnboardingReport
 from .tasks import upload_results_file
-
+import pandas as pd
 PAGE_TITLE = "Dashboard Data Upload"
-
+ONBOARDING_TITLE = "Onboarding Page"
 
 @uploader_decorator
 @xframe_options_exempt
@@ -33,41 +33,53 @@ def upload_achilles_results(request, *args, **kwargs):
 
     if request.method == "POST":
         form = AchillesResultsForm(request.POST, request.FILES)
+        onboarding_form = OnboardingReportForm(request.POST, request.FILES)
 
         if form.is_valid():
-            pending_upload = PendingUpload.objects.create(
-                data_source=obj_data_source, uploaded_file=request.FILES["results_file"]
+            if (request.FILES.get('results_file', None) != None):
+                pending_upload = PendingUpload.objects.create(
+                    data_source=obj_data_source, uploaded_file=request.FILES["results_file"]
+                )
+
+                messages.success(
+                    request,
+                    "File uploaded with success. The file is being processed and its status, on the upload history table "
+                    "should update in the meantime.",
+                )
+
+                task = upload_results_file.delay(pending_upload.id)
+
+                pending_upload.task_id = task.task_id
+                pending_upload.save()
+
+        # save onboarding csv if it exists
+        if (request.FILES.get('onboarding_results_file', None) != None):
+            OnboardingReport.objects.create(
+                data_source=obj_data_source, uploaded_file=request.FILES["onboarding_results_file"]
             )
 
-            messages.success(
-                request,
-                "File uploaded with success. The file is being processed and its status, on the upload history table "
-                "should update in the meantime.",
-            )
-
-            task = upload_results_file.delay(pending_upload.id)
-
-            pending_upload.task_id = task.task_id
-            pending_upload.save()
     else:
         form = AchillesResultsForm()
+        onboarding_form = OnboardingReportForm()
 
     upload_history = sorted(
         itertools.chain(
             UploadHistory.objects.filter(data_source=obj_data_source),
             PendingUpload.objects.filter(data_source=obj_data_source),
+            OnboardingReport.objects.filter(data_source=obj_data_source)
         ),
         key=lambda upload: upload.upload_date,
         reverse=True,
     )
 
-    upload_history = list(map(lambda obj: (obj, obj.get_status()), upload_history))
+    upload_history = list(map(lambda obj: (obj, obj.get_status(), 'Onboarding' if isinstance(obj, OnboardingReport) else 'Catalogue'), upload_history))
 
     return render(
         request,
         "upload_achilles_results.html",
         {
             "form": form,
+            "onboarding_form": onboarding_form,
             "obj_data_source": obj_data_source,
             "upload_history": upload_history,
             "submit_button_text": mark_safe("<i class='fas fa-upload'></i> Upload"),
@@ -229,6 +241,7 @@ def create_data_source(request, *_, **kwargs):
         "data_source.html",
         {
             "form": form,
+            "onboarding_form": None,
             "editing": False,
             "submit_button_text": mark_safe(
                 "<i class='fas fa-plus-circle'></i> Create"
@@ -333,6 +346,24 @@ def data_source_dashboard(request, data_source):
 
     return render(request, "no_uploads_dashboard.html")
 
+@uploader_decorator
+@xframe_options_exempt
+def show_onboarding_csv(request, data_source):
+    df = None
+    data_source_obj = None
+    try:
+        data_source_obj = DataSource.objects.get(hash=data_source)
+        on_boarding_file = OnboardingReport.objects.filter(data_source=data_source_obj.id).latest('id').uploaded_file
+        df = pd.read_csv(on_boarding_file, index_col=0)
+    except:
+        df = pd.DataFrame([])
+
+    context = {'headers': df.columns.tolist(),
+               'body': df.values.tolist(),
+               'constance_config': constance.config,
+               'obj_data_source': data_source_obj,
+               'page_title': ONBOARDING_TITLE}
+    return render(request, "onboarding_report.html", context)
 
 class DataSourceUpdate(viewsets.GenericViewSet):
     # since the edit and upload views don't have authentication, also disable

@@ -33,4 +33,10 @@ class EditSourceForm(SourceForm):
 
 
 class AchillesResultsForm(forms.Form):
-    results_file = forms.FileField()
+    if constance.config.ALLOW_ONBOARDING_UPLOAD:
+        results_file = forms.FileField(required=False, label='Catalogue Export File')
+    else:
+        results_file = forms.FileField()
+
+class OnboardingReportForm(forms.Form):
+    onboarding_results_file = forms.FileField(required=False, label='Onboarding Report file (Optional)')

@@ -175,6 +175,15 @@ def success_data_source_directory(instance, filename):
 
     return datetime.datetime.now().strftime(file_path)
 
+def onboarding_folder(instance, filename):
+    file_path = os.path.join(
+        settings.ACHILLES_RESULTS_STORAGE_PATH,
+        instance.data_source.hash,
+        "onboarding",
+        "%Y%m%d%H%M%S%f" + "".join(pathlib.Path(filename).suffixes),
+    )
+    return datetime.datetime.now().strftime(file_path)
+
 
 class UploadHistory(models.Model):
     """
@@ -266,3 +275,16 @@ class AchillesResultsArchive(models.Model):
     p25_value = models.FloatField(null=True)
     p75_value = models.FloatField(null=True)
     p90_value = models.FloatField(null=True)
+
+class OnboardingReport(models.Model):
+    class Meta:
+        db_table = "onboarding_report"
+    
+    data_source = models.ForeignKey(DataSource, on_delete=models.CASCADE)
+    upload_date = models.DateTimeField(auto_now_add=True)
+    uploaded_file = models.FileField(
+        null=True, upload_to=onboarding_folder
+    )
+
+    def get_status(self):
+        return "Done"

@@ -345,6 +345,23 @@ CONSTANCE_CONFIG = {
         "Css for the img tag displaying the app logo",
         str,
     ),
+    "ALLOW_ONBOARDING_UPLOAD" :(
+        False,
+        "If Onboarding reports are allowed to be uploaded, which shows a button in the uploader page if true to allow these kind of files",
+        bool,
+    ),
+    "CAPTION_ONBOARDING" :(
+        "Drug Exposure Diagnostics results for selected ingredients. Executed with minCellCount = 5, sample = 1e+06, "
+        "earliestStartDate = 2010-01-01. # = Number of records. Type (n,%) = Frequency and percentage of available drug types."
+        "Route (n,%) = Frequency and percentage of available routes. Dose Form present n (%) = Frequency and percentage with dose form present."
+        "Fixed amount dose form n (%) = Frequency and percentage of missing denominator unit concept id. Amount distrib. [null or missing] = Distribution of amount (median q05-q95),"
+        "frequency and percentage of null or missing amount. Quantity distrib. [null or missing] = Distribution of quantity (median q05-q95), frequency and percentage of null or missing quantity."
+        "Exposure days distrib. [null or missing] = Distribution of exposure days (median q05-q95), frequency and percentage of null days_supply or missing exposure dates."
+        "Neg. Days n (%) = Frequency and percentage of negative exposure days.",
+        "Caption Text for the table in the Onboarding Report Page",
+        "markdown",
+    ),
+    
 }
 
 CONSTANCE_CONFIG_FIELDSETS = OrderedDict(
@@ -356,9 +373,10 @@ CONSTANCE_CONFIG_FIELDSETS = OrderedDict(
                 "UPLOADER_EXECUTE_EXPORT_PACKAGE",
                 "UPLOADER_UPLOAD",
                 "UPLOADER_AUTO_UPDATE",
+                "CAPTION_ONBOARDING"
             ),
         ),
-        ("Uploader Settings", ("UPLOADER_ALLOW_EDIT_DRAFT_STATUS",)),
+        ("Uploader Settings", ("UPLOADER_ALLOW_EDIT_DRAFT_STATUS", "ALLOW_ONBOARDING_UPLOAD")),
         (
             "Superset",
             ("SUPERSET_HOST", "DATABASE_DASHBOARD_IDENTIFIER", "DATABASE_FILTER_ID"),

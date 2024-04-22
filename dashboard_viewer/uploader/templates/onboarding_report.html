@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% load markdownify %}
+
+{% block head_tail %}
+    {{ form.media.css }}
+    <link rel="stylesheet" href='{% static "pages.css" %}' >
+    <link rel="stylesheet" href='{% static "header.css" %}' >
+    <link rel="stylesheet" href='{% static "css/uploader.css" %}' >
+{% endblock %}
+
+
+{% block content %}
+<div>
+    {% include "header.html" %}
+    
+    {# Achilles resutls file form #}
+    <div class="content-container" >
+        <div class="row">
+            <h3 class="col">Data Source: {{ obj_data_source.name }}</h3>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p><b>Database type:</b> {{ obj_data_source.database_type }}</p>
+            </div>
+            <div class="col">
+                <p><b>Country:</b> {{ obj_data_source.country }}</p>
+            </div>
+            <div class="col-auto">
+                <p><b>Release date:</b> {{ obj_data_source.release_date }}</p>
+            </div>
+        </div>
+        
+        <hr/>
+        <h3 style="margin-top: 15px;">Onboarding Report</h3>
+        <div style="margin-top: 15px;text-align: center;">
+            {% if body|length > 0 %}
+                <table class="table center table-stripped" style="font-size: 14px;margin-top: 20px;width: 95%;">
+                    <caption style="text-align:left"> {{ constance_config.CAPTION_ONBOARDING|markdownify  }}</caption>
+                    <thead style="background-color: #023E8a;color: white">
+                        <tr>
+                            {% for header in headers %}
+                            <th> {{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody style="background-color: #f5fbff;">
+                    {% for list in body %}
+                        <tr>
+                            {% for el in list %}
+                                <td>{{ el }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Onboarding report is not available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block body_before_bootstrap %}
+<style>
+    table
+    {        
+        margin-left: auto;
+        margin-right: auto;
+        border-collapse : collapse;  
+    }
+    caption { caption-side:top; }
+    table td, table th  
+    {         
+        max-width: 100px;
+        word-wrap: break-word;
+    }
+  </style>
+{% endblock %}
