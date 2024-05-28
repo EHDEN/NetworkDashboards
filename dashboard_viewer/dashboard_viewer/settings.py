@@ -345,6 +345,11 @@ CONSTANCE_CONFIG = {
         "Css for the img tag displaying the app logo",
         str,
     ),
+    "REFRESH_MATERIALIZED_TIMEOUT": (
+        7200000,
+        "Refresh materialized view statement timeout in POSTGRES (in ms). Default: 2hrs",
+        int,
+    ),
 }
 
 CONSTANCE_CONFIG_FIELDSETS = OrderedDict(
@@ -361,7 +366,7 @@ CONSTANCE_CONFIG_FIELDSETS = OrderedDict(
         ("Uploader Settings", ("UPLOADER_ALLOW_EDIT_DRAFT_STATUS",)),
         (
             "Superset",
-            ("SUPERSET_HOST", "DATABASE_DASHBOARD_IDENTIFIER", "DATABASE_FILTER_ID"),
+            ("SUPERSET_HOST", "DATABASE_DASHBOARD_IDENTIFIER", "DATABASE_FILTER_ID", "REFRESH_MATERIALIZED_TIMEOUT"),
         ),
         ("Tabs (Deprecated)", ("TABS_LOGO_CONTAINER_CSS", "TABS_LOGO_IMG_CSS")),
     ]

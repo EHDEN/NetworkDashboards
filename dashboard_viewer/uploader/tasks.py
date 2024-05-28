@@ -91,13 +91,19 @@ def upload_results_file(pending_upload_id: int):
                 )
 
                 logger.info(
-                    "Creating an upload history record [datasource %d, pending upload %d]",
+                    "Saving data source release date [datasource %d, pending upload %d]",
                     data_source.id,
                     pending_upload_id,
                 )
 
                 data_source.release_date = data["source_release_date"]
                 data_source.save()
+
+                logger.info(
+                    "Creating an upload history record [datasource %d, pending upload %d]",
+                    data_source.id,
+                    pending_upload_id,
+                )
 
                 pending_upload.uploaded_file.seek(0)
                 UploadHistory.objects.create(
@@ -111,7 +117,21 @@ def upload_results_file(pending_upload_id: int):
                     pending_upload_id=pending_upload.id,
                 )
 
+                logger.info(
+                    "Deleting pending upload files [datasource %d, pending upload %d, pending upload file %s]",
+                    data_source.id,
+                    pending_upload_id,
+                    pending_upload.uploaded_file.file
+                )
+
                 pending_upload.uploaded_file.delete()
+
+                logger.info(
+                    "Deleting pending upload [datasource %d, pending upload %d]",
+                    data_source.id,
+                    pending_upload_id
+                )
+
                 pending_upload.delete()
 
         finally:

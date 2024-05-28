@@ -1,7 +1,7 @@
 from django.core.cache import caches
 from django.db import connections
 from redis_rw_lock import RWLock
-
+import constance
 from materialized_queries_manager.models import MaterializedQuery
 
 
@@ -24,6 +24,7 @@ def refresh(logger, db_id=None, query_set=None):
 
             for i, materialized_query in enumerate(to_refresh):
                 try:
+                    cursor.execute("SET statement_timeout = " + str(constance.config.REFRESH_MATERIALIZED_TIMEOUT) + ";")
                     logger.info(
                         "Refreshing materialized view %s (%d/%d) [%s]",
                         materialized_query.matviewname,
@@ -37,6 +38,6 @@ def refresh(logger, db_id=None, query_set=None):
                 except:  # noqa
                     logger.exception(
                         "Some unexpected error happen while refreshing materialized query %s. [%s]",
-                        materialized_query.name,
+                        materialized_query.matviewname,
                         "command" if not db_id else f"datasource {db_id}",
                     )
